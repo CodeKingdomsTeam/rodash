@@ -1,0 +1,12 @@
+- repo: local
+  hooks:
+    - id: luacheck
+      name: luacheck
+      entry: ./luacheck.sh
+      language: script
+      files: \.lua$
+    - id: lua-fmt
+      name: lua-fmt
+      entry: ./format.sh
+      language: script
+      files: \.lua$

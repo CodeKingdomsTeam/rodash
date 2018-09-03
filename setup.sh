@@ -26,3 +26,6 @@ do
 		luarocks install "${ROCKS_ARGS[@]}"
 	fi
 done
+
+pip install pre-commit
+pre-commit install
