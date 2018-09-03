@@ -39,3 +39,18 @@ luac.out
 *.x86_64
 *.hex
 
+# Coverage
+/luacov.report.out.index
+/cobertura.xml
+
+# Local Lua installation
+/lua_install
+
+# Local python virtualenv
+/lua-utils-venv
+
+# JUnit test report
+/testReport.xml
+
+node_modules
+
