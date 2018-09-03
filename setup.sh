@@ -10,7 +10,7 @@ yarn install --frozen-lockfile --non-interactive
 
 export LUA="lua=5.1"
 
-pip install hererocks
+pip install hererocks==0.19.0
 
 hererocks lua_install -r^ --$LUA
 
@@ -27,5 +27,5 @@ do
 	fi
 done
 
-pip install pre-commit
+pip install pre-commit==1.8.2
 pre-commit install
