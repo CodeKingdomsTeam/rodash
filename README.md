@@ -9,3 +9,5 @@ A utility library for Lua.
 | `luacheck.sh` | Runs `luacheck` against all source.               |
 | `test.sh`     | Run the tests.                                    |
 | `build.sh`    | Run `setup`, `luacheck` and `test` with coverage. |
+
+[Contribution guidelines for this project](docs/CONTRIBUTING.md)
