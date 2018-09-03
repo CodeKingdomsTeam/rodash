@@ -30,5 +30,35 @@ describe(
 				)
 			end
 		)
+
+		describe(
+			"StartsWith",
+			function()
+				it(
+					"returns correctly",
+					function()
+						local x = "roblox"
+
+						assert.True(StringUtils.StartsWith(x, "rob"))
+						assert.False(StringUtils.StartsWith(x, "x"))
+					end
+				)
+			end
+		)
+
+		describe(
+			"EndsWith",
+			function()
+				it(
+					"returns correctly",
+					function()
+						local x = "roblox"
+
+						assert.False(StringUtils.EndsWith(x, "rob"))
+						assert.True(StringUtils.EndsWith(x, "x"))
+					end
+				)
+			end
+		)
 	end
 )
