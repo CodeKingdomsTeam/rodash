@@ -30,5 +30,25 @@ describe(
 				)
 			end
 		)
+		describe(
+			"Clone",
+			function()
+				it(
+					"performs a deep clone",
+					function()
+						local x = {"a", "b"}
+
+						local y = TableUtils.Clone(x)
+
+						assert.are.same({"a", "b"}, y)
+
+						x[1] = "c"
+
+						assert.are.same({"a", "b"}, y)
+						assert.are.same({"c", "b"}, x)
+					end
+				)
+			end
+		)
 	end
 )

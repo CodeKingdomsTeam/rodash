@@ -18,4 +18,8 @@ function TableUtils.GetLength(T) --: (table) => number
 	return count
 end
 
+function TableUtils.Clone(tbl) --: (table) => table
+	return {unpack(tbl)}
+end
+
 return TableUtils
