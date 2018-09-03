@@ -6,10 +6,6 @@ pipeline {
 
 	agent any
 
-	options {
-		timestamps()
-  	}
-
 	stages {
 
 		stage('Setup') {
@@ -75,7 +71,7 @@ pipeline {
 	post {
 		always {
 			junit "testReport.xml"
-			cobertura
+			cobertura coberturaReportFile: 'cobertura.xml'
 		}
 		failure {
 			githubNotify description: 'Build failed.',  status: 'ERROR'
