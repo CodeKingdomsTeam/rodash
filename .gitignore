@@ -49,5 +49,8 @@ luac.out
 # Local python virtualenv
 /lua-utils-venv
 
+# JUnit test report
+/testReport.xml
+
 node_modules
 
