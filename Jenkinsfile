@@ -18,6 +18,9 @@ pipeline {
 				failure {
 					githubNotify description: 'Luacheck failed',  status: 'FAILURE', context: 'luacheck'
 				}
+				success {
+					githubNotify description: 'Luacheck passed.',  status: 'SUCCESS', context: 'luacheck'
+				}
 			}
 		}
 
@@ -29,6 +32,9 @@ pipeline {
 				failure {
 					githubNotify description: 'Code style check failed',  status: 'FAILURE', context: 'codestyle'
 				}
+				success {
+					githubNotify description: 'Code style check passed.',  status: 'SUCCESS', context: 'codestyle'
+				}				
 			}
 		}
 
@@ -39,6 +45,9 @@ pipeline {
 			post {
 				failure {
 					githubNotify description: 'Tests failed',  status: 'FAILURE', context: 'tests'
+				}
+				success {
+					githubNotify description: 'Tests passed.',  status: 'SUCCESS', context: 'tests'
 				}
 			}
 		}
