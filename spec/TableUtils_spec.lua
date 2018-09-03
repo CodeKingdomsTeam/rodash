@@ -34,7 +34,7 @@ describe(
 			"Clone",
 			function()
 				it(
-					"performs a deep clone",
+					"performs a shallow clone",
 					function()
 						local x = {"a", "b"}
 
