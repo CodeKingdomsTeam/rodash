@@ -14,7 +14,7 @@ export LUA="lua=5.1"
 $(which pip2.7 || which pip) install virtualenv
 
 # Add user local bin for Jenkins
-export PATH = "$HOME/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 
 virtualenv lua-utils-venv
 VIRTUAL_ENV_DISABLE_PROMPT=true source lua-utils-venv/bin/activate
