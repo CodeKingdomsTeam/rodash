@@ -1,7 +1,3 @@
-#!/usr/bin/env groovy
-
-function
-
 pipeline {
 
 	agent any
