@@ -8,5 +8,8 @@ if [ $# -eq 0 ]
 then
 	find lib spec -name '*.lua' -exec ./node_modules/lua-fmt/dist/bin/luafmt.js --use-tabs --write-mode replace {} \;
 else
-	./node_modules/lua-fmt/dist/bin/luafmt.js --use-tabs --write-mode replace {} \;
+	for FILE in "$@"
+	do
+		./node_modules/lua-fmt/dist/bin/luafmt.js --use-tabs --write-mode replace "$FILE"
+	done
 fi
