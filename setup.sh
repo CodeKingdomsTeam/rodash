@@ -10,7 +10,16 @@ yarn install --frozen-lockfile --non-interactive
 
 export LUA="lua=5.1"
 
-pip install hererocks==0.19.0
+# Use homebrew pip on OS X
+$(which pip2.7 || which pip) install virtualenv
+
+# Add user local bin for Jenkins
+export PATH = "$HOME/.local/bin:$PATH"
+
+virtualenv lua-utils-venv
+VIRTUAL_ENV_DISABLE_PROMPT=true source lua-utils-venv/bin/activate
+
+$(which pip2.7 || which pip) install hererocks==0.19.0
 
 hererocks lua_install -r^ --$LUA
 

@@ -46,4 +46,8 @@ luac.out
 # Local Lua installation
 /lua_install
 
+# Local python virtualenv
+/lua-utils-venv
+
 node_modules
+
