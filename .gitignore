@@ -39,3 +39,10 @@ luac.out
 *.x86_64
 *.hex
 
+# Coverage
+/luacov.report.out.index
+
+# Local Lua installation
+/lua_install
+
+node_modules

@@ -1,0 +1,11 @@
+{
+  "name": "lua-utils",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:CodeKingdomsTeam/lua-utils.git",
+  "author": "Andrew Moss <andrew@codekingdoms.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "lua-fmt": "^2.6.0"
+  }
+}
