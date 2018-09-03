@@ -42,7 +42,7 @@ pipeline {
 
 		stage('Tests') {
 			steps {
-				sh 'rm -f testReport.xml && ./test.sh --verbose --coverage --output junit > testReport.xml'
+				sh 'rm -f testReport.xml && ./test.sh --verbose --coverage --output junit > testReport.xml && ./lua_install/bin/luacov-cobertura -o cobertura.xml'
 			}
 			post {
 				failure {
@@ -75,6 +75,7 @@ pipeline {
 	post {
 		always {
 			junit "testReport.xml"
+			cobertura
 		}
 		failure {
 			githubNotify description: 'Build failed.',  status: 'ERROR'
