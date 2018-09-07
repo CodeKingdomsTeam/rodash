@@ -18,6 +18,13 @@ function TableUtils.GetLength(T) --: (table) => number
 	return count
 end
 
+function TableUtils.Assign(target, source)
+	for key, value in pairs(source) do
+		target[key] = value
+	end
+	return target
+end
+
 function TableUtils.Clone(tbl) --: (table) => table
 	return {unpack(tbl)}
 end
