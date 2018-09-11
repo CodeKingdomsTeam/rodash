@@ -44,7 +44,7 @@ pipeline {
 
 		stage('Tests') {
 			steps {
-				sh 'rm -f luacov.stats.output testReport.xml cobertura.xml && ./test.sh --verbose --coverage --output junit > testReport.xml && ./lua_install/bin/luacov-cobertura -o cobertura.xml'
+				sh 'rm -f luacov.stats.* luacov.report.* testReport.xml cobertura.xml && ./test.sh --verbose --coverage --output junit > testReport.xml && ./lua_install/bin/luacov-cobertura -o cobertura.xml'
 			}
 			post {
 				failure {
