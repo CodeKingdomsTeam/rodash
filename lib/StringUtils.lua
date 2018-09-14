@@ -1,6 +1,6 @@
 local StringUtils = {}
 
-function StringUtils.Split(str, delimiter) --: (string, number) => string
+function StringUtils.Split(str, delimiter) --: (string, string) => string
 	local result = {}
 	local from = 1
 	local delim_from, delim_to = string.find(str, delimiter, from)
@@ -23,6 +23,14 @@ end
 
 function StringUtils.EndsWith(str, ending) --: (string, string) => boolean
 	return string.sub(str, -string.len(ending)) == ending
+end
+
+function StringUtils.LeftPad(string, length, character) --: (string, number, string) => string
+	return string.rep(character or " ", length - #string) .. string
+end
+
+function StringUtils.RightPad(string, length, character) --: (string, number, string) => string
+	return string .. string.rep(character or " ", length - #string)
 end
 
 return StringUtils

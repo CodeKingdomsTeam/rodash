@@ -16,3 +16,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * `TableUtils.Slice`
 * `TableUtils.GetLength`
 * `TableUtils.Clone`
+* `TableUtils.Map`
+* `TableUtils.Find`
+* `TableUtils.Filter`
+* `TableUtils.InsertMany`
+* `StringUtils.PadLeft`
+* `StringUtils.PadRight`
+
+### Fixed
+
+* Typing of `TableUtils.GetLength` and `TableUtils.Split`
