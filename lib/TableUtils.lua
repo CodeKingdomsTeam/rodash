@@ -22,7 +22,7 @@ function TableUtils.Filter(source, handler) --: ((any[], (element: any, key: num
 	local result = {}
 	for i, v in pairs(source) do
 		if (handler(v, i)) then
-			table.insert(v)
+			table.insert(result, v)
 		end
 	end
 	return result
