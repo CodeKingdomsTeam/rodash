@@ -34,4 +34,31 @@ function TableUtils.Clone(tbl) --: (table) => table
 	return {unpack(tbl)}
 end
 
+function TableUtils.IsSubset(a, b)
+	if type(a) ~= "table" or type(b) ~= "table" then
+		return false
+	else
+		for key, aValue in pairs(a) do
+			local bValue = b[key]
+			if type(aValue) ~= type(bValue) then
+				return false
+			elseif aValue ~= bValue then
+				if type(aValue) == "table" then
+					-- The values are tables, so we need to recurse for a deep comparison.
+					if not TableUtils.IsSubset(aValue, bValue) then
+						return false
+					end
+				else
+					return false
+				end
+			end
+		end
+	end
+	return true
+end
+
+function TableUtils.DeepEquals(a, b)
+	return TableUtils.IsSubset(a, b) and TableUtils.IsSubset(b, a)
+end
+
 return TableUtils

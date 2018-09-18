@@ -66,5 +66,145 @@ describe(
 				)
 			end
 		)
+		describe(
+			"IsSubset",
+			function()
+				it(
+					"returns true for two empty tables",
+					function()
+						assert.True(TableUtils.IsSubset({}, {}))
+					end
+				)
+				it(
+					"returns true for an empty table and a non-empty table",
+					function()
+						assert.True(TableUtils.IsSubset({}, {a = 1}))
+					end
+				)
+				it(
+					"returns false if either argument is not a table",
+					function()
+						assert.False(TableUtils.IsSubset({}, 3))
+					end
+				)
+				it(
+					"returns true for nested tables whose fields are a subset of the others",
+					function()
+						assert.True(
+							TableUtils.IsSubset(
+								{
+									a = 1,
+									b = 2,
+									c = {
+										d = 3,
+										e = {
+											f = 4
+										}
+									}
+								},
+								{
+									a = 1,
+									b = 2,
+									g = 5,
+									c = {
+										d = 3,
+										h = 6,
+										e = {
+											f = 4
+										}
+									}
+								}
+							)
+						)
+					end
+				)
+				it(
+					"returns false if a field that is present in the first argument is not in the second",
+					function()
+						assert.False(TableUtils.IsSubset({a = 1, b = 2}, {a = 1}))
+					end
+				)
+				it(
+					"returns false if a field in the first argument does not equal the corresponding field in the second",
+					function()
+						assert.False(
+							TableUtils.IsSubset(
+								{
+									a = 1,
+									b = {
+										c = 2
+									}
+								},
+								{
+									a = 1,
+									b = {
+										c = 3
+									}
+								}
+							)
+						)
+					end
+				)
+			end
+		)
+		describe(
+			"DeepEquals",
+			function()
+				it(
+					"returns true if the first argument deep equals the second",
+					function()
+						assert.True(
+							TableUtils.DeepEquals(
+								{
+									a = 1,
+									b = 2,
+									c = {
+										d = 3,
+										e = {
+											f = {
+												g = {},
+												h = 4
+											}
+										}
+									}
+								},
+								{
+									a = 1,
+									b = 2,
+									c = {
+										d = 3,
+										e = {
+											f = {
+												g = {},
+												h = 4
+											}
+										}
+									}
+								}
+							)
+						)
+					end
+				)
+				it(
+					"returns false if one of the arguments has an additional field",
+					function()
+						assert.False(
+							TableUtils.DeepEquals(
+								{
+									a = 1,
+									b = {}
+								},
+								{
+									a = 1,
+									b = {
+										c = 2
+									}
+								}
+							)
+						)
+					end
+				)
+			end
+		)
 	end
 )
