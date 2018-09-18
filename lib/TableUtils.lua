@@ -19,6 +19,9 @@ function TableUtils.GetLength(T) --: (table) => number
 end
 
 function TableUtils.Assign(target, ...)
+	-- Use select here so that nil arguments can be supported. If instead we
+	-- iterated over ipairs({...}), any arguments after the first nil one
+	-- would be ignored.
 	for i = 1, select("#", ...) do
 		local source = select(i, ...)
 		if source ~= nil then
