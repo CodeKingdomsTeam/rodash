@@ -50,5 +50,21 @@ describe(
 				)
 			end
 		)
+		describe(
+			"Assign",
+			function()
+				it(
+					"copies fields from the source tables left to right and overwrites any fields in the target with the same keys",
+					function()
+						local target = {a = 1, b = 2, c = 3}
+						local source1 = {a = 2, b = 3, d = 5}
+						local source2 = {b = 4, e = 6}
+						local result = TableUtils.Assign(target, source1, source2)
+						assert.are.equal(result, target)
+						assert.are.same({a = 2, b = 4, c = 3, d = 5, e = 6}, result)
+					end
+				)
+			end
+		)
 	end
 )

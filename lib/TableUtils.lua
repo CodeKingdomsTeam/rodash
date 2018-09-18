@@ -18,9 +18,14 @@ function TableUtils.GetLength(T) --: (table) => number
 	return count
 end
 
-function TableUtils.Assign(target, source)
-	for key, value in pairs(source) do
-		target[key] = value
+function TableUtils.Assign(target, ...)
+	for i = 1, select("#", ...) do
+		local source = select(i, ...)
+		if source ~= nil then
+			for key, value in pairs(source) do
+				target[key] = value
+			end
+		end
 	end
 	return target
 end
