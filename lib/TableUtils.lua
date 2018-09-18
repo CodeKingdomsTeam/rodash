@@ -51,9 +51,12 @@ function TableUtils.GetLength(table) --: (table) => number
 	return count
 end
 
-function TableUtils.Assign(target, source)
-	for key, value in pairs(source) do
-		target[key] = value
+function TableUtils.Assign(target, ...) --: table, ...table => table
+	local objects = {...}
+	for _, source in pairs(objects) do
+		for key, value in pairs(source) do
+			target[key] = value
+		end
 	end
 	return target
 end
