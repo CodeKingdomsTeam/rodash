@@ -16,3 +16,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * `TableUtils.Slice`
 * `TableUtils.GetLength`
 * `TableUtils.Clone`
+* `TableUtils.IsSubset`
+* `TableUtils.DeepEquals`
