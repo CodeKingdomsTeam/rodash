@@ -1,6 +1,6 @@
 local TableUtils = {}
 
-function TableUtils.Slice(tbl, first, last, step) --: (any[], number, number, number?) => any[]
+function TableUtils.Slice(tbl, first, last, step) --: (any[], number?, number?, number?) => any[]
 	local sliced = {}
 
 	for i = first or 1, last or #tbl, step or 1 do
@@ -22,7 +22,7 @@ function TableUtils.Filter(source, handler) --: ((any[], (element: any, key: num
 	local result = {}
 	for i, v in pairs(source) do
 		if (handler(v, i)) then
-			table.insert(result, v)
+			result[i] = v
 		end
 	end
 	return result
