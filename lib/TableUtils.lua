@@ -28,6 +28,14 @@ function TableUtils.Filter(source, handler) --: ((any[], (element: any, key: num
 	return result
 end
 
+function TableUtils.Values(source) --: table => any[]
+	local result = {}
+	for i, v in pairs(source) do
+		table.insert(result, v)
+	end
+	return result
+end
+
 function TableUtils.Find(source, handler) --: ((any[], (element: any, key: number) => boolean) => any) | ((table, (element: any, key: string) => boolean) => any)
 	for i, v in pairs(source) do
 		if (handler(v, i)) then
