@@ -375,7 +375,7 @@ describe(
 						assert.are.same(
 							"d",
 							TableUtils.Find(
-								{one = "a", two = "b", three == "c", four = "d", five = "e"},
+								{one = "a", two = "b", three = "c", four = "d", five = "e"},
 								function(x, i)
 									return x == "d"
 								end
