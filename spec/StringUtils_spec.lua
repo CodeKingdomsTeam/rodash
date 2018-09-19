@@ -60,5 +60,53 @@ describe(
 				)
 			end
 		)
+
+		describe(
+			"LeftPad",
+			function()
+				it(
+					"repeats correctly",
+					function()
+						assert.are.same("    nice", StringUtils.LeftPad("nice", 8))
+					end
+				)
+				it(
+					"doesn't add extra if string is too long",
+					function()
+						assert.are.same("nice", StringUtils.LeftPad("nice", 2))
+					end
+				)
+				it(
+					"pads with different character",
+					function()
+						assert.are.same("00000nice", StringUtils.LeftPad("nice", 9, "0"))
+					end
+				)
+			end
+		)
+
+		describe(
+			"RightPad",
+			function()
+				it(
+					"repeats correctly",
+					function()
+						assert.are.same("nice    ", StringUtils.RightPad("nice", 8))
+					end
+				)
+				it(
+					"doesn't add extra if string is too long",
+					function()
+						assert.are.same("nice", StringUtils.RightPad("nice", 2))
+					end
+				)
+				it(
+					"pads with different character",
+					function()
+						assert.are.same("nice00000", StringUtils.RightPad("nice", 9, "0"))
+					end
+				)
+			end
+		)
 	end
 )

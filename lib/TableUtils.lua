@@ -1,6 +1,6 @@
 local TableUtils = {}
 
-function TableUtils.Slice(tbl, first, last, step) --: (table, number, number, number?) => table
+function TableUtils.Slice(tbl, first, last, step) --: (any[], number?, number?, number?) => any[]
 	local sliced = {}
 
 	for i = first or 1, last or #tbl, step or 1 do
@@ -10,9 +10,50 @@ function TableUtils.Slice(tbl, first, last, step) --: (table, number, number, nu
 	return sliced
 end
 
-function TableUtils.GetLength(T) --: (table) => number
+function TableUtils.Map(source, handler) --: ((any[], (element: any, key: number) => any) => any[]) | ((table, (element: any, key: string) => any) => table)
+	local result = {}
+	for i, v in pairs(source) do
+		result[i] = handler(v, i)
+	end
+	return result
+end
+
+function TableUtils.Filter(source, handler) --: table, (element: any, key: number | string => boolean) => any[]
+	local result = {}
+	for i, v in pairs(source) do
+		if (handler(v, i)) then
+			table.insert(result, v)
+		end
+	end
+	return result
+end
+
+function TableUtils.Values(source) --: table => any[]
+	local result = {}
+	for i, v in pairs(source) do
+		table.insert(result, v)
+	end
+	return result
+end
+
+function TableUtils.Find(source, handler) --: ((any[], (element: any, key: number) => boolean) => any) | ((table, (element: any, key: string) => boolean) => any)
+	for i, v in pairs(source) do
+		if (handler(v, i)) then
+			return v
+		end
+	end
+end
+
+function TableUtils.InsertMany(target, items) --: (any[], any[]) => any[]
+	for _, v in ipairs(items) do
+		table.insert(target, v)
+	end
+	return
+end
+
+function TableUtils.GetLength(table) --: (table) => number
 	local count = 0
-	for _ in pairs(T) do
+	for _ in pairs(table) do
 		count = count + 1
 	end
 	return count
