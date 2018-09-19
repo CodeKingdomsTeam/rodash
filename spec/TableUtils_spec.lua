@@ -206,7 +206,7 @@ describe(
 				)
 			end
 		)
-    describe(
+		describe(
 			"Map",
 			function()
 				it(
@@ -334,7 +334,7 @@ describe(
 							"d",
 							TableUtils.Find(
 								{"a", "b", "c", "d", "e"},
-								function(x, i)
+								function(x)
 									return x == "d"
 								end
 							)
