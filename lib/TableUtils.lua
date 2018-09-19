@@ -18,11 +18,11 @@ function TableUtils.Map(source, handler) --: ((any[], (element: any, key: number
 	return result
 end
 
-function TableUtils.Filter(source, handler) --: ((any[], (element: any, key: number) => boolean) => any[]) | ((table, (element: any, key: string) => boolean) => table)
+function TableUtils.Filter(source, handler) --: table, (element: any, key: number | string => boolean) => any[]
 	local result = {}
 	for i, v in pairs(source) do
 		if (handler(v, i)) then
-			result[i] = v
+			table.insert(result, v)
 		end
 	end
 	return result
