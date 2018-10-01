@@ -61,6 +61,14 @@ function TableUtils.Includes(source, item) --: table, any => boolean
 	) ~= nil
 end
 
+function TableUtils.KeyOf(source, value) --: (table, any) => number?
+	for k, v in pairs(source) do
+		if (value == v) then
+			return k
+		end
+	end
+end
+
 function TableUtils.InsertMany(target, items) --: (any[], any[]) => any[]
 	for _, v in ipairs(items) do
 		table.insert(target, v)
