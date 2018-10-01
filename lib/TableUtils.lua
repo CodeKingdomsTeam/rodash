@@ -44,7 +44,7 @@ function TableUtils.Find(source, handler) --: ((any[], (element: any, key: numbe
 	end
 end
 
-function TableUtils.KeyOf(source,  value) --: (table, any) => number?
+function TableUtils.KeyOf(source, value) --: (table, any) => number?
 	for k, v in pairs(source) do
 		if (value == v) then
 			return k
