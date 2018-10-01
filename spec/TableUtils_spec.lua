@@ -385,5 +385,28 @@ describe(
 				)
 			end
 		)
+		describe(
+			"KeyOf",
+			function()
+				it(
+					"gets the first matching value from a table",
+					function()
+						assert.are.same(4, TableUtils.KeyOf({"a", "b", "c", "d", "e"}, "d"))
+					end
+				)
+				it(
+					"returns nil for a missing value",
+					function()
+						assert.truthy(nil == TableUtils.KeyOf({"a", "b", "c", "d", "e"}, "f"))
+					end
+				)
+				it(
+					"gets the first matching value from a non-sequential table",
+					function()
+						assert.are.same("four", TableUtils.KeyOf({one = "a", two = "b", three = "c", four = "d", five = "e"}, "d"))
+					end
+				)
+			end
+		)
 	end
 )
