@@ -28,6 +28,14 @@ function TableUtils.Filter(source, handler) --: table, (element: any, key: numbe
 	return result
 end
 
+function TableUtils.Invert(source) --: table => table
+	local result = {}
+	for i, v in pairs(source) do
+		result[v] = i
+	end
+	return result
+end
+
 function TableUtils.Values(source) --: table => any[]
 	local result = {}
 	for i, v in pairs(source) do
@@ -42,6 +50,15 @@ function TableUtils.Find(source, handler) --: ((any[], (element: any, key: numbe
 			return v
 		end
 	end
+end
+
+function TableUtils.Includes(source, item) --: table, any => boolean
+	return TableUtils.Find(
+		source,
+		function(value)
+			return value == item
+		end
+	) ~= nil
 end
 
 function TableUtils.InsertMany(target, items) --: (any[], any[]) => any[]

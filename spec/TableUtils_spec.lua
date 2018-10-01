@@ -240,6 +240,47 @@ describe(
 			end
 		)
 		describe(
+			"Invert",
+			function()
+				it(
+					"inverts an array",
+					function()
+						assert.are.same({1, 3, 4, 2}, TableUtils.Invert({1, 4, 2, 3}))
+					end
+				)
+				it(
+					"inverts a table",
+					function()
+						assert.are.same(
+							{["1.a"] = "a", ["2.b"] = "b", ["3.c"] = "c", ["4.d"] = "d"},
+							TableUtils.Invert({a = "1.a", b = "2.b", c = "3.c", d = "4.d"})
+						)
+					end
+				)
+			end
+		)
+
+		describe(
+			"Includes",
+			function()
+				it(
+					"checks array",
+					function()
+						assert.truthy(TableUtils.Includes({1, 4, 8, 3}, 8))
+						assert.not_truthy(TableUtils.Includes({1, 4, 8, 3}, 9))
+					end
+				)
+				it(
+					"checks table",
+					function()
+						assert.truthy(TableUtils.Includes({a = "1.a", b = "2.b", c = "3.c", d = "4.d"}, "3.c"))
+						assert.not_truthy(TableUtils.Includes({a = "1.a", b = "2.b", c = "3.c", d = "4.d"}, "3.d"))
+					end
+				)
+			end
+		)
+
+		describe(
 			"Filter",
 			function()
 				it(
