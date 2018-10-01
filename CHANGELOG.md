@@ -22,9 +22,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * `TableUtils.InsertMany`
 * `StringUtils.PadLeft`
 * `StringUtils.PadRight`
+* `TableUtils.Invert`
+* `TableUtils.Includes`
 
 ### Fixed
 
 * Typing of `TableUtils.GetLength` and `TableUtils.Split`
+* Split works for empty delimiter
 * `TableUtils.IsSubset`
 * `TableUtils.DeepEquals`

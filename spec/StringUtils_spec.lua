@@ -14,6 +14,14 @@ describe(
 						assert.are.same({"hi", "guys"}, StringUtils.Split(x, " "))
 					end
 				)
+				it(
+					"splits with empty delimiter",
+					function()
+						local x = "hi guys"
+
+						assert.are.same({"h", "i", " ", "g", "u", "y", "s"}, StringUtils.Split(x))
+					end
+				)
 			end
 		)
 

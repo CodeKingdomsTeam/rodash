@@ -3,6 +3,12 @@ local StringUtils = {}
 function StringUtils.Split(str, delimiter) --: (string, string) => string
 	local result = {}
 	local from = 1
+	if (not delimiter) then
+		for i = 1, #str do
+			table.insert(result, string.sub(str, i, i))
+		end
+		return result
+	end
 	local delim_from, delim_to = string.find(str, delimiter, from)
 	while delim_from do
 		table.insert(result, string.sub(str, from, delim_from - 1))
