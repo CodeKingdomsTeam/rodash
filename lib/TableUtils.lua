@@ -44,6 +44,22 @@ function TableUtils.Values(source) --: table => any[]
 	return result
 end
 
+function TableUtils.Keys(source) --: table => any[]
+	local result = {}
+	for i, v in pairs(source) do
+		table.insert(result, i)
+	end
+	return result
+end
+
+function TableUtils.Entries(source) --: table => [string | number, any][]
+	local result = {}
+	for i, v in pairs(source) do
+		table.insert(result, {i, v})
+	end
+	return result
+end
+
 function TableUtils.Find(source, handler) --: ((any[], (element: any, key: number) => boolean) => any) | ((table, (element: any, key: string) => boolean) => any)
 	for i, v in pairs(source) do
 		if (handler(v, i)) then

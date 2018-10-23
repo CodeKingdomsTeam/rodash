@@ -348,6 +348,24 @@ describe(
 			end
 		)
 		describe(
+			"Keys",
+			function()
+				it(
+					"gets the keys from a table",
+					function()
+						local output = TableUtils.Keys({one = "a", two = "b", three = "c", four = "d", five = "e"})
+						table.sort(
+							output,
+							function(a, b)
+								return a < b
+							end
+						)
+						assert.are.same({"five", "four", "one", "three", "two"}, output)
+					end
+				)
+			end
+		)
+		describe(
 			"Values",
 			function()
 				it(
@@ -361,6 +379,24 @@ describe(
 							end
 						)
 						assert.are.same({"a", "b", "c", "d", "e"}, output)
+					end
+				)
+			end
+		)
+		describe(
+			"Entries",
+			function()
+				it(
+					"gets the entries from a table",
+					function()
+						local output = TableUtils.Entries({one = "a", two = "b", three = "c", four = "d", five = "e"})
+						table.sort(
+							output,
+							function(a, b)
+								return a[2] < b[2]
+							end
+						)
+						assert.are.same({{"one", "a"}, {"two", "b"}, {"three", "c"}, {"four", "d"}, {"five", "e"}}, output)
 					end
 				)
 			end
