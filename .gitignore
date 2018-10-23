@@ -54,3 +54,5 @@ luac.out
 
 node_modules
 
+# System files
+.DS_Store
