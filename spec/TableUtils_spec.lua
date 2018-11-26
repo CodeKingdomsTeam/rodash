@@ -485,5 +485,54 @@ describe(
 				)
 			end
 		)
+		describe(
+			"Reduce",
+			function()
+				it(
+					"returns the base case for an empty array",
+					function()
+						assert.are.same(
+							"f",
+							TableUtils.Reduce(
+								{},
+								function(prev, next)
+									return prev .. next
+								end,
+								"f"
+							)
+						)
+					end
+				)
+				it(
+					"applies an iterator to reduce a table",
+					function()
+						assert.are.same(
+							"fabcde",
+							TableUtils.Reduce(
+								{"a", "b", "c", "d", "e"},
+								function(prev, next)
+									return prev .. next
+								end,
+								"f"
+							)
+						)
+					end
+				)
+				it(
+					"can operate on the index",
+					function()
+						assert.are.same(
+							"f1a2b3c4d5e",
+							TableUtils.Reduce(
+								{"a", "b", "c", "d", "e"},
+								function(prev, next, i)
+									return (prev or "f") .. i .. next
+								end
+							)
+						)
+					end
+				)
+			end
+		)
 	end
 )
