@@ -28,7 +28,7 @@ function TableUtils.Filter(source, handler) --: table, (element: any, key: numbe
 	return result
 end
 
-function TableUtils.Reduce(source, handler, init) --: <T>(table, (element: any, key: number | string => T), T) => T
+function TableUtils.Reduce(source, handler, init) --: <T>(any[], (previous: T, current: any,  key: number | string => T), T?) => T
 	local result = init
 	for i, v in pairs(source) do
 		result = handler(result, v, i)
