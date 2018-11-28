@@ -36,6 +36,35 @@ function TableUtils.Reduce(source, handler, init) --: <T>(any[], (previous: T, c
 	return result
 end
 
+function TableUtils.All(source, handler) --: table => boolean
+	if not handler then
+		handler = function(x)
+			return x
+		end
+	end
+	return not (not TableUtils.Reduce(
+		source,
+		function(acc, value, key)
+			return acc and handler(value, key)
+		end,
+		true
+	))
+end
+function TableUtils.Any(source, handler) --: table => boolean
+	if not handler then
+		handler = function(x)
+			return x
+		end
+	end
+	return not (not TableUtils.Reduce(
+		source,
+		function(acc, value, key)
+			return acc or handler(value, key)
+		end,
+		false
+	))
+end
+
 function TableUtils.Invert(source) --: table => table
 	local result = {}
 	for i, v in pairs(source) do
