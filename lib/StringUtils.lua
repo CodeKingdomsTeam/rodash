@@ -1,5 +1,11 @@
 local StringUtils = {}
 
+--[[
+	Splits a string into parts based on a delimiter and returns a table of the
+	parts. The delimiter is a Lua string pattern, so special characters need
+	escaping. See https://www.lua.org/manual/5.1/manual.html#5.4.1 for details
+	on patterns.
+	]]
 function StringUtils.Split(str, delimiter) --: (string, string) => string
 	local result = {}
 	local from = 1
