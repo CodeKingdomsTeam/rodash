@@ -534,5 +534,103 @@ describe(
 				)
 			end
 		)
+		describe(
+			"All",
+			function()
+				it(
+					"returns true if the table is empty",
+					function()
+						assert.is_true(TableUtils.All({}))
+					end
+				)
+				it(
+					"returns true if the table contains only truthy expressions",
+					function()
+						assert.is_true(TableUtils.All({2, "a", true, {}}))
+					end
+				)
+				it(
+					"returns false if one expression in the input table is false",
+					function()
+						assert.is_false(TableUtils.All({2, "a", false, {}}))
+					end
+				)
+				it(
+					"returns true if the provided handler evaluates to true for all values in the table",
+					function()
+						assert.is_true(
+							TableUtils.All(
+								{2, 4, 6, 8},
+								function(value)
+									return value % 2 == 0
+								end
+							)
+						)
+					end
+				)
+				it(
+					"returns false if the provided handler evaluates to false for any value in the table",
+					function()
+						assert.is_false(
+							TableUtils.All(
+								{2, 4, 5, 8},
+								function(value)
+									return value % 2 == 0
+								end
+							)
+						)
+					end
+				)
+			end
+		)
+		describe(
+			"Any",
+			function()
+				it(
+					"returns false if the table is empty",
+					function()
+						assert.is_false(TableUtils.Any({}))
+					end
+				)
+				it(
+					"returns false if the table contains only false expressions",
+					function()
+						assert.is_false(TableUtils.Any({1 == 0, false}))
+					end
+				)
+				it(
+					"returns true if one expression in the input table is true",
+					function()
+						assert.is_true(TableUtils.Any({1 == 0, 2 == 2}))
+					end
+				)
+				it(
+					"returns false if the provided handler evalutes to false for all values in the table",
+					function()
+						assert.is_false(
+							TableUtils.Any(
+								{1, 2, 3},
+								function(value)
+									return value > 3
+								end
+							)
+						)
+					end
+				)
+				it(
+					"returns true if one expression in the input table is true",
+					function()
+						assert.is_true(
+							TableUtils.Any(
+								{1, 2, 3, 4},
+								function(value)
+									return value > 3
+								end
+							)
+						)
+					end
+				)
+			end
+		)
 	end
 )

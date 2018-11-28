@@ -36,6 +36,39 @@ function TableUtils.Reduce(source, handler, init) --: <T>(any[], (previous: T, c
 	return result
 end
 
+function TableUtils.All(source, handler) --: table => boolean
+	if not handler then
+		handler = function(x)
+			return x
+		end
+	end
+	-- Use double negation to coerce the type to a boolean, as there is
+	-- no toboolean() or equivalent in Lua.
+	return not (not TableUtils.Reduce(
+		source,
+		function(acc, value, key)
+			return acc and handler(value, key)
+		end,
+		true
+	))
+end
+function TableUtils.Any(source, handler) --: table => boolean
+	if not handler then
+		handler = function(x)
+			return x
+		end
+	end
+	-- Use double negation to coerce the type to a boolean, as there is
+	-- no toboolean() or equivalent in Lua.
+	return not (not TableUtils.Reduce(
+		source,
+		function(acc, value, key)
+			return acc or handler(value, key)
+		end,
+		false
+	))
+end
+
 function TableUtils.Invert(source) --: table => table
 	local result = {}
 	for i, v in pairs(source) do
