@@ -42,6 +42,8 @@ function TableUtils.All(source, handler) --: table => boolean
 			return x
 		end
 	end
+	-- Use double negation to coerce the type to a boolean, as there is
+	-- no toboolean() or equivalent in Lua.
 	return not (not TableUtils.Reduce(
 		source,
 		function(acc, value, key)
@@ -56,6 +58,8 @@ function TableUtils.Any(source, handler) --: table => boolean
 			return x
 		end
 	end
+	-- Use double negation to coerce the type to a boolean, as there is
+	-- no toboolean() or equivalent in Lua.
 	return not (not TableUtils.Reduce(
 		source,
 		function(acc, value, key)

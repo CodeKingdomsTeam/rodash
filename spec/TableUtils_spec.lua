@@ -538,6 +538,12 @@ describe(
 			"All",
 			function()
 				it(
+					"returns true if the table is empty",
+					function()
+						assert.is_true(TableUtils.All({}))
+					end
+				)
+				it(
 					"returns true if the table contains only truthy expressions",
 					function()
 						assert.is_true(TableUtils.All({2, "a", true, {}}))
@@ -580,6 +586,12 @@ describe(
 		describe(
 			"Any",
 			function()
+				it(
+					"returns false if the table is empty",
+					function()
+						assert.is_false(TableUtils.Any({}))
+					end
+				)
 				it(
 					"returns false if the table contains only false expressions",
 					function()
