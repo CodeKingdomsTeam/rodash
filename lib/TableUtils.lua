@@ -157,7 +157,7 @@ function TableUtils.Assign(target, ...)
 end
 
 function TableUtils.Clone(tbl) --: (table) => table
-	return {unpack(tbl)}
+	return TableUtils.Assign({}, tbl)
 end
 
 function TableUtils.IsSubset(a, b)
