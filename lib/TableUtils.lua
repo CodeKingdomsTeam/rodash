@@ -21,11 +21,20 @@ end
 function TableUtils.Filter(source, handler) --: table, (element: any, key: number | string => boolean) => any[]
 	local result = {}
 	for i, v in pairs(source) do
-		if (handler(v, i)) then
+		if handler(v, i) then
 			table.insert(result, v)
 		end
 	end
 	return result
+end
+
+function TableUtils.Compact(source) --: table => table
+	return TableUtils.Filter(
+		source,
+		function(value)
+			return value
+		end
+	)
 end
 
 function TableUtils.Reduce(source, handler, init) --: <T>(any[], (previous: T, current: any,  key: number | string => T), T?) => T

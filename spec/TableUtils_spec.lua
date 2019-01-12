@@ -319,6 +319,17 @@ describe(
 			end
 		)
 		describe(
+			"Compact",
+			function()
+				it(
+					"filters out falsey values from an array",
+					function()
+						assert.are.same({"b", "e"}, TableUtils.Compact({"b", false, false, "e", false}))
+					end
+				)
+			end
+		)
+		describe(
 			"InsertMany",
 			function()
 				it(
