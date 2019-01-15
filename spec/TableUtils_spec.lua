@@ -330,6 +330,53 @@ describe(
 			end
 		)
 		describe(
+			"KeyBy",
+			function()
+				it(
+					"can use number keys",
+					function()
+						assert.are.same(
+							{{name = "a", i = 1}, {name = "c", i = 2}, {name = "b", i = 3}},
+							TableUtils.KeyBy(
+								{{name = "a", i = 1}, {name = "b", i = 3}, {name = "c", i = 2}},
+								function(obj)
+									return obj.i
+								end
+							)
+						)
+					end
+				)
+				it(
+					"can use string keys",
+					function()
+						assert.are.same(
+							{a = {name = "a", i = 1}, c = {name = "c", i = 2}, b = {name = "b", i = 3}},
+							TableUtils.KeyBy(
+								{{name = "a", i = 1}, {name = "b", i = 3}, {name = "c", i = 2}},
+								function(obj)
+									return obj.name
+								end
+							)
+						)
+					end
+				)
+				it(
+					"filters out nil keys",
+					function()
+						assert.are.same(
+							{a = {name = "a", i = 1}, b = {name = "b", i = 3}},
+							TableUtils.KeyBy(
+								{{name = "a", i = 1}, {name = "b", i = 3}, {i = 2}},
+								function(obj)
+									return obj.name
+								end
+							)
+						)
+					end
+				)
+			end
+		)
+		describe(
 			"InsertMany",
 			function()
 				it(

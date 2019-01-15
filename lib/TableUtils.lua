@@ -86,6 +86,17 @@ function TableUtils.Invert(source) --: table => table
 	return result
 end
 
+function TableUtils.KeyBy(source, handler) --: table, (any => string | number) => table
+	local result = {}
+	for i, v in pairs(source) do
+		local key = handler(v, i)
+		if key ~= nil then
+			result[key] = v
+		end
+	end
+	return result
+end
+
 function TableUtils.Values(source) --: table => any[]
 	local result = {}
 	for i, v in pairs(source) do
