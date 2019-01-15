@@ -67,6 +67,22 @@ describe(
 			end
 		)
 		describe(
+			"Merge",
+			function()
+				it(
+					"copies fields from the source tables left to right and merges any fields in the target with the same keys",
+					function()
+						local target = {a = 1, b = 2, c = {x = 2, y = 3}, d = {a = 3, b = 5}, e = {f = 6, g = 7, j = 10}}
+						local source1 = {a = 2, b = 3, d = 5, e = {f = 8, h = 10}}
+						local source2 = {b = 4, c = 3, e = {f = 2, i = 12}}
+						local result = TableUtils.Merge(target, source1, source2)
+						assert.are.equal(result, target)
+						assert.are.same({a = 2, b = 4, c = 3, d = 5, e = {f = 2, i = 12, g = 7, j = 10, h = 10}}, result)
+					end
+				)
+			end
+		)
+		describe(
 			"IsSubset",
 			function()
 				it(
@@ -366,6 +382,53 @@ describe(
 						assert.are.same(
 							{a = {name = "a", i = 1}, b = {name = "b", i = 3}},
 							TableUtils.KeyBy(
+								{{name = "a", i = 1}, {name = "b", i = 3}, {i = 2}},
+								function(obj)
+									return obj.name
+								end
+							)
+						)
+					end
+				)
+			end
+		)
+		describe(
+			"GroupBy",
+			function()
+				it(
+					"can use number keys",
+					function()
+						assert.are.same(
+							{{{name = "a", i = 1}}, {{name = "c", i = 2}, {name = "b", i = 2}}},
+							TableUtils.GroupBy(
+								{{name = "a", i = 1}, {name = "c", i = 2}, {name = "b", i = 2}},
+								function(obj)
+									return obj.i
+								end
+							)
+						)
+					end
+				)
+				it(
+					"can use string keys",
+					function()
+						assert.are.same(
+							{a = {{name = "a", i = 1}}, c = {{name = "c", i = 3}, {name = "c", i = 2}}},
+							TableUtils.GroupBy(
+								{{name = "a", i = 1}, {name = "c", i = 3}, {name = "c", i = 2}},
+								function(obj)
+									return obj.name
+								end
+							)
+						)
+					end
+				)
+				it(
+					"filters out nil keys",
+					function()
+						assert.are.same(
+							{a = {{name = "a", i = 1}}, b = {{name = "b", i = 3}}},
+							TableUtils.GroupBy(
 								{{name = "a", i = 1}, {name = "b", i = 3}, {i = 2}},
 								function(obj)
 									return obj.name

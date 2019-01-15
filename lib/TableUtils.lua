@@ -97,6 +97,39 @@ function TableUtils.KeyBy(source, handler) --: table, (any => string | number) =
 	return result
 end
 
+function TableUtils.GroupBy(source, handler) --: table, (any => string | number) => table
+	local result = {}
+	for i, v in pairs(source) do
+		local key = handler(v, i)
+		if key ~= nil then
+			if not result[key] then
+				result[key] = {}
+			end
+			table.insert(result[key], v)
+		end
+	end
+	return result
+end
+
+function TableUtils.Merge(target, ...)
+	-- Use select here so that nil arguments can be supported. If instead we
+	-- iterated over ipairs({...}), any arguments after the first nil one
+	-- would be ignored.
+	for i = 1, select("#", ...) do
+		local source = select(i, ...)
+		if source ~= nil then
+			for key, value in pairs(source) do
+				if type(target[key]) == "table" and type(value) == "table" then
+					target[key] = TableUtils.Merge(target[key] or {}, value)
+				else
+					target[key] = value
+				end
+			end
+		end
+	end
+	return target
+end
+
 function TableUtils.Values(source) --: table => any[]
 	local result = {}
 	for i, v in pairs(source) do
