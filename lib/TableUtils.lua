@@ -183,7 +183,7 @@ function TableUtils.InsertMany(target, items) --: (any[], any[]) => any[]
 	for _, v in ipairs(items) do
 		table.insert(target, v)
 	end
-	return
+	return target
 end
 
 function TableUtils.GetLength(table) --: (table) => number
