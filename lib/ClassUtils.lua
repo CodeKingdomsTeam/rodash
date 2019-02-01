@@ -4,10 +4,12 @@ local ClassUtils = {}
 function ClassUtils.makeClass(name, constructor)
     local Class = {
         name = name,
-        constructor = constructor
+        constructor = constructor or function()
+                return {}
+            end
     }
     function Class.new(...)
-        local instance = constructor(...)
+        local instance = Class.constructor(...)
         setmetatable(instance, {__index = Class, __tostring = Class.toString})
         return instance
     end
