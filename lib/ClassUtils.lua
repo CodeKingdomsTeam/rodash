@@ -28,7 +28,7 @@ function ClassUtils.makeWrapperClass(name)
     return ClassUtils.makeClass(
         name,
         function(data)
-            return data
+            return TableUtils.Clone(data)
         end
     )
 end
