@@ -48,13 +48,13 @@ function ClassUtils.isA(instance, classOrEnum)
     if isEnum then
         local isEnumKeyDefined = type(classOrEnum[instance]) == "string"
         return isEnumKeyDefined
-    else
+    elseif type(instance) == "table" then
         local metatable = getmetatable(instance)
         while metatable do
-            if metatable == classOrEnum then
+            if metatable.__index == classOrEnum then
                 return true
             end
-            metatable = getmetatable(metatable)
+            metatable = getmetatable(metatable.__index)
         end
     end
     return false
