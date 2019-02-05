@@ -256,6 +256,39 @@ describe(
 			end
 		)
 		describe(
+			"FlatMap",
+			function()
+				it(
+					"inline returned arrays from handler",
+					function()
+						assert.are.same(
+							{"a", 1, "b", 2, "c", 3, "d", 4},
+							TableUtils.FlatMap(
+								{"a", "b", "c", "d"},
+								function(x, i)
+									return {x, i}
+								end
+							)
+						)
+					end
+				)
+				it(
+					"ignores empty returns",
+					function()
+						assert.are.same(
+							{"c", 3, "d", 4},
+							TableUtils.FlatMap(
+								{"a", "b", "c", "d"},
+								function(x, i)
+									return i > 2 and {x, i}
+								end
+							)
+						)
+					end
+				)
+			end
+		)
+		describe(
 			"Invert",
 			function()
 				it(

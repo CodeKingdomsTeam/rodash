@@ -18,6 +18,17 @@ function TableUtils.Map(source, handler) --: ((any[], (element: any, key: number
 	return result
 end
 
+function TableUtils.FlatMap(source, handler) --: ((any[], (element: any, key: number) => any[]) => any[]) | ((table, (element: any, key: string) => any[]) => table)
+	local result = {}
+	for i, v in pairs(source) do
+		local list = handler(v, i)
+		if type(list) == "table" then
+			TableUtils.InsertMany(result, list)
+		end
+	end
+	return result
+end
+
 function TableUtils.Filter(source, handler) --: table, (element: any, key: number | string => boolean) => any[]
 	local result = {}
 	for i, v in pairs(source) do
