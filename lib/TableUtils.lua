@@ -18,6 +18,17 @@ function TableUtils.Map(source, handler) --: ((any[], (element: any, key: number
 	return result
 end
 
+function TableUtils.FlatMap(source, handler) --: ((any[], (element: any, key: number) => any[]) => any[]) | ((table, (element: any, key: string) => any[]) => table)
+	local result = {}
+	for i, v in pairs(source) do
+		local list = handler(v, i)
+		if type(list) == "table" then
+			TableUtils.InsertMany(result, list)
+		end
+	end
+	return result
+end
+
 function TableUtils.Filter(source, handler) --: table, (element: any, key: number | string => boolean) => any[]
 	local result = {}
 	for i, v in pairs(source) do
@@ -238,6 +249,27 @@ end
 
 function TableUtils.DeepEquals(a, b)
 	return TableUtils.IsSubset(a, b) and TableUtils.IsSubset(b, a)
+end
+
+-- Based on https://developmentarc.gitbooks.io/react-indepth/content/life_cycle/update/using_should_component_update.html
+function TableUtils.shallowEqual(left, right)
+	if left == right then
+		return true
+	end
+	if type(left) ~= "table" or type(right) ~= "table" then
+		return false
+	end
+	local leftKeys = TableUtils.Keys(left)
+	local rightKeys = TableUtils.Keys(right)
+	if #leftKeys ~= #rightKeys then
+		return false
+	end
+	return TableUtils.All(
+		left,
+		function(value, key)
+			return value == right[key]
+		end
+	)
 end
 
 return TableUtils
