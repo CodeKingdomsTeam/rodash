@@ -43,12 +43,24 @@ function ClassUtils.makeEnum(keys)
     )
 end
 
+function ClassUtils.makeSymbolEnum(keys)
+    return TableUtils.Map(
+        ClassUtils.makeEnum(keys),
+        function(key)
+            return ClassUtils.makeSymbol(key)
+        end
+    )
+end
+
 function ClassUtils.isA(instance, classOrEnum)
     local isEnum = type(instance) == "string"
     if isEnum then
         local isEnumKeyDefined = type(classOrEnum[instance]) == "string"
         return isEnumKeyDefined
     elseif type(instance) == "table" then
+        if instance.__symbol and classOrEnum[instance.__symbol] == instance then
+            return true
+        end
         local metatable = getmetatable(instance)
         while metatable do
             if metatable.__index == classOrEnum then
@@ -61,9 +73,17 @@ function ClassUtils.isA(instance, classOrEnum)
 end
 
 function ClassUtils.makeSymbol(name)
-    return {
+    local symbol = {
         __symbol = name
     }
+    setmetatable(
+        symbol,
+        {
+            __tostring = function()
+                return name
+            end
+        }
+    )
 end
 
 return ClassUtils
