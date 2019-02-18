@@ -368,6 +368,17 @@ describe(
 			end
 		)
 		describe(
+			"Without",
+			function()
+				it(
+					"removes elements of a specific value",
+					function()
+						assert.are.same({"b", "e"}, TableUtils.Without({"a", "b", "a", "e"}, "a"))
+					end
+				)
+			end
+		)
+		describe(
 			"Compact",
 			function()
 				it(

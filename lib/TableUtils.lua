@@ -39,6 +39,15 @@ function TableUtils.Filter(source, handler) --: table, (element: any, key: numbe
 	return result
 end
 
+function TableUtils.Without(source, element)
+	return TableUtils.Filter(
+		source,
+		function(child)
+			return child ~= element
+		end
+	)
+end
+
 function TableUtils.Compact(source) --: table => table
 	return TableUtils.Filter(
 		source,
