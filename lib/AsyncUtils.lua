@@ -1,7 +1,19 @@
 local TableUtils = require(script.Parent.TableUtils)
+local Promise = require(script.Parent.Parent.Promise)
 local AsyncUtils = {}
 
 local baseRandomStream = Random.new()
+
+function AsyncUtils.parallel(things)
+	local promises =
+		TableUtils.Map(
+		things,
+		function(thing)
+			return Promise.resolve(thing)
+		end
+	)
+	return Promise.all(promises)
+end
 
 function AsyncUtils.wrapAsync(fn)
 	return Promise.new(
@@ -36,6 +48,9 @@ function AsyncUtils.retryWithBackoff(getPromise, backoffOptions)
 	)
 	assert(backoffOptions.maxTries > 0, "You must try a function at least once")
 	local response = getPromise()
+	if not Promise.is(response) then
+		return Promise.resolve(response)
+	end
 	if backoffOptions.maxTries == 1 then
 		return response
 	else
@@ -45,17 +60,21 @@ function AsyncUtils.retryWithBackoff(getPromise, backoffOptions)
 					(backoffOptions.retryPeriodInSeconds ^ backoffOptions.attemptNumber) * backoffOptions.randomStream:NextNumber() +
 					backoffOptions.initialDelayInSeconds
 				backoffOptions.onRetry(waitTime)
-				wait(waitTime)
-				AsyncUtils.tryWithBackoff(
-					getPromise,
-					TableUtils.Assign(
-						{},
-						backoffOptions,
-						{
-							maxTries = backoffOptions.maxTries - 1,
-							attemptNumber = backoffOptions.attemptNumber + 1
-						}
-					)
+				delay(
+					function()
+						AsyncUtils.tryWithBackoff(
+							getPromise,
+							TableUtils.Assign(
+								{},
+								backoffOptions,
+								{
+									maxTries = backoffOptions.maxTries - 1,
+									attemptNumber = backoffOptions.attemptNumber + 1
+								}
+							)
+						)
+					end,
+					waitTime
 				)
 			end
 		)
