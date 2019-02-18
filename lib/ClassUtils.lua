@@ -24,11 +24,15 @@ function ClassUtils.makeClass(name, constructor)
     return Class
 end
 
-function ClassUtils.makeWrapperClass(name)
+function ClassUtils.makeConstructedClass(name, constructor)
     return ClassUtils.makeClass(
         name,
         function(data)
-            return TableUtils.Clone(data)
+            local instance = TableUtils.Clone(data)
+            if constructor then
+                constructor(instance)
+            end
+            return instance
         end
     )
 end
@@ -84,6 +88,7 @@ function ClassUtils.makeSymbol(name)
             end
         }
     )
+    return symbol
 end
 
 return ClassUtils
