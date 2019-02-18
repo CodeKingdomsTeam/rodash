@@ -29,7 +29,7 @@ function AsyncUtils.retryWithBackoff(getPromise, backoffOptions)
 			retryPeriodInSeconds = 5,
 			initialDelayInSeconds = 2,
 			randomStream = baseRandomStream,
-			handleRetry = function()
+			onRetry = function()
 			end
 		},
 		backoffOptions
@@ -44,7 +44,7 @@ function AsyncUtils.retryWithBackoff(getPromise, backoffOptions)
 				local waitTime =
 					(backoffOptions.retryPeriodInSeconds ^ backoffOptions.attemptNumber) * backoffOptions.randomStream:NextNumber() +
 					backoffOptions.initialDelayInSeconds
-				backoffOptions.handleRetry(waitTime)
+				backoffOptions.onRetry(waitTime)
 				wait(waitTime)
 				AsyncUtils.tryWithBackoff(
 					getPromise,
