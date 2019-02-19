@@ -368,6 +368,46 @@ describe(
 			end
 		)
 		describe(
+			"FilterKeys",
+			function()
+				it(
+					"filters keys and values of a non-sequential table",
+					function()
+						local output =
+							TableUtils.FilterKeys(
+							{one = "a", two = "b", three = "a", four = "d", five = "e"},
+							function(x, i)
+								return x == "b" or i == "five"
+							end
+						)
+						assert.are.same({two = "b", five = "e"}, output)
+					end
+				)
+			end
+		)
+		describe(
+			"FilterKeysMap",
+			function()
+				it(
+					"filters keys and maps results of a non-sequential table",
+					function()
+						local output =
+							TableUtils.FilterKeysMap(
+							{one = "a", two = "b", three = "a", four = "d", five = "e"},
+							function(x, i)
+								if x == "b" then
+									return "well"
+								elseif i == "five" then
+									return "done"
+								end
+							end
+						)
+						assert.are.same({two = "well", five = "done"}, output)
+					end
+				)
+			end
+		)
+		describe(
 			"Without",
 			function()
 				it(
