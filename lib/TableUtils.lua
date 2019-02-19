@@ -39,6 +39,27 @@ function TableUtils.Filter(source, handler) --: table, (element: any, key: numbe
 	return result
 end
 
+function TableUtils.FilterKeys(source, handler) --: table, (element: any, key: string => boolean) => table
+	local result = {}
+	for i, v in pairs(source) do
+		if handler(v, i) then
+			result[i] = v
+		end
+	end
+	return result
+end
+
+function TableUtils.FilterKeysMap(source, handler) --: table, (element: any, key: string => any) => table
+	local result = {}
+	for i, v in pairs(source) do
+		local value = handler(v, i)
+		if value ~= nil then
+			result[i] = value
+		end
+	end
+	return result
+end
+
 function TableUtils.Without(source, element)
 	return TableUtils.Filter(
 		source,
