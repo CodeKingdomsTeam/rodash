@@ -72,10 +72,15 @@ function AsyncUtils.retryWithBackoff(getPromise, backoffOptions)
 		)
 	end
 
+	local function getDurationMs()
+		return math.floor((tick() - backoffOptions.startTime) * 1000)
+	end
+
 	backoffOptions =
 		TableUtils.Assign(
 		{
-			maxTries = 3,
+			startTime = tick(),
+			maxTries = 5,
 			attemptNumber = 0,
 			retryPeriodInSeconds = 5,
 			initialDelayInSeconds = 2,
@@ -104,7 +109,7 @@ function AsyncUtils.retryWithBackoff(getPromise, backoffOptions)
 			return backoffThenRetry()
 		end
 	elseif not Promise.is(response) then
-		backoffOptions.onDone(response)
+		backoffOptions.onDone(response, getDurationMs())
 		return Promise.resolve(response)
 	elseif backoffOptions.maxTries == 1 then
 		return response:catch(
@@ -116,7 +121,7 @@ function AsyncUtils.retryWithBackoff(getPromise, backoffOptions)
 	else
 		return response:andThen(
 			function(response)
-				backoffOptions.onDone(response)
+				backoffOptions.onDone(response, getDurationMs())
 				return response
 			end
 		):catch(backoffThenRetry)
