@@ -9,10 +9,27 @@ function AsyncUtils.parallel(things)
 		TableUtils.Map(
 		things,
 		function(thing)
-			return Promise.resolve(thing)
+			if Promise.is(thing) then
+				return thing
+			else
+				return Promise.resolve(thing)
+			end
 		end
 	)
 	return Promise.all(promises)
+end
+
+function AsyncUtils.delay(delayInSeconds)
+	return Promise.new(
+		function(resolve)
+			delay(
+				delayInSeconds,
+				function()
+					resolve()
+				end
+			)
+		end
+	)
 end
 
 function AsyncUtils.wrapAsync(fn)
@@ -33,6 +50,28 @@ function AsyncUtils.wrapAsync(fn)
 end
 
 function AsyncUtils.retryWithBackoff(getPromise, backoffOptions)
+	local function backoffThenRetry()
+		local waitTime =
+			(backoffOptions.retryPeriodInSeconds ^ backoffOptions.attemptNumber) * backoffOptions.randomStream:NextNumber() +
+			backoffOptions.initialDelayInSeconds
+		backoffOptions.onRetry(waitTime)
+		return AsyncUtils.delay(waitTime):andThen(
+			function()
+				return AsyncUtils.retryWithBackoff(
+					getPromise,
+					TableUtils.Assign(
+						{},
+						backoffOptions,
+						{
+							maxTries = backoffOptions.maxTries - 1,
+							attemptNumber = backoffOptions.attemptNumber + 1
+						}
+					)
+				)
+			end
+		)
+	end
+
 	backoffOptions =
 		TableUtils.Assign(
 		{
@@ -42,42 +81,45 @@ function AsyncUtils.retryWithBackoff(getPromise, backoffOptions)
 			initialDelayInSeconds = 2,
 			randomStream = baseRandomStream,
 			onRetry = function()
+			end,
+			onDone = function()
+			end,
+			onFail = function()
 			end
 		},
 		backoffOptions
 	)
 	assert(backoffOptions.maxTries > 0, "You must try a function at least once")
-	local response = getPromise()
-	if not Promise.is(response) then
+	local ok, response =
+		pcall(
+		function()
+			return getPromise()
+		end
+	)
+	if not ok then
+		if backoffOptions.maxTries == 1 then
+			backoffOptions.onFail(response)
+			return Promise.reject(response)
+		else
+			return backoffThenRetry()
+		end
+	elseif not Promise.is(response) then
+		backoffOptions.onDone(response)
 		return Promise.resolve(response)
-	end
-	if backoffOptions.maxTries == 1 then
-		return response
-	else
+	elseif backoffOptions.maxTries == 1 then
 		return response:catch(
-			function()
-				local waitTime =
-					(backoffOptions.retryPeriodInSeconds ^ backoffOptions.attemptNumber) * backoffOptions.randomStream:NextNumber() +
-					backoffOptions.initialDelayInSeconds
-				backoffOptions.onRetry(waitTime)
-				delay(
-					function()
-						AsyncUtils.tryWithBackoff(
-							getPromise,
-							TableUtils.Assign(
-								{},
-								backoffOptions,
-								{
-									maxTries = backoffOptions.maxTries - 1,
-									attemptNumber = backoffOptions.attemptNumber + 1
-								}
-							)
-						)
-					end,
-					waitTime
-				)
+			function(message)
+				backoffOptions.onFail(message)
+				error(message)
 			end
 		)
+	else
+		return response:andThen(
+			function(response)
+				backoffOptions.onDone(response)
+				return response
+			end
+		):catch(backoffThenRetry)
 	end
 end
 
