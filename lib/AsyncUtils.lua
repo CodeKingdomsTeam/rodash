@@ -50,11 +50,11 @@ function AsyncUtils.wrapAsync(fn)
 end
 
 function AsyncUtils.retryWithBackoff(getPromise, backoffOptions)
-	local function backoffThenRetry()
+	local function backoffThenRetry(errorMessage)
 		local waitTime =
 			(backoffOptions.retryPeriodInSeconds ^ backoffOptions.attemptNumber) * backoffOptions.randomStream:NextNumber() +
 			backoffOptions.initialDelayInSeconds
-		backoffOptions.onRetry(waitTime)
+		backoffOptions.onRetry(waitTime, errorMessage)
 		return AsyncUtils.delay(waitTime):andThen(
 			function()
 				return AsyncUtils.retryWithBackoff(
@@ -106,7 +106,7 @@ function AsyncUtils.retryWithBackoff(getPromise, backoffOptions)
 			backoffOptions.onFail(response)
 			return Promise.reject(response)
 		else
-			return backoffThenRetry()
+			return backoffThenRetry(response)
 		end
 	elseif not Promise.is(response) then
 		backoffOptions.onDone(response, getDurationMs())
