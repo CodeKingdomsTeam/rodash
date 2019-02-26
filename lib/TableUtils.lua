@@ -29,6 +29,15 @@ function TableUtils.FlatMap(source, handler) --: ((any[], (element: any, key: nu
 	return result
 end
 
+function TableUtils.Shuffle(source) --: table => table
+	local result = TableUtils.Clone(source)
+	for i = #result, 1, -1 do
+		local j = math.random(i)
+		result[i], result[j] = result[j], result[i]
+	end
+	return result
+end
+
 function TableUtils.Filter(source, handler) --: table, (element: any, key: number | string => boolean) => any[]
 	local result = {}
 	for i, v in pairs(source) do
