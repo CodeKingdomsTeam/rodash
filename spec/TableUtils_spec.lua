@@ -273,7 +273,7 @@ describe(
 					end
 				)
 				it(
-					"ignores empty returns",
+					"ignores falsy returns",
 					function()
 						assert.are.same(
 							{"c", 3, "d", 4},
@@ -281,6 +281,21 @@ describe(
 								{"a", "b", "c", "d"},
 								function(x, i)
 									return i > 2 and {x, i}
+								end
+							)
+						)
+					end
+				)
+
+				it(
+					"returning a truthy non-table",
+					function()
+						assert.are.same(
+							{1, 2},
+							TableUtils.FlatMap(
+								{"a", "b"},
+								function(val, i)
+									return i
 								end
 							)
 						)
