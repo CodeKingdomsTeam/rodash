@@ -25,16 +25,20 @@ function ClassUtils.makeClass(name, constructor)
 end
 
 function ClassUtils.makeConstructedClass(name, constructor)
-    return ClassUtils.makeClass(
+    local Class
+    Class =
+        ClassUtils.makeClass(
         name,
         function(data)
             local instance = TableUtils.Clone(data)
             if constructor then
+                setmetatable(instance, {__index = Class, __tostring = Class.toString})
                 constructor(instance)
             end
             return instance
         end
     )
+    return Class
 end
 
 function ClassUtils.makeEnum(keys)
