@@ -24,6 +24,8 @@ function TableUtils.FlatMap(source, handler) --: ((any[], (element: any, key: nu
 		local list = handler(v, i)
 		if type(list) == "table" then
 			TableUtils.InsertMany(result, list)
+		elseif list then
+			table.insert(result, list)
 		end
 	end
 	return result

@@ -286,6 +286,29 @@ describe(
 						)
 					end
 				)
+
+				it(
+					"nested",
+					function()
+						assert.are.same(
+							{1, 2, 1, 2},
+							TableUtils.FlatMap(
+								{"a", "b"},
+								function(val, i)
+									local x =
+										TableUtils.FlatMap(
+										{"c", "d"},
+										function(val, j)
+											return j
+										end
+									)
+
+									return x
+								end
+							)
+						)
+					end
+				)
 			end
 		)
 		describe(
