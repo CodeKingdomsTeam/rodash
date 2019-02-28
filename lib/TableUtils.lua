@@ -1,5 +1,13 @@
 local TableUtils = {}
 
+local function getIterator(source)
+	if type(source) == "function" then
+		return source
+	else
+		return pairs(source)
+	end
+end
+
 function TableUtils.Slice(tbl, first, last, step) --: (any[], number?, number?, number?) => any[]
 	local sliced = {}
 
@@ -12,15 +20,15 @@ end
 
 function TableUtils.Map(source, handler) --: ((any[], (element: any, key: number) => any) => any[]) | ((table, (element: any, key: string) => any) => table)
 	local result = {}
-	for i, v in pairs(source) do
+	for i, v in getIterator(source) do
 		result[i] = handler(v, i)
 	end
 	return result
 end
 
-function TableUtils.FlatMap(source, handler) --: ((any[], (element: any, key: number) => any[]) => any[]) | ((table, (element: any, key: string) => any[]) => table)
+function TableUtils.FlatMap(source, handler) --: (any[], (element: any, key: number) => any[]) => any[]) | ((table, (element: any, key: string) => any[]) => table)
 	local result = {}
-	for i, v in pairs(source) do
+	for i, v in getIterator(source) do
 		local list = handler(v, i)
 		if type(list) == "table" then
 			TableUtils.InsertMany(result, list)
@@ -40,7 +48,7 @@ end
 
 function TableUtils.Filter(source, handler) --: table, (element: any, key: number | string => boolean) => any[]
 	local result = {}
-	for i, v in pairs(source) do
+	for i, v in getIterator(source) do
 		if handler(v, i) then
 			table.insert(result, v)
 		end
@@ -50,7 +58,7 @@ end
 
 function TableUtils.FilterKeys(source, handler) --: table, (element: any, key: string => boolean) => table
 	local result = {}
-	for i, v in pairs(source) do
+	for i, v in getIterator(source) do
 		if handler(v, i) then
 			result[i] = v
 		end
@@ -60,7 +68,7 @@ end
 
 function TableUtils.FilterKeysMap(source, handler) --: table, (element: any, key: string => any) => table
 	local result = {}
-	for i, v in pairs(source) do
+	for i, v in getIterator(source) do
 		local value = handler(v, i)
 		if value ~= nil then
 			result[i] = value
@@ -89,7 +97,7 @@ end
 
 function TableUtils.Reduce(source, handler, init) --: <T>(any[], (previous: T, current: any,  key: number | string => T), T?) => T
 	local result = init
-	for i, v in pairs(source) do
+	for i, v in getIterator(source) do
 		result = handler(result, v, i)
 	end
 	return result
@@ -130,7 +138,7 @@ end
 
 function TableUtils.Invert(source) --: table => table
 	local result = {}
-	for i, v in pairs(source) do
+	for i, v in getIterator(source) do
 		result[v] = i
 	end
 	return result
@@ -138,7 +146,7 @@ end
 
 function TableUtils.KeyBy(source, handler) --: table, (any => string | number) => table
 	local result = {}
-	for i, v in pairs(source) do
+	for i, v in getIterator(source) do
 		local key = handler(v, i)
 		if key ~= nil then
 			result[key] = v
@@ -149,7 +157,7 @@ end
 
 function TableUtils.GroupBy(source, handler) --: table, (any => string | number) => table
 	local result = {}
-	for i, v in pairs(source) do
+	for i, v in getIterator(source) do
 		local key = handler(v, i)
 		if key ~= nil then
 			if not result[key] then
@@ -168,7 +176,7 @@ function TableUtils.Merge(target, ...)
 	for i = 1, select("#", ...) do
 		local source = select(i, ...)
 		if source ~= nil then
-			for key, value in pairs(source) do
+			for key, value in getIterator(source) do
 				if type(target[key]) == "table" and type(value) == "table" then
 					target[key] = TableUtils.Merge(target[key] or {}, value)
 				else
@@ -182,7 +190,7 @@ end
 
 function TableUtils.Values(source) --: table => any[]
 	local result = {}
-	for i, v in pairs(source) do
+	for i, v in getIterator(source) do
 		table.insert(result, v)
 	end
 	return result
@@ -190,7 +198,7 @@ end
 
 function TableUtils.Keys(source) --: table => any[]
 	local result = {}
-	for i, v in pairs(source) do
+	for i, v in getIterator(source) do
 		table.insert(result, i)
 	end
 	return result
@@ -198,14 +206,14 @@ end
 
 function TableUtils.Entries(source) --: table => [string | number, any][]
 	local result = {}
-	for i, v in pairs(source) do
+	for i, v in getIterator(source) do
 		table.insert(result, {i, v})
 	end
 	return result
 end
 
 function TableUtils.Find(source, handler) --: ((any[], (element: any, key: number) => boolean) => any) | ((table, (element: any, key: string) => boolean) => any)
-	for i, v in pairs(source) do
+	for i, v in getIterator(source) do
 		if (handler(v, i)) then
 			return v
 		end
@@ -222,7 +230,7 @@ function TableUtils.Includes(source, item) --: table, any => boolean
 end
 
 function TableUtils.KeyOf(source, value) --: (table, any) => number?
-	for k, v in pairs(source) do
+	for k, v in getIterator(source) do
 		if (value == v) then
 			return k
 		end
@@ -230,7 +238,7 @@ function TableUtils.KeyOf(source, value) --: (table, any) => number?
 end
 
 function TableUtils.InsertMany(target, items) --: (any[], any[]) => any[]
-	for _, v in ipairs(items) do
+	for _, v in getIterator(items) do
 		table.insert(target, v)
 	end
 	return target
@@ -251,7 +259,7 @@ function TableUtils.Assign(target, ...)
 	for i = 1, select("#", ...) do
 		local source = select(i, ...)
 		if source ~= nil then
-			for key, value in pairs(source) do
+			for key, value in getIterator(source) do
 				target[key] = value
 			end
 		end

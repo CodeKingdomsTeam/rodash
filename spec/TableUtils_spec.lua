@@ -1,5 +1,17 @@
 local TableUtils = require "TableUtils"
 
+local function lazySequence(firstNumber, lastNumber)
+	local i = -1
+	return function()
+		i = i + 1
+		if firstNumber + i > lastNumber then
+			return
+		else
+			return i, firstNumber + i
+		end
+	end
+end
+
 describe(
 	"TableUtils",
 	function()
@@ -363,6 +375,20 @@ describe(
 							end
 						)
 						assert.are.same({"b", "e"}, output)
+					end
+				)
+				it(
+					"works when passed an iterator",
+					function()
+						assert.are.same(
+							{5, 6},
+							TableUtils.Filter(
+								lazySequence(5, 10),
+								function(value)
+									return value < 7
+								end
+							)
+						)
 					end
 				)
 			end
@@ -733,6 +759,21 @@ describe(
 								function(prev, next, i)
 									return (prev or "f") .. i .. next
 								end
+							)
+						)
+					end
+				)
+				it(
+					"works when passed an iterator",
+					function()
+						assert.are.same(
+							15,
+							TableUtils.Reduce(
+								lazySequence(1, 5),
+								function(prev, next, i)
+									return prev + next
+								end,
+								0
 							)
 						)
 					end
