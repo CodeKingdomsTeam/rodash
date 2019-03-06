@@ -273,14 +273,67 @@ describe(
 					end
 				)
 				it(
-					"ignores empty returns",
+					"does not ignore falsy returns",
 					function()
 						assert.are.same(
-							{"c", 3, "d", 4},
+							{false, false, "c", 3, "d", 4},
 							TableUtils.FlatMap(
 								{"a", "b", "c", "d"},
 								function(x, i)
 									return i > 2 and {x, i}
+								end
+							)
+						)
+					end
+				)
+
+				it(
+					"returning a truthy non-table",
+					function()
+						assert.are.same(
+							{1, 2},
+							TableUtils.FlatMap(
+								{"a", "b"},
+								function(val, i)
+									return i
+								end
+							)
+						)
+					end
+				)
+
+				it(
+					"returning an empty table",
+					function()
+						assert.are.same(
+							{},
+							TableUtils.FlatMap(
+								{"a", "b"},
+								function(val, i)
+									return {}
+								end
+							)
+						)
+					end
+				)
+
+				it(
+					"nested",
+					function()
+						assert.are.same(
+							{1, 2, 1, 2},
+							TableUtils.FlatMap(
+								{"a", "b"},
+								function(val, i)
+									local x =
+										TableUtils.FlatMap(
+										{"c", "d"},
+										function(val, j)
+											return j
+										end
+									)
+
+									return x
 								end
 							)
 						)
