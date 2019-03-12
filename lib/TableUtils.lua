@@ -313,14 +313,14 @@ function TableUtils.shallowEqual(left, right)
 	)
 end
 
-function TableUtils.serialize(table, serializer)
+function TableUtils.serialize(input, serializer)
 	serializer = serializer or function(value)
 			return tostring(value)
 		end
 	return "{" ..
 		table.concat(
 			TableUtils.Map(
-				table,
+				input,
 				function(element, i)
 					return tostring(i) .. "=" .. serializer(element)
 				end
