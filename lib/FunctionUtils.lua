@@ -60,14 +60,19 @@ function FunctionUtils.throttle(fn, secondsCooldown)
 	assert(type(fn) == "function" or (type(fn) == "table" and getmetatable(fn) and getmetatable(fn).__call ~= nil))
 	assert(type(secondsCooldown) == "number")
 
-	local lastTime = 0
+	local cached = false
 	local lastResult = nil
 
 	return function(...)
-		local now = tick()
-		if lastTime + secondsCooldown < now then
-			lastTime = now
+		if not cached then
 			lastResult = fn(...)
+			cached = true
+			delay(
+				secondsCooldown,
+				function()
+					cached = false
+				end
+			)
 		end
 		return lastResult
 	end
