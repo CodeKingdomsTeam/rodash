@@ -18,7 +18,9 @@ ignore = {
 	"213", -- Unused loop variable.
 	"423", -- Shadowing a loop variable.
 	"431", -- Shadowing an upvalue.
-	"432" -- Shadowing an upvalue argument.
+	"432", -- Shadowing an upvalue argument.
+	"611", -- line contains only whitespace (this checks inside comments!)
+	"614" -- Trailing whitespace in a comment.
 }
 
 -- Copied from https://github.com/Quenty/luacheck-roblox/blob/master/roblox_standard.lua
