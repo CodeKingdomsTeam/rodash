@@ -317,6 +317,8 @@ function TableUtils.serialize(input, serializer)
 	serializer = serializer or function(value)
 			return tostring(value)
 		end
+	assert(type(input) == "table")
+	assert(type(serializer) == "function")
 	return "{" ..
 		table.concat(
 			TableUtils.Map(

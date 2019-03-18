@@ -6,13 +6,25 @@ function FunctionUtils.defaultSerializeArgs(fnArgs)
 	return TableUtils.serialize(fnArgs)
 end
 
+--[[
+	Cache results of a function such that subsequent calls return the cached result rather than
+	call the function again.
+
+	By default, a cached result is stored for each separate combination of serialized input args.
+	Optionally memoize takes a serializeArgs function which should return a key that the result
+	should be cached with for a given call signature. Return nil to avoid caching the result.
+]]
 function FunctionUtils.memoize(fn, serializeArgs)
+	assert(type(fn) == "function")
 	serializeArgs = serializeArgs or FunctionUtils.defaultSerializeArgs
+	assert(type(serializeArgs) == "function")
 	local cache = {}
 	local proxyFunction = function(...)
 		local proxyArgs = {...}
 		local cacheKey = serializeArgs(proxyArgs)
-		if cacheKey ~= nil then
+		if cacheKey == nil then
+			return fn(...)
+		else
 			if cache[cacheKey] == nil then
 				cache[cacheKey] = fn(...)
 			end
@@ -59,6 +71,7 @@ end
 function FunctionUtils.throttle(fn, secondsCooldown)
 	assert(type(fn) == "function" or (type(fn) == "table" and getmetatable(fn) and getmetatable(fn).__call ~= nil))
 	assert(type(secondsCooldown) == "number")
+	assert(secondsCooldown > 0)
 
 	local cached = false
 	local lastResult = nil
