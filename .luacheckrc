@@ -1,3 +1,13 @@
+std = "lua51+roblox"
+
+files["spec/*.lua"] = {
+	std = "+busted"
+}
+
+exclude_files = {
+	".luacheckrc"
+}
+
 -- prevent max line lengths
 max_code_line_length = false
 max_string_line_length = false
@@ -11,37 +21,6 @@ ignore = {
 	"432", -- Shadowing an upvalue argument.
 	"611", -- line contains only whitespace (this checks inside comments!)
 	"614" -- Trailing whitespace in a comment.
-}
-
-exclude_files = {
-	".luacheckrc"
-}
-
-stds.baste = {
-	read_globals = {
-		"import"
-	}
-}
-
-stds.hydrator = {
-	read_globals = {
-        "PluginSettings",
-		"PluginSettingsCache",
-        "HttpRequestCache",
-        "HydratorHttpService"
-	}
-}
-
-files["**/hydrator/**/*.lua"] = {
-    std = "lua51+roblox+plugin+hydrator"
-}
-
-files["**/plugin/testInit.lua"] = {
-	std = "lua51+plugin"
-}
-
-files["**/spec/**/*.lua"] = {
-	std = "+busted+baste"
 }
 
 -- Copied from https://github.com/Quenty/luacheck-roblox/blob/master/roblox_standard.lua
@@ -302,7 +281,7 @@ stds.roblox = {
         BrickColor = def_fields({"new", "palette", "random", "White", "Gray", "DarkGray", "Black",
             "Red", "Yellow", "Green", "Blue"}),
 
-        CFrame = def_fields({"new", "fromEulerAnglesXYZ", "Angles", "fromOrientation",
+        CFrame = def_fields({"new", "fromEulerAnglesXYZ", "fromEulerAnglesYXZ", "Angles", "fromOrientation",
             "fromAxisAngle", "fromMatrix"}),
 
         Color3 = def_fields({"new", "fromRGB", "fromHSV", "toHSV"}),
@@ -715,26 +694,4 @@ stds.roblox = {
             }
         }
     },
-}
-
-stds.testez = {
-	read_globals = {
-		"describe",
-		"it", "itFOCUS", "itSKIP",
-		"FOCUS", "SKIP", "HACK_NO_XPCALL",
-		"expect", "fail"
-	}
-}
-
-stds.plugin = {
-	read_globals = {
-		"plugin",
-		"DebuggerManager",
-	}
-}
-
-std = "lua51+roblox"
-
-files["**/*.spec.lua"] = {
-	std = "+testez",
 }

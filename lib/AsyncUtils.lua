@@ -78,8 +78,9 @@ end
 
     maxTries - how many tries (including the first one) the function should be called
     retryExponentInSeconds - customize the backoff exponent
-    retryConstantInSeconds - customize the backoff constant
+	retryConstantInSeconds - customize the backoff constant
     randomStream - use a Roblox "Random" instance to control the backoff
+	shouldRetry(response) - called if maxTries > 1 to determine whether a retry should occur
     onRetry(waitTime, errorMessage) - a hook for when a retry is triggered, with the delay before retry and error message which caused the failure
     onDone(response, durationMs) - a hook for when the promise resolves
     onFail(errorMessage) - a hook for when the promise has failed and no more retries are allowed
@@ -126,46 +127,52 @@ function AsyncUtils.retryWithBackoff(getPromise, backoffOptions)
 			onDone = function()
 			end,
 			onFail = function()
+			end,
+			shouldRetry = function()
+				return true
 			end
 		},
 		backoffOptions
 	)
 	assert(backoffOptions.maxTries > 0, "You must try a function at least once")
+
+	local function shouldRetry(response)
+		return backoffOptions.maxTries > 1 and backoffOptions.shouldRetry(response)
+	end
+
+	local function retryIfShouldElseCallOnFailAndReturn(response, failHandler)
+		if shouldRetry(response) then
+			return backoffThenRetry(response)
+		else
+			backoffOptions.onFail(response)
+			return failHandler(response)
+		end
+	end
+
+	local function callOnDoneAndReturnPromise(response)
+		backoffOptions.onDone(response, getDurationMs())
+		return Promise.is(response) and response or Promise.resolve(response)
+	end
+
 	local ok, response =
 		pcall(
 		function()
 			return getPromise()
 		end
 	)
-	if not ok then
-		if backoffOptions.maxTries == 1 then
-			backoffOptions.onFail(response)
-			return Promise.reject(response)
+
+	if ok then
+		if Promise.is(response) then
+			return response:catch(
+				function(response)
+					return retryIfShouldElseCallOnFailAndReturn(response, error)
+				end
+			):andThen(callOnDoneAndReturnPromise)
 		else
-			return backoffThenRetry(response)
+			return callOnDoneAndReturnPromise(response)
 		end
-	elseif not Promise.is(response) then
-		backoffOptions.onDone(response, getDurationMs())
-		return Promise.resolve(response)
-	elseif backoffOptions.maxTries == 1 then
-		return response:andThen(
-			function(response)
-				backoffOptions.onDone(response, getDurationMs())
-				return response
-			end
-		):catch(
-			function(message)
-				backoffOptions.onFail(message)
-				error(message)
-			end
-		)
 	else
-		return response:andThen(
-			function(response)
-				backoffOptions.onDone(response, getDurationMs())
-				return response
-			end
-		):catch(backoffThenRetry)
+		return retryIfShouldElseCallOnFailAndReturn(response, Promise.reject)
 	end
 end
 
