@@ -78,8 +78,8 @@ function FunctionUtils.throttle(fn, secondsCooldown)
 
 	return function(...)
 		if not cached then
-			lastResult = fn(...)
 			cached = true
+			lastResult = fn(...)
 			delay(
 				secondsCooldown,
 				function()
