@@ -332,12 +332,12 @@ function TableUtils.serialize(input, serializer)
 			"}"
 end
 
-function TableUtils.concat(...)
+function TableUtils.append(...)
 	local result = {}
 	for i = 1, select("#", ...) do
 		local x = select(i, ...)
 		if type(x) == "table" then
-			for i, y in ipairs(x) do
+			for _, y in ipairs(x) do
 				table.insert(result, y)
 			end
 		else
