@@ -890,5 +890,21 @@ describe(
 				)
 			end
 		)
+
+		describe(
+			"append",
+			function()
+				it(
+					"concatenates mixed tables and values, ignoring non-arraylike keys",
+					function()
+						local a = {7, 4}
+						local b = 9
+						local c = {[1] = 5, x = 12}
+
+						assert.are.same({7, 4, 9, 5}, TableUtils.append(a, b, c))
+					end
+				)
+			end
+		)
 	end
 )
