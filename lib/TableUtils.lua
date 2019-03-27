@@ -130,6 +130,18 @@ function TableUtils.Any(source, handler) --: table => boolean
 	))
 end
 
+function TableUtils.Reverse(source)
+	local output = TableUtils.Clone(source)
+	local i = 1
+	local j = #source
+	while i < j do
+		output[i], output[j] = output[j], output[i]
+		i = i + 1
+		j = j - 1
+	end
+	return output
+end
+
 function TableUtils.Invert(source) --: table => table
 	local result = {}
 	for i, v in pairs(source) do
