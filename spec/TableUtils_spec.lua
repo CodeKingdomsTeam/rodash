@@ -383,6 +383,18 @@ describe(
 		)
 
 		describe(
+			"Reverse",
+			function()
+				it(
+					"reverses an array",
+					function()
+						assert.are.same({1, 2, 3, 4, 5}, TableUtils.Reverse({5, 4, 3, 2, 1}))
+					end
+				)
+			end
+		)
+
+		describe(
 			"Filter",
 			function()
 				it(
