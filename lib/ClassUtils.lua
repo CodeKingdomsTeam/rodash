@@ -38,6 +38,13 @@ function ClassUtils.makeConstructedClass(name, constructor)
 			return instance
 		end
 	)
+	Class.constructor = constructor or function()
+		end
+	function Class:extend(name, constructor)
+		local Subclass = ClassUtils.makeConstructedClass(name, Class.constructor)
+		setmetatable(Subclass, {__index = self})
+		return Subclass
+	end
 	return Class
 end
 
