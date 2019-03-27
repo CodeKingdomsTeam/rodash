@@ -2,21 +2,22 @@ local TableUtils = require(script.Parent.TableUtils)
 local ClassUtils = {}
 
 function ClassUtils.makeClass(name, constructor)
+	constructor = constructor or function()
+			return {}
+		end
 	local Class = {
 		name = name,
-		constructor = constructor or function()
-				return {}
-			end
+		constructor = constructor
 	}
 	function Class.new(...)
-		local instance = Class.constructor(...)
+		local instance = constructor(...)
 		setmetatable(instance, {__index = Class, __tostring = Class.toString})
 		return instance
 	end
 	function Class:extend(name, constructor)
-		local Subclass = ClassUtils.makeClass(name, constructor or self.constructor)
-		setmetatable(Subclass, {__index = self})
-		return Subclass
+		local SubClass = ClassUtils.makeClass(name, constructor or self.constructor)
+		setmetatable(SubClass, {__index = self})
+		return SubClass
 	end
 	function Class:toString()
 		return self.name
@@ -25,6 +26,8 @@ function ClassUtils.makeClass(name, constructor)
 end
 
 function ClassUtils.makeConstructedClass(name, constructor)
+	constructor = constructor or function()
+		end
 	local Class
 	Class =
 		ClassUtils.makeClass(
@@ -38,12 +41,11 @@ function ClassUtils.makeConstructedClass(name, constructor)
 			return instance
 		end
 	)
-	Class.constructor = constructor or function()
-		end
+	Class.constructor = constructor
 	function Class:extend(name, constructor)
-		local Subclass = ClassUtils.makeConstructedClass(name, Class.constructor)
-		setmetatable(Subclass, {__index = self})
-		return Subclass
+		local SubClass = ClassUtils.makeConstructedClass(name, constructor)
+		setmetatable(SubClass, {__index = self})
+		return SubClass
 	end
 	return Class
 end
