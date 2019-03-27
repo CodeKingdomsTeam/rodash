@@ -132,7 +132,8 @@ end
 
 function TableUtils.Reverse(source)
 	local output = TableUtils.Clone(source)
-	local i, j = 1, #source
+	local i = 1
+	local j = #source
 	while i < j do
 		output[i], output[j] = output[j], output[i]
 		i = i + 1
