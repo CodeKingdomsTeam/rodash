@@ -258,7 +258,7 @@ function TableUtils.GetLength(table) --: (table) => number
 	return count
 end
 
-function TableUtils.Assign(target, ...)
+local function assign(overwriteTarget, target, ...)
 	-- Use select here so that nil arguments can be supported. If instead we
 	-- iterated over ipairs({...}), any arguments after the first nil one
 	-- would be ignored.
@@ -266,11 +266,21 @@ function TableUtils.Assign(target, ...)
 		local source = select(i, ...)
 		if source ~= nil then
 			for key, value in pairs(source) do
-				target[key] = value
+				if overwriteTarget or target[key] == nil then
+					target[key] = value
+				end
 			end
 		end
 	end
 	return target
+end
+
+function TableUtils.Assign(target, ...)
+	return assign(true, target, ...)
+end
+
+function TableUtils.defaults(target, ...)
+	return assign(false, target, ...)
 end
 
 function TableUtils.Clone(tbl) --: (table) => table
