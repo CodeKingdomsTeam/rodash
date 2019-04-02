@@ -38,7 +38,7 @@ end
 	Creates a debounced function that delays invoking fn until after secondsDelay seconds have elapsed since the last time the debounced function was invoked.
 ]]
 function FunctionUtils.debounce(fn, secondsDelay)
-	assert(type(fn) == "function" or (type(fn) == "table" and getmetatable(fn) and getmetatable(fn).__call ~= nil))
+	assert(FunctionUtils.isCallable(fn))
 	assert(type(secondsDelay) == "number")
 
 	local lastInvocation = 0
@@ -69,7 +69,7 @@ end
 	Creates a throttle function that drops any repeat calls within a cooldown period and instead returns the result of the last call
 ]]
 function FunctionUtils.throttle(fn, secondsCooldown)
-	assert(type(fn) == "function" or (type(fn) == "table" and getmetatable(fn) and getmetatable(fn).__call ~= nil))
+	assert(FunctionUtils.isCallable(fn))
 	assert(type(secondsCooldown) == "number")
 	assert(secondsCooldown > 0)
 
@@ -89,6 +89,11 @@ function FunctionUtils.throttle(fn, secondsCooldown)
 		end
 		return lastResult
 	end
+end
+
+function FunctionUtils.isCallable(thing)
+	return type(thing) == "function" or
+		(type(thing) == "table" and getmetatable(thing) and getmetatable(thing).__call ~= nil)
 end
 
 return FunctionUtils
