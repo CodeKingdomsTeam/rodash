@@ -32,6 +32,8 @@ function TableUtils.FlatMap(source, handler) --: (any[], (element: any, key: num
 		local list = handler(v, i)
 		if type(list) == "table" then
 			TableUtils.InsertMany(result, list)
+		else
+			table.insert(result, list)
 		end
 	end
 	return result
@@ -134,6 +136,18 @@ function TableUtils.Any(source, handler) --: table => boolean
 		end,
 		false
 	))
+end
+
+function TableUtils.Reverse(source)
+	local output = TableUtils.Clone(source)
+	local i = 1
+	local j = #source
+	while i < j do
+		output[i], output[j] = output[j], output[i]
+		i = i + 1
+		j = j - 1
+	end
+	return output
 end
 
 function TableUtils.Invert(source) --: table => table
@@ -252,7 +266,7 @@ function TableUtils.GetLength(table) --: (table) => number
 	return count
 end
 
-function TableUtils.Assign(target, ...)
+local function assign(overwriteTarget, target, ...)
 	-- Use select here so that nil arguments can be supported. If instead we
 	-- iterated over ipairs({...}), any arguments after the first nil one
 	-- would be ignored.
@@ -260,11 +274,21 @@ function TableUtils.Assign(target, ...)
 		local source = select(i, ...)
 		if source ~= nil then
 			for key, value in getIterator(source) do
-				target[key] = value
+				if overwriteTarget or target[key] == nil then
+					target[key] = value
+				end
 			end
 		end
 	end
 	return target
+end
+
+function TableUtils.Assign(target, ...)
+	return assign(true, target, ...)
+end
+
+function TableUtils.defaults(target, ...)
+	return assign(false, target, ...)
 end
 
 function TableUtils.Clone(tbl) --: (table) => table
@@ -317,6 +341,41 @@ function TableUtils.shallowEqual(left, right)
 			return value == right[key]
 		end
 	)
+end
+
+function TableUtils.serialize(input, serializer)
+	serializer = serializer or function(value)
+			return tostring(value)
+		end
+	assert(type(input) == "table")
+	assert(type(serializer) == "function")
+	return "{" ..
+		table.concat(
+			TableUtils.Map(
+				input,
+				function(element, i)
+					return tostring(i) .. "=" .. serializer(element)
+				end
+			),
+			","
+		) ..
+			"}"
+end
+
+function TableUtils.append(...)
+	local result = {}
+	for i = 1, select("#", ...) do
+		local x = select(i, ...)
+		if type(x) == "table" then
+			for _, y in ipairs(x) do
+				table.insert(result, y)
+			end
+		else
+			table.insert(result, x)
+		end
+	end
+
+	return result
 end
 
 return TableUtils

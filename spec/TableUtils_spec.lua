@@ -285,14 +285,67 @@ describe(
 					end
 				)
 				it(
-					"ignores empty returns",
+					"does not ignore falsy returns",
 					function()
 						assert.are.same(
-							{"c", 3, "d", 4},
+							{false, false, "c", 3, "d", 4},
 							TableUtils.FlatMap(
 								{"a", "b", "c", "d"},
 								function(x, i)
 									return i > 2 and {x, i}
+								end
+							)
+						)
+					end
+				)
+
+				it(
+					"returning a truthy non-table",
+					function()
+						assert.are.same(
+							{1, 2},
+							TableUtils.FlatMap(
+								{"a", "b"},
+								function(val, i)
+									return i
+								end
+							)
+						)
+					end
+				)
+
+				it(
+					"returning an empty table",
+					function()
+						assert.are.same(
+							{},
+							TableUtils.FlatMap(
+								{"a", "b"},
+								function(val, i)
+									return {}
+								end
+							)
+						)
+					end
+				)
+
+				it(
+					"nested",
+					function()
+						assert.are.same(
+							{1, 2, 1, 2},
+							TableUtils.FlatMap(
+								{"a", "b"},
+								function(val, i)
+									local x =
+										TableUtils.FlatMap(
+										{"c", "d"},
+										function(val, j)
+											return j
+										end
+									)
+
+									return x
 								end
 							)
 						)
@@ -336,6 +389,18 @@ describe(
 					function()
 						assert.truthy(TableUtils.Includes({a = "1.a", b = "2.b", c = "3.c", d = "4.d"}, "3.c"))
 						assert.not_truthy(TableUtils.Includes({a = "1.a", b = "2.b", c = "3.c", d = "4.d"}, "3.d"))
+					end
+				)
+			end
+		)
+
+		describe(
+			"Reverse",
+			function()
+				it(
+					"reverses an array",
+					function()
+						assert.are.same({1, 2, 3, 4, 5}, TableUtils.Reverse({5, 4, 3, 2, 1}))
 					end
 				)
 			end
@@ -874,6 +939,38 @@ describe(
 								end
 							)
 						)
+					end
+				)
+			end
+		)
+
+		describe(
+			"append",
+			function()
+				it(
+					"concatenates mixed tables and values, ignoring non-arraylike keys",
+					function()
+						local a = {7, 4}
+						local b = 9
+						local c = {[1] = 5, x = 12}
+
+						assert.are.same({7, 4, 9, 5}, TableUtils.append(a, b, c))
+					end
+				)
+			end
+		)
+
+		describe(
+			"defaults",
+			function()
+				it(
+					"assigns missing properties in order",
+					function()
+						local a = {foo = "bar"}
+						local b = {bar = "baz", bez = "boz"}
+						local c = {bez = "woz", foo = "bor", bof = "buf"}
+
+						assert.are.same({foo = "bar", bar = "baz", bez = "boz", bof = "buf"}, TableUtils.defaults(a, b, c))
 					end
 				)
 			end
