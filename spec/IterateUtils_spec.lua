@@ -12,7 +12,7 @@ describe(
 					function()
 						assert.are.same(
 							{10, 20, 30, 40, 50, 60},
-							TableUtils.Map(
+							TableUtils.map(
 								IterateUtils.getInsertIterator({1, 3, 5}),
 								function(iterator, i)
 									if iterator.value % 2 == 1 then

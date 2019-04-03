@@ -33,7 +33,7 @@ function ClassUtils.makeConstructedClass(name, constructor)
 		ClassUtils.makeClass(
 		name,
 		function(data)
-			local instance = TableUtils.Clone(data)
+			local instance = TableUtils.clone(data)
 			if constructor then
 				setmetatable(instance, {__index = Class, __tostring = Class.toString})
 				constructor(instance)
@@ -51,7 +51,7 @@ function ClassUtils.makeConstructedClass(name, constructor)
 end
 
 function ClassUtils.makeEnum(keys)
-	return TableUtils.KeyBy(
+	return TableUtils.keyBy(
 		keys,
 		function(key)
 			assert(key:match("^[A-Z_]+$"), "Enum keys must be defined as upper snake case")
@@ -61,7 +61,7 @@ function ClassUtils.makeEnum(keys)
 end
 
 function ClassUtils.makeSymbolEnum(keys)
-	return TableUtils.Map(
+	return TableUtils.map(
 		ClassUtils.makeEnum(keys),
 		function(key)
 			return ClassUtils.makeSymbol(key)
