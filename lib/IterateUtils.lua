@@ -33,7 +33,7 @@ function IterateUtils.getInsertionSafeIterator(source)
 			local stackHead = insertStack[#insertStack]
 			table.remove(insertStack, #insertStack)
 			iterator.value = stackHead
-			iterator.key = nil
+			iterator.outputKey = outputIndex
 			return outputIndex, iterator
 		else
 			local key, value = next()
@@ -41,7 +41,8 @@ function IterateUtils.getInsertionSafeIterator(source)
 				return
 			end
 			iterator.value = value
-			iterator.key = key
+			iterator.outputKey = outputIndex
+			iterator.inputKey = key
 			return outputIndex, iterator
 		end
 	end
