@@ -1,13 +1,15 @@
 local TableUtils = require "TableUtils"
 
 local function lazySequence(firstNumber, lastNumber)
-	local i = -1
+	local i = 0
 	return function()
-		i = i + 1
-		if firstNumber + i > lastNumber then
+		local currentNumber = firstNumber + i
+		if currentNumber > lastNumber then
 			return
 		else
-			return i, firstNumber + i
+			local currentIndex = i
+			i = i + 1
+			return currentIndex, currentNumber
 		end
 	end
 end
