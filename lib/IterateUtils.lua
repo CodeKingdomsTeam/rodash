@@ -4,6 +4,7 @@ local function getNext(source)
 	if type(source) == "function" then
 		return source
 	else
+		assert(type(source) == "table", "Can only iterate over an array or an iterator function")
 		local key = 0
 		return function()
 			key = key + 1
@@ -16,13 +17,13 @@ local function getNext(source)
 	end
 end
 
-function IterateUtils.getInsertIterator(source)
+function IterateUtils.getInsertionSafeIterator(source)
 	local next = getNext(source)
 	local insertStack = {}
 	local outputIndex = 0
 
 	local iterator = {}
-	function iterator:insert(element)
+	function iterator:insertAhead(element)
 		table.insert(insertStack, element)
 	end
 

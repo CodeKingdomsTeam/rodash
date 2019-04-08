@@ -5,18 +5,19 @@ describe(
 	"IterateUtils",
 	function()
 		describe(
-			"getInsertIterator",
+			"getInsertionSafeIterator",
 			function()
 				it(
 					"iterates through an array and allows insertions",
 					function()
 						assert.are.same(
-							{10, 20, 30, 40, 50, 60},
+							{10, 120, 20, 30, 140, 40, 50, 160, 60},
 							TableUtils.Map(
-								IterateUtils.getInsertIterator({1, 3, 5}),
+								IterateUtils.getInsertionSafeIterator({1, 3, 5}),
 								function(iterator, i)
 									if iterator.value % 2 == 1 then
-										iterator:insert(iterator.value + 1)
+										iterator:insertAhead(iterator.value + 1)
+										iterator:insertAhead(iterator.value + 11)
 									end
 									return iterator.value * 10
 								end

@@ -4,6 +4,7 @@ local function getIterator(source)
 	if type(source) == "function" then
 		return source
 	else
+		assert(type(source) == "table", "Can only iterate over a table or an iterator function")
 		return pairs(source)
 	end
 end
