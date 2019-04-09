@@ -710,7 +710,7 @@ describe(
 							TableUtils.find(
 								{"a", "b", "c", "d", "e"},
 								function(x)
-									return x == "d"
+									return x == "d" or x == "e"
 								end
 							)
 						)
@@ -724,7 +724,7 @@ describe(
 							TableUtils.find(
 								{"a", "b", "c", "d", "e"},
 								function(x, i)
-									return i == 4
+									return i == 4 or i == 5
 								end
 							)
 						)
@@ -733,14 +733,13 @@ describe(
 				it(
 					"returns nil for a missing value",
 					function()
-						assert.truthy(
-							nil ==
-								TableUtils.find(
-									{"a", "b", "c", "d", "e"},
-									function(x, i)
-										return x == "f"
-									end
-								)
+						assert.is_nil(
+							TableUtils.find(
+								{"a", "b", "c", "d", "e"},
+								function(x, i)
+									return x == "f"
+								end
+							)
 						)
 					end
 				)
@@ -771,7 +770,7 @@ describe(
 							TableUtils.findKey(
 								{"a", "b", "c", "d", "e"},
 								function(x)
-									return x == "d"
+									return x == "d" or x == "e"
 								end
 							)
 						)
@@ -785,7 +784,7 @@ describe(
 							TableUtils.findKey(
 								{"a", "b", "c", "d", "e"},
 								function(x, i)
-									return i == 4
+									return i == 4 or i == 5
 								end
 							)
 						)
@@ -794,14 +793,13 @@ describe(
 				it(
 					"returns nil for a missing value",
 					function()
-						assert.truthy(
-							nil ==
-								TableUtils.findKey(
-									{"a", "b", "c", "d", "e"},
-									function(x, i)
-										return x == "f"
-									end
-								)
+						assert.is_nil(
+							TableUtils.findKey(
+								{"a", "b", "c", "d", "e"},
+								function(x, i)
+									return x == "f"
+								end
+							)
 						)
 					end
 				)
@@ -833,7 +831,7 @@ describe(
 				it(
 					"returns nil for a missing value",
 					function()
-						assert.truthy(nil == TableUtils.keyOf({"a", "b", "c", "d", "e"}, "f"))
+						assert.is_nil(TableUtils.keyOf({"a", "b", "c", "d", "e"}, "f"))
 					end
 				)
 				it(
