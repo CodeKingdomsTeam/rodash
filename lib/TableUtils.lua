@@ -36,7 +36,7 @@ function TableUtils.slice(tbl, first, last, step) --: <T>(T[], number?, number?,
 	return sliced
 end
 
-function TableUtils.map(source, handler) --: <T extends Iterable<K,V>, R extends Iterable<U,V>((T, (element: V, key: K) => U) => R)
+function TableUtils.map(source, handler) --: <T extends Iterable<K,V>, R extends Iterable<K,V2>((T, (element: V, key: K) => V2) => R)
 	local result = {}
 	for i, v in getIterator(source) do
 		result[i] = handler(v, i)
