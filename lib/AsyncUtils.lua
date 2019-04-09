@@ -16,7 +16,7 @@ local baseRandomStream = Random.new()
 ]]
 function AsyncUtils.parallel(things)
 	local promises =
-		TableUtils.Map(
+		TableUtils.map(
 		things,
 		function(thing)
 			if Promise.is(thing) then
@@ -96,7 +96,7 @@ function AsyncUtils.retryWithBackoff(getPromise, backoffOptions)
 			function()
 				return AsyncUtils.retryWithBackoff(
 					getPromise,
-					TableUtils.Assign(
+					TableUtils.assign(
 						{},
 						backoffOptions,
 						{
@@ -114,7 +114,7 @@ function AsyncUtils.retryWithBackoff(getPromise, backoffOptions)
 	end
 
 	backoffOptions =
-		TableUtils.Assign(
+		TableUtils.assign(
 		{
 			startTime = tick(),
 			maxTries = 5,
