@@ -761,6 +761,67 @@ describe(
 			end
 		)
 		describe(
+			"FindKey",
+			function()
+				it(
+					"gets the first matching key from a table by value",
+					function()
+						assert.are.same(
+							4,
+							TableUtils.findKey(
+								{"a", "b", "c", "d", "e"},
+								function(x)
+									return x == "d"
+								end
+							)
+						)
+					end
+				)
+				it(
+					"gets the first matching key from a table by key",
+					function()
+						assert.are.same(
+							4,
+							TableUtils.findKey(
+								{"a", "b", "c", "d", "e"},
+								function(x, i)
+									return i == 4
+								end
+							)
+						)
+					end
+				)
+				it(
+					"returns nil for a missing value",
+					function()
+						assert.truthy(
+							nil ==
+								TableUtils.findKey(
+									{"a", "b", "c", "d", "e"},
+									function(x, i)
+										return x == "f"
+									end
+								)
+						)
+					end
+				)
+				it(
+					"gets the first matching key from a non-sequential table",
+					function()
+						assert.are.same(
+							"four",
+							TableUtils.findKey(
+								{one = "a", two = "b", three = "c", four = "d", five = "e"},
+								function(x, i)
+									return x == "d"
+								end
+							)
+						)
+					end
+				)
+			end
+		)
+		describe(
 			"KeyOf",
 			function()
 				it(
