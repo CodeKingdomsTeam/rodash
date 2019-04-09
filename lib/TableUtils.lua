@@ -26,7 +26,7 @@ local function getIterator(source)
 	end
 end
 
-function TableUtils.slice(tbl, first, last, step) --: (any[], number?, number?, number?) => any[]
+function TableUtils.slice(tbl, first, last, step) --: <T>(T[], number?, number?, number?) => T[]
 	local sliced = {}
 
 	for i = first or 1, last or #tbl, step or 1 do
@@ -36,7 +36,7 @@ function TableUtils.slice(tbl, first, last, step) --: (any[], number?, number?, 
 	return sliced
 end
 
-function TableUtils.map(source, handler) --: ((any[], (element: any, key: number) => any) => any[]) | ((table, (element: any, key: string) => any) => table)
+function TableUtils.map(source, handler) --: <T extends Iterable<K,V>, R extends Iterable<K,V2>((T, (element: V, key: K) => V2) => R)
 	local result = {}
 	for i, v in getIterator(source) do
 		result[i] = handler(v, i)
@@ -44,7 +44,7 @@ function TableUtils.map(source, handler) --: ((any[], (element: any, key: number
 	return result
 end
 
-function TableUtils.flatMap(source, handler) --: (any[], (element: any, key: number) => any[]) => any[]) | ((table, (element: any, key: string) => any[]) => table)
+function TableUtils.flatMap(source, handler) --: <T extends Iterable<K,V>, U>((T, (element: V, key: K) => U[] | U) => U[])
 	local result = {}
 	for i, v in getIterator(source) do
 		local list = handler(v, i)
@@ -57,7 +57,7 @@ function TableUtils.flatMap(source, handler) --: (any[], (element: any, key: num
 	return result
 end
 
-function TableUtils.shuffle(source) --: table => table
+function TableUtils.shuffle(source) --: <T extends Iterable>(T => T)
 	local result = TableUtils.clone(source)
 	for i = #result, 1, -1 do
 		local j = math.random(i)
@@ -66,7 +66,7 @@ function TableUtils.shuffle(source) --: table => table
 	return result
 end
 
-function TableUtils.filter(source, handler) --: table, (element: any, key: number | string => boolean) => any[]
+function TableUtils.filter(source, handler) --: <T extends Iterable<K,V>>(T, (element: V, key: K => boolean) => V[])
 	local result = {}
 	for i, v in getIterator(source) do
 		if handler(v, i) then
@@ -76,7 +76,7 @@ function TableUtils.filter(source, handler) --: table, (element: any, key: numbe
 	return result
 end
 
-function TableUtils.filterKeys(source, handler) --: table, (element: any, key: string => boolean) => table
+function TableUtils.filterKeys(source, handler) --: <T extends Iterable<K,V>>(T, (element: V, key: K => boolean) => T)
 	local result = {}
 	for i, v in getIterator(source) do
 		if handler(v, i) then
@@ -86,7 +86,7 @@ function TableUtils.filterKeys(source, handler) --: table, (element: any, key: s
 	return result
 end
 
-function TableUtils.filterKeysMap(source, handler) --: table, (element: any, key: string => any) => table
+function TableUtils.filterKeysMap(source, handler) --: <T extends Iterable<K,V>, R extends Iterable<K,U>>(T, (element: V, key: K => U) => R
 	local result = {}
 	for i, v in getIterator(source) do
 		local value = handler(v, i)
@@ -97,7 +97,7 @@ function TableUtils.filterKeysMap(source, handler) --: table, (element: any, key
 	return result
 end
 
-function TableUtils.without(source, element)
+function TableUtils.without(source, element) --: <T extends Iterable<K,V>>(T, V => T)
 	return TableUtils.filter(
 		source,
 		function(child)
@@ -106,7 +106,7 @@ function TableUtils.without(source, element)
 	)
 end
 
-function TableUtils.compact(source) --: table => table
+function TableUtils.compact(source) --: <T extends Iterable<K,V>>(T, T)
 	return TableUtils.filter(
 		source,
 		function(value)
@@ -115,7 +115,7 @@ function TableUtils.compact(source) --: table => table
 	)
 end
 
-function TableUtils.reduce(source, handler, init) --: <T>(any[], (previous: T, current: any,  key: number | string => T), T?) => T
+function TableUtils.reduce(source, handler, init) --: <T, R>(T[], (acc: R, current: T, key: number => R), R) => R
 	local result = init
 	for i, v in getIterator(source) do
 		result = handler(result, v, i)
@@ -123,7 +123,7 @@ function TableUtils.reduce(source, handler, init) --: <T>(any[], (previous: T, c
 	return result
 end
 
-function TableUtils.all(source, handler) --: table => boolean
+function TableUtils.all(source, handler) --: <T extends Iterable<K,V>>(T => boolean)
 	if not handler then
 		handler = function(x)
 			return x
@@ -139,7 +139,7 @@ function TableUtils.all(source, handler) --: table => boolean
 		true
 	))
 end
-function TableUtils.any(source, handler) --: table => boolean
+function TableUtils.any(source, handler) --: <T extends Iterable<K,V>>(T => boolean)
 	if not handler then
 		handler = function(x)
 			return x
@@ -168,7 +168,7 @@ function TableUtils.reverse(source)
 	return output
 end
 
-function TableUtils.invert(source) --: table => table
+function TableUtils.invert(source) --: <K extends Key, V>(Iterable<K,V> => Iterable<V,K>)
 	local result = {}
 	for i, v in getIterator(source) do
 		result[v] = i
@@ -176,7 +176,7 @@ function TableUtils.invert(source) --: table => table
 	return result
 end
 
-function TableUtils.keyBy(source, handler) --: table, (any => string | number) => table
+function TableUtils.keyBy(source, handler) --: <T, K extends Key>(T[], (T => K) => Iterable<K,V>)
 	local result = {}
 	for i, v in getIterator(source) do
 		local key = handler(v, i)
@@ -187,7 +187,7 @@ function TableUtils.keyBy(source, handler) --: table, (any => string | number) =
 	return result
 end
 
-function TableUtils.groupBy(source, handler) --: table, (any => string | number) => table
+function TableUtils.groupBy(source, handler) --: <T extends Iterable<K,V>, I extends Key>((value: T, key: K) => I) => Iterable<I, Iterable<K,V>>)
 	local result = {}
 	for i, v in getIterator(source) do
 		local key = handler(v, i)
@@ -244,10 +244,18 @@ function TableUtils.entries(source) --: table => [string | number, any][]
 	return result
 end
 
-function TableUtils.find(source, handler) --: ((any[], (element: any, key: number) => boolean) => any) | ((table, (element: any, key: string) => boolean) => any)
+function TableUtils.find(source, handler) --: <T extends Iterable<K,V>>((T, (element: V, key: K) => boolean) => V)
 	for i, v in getIterator(source) do
 		if (handler(v, i)) then
 			return v
+		end
+	end
+end
+
+function TableUtils.findKey(source, handler) --: <T extends Iterable<K,V>>((T, (element: V, key: K) => boolean) => K)
+	for i, v in getIterator(source) do
+		if (handler(v, i)) then
+			return i
 		end
 	end
 end
