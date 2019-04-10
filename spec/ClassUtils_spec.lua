@@ -323,7 +323,7 @@ describe(
 		)
 
 		describe(
-			"applyStrategyForEnum",
+			"applySwitchStrategyForEnum",
 			function()
 				local ENUM = ClassUtils.makeEnum({"ONE", "TWO"})
 				local strategies = {
@@ -338,7 +338,7 @@ describe(
 				it(
 					"applies",
 					function()
-						local result = ClassUtils.applyStrategyForEnum(ENUM, ENUM.ONE, strategies, 3)
+						local result = ClassUtils.applySwitchStrategyForEnum(ENUM, ENUM.ONE, strategies, 3)
 
 						assert(result == 4)
 					end
@@ -349,7 +349,7 @@ describe(
 					function()
 						assert.has_errors(
 							function()
-								ClassUtils.applyStrategyForEnum(2, ENUM.ONE, strategies)
+								ClassUtils.applySwitchStrategyForEnum(2, ENUM.ONE, strategies)
 							end
 						)
 					end
@@ -360,7 +360,7 @@ describe(
 					function()
 						assert.has_errors(
 							function()
-								ClassUtils.applyStrategyForEnum(ENUM, "1", strategies)
+								ClassUtils.applySwitchStrategyForEnum(ENUM, "1", strategies)
 							end
 						)
 					end
@@ -371,13 +371,13 @@ describe(
 					function()
 						assert.has_errors(
 							function()
-								ClassUtils.applyStrategyForEnum(ENUM, ENUM.ONE, {})
+								ClassUtils.applySwitchStrategyForEnum(ENUM, ENUM.ONE, {})
 							end
 						)
 
 						assert.has_errors(
 							function()
-								ClassUtils.applyStrategyForEnum(ClassUtils.makeEnum({"FOUR"}), ENUM.ONE, strategies)
+								ClassUtils.applySwitchStrategyForEnum(ClassUtils.makeEnum({"FOUR"}), ENUM.ONE, strategies)
 							end
 						)
 					end

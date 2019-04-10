@@ -76,7 +76,7 @@ function ClassUtils.makeEnum(keys)
 	return enum
 end
 
-function ClassUtils.applyStrategyForEnum(enum, enumValue, strategies, ...)
+function ClassUtils.applySwitchStrategyForEnum(enum, enumValue, strategies, ...)
 	assert(ClassUtils.isA(enumValue, enum), "enumValue must be an instance of enum")
 	assert(
 		TableUtils.deepEquals(TableUtils.sort(TableUtils.values(enum)), TableUtils.sort(TableUtils.keys(strategies))),
