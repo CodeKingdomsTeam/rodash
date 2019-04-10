@@ -1,3 +1,5 @@
+local tea = require(script.Parent.Parent.tea)
+
 local TableUtils = {}
 
 setmetatable(
@@ -402,6 +404,32 @@ function TableUtils.append(...)
 	end
 
 	return result
+end
+
+function TableUtils.sort(input, comparator)
+	assert(tea.table(input), input)
+
+	local FunctionUtils = require(script.Parent.FunctionUtils)
+	assert(comparator == nil or FunctionUtils.isCallable(comparator), "comparator must be callable or nil")
+
+	comparator = comparator or function(a, b)
+			return a < b
+		end
+
+	table.sort(
+		input,
+		function(a, b)
+			local result = comparator(a, b)
+
+			if type(result) ~= "boolean" and result ~= nil then
+				error("sort comparator must return a boolean or nil")
+			end
+
+			return result
+		end
+	)
+
+	return input
 end
 
 return TableUtils
