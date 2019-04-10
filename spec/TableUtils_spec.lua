@@ -1036,5 +1036,53 @@ describe(
 				)
 			end
 		)
+
+		describe(
+			"sort",
+			function()
+				local cases = {
+					{
+						input = {1, 3, 2},
+						expected = {1, 2, 3},
+						name = "with no comparator"
+					},
+					{
+						input = {1, 3, 2},
+						expected = {3, 2, 1},
+						comparator = function(a, b)
+							return a > b
+						end,
+						name = "with a comparator"
+					}
+				}
+
+				for _, case in ipairs(cases) do
+					it(
+						case.name,
+						function()
+							local result = TableUtils.sort(case.input, case.comparator)
+
+							assert.are.same(case.expected, result)
+						end
+					)
+				end
+
+				it(
+					"throws if the comparator returns a bad value",
+					function()
+						assert.has_errors(
+							function()
+								TableUtils.sort(
+									{1, 3, 2},
+									function(a, b)
+										return a
+									end
+								)
+							end
+						)
+					end
+				)
+			end
+		)
 	end
 )

@@ -6,6 +6,9 @@ set -o pipefail
 
 # Inspiration from https://github.com/LPGhatguy/lemur/blob/master/.travis.yml
 
+git submodule sync --recursive
+git submodule update --init --recursive
+
 yarn install --frozen-lockfile --non-interactive
 
 export LUA="lua=5.1"
