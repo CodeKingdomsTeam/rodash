@@ -46,6 +46,14 @@ function TableUtils.map(source, handler) --: <T extends Iterable<K,V>, R extends
 	return result
 end
 
+function TableUtils.mapKeys(source, handler) --: <T extends Iterable<K,V>, R extends Iterable<K,V2>((T, (element: V, key: K) => V2) => R)
+	local result = {}
+	for i, v in getIterator(source) do
+		result[handler(v, i)] = v
+	end
+	return result
+end
+
 function TableUtils.flatMap(source, handler) --: <T extends Iterable<K,V>, U>((T, (element: V, key: K) => U[] | U) => U[])
 	local result = {}
 	for i, v in getIterator(source) do
