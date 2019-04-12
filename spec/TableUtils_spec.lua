@@ -269,6 +269,40 @@ describe(
 				)
 			end
 		)
+
+		describe(
+			"mapKeys",
+			function()
+				it(
+					"maps keys and values of an array",
+					function()
+						assert.are.same(
+							{[2] = "a", [3] = "b", [4] = "c", [5] = "d"},
+							TableUtils.mapKeys(
+								{"a", "b", "c", "d"},
+								function(x, i)
+									return i + 1
+								end
+							)
+						)
+					end
+				)
+				it(
+					"maps keys and values of a non-sequential table",
+					function()
+						assert.are.same(
+							{a1 = 1, b2 = 2, c3 = 3, d4 = 4},
+							TableUtils.mapKeys(
+								{a = 1, b = 2, c = 3, d = 4},
+								function(x, i)
+									return i .. x
+								end
+							)
+						)
+					end
+				)
+			end
+		)
 		describe(
 			"FlatMap",
 			function()
