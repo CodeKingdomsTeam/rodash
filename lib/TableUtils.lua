@@ -107,6 +107,18 @@ function TableUtils.filterKeysMap(source, handler) --: <T extends Iterable<K,V>,
 	return result
 end
 
+function TableUtils.omitBy(source, handler)
+	local result = {}
+
+	for i, v in getIterator(source) do
+		local value = handler(v, i)
+		if not value then
+			result[i] = v
+		end
+	end
+	return result
+end
+
 function TableUtils.without(source, element) --: <T extends Iterable<K,V>>(T, V => T)
 	return TableUtils.filter(
 		source,

@@ -443,6 +443,25 @@ describe(
 		)
 
 		describe(
+			"omitBy",
+			function()
+				it(
+					"omits keys and values of a non-sequential table",
+					function()
+						local output =
+							TableUtils.omitBy(
+							{one = "a", two = "b", three = "a", four = "d", five = "e"},
+							function(x, i)
+								return x == "b" or i == "five"
+							end
+						)
+						assert.are.same({one = "a", three = "a", four = "d"}, output)
+					end
+				)
+			end
+		)
+
+		describe(
 			"Filter",
 			function()
 				it(
