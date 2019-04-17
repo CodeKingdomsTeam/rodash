@@ -7,16 +7,18 @@ function ClassUtils.makeClass(name, constructor)
 			return {}
 		end
 	local Class = {
-		name = name,
-		constructor = constructor
+		name = name
 	}
 	function Class.new(...)
 		local instance = constructor(...)
 		setmetatable(instance, {__index = Class, __tostring = Class.toString})
+		if instance.init then
+			instance:init(...)
+		end
 		return instance
 	end
-	function Class:extend(name, constructor)
-		local SubClass = ClassUtils.makeClass(name, constructor or self.constructor)
+	function Class:extend(name, subConstructor)
+		local SubClass = ClassUtils.makeClass(name, subConstructor or Class.new)
 		setmetatable(SubClass, {__index = self})
 		return SubClass
 	end
@@ -26,29 +28,24 @@ function ClassUtils.makeClass(name, constructor)
 	return Class
 end
 
-function ClassUtils.makeConstructedClass(name, constructor)
-	constructor = constructor or function()
-		end
-	local Class
-	Class =
-		ClassUtils.makeClass(
+function ClassUtils.makeClassWithInterface(name, interface)
+	assert(tea.values(tea.callback)(interface), string.format("Class %s does not have a valid interface", name))
+	local implementsInterface = tea.strictInterface(interface)
+	return ClassUtils.makeClass(
 		name,
 		function(data)
-			local instance = TableUtils.clone(data)
-			if constructor then
-				setmetatable(instance, {__index = Class, __tostring = Class.toString})
-				constructor(instance)
-			end
-			return instance
+			assert(
+				implementsInterface(data),
+				string.format("Class %s cannot be constructed as data does not match interface", name)
+			)
+			return TableUtils.mapKeys(
+				data,
+				function(_, key)
+					return "_" .. key
+				end
+			)
 		end
 	)
-	Class.constructor = constructor
-	function Class:extend(name, constructor)
-		local SubClass = ClassUtils.makeConstructedClass(name, constructor)
-		setmetatable(SubClass, {__index = self})
-		return SubClass
-	end
-	return Class
 end
 
 function ClassUtils.makeEnum(keys)
@@ -65,10 +62,10 @@ function ClassUtils.makeEnum(keys)
 		enum,
 		{
 			__index = function(t, key)
-				error("Attempt to access key " .. key .. " which is not a valid key of the enum")
+				error(string.format("Attempt to access key %s which is not a valid key of the enum", key))
 			end,
 			__newindex = function(t, key)
-				error("Attempt to set key " .. key .. " on enum")
+				error(string.format("Attempt to set key %s on enum", key))
 			end
 		}
 	)

@@ -1,4 +1,5 @@
-local ClassUtils = require("ClassUtils")
+local ClassUtils = require "ClassUtils"
+local tea = require "tea"
 
 describe(
 	"ClassUtils",
@@ -15,6 +16,20 @@ describe(
 						end
 						local myInstance = MyClass.new()
 						assert.are.equal(myInstance:getFive(), 5)
+					end
+				)
+				it(
+					"allows an init impl which passes self",
+					function()
+						local MyClass = ClassUtils.makeClass("Simple")
+						function MyClass:getFive()
+							return 5
+						end
+						function MyClass:init(amount)
+							self.amount = amount + self:getFive()
+						end
+						local myInstance = MyClass.new(4)
+						assert.are.equal(myInstance.amount, 9)
 					end
 				)
 				it(
@@ -42,6 +57,35 @@ describe(
 						end
 						local myInstance = MyClass.new(10)
 						assert.are.equal(myInstance:addFive(), 15)
+					end
+				)
+				it(
+					"makes a subclass with a constructor",
+					function()
+						local MyClass =
+							ClassUtils.makeClass(
+							"Simple",
+							function(amount)
+								return {
+									amount = amount
+								}
+							end
+						)
+						function MyClass:addVirtual()
+							return self.amount + self:getVirtual()
+						end
+						local MySubClass =
+							MyClass:extend(
+							"SubSimple",
+							function(amount)
+								return MyClass.new(amount + 3)
+							end
+						)
+						function MySubClass:getVirtual()
+							return 6
+						end
+						local myInstance = MySubClass.new(10)
+						assert.are.equal(myInstance:addVirtual(), 19)
 					end
 				)
 			end
@@ -96,9 +140,9 @@ describe(
 							MyClass:extend(
 							"SimpleSub",
 							function(amount)
-								local instance = MyClass.constructor(amount + 5)
-								instance.amount = instance.amount + 23
-								return instance
+								local self = MyClass.new(amount + 5)
+								self.amount = self.amount + 23
+								return self
 							end
 						)
 						function MySubclass:getAmount()
@@ -133,14 +177,20 @@ describe(
 			end
 		)
 		describe(
-			"makeConstructedClass",
+			"makeClassWithInterface",
 			function()
 				it(
 					"makes a class which constructs instances from data",
 					function()
-						local MyClass = ClassUtils.makeConstructedClass("Simple")
+						local MyClass =
+							ClassUtils.makeClassWithInterface(
+							"Simple",
+							{
+								amount = tea.number
+							}
+						)
 						function MyClass:getAmount()
-							return self.amount
+							return self._amount
 						end
 						local myInstance = MyClass.new({amount = 10})
 						assert.are.equal(myInstance:getAmount(), 10)
@@ -149,64 +199,81 @@ describe(
 				it(
 					"takes a shallow copy of the data",
 					function()
-						local MyClass = ClassUtils.makeConstructedClass("Simple")
+						local MyClass =
+							ClassUtils.makeClassWithInterface(
+							"Simple",
+							{
+								amount = tea.number
+							}
+						)
 						function MyClass:setAmount(amount)
-							self.amount = amount
+							self._amount = amount
 						end
 						local data = {amount = 10}
 						local myInstance = MyClass.new(data)
 						myInstance:setAmount(6)
-						assert.are.equal(myInstance.amount, 6)
+						assert.are.equal(myInstance._amount, 6)
 						assert.are.equal(data.amount, 10)
 					end
 				)
 				it(
-					"passes instance to the constructor",
+					"passes instance to init",
 					function()
 						local MyClass =
-							ClassUtils.makeConstructedClass(
+							ClassUtils.makeClassWithInterface(
 							"Simple",
-							function(self)
-								self.nice = self:getDefaultAmount()
-							end
+							{
+								amount = tea.number
+							}
 						)
+
+						function MyClass:init()
+							self._nice = self:getDefaultAmount()
+						end
 						function MyClass:getDefaultAmount()
 							return 5
 						end
 						function MyClass:setAmount(amount)
-							self.amount = amount
+							self._amount = amount
 						end
 						local data = {amount = 10}
 						local myInstance = MyClass.new(data)
-						assert.are.equal(myInstance.amount, 10)
-						assert.are.equal(myInstance.nice, 5)
+						assert.are.equal(myInstance._amount, 10)
+						assert.are.equal(myInstance._nice, 5)
 					end
 				)
 				it(
 					"extends produces correct, separate constructors",
 					function()
 						local MyClass =
-							ClassUtils.makeConstructedClass(
+							ClassUtils.makeClassWithInterface(
 							"Simple",
-							function(self)
-								self.nice = self:getDefaultAmount()
-							end
+							{
+								amount = tea.number
+							}
 						)
+
+						function MyClass:init()
+							self._nice = self:getDefaultAmount()
+						end
+
 						function MyClass:getDefaultAmount()
 							return 5
 						end
+
 						local MySubClass =
 							MyClass:extend(
 							"SubSimple",
-							function(self)
-								MyClass.constructor(self)
-								self.nicer = self.nice + 5
+							function(...)
+								local self = MyClass.new(...)
+								self._nicer = self._nice + 5
+								return self
 							end
 						)
 						local data = {amount = 10}
 						local myInstance = MySubClass.new(data)
-						assert.are.equal(5, myInstance.nice)
-						assert.are.equal(10, myInstance.nicer)
+						assert.are.equal(5, myInstance._nice)
+						assert.are.equal(10, myInstance._nicer)
 					end
 				)
 			end
