@@ -17,6 +17,9 @@ function ClassUtils.makeClass(name, constructor)
 		end
 		return instance
 	end
+	function Class.isInstance(value)
+		return ClassUtils.isA(value, Class)
+	end
 	function Class:extend(name, subConstructor)
 		local SubClass = ClassUtils.makeClass(name, subConstructor or Class.new)
 		setmetatable(SubClass, {__index = self})
@@ -29,14 +32,25 @@ function ClassUtils.makeClass(name, constructor)
 end
 
 function ClassUtils.makeClassWithInterface(name, interface)
-	assert(tea.values(tea.callback)(interface), string.format("Class %s does not have a valid interface", name))
-	local implementsInterface = tea.strictInterface(interface)
-	return ClassUtils.makeClass(
+	local function getImplementsInterface(currentInterface)
+		assert(
+			tea.values(tea.callback)(currentInterface),
+			string.format("Class %s does not have a valid static interface", name)
+		)
+		return tea.strictInterface(currentInterface)
+	end
+	local staticInterface = type(interface) ~= "function" and getImplementsInterface(interface)
+	local Class
+	Class =
+		ClassUtils.makeClass(
 		name,
 		function(data)
+			data = data or {}
+			local dynamicInterface = type(interface) == "function" and getImplementsInterface(interface(Class))
+			local implementsInterface = dynamicInterface or staticInterface
 			assert(
 				implementsInterface(data),
-				string.format("Class %s cannot be constructed as data does not match interface", name)
+				string.format("Class %s cannot be instantiated as data does not match interface", name)
 			)
 			return TableUtils.mapKeys(
 				data,
@@ -46,6 +60,7 @@ function ClassUtils.makeClassWithInterface(name, interface)
 			)
 		end
 	)
+	return Class
 end
 
 function ClassUtils.makeEnum(keys)

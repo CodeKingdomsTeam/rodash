@@ -59,35 +59,6 @@ describe(
 						assert.are.equal(myInstance:addFive(), 15)
 					end
 				)
-				it(
-					"makes a subclass with a constructor",
-					function()
-						local MyClass =
-							ClassUtils.makeClass(
-							"Simple",
-							function(amount)
-								return {
-									amount = amount
-								}
-							end
-						)
-						function MyClass:addVirtual()
-							return self.amount + self:getVirtual()
-						end
-						local MySubClass =
-							MyClass:extend(
-							"SubSimple",
-							function(amount)
-								return MyClass.new(amount + 3)
-							end
-						)
-						function MySubClass:getVirtual()
-							return 6
-						end
-						local myInstance = MySubClass.new(10)
-						assert.are.equal(myInstance:addVirtual(), 19)
-					end
-				)
 			end
 		)
 		describe(
@@ -108,6 +79,35 @@ describe(
 		describe(
 			"extend",
 			function()
+				it(
+					"makes a subclass with a constructor",
+					function()
+						local MyClass =
+							ClassUtils.makeClass(
+							"Simple",
+							function(amount)
+								return {
+									amount = amount
+								}
+							end
+						)
+						function MyClass:addVirtual()
+							return self.amount + self:getVirtual()
+						end
+						local MySubclass =
+							MyClass:extend(
+							"SubSimple",
+							function(amount)
+								return MyClass.new(amount + 3)
+							end
+						)
+						function MySubclass:getVirtual()
+							return 6
+						end
+						local myInstance = MySubclass.new(10)
+						assert.are.equal(myInstance:addVirtual(), 19)
+					end
+				)
 				it(
 					"provides recursive table lookup",
 					function()
@@ -177,6 +177,25 @@ describe(
 			end
 		)
 		describe(
+			"isInstance",
+			function()
+				it(
+					"returns true or false depending on inheritance tree",
+					function()
+						local MyClass = ClassUtils.makeClass("Simple")
+						local MyOtherClass = ClassUtils.makeClass("Simple2")
+						local MySubclass = MyClass:extend("SimpleSub")
+						local myInstance = MyClass.new()
+						local mySubInstance = MySubclass.new()
+						local myOtherInstance = MyOtherClass.new()
+						assert.is_true(MyClass.isInstance(myInstance))
+						assert.is_true(MyClass.isInstance(mySubInstance))
+						assert.is_false(MyClass.isInstance(myOtherInstance))
+					end
+				)
+			end
+		)
+		describe(
 			"makeClassWithInterface",
 			function()
 				it(
@@ -194,6 +213,116 @@ describe(
 						end
 						local myInstance = MyClass.new({amount = 10})
 						assert.are.equal(myInstance:getAmount(), 10)
+					end
+				)
+				it(
+					"throws if the data doesn't match during construction",
+					function()
+						local MyClass =
+							ClassUtils.makeClassWithInterface(
+							"Simple",
+							{
+								amount = tea.string
+							}
+						)
+						function MyClass:getAmount()
+							return self._amount
+						end
+						assert.errors(
+							function()
+								MyClass.new({amount = 10})
+							end,
+							"Class Simple cannot be instantiated as data does not match interface"
+						)
+					end
+				)
+				it(
+					"allows a class to be used",
+					function()
+						local MyClass =
+							ClassUtils.makeClassWithInterface(
+							"Simple",
+							{
+								amount = tea.string
+							}
+						)
+						function MyClass:getAmount()
+							return self._amount
+						end
+						assert.errors(
+							function()
+								MyClass.new({amount = 10})
+							end,
+							"Class Simple cannot be instantiated as data does not match interface"
+						)
+					end
+				)
+				it(
+					"throws if the interface is malformed",
+					function()
+						assert.errors(
+							function()
+								ClassUtils.makeClassWithInterface(
+									"Simple",
+									{
+										amount = "lol"
+									}
+								)
+							end,
+							"Class Simple does not have a valid static interface"
+						)
+					end
+				)
+				it(
+					"allows an instance to be passed as child",
+					function()
+						local MyComposite = ClassUtils.makeClass("Composite")
+						local MyClass =
+							ClassUtils.makeClassWithInterface(
+							"Simple",
+							{
+								child = MyComposite.isInstance
+							}
+						)
+						local myInstance = MyClass.new({child = MyComposite.new()})
+						assert.is_true(MyComposite.isInstance(myInstance._child))
+					end
+				)
+				it(
+					"allows an instance of the same class to be passed as child using a dynamic interface",
+					function()
+						local MyClass =
+							ClassUtils.makeClassWithInterface(
+							"Simple",
+							function(Class)
+								return {
+									parent = tea.optional(Class.isInstance)
+								}
+							end
+						)
+						local myParent = MyClass.new()
+						local myChild = MyClass.new({parent = myParent})
+						assert.is_true(MyClass.isInstance(myChild._parent))
+					end
+				)
+				it(
+					"throw if an instance passed as child is of incorrect type",
+					function()
+						local MyComposite = ClassUtils.makeClass("Composite")
+						local MyBadComposite = ClassUtils.makeClass("BadComposite")
+						local MyClass =
+							ClassUtils.makeClassWithInterface(
+							"Simple",
+							{
+								child = MyComposite.isInstance
+							}
+						)
+						assert.errors(
+							function()
+								MyClass.new({child = MyBadComposite.new()})
+							end,
+							"Class Simple cannot be instantiated as data does not match interface"
+						)
 					end
 				)
 				it(
@@ -261,7 +390,7 @@ describe(
 							return 5
 						end
 
-						local MySubClass =
+						local MySubclass =
 							MyClass:extend(
 							"SubSimple",
 							function(...)
@@ -271,7 +400,7 @@ describe(
 							end
 						)
 						local data = {amount = 10}
-						local myInstance = MySubClass.new(data)
+						local myInstance = MySubclass.new(data)
 						assert.are.equal(5, myInstance._nice)
 						assert.are.equal(10, myInstance._nicer)
 					end
