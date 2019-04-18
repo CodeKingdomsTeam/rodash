@@ -39,15 +39,12 @@ function ClassUtils.makeClassWithInterface(name, interface)
 		)
 		return tea.strictInterface(currentInterface)
 	end
-	local staticInterface = type(interface) ~= "function" and getImplementsInterface(interface)
-	local Class
-	Class =
+	local implementsInterface
+	local Class =
 		ClassUtils.makeClass(
 		name,
 		function(data)
 			data = data or {}
-			local dynamicInterface = type(interface) == "function" and getImplementsInterface(interface(Class))
-			local implementsInterface = dynamicInterface or staticInterface
 			assert(
 				implementsInterface(data),
 				string.format("Class %s cannot be instantiated as data does not match interface", name)
@@ -60,6 +57,8 @@ function ClassUtils.makeClassWithInterface(name, interface)
 			)
 		end
 	)
+	implementsInterface =
+		type(interface) == "function" and getImplementsInterface(interface(Class)) or getImplementsInterface(interface)
 	return Class
 end
 

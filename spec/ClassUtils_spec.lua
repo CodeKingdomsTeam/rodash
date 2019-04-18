@@ -269,7 +269,7 @@ describe(
 									}
 								)
 							end,
-							"Class Simple does not have a valid static interface"
+							"Class Simple does not have a valid interface"
 						)
 					end
 				)
