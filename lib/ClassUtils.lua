@@ -15,6 +15,7 @@ function ClassUtils.makeClass(name, constructor)
 		if instance.init then
 			instance:init(...)
 		end
+		instance.Class = Class
 		return instance
 	end
 	function Class.isInstance(value)
