@@ -19,7 +19,8 @@ function ClassUtils.makeClass(name, constructor)
 		return instance
 	end
 	function Class.isInstance(value)
-		return ClassUtils.isA(value, Class)
+		local ok = ClassUtils.isA(value, Class)
+		return ok, ok and "" or string.format("Not a %s instance", name)
 	end
 	function Class:extend(name, subConstructor)
 		local SubClass = ClassUtils.makeClass(name, subConstructor or Class.new)
@@ -34,7 +35,9 @@ end
 
 function ClassUtils.makeClassWithInterface(name, interface)
 	local function getImplementsInterface(currentInterface)
-		assert(tea.values(tea.callback)(currentInterface), string.format("Class %s does not have a valid interface", name))
+		local ok, problem = tea.values(tea.callback)(currentInterface)
+		assert(ok, string.format([[Class %s does not have a valid interface
+%s]], name, problem or ""))
 		return tea.strictInterface(currentInterface)
 	end
 	local implementsInterface
@@ -43,10 +46,9 @@ function ClassUtils.makeClassWithInterface(name, interface)
 		name,
 		function(data)
 			data = data or {}
-			assert(
-				implementsInterface(data),
-				string.format("Class %s cannot be instantiated as data does not match interface", name)
-			)
+			local ok, problem = implementsInterface(data)
+			assert(ok, string.format([[Class %s cannot be instantiated
+%s]], name, problem or ""))
 			return TableUtils.mapKeys(
 				data,
 				function(_, key)

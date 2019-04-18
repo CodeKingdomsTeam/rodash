@@ -232,7 +232,9 @@ describe(
 							function()
 								MyClass.new({amount = 10})
 							end,
-							"Class Simple cannot be instantiated as data does not match interface"
+							[[Class Simple cannot be instantiated
+[interface] bad value for amount:
+	string expected, got number]]
 						)
 					end
 				)
@@ -253,7 +255,9 @@ describe(
 							function()
 								MyClass.new({amount = 10})
 							end,
-							"Class Simple cannot be instantiated as data does not match interface"
+							[[Class Simple cannot be instantiated
+[interface] bad value for amount:
+	string expected, got number]]
 						)
 					end
 				)
@@ -269,7 +273,9 @@ describe(
 									}
 								)
 							end,
-							"Class Simple does not have a valid interface"
+							[[Class Simple does not have a valid interface
+bad value for key amount:
+	function expected, got string]]
 						)
 					end
 				)
@@ -321,7 +327,9 @@ describe(
 							function()
 								MyClass.new({child = MyBadComposite.new()})
 							end,
-							"Class Simple cannot be instantiated as data does not match interface"
+							[[Class Simple cannot be instantiated
+[interface] bad value for child:
+	Not a Composite instance]]
 						)
 					end
 				)
