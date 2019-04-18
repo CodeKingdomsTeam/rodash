@@ -33,10 +33,7 @@ end
 
 function ClassUtils.makeClassWithInterface(name, interface)
 	local function getImplementsInterface(currentInterface)
-		assert(
-			tea.values(tea.callback)(currentInterface),
-			string.format("Class %s does not have a valid static interface", name)
-		)
+		assert(tea.values(tea.callback)(currentInterface), string.format("Class %s does not have a valid interface", name))
 		return tea.strictInterface(currentInterface)
 	end
 	local implementsInterface
