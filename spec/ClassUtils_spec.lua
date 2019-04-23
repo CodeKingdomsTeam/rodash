@@ -239,29 +239,6 @@ describe(
 					end
 				)
 				it(
-					"allows a class to be used",
-					function()
-						local MyClass =
-							ClassUtils.makeClassWithInterface(
-							"Simple",
-							{
-								amount = tea.string
-							}
-						)
-						function MyClass:getAmount()
-							return self._amount
-						end
-						assert.errors(
-							function()
-								MyClass.new({amount = 10})
-							end,
-							[[Class Simple cannot be instantiated
-[interface] bad value for amount:
-	string expected, got number]]
-						)
-					end
-				)
-				it(
 					"throws if the interface is malformed",
 					function()
 						assert.errors(

@@ -3,6 +3,8 @@ local TableUtils = require(script.Parent.TableUtils)
 local ClassUtils = {}
 
 function ClassUtils.makeClass(name, constructor)
+	assert(tea.string(name), "Class name must be a string")
+	assert(tea.optional(tea.callback)(constructor), "Class constructor must be a function or nil")
 	constructor = constructor or function()
 			return {}
 		end
@@ -20,7 +22,7 @@ function ClassUtils.makeClass(name, constructor)
 	end
 	function Class.isInstance(value)
 		local ok = ClassUtils.isA(value, Class)
-		return ok, ok and "" or string.format("Not a %s instance", name)
+		return ok, not ok and string.format("Not a %s instance", name) or nil
 	end
 	function Class:extend(name, subConstructor)
 		local SubClass = ClassUtils.makeClass(name, subConstructor or Class.new)
@@ -37,7 +39,7 @@ function ClassUtils.makeClassWithInterface(name, interface)
 	local function getImplementsInterface(currentInterface)
 		local ok, problem = tea.values(tea.callback)(currentInterface)
 		assert(ok, string.format([[Class %s does not have a valid interface
-%s]], name, problem or ""))
+%s]], name, tostring(problem)))
 		return tea.strictInterface(currentInterface)
 	end
 	local implementsInterface
@@ -48,7 +50,7 @@ function ClassUtils.makeClassWithInterface(name, interface)
 			data = data or {}
 			local ok, problem = implementsInterface(data)
 			assert(ok, string.format([[Class %s cannot be instantiated
-%s]], name, problem or ""))
+%s]], name, tostring(problem)))
 			return TableUtils.mapKeys(
 				data,
 				function(_, key)
