@@ -3,20 +3,29 @@ local TableUtils = require(script.Parent.TableUtils)
 local ClassUtils = {}
 
 function ClassUtils.makeClass(name, constructor)
+	assert(tea.string(name), "Class name must be a string")
+	assert(tea.optional(tea.callback)(constructor), "Class constructor must be a function or nil")
 	constructor = constructor or function()
 			return {}
 		end
 	local Class = {
-		name = name,
-		constructor = constructor
+		name = name
 	}
 	function Class.new(...)
 		local instance = constructor(...)
 		setmetatable(instance, {__index = Class, __tostring = Class.toString})
+		if instance._init then
+			instance:_init(...)
+		end
+		instance.Class = Class
 		return instance
 	end
-	function Class:extend(name, constructor)
-		local SubClass = ClassUtils.makeClass(name, constructor or self.constructor)
+	function Class.isInstance(value)
+		local ok = ClassUtils.isA(value, Class)
+		return ok, not ok and string.format("Not a %s instance", name) or nil
+	end
+	function Class:extend(name, subConstructor)
+		local SubClass = ClassUtils.makeClass(name, subConstructor or Class.new)
 		setmetatable(SubClass, {__index = self})
 		return SubClass
 	end
@@ -26,28 +35,32 @@ function ClassUtils.makeClass(name, constructor)
 	return Class
 end
 
-function ClassUtils.makeConstructedClass(name, constructor)
-	constructor = constructor or function()
-		end
-	local Class
-	Class =
+function ClassUtils.makeClassWithInterface(name, interface)
+	local function getImplementsInterface(currentInterface)
+		local ok, problem = tea.values(tea.callback)(currentInterface)
+		assert(ok, string.format([[Class %s does not have a valid interface
+%s]], name, tostring(problem)))
+		return tea.strictInterface(currentInterface)
+	end
+	local implementsInterface
+	local Class =
 		ClassUtils.makeClass(
 		name,
 		function(data)
-			local instance = TableUtils.clone(data)
-			if constructor then
-				setmetatable(instance, {__index = Class, __tostring = Class.toString})
-				constructor(instance)
-			end
-			return instance
+			data = data or {}
+			local ok, problem = implementsInterface(data)
+			assert(ok, string.format([[Class %s cannot be instantiated
+%s]], name, tostring(problem)))
+			return TableUtils.mapKeys(
+				data,
+				function(_, key)
+					return "_" .. key
+				end
+			)
 		end
 	)
-	Class.constructor = constructor
-	function Class:extend(name, constructor)
-		local SubClass = ClassUtils.makeConstructedClass(name, constructor)
-		setmetatable(SubClass, {__index = self})
-		return SubClass
-	end
+	implementsInterface =
+		type(interface) == "function" and getImplementsInterface(interface(Class)) or getImplementsInterface(interface)
 	return Class
 end
 
@@ -65,10 +78,10 @@ function ClassUtils.makeEnum(keys)
 		enum,
 		{
 			__index = function(t, key)
-				error("Attempt to access key " .. key .. " which is not a valid key of the enum")
+				error(string.format("Attempt to access key %s which is not a valid key of the enum", key))
 			end,
 			__newindex = function(t, key)
-				error("Attempt to set key " .. key .. " on enum")
+				error(string.format("Attempt to set key %s on enum", key))
 			end
 		}
 	)
