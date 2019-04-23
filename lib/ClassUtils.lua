@@ -14,8 +14,8 @@ function ClassUtils.makeClass(name, constructor)
 	function Class.new(...)
 		local instance = constructor(...)
 		setmetatable(instance, {__index = Class, __tostring = Class.toString})
-		if instance.init then
-			instance:init(...)
+		if instance._init then
+			instance:_init(...)
 		end
 		instance.Class = Class
 		return instance

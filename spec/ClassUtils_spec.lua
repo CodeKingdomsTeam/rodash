@@ -25,7 +25,7 @@ describe(
 						function MyClass:getFive()
 							return 5
 						end
-						function MyClass:init(amount)
+						function MyClass:_init(amount)
 							self.amount = amount + self:getFive()
 						end
 						local myInstance = MyClass.new(4)
@@ -341,7 +341,7 @@ bad value for key amount:
 							}
 						)
 
-						function MyClass:init()
+						function MyClass:_init()
 							self._nice = self:getDefaultAmount()
 						end
 						function MyClass:getDefaultAmount()
@@ -367,7 +367,7 @@ bad value for key amount:
 							}
 						)
 
-						function MyClass:init()
+						function MyClass:_init()
 							self._nice = self:getDefaultAmount()
 						end
 
