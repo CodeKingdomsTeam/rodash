@@ -393,6 +393,162 @@ bad value for key amount:
 			end
 		)
 		describe(
+			"extendWithInterface",
+			function()
+				local function makeClass()
+					local MyClass =
+						ClassUtils.makeClassWithInterface(
+						"Simple",
+						{
+							amount = tea.number
+						}
+					)
+					local MySubClass =
+						MyClass:extendWithInterface(
+						"SubSimple",
+						{
+							subAmount = tea.number
+						}
+					)
+					local MyVerySubClass =
+						MySubClass:extendWithInterface(
+						"VerySubSimple",
+						{
+							verySubAmount = tea.number
+						}
+					)
+					return MyVerySubClass
+				end
+
+				it(
+					"makes a sub class which verifies types for all interfaces",
+					function()
+						local myInstance = makeClass().new({amount = 10, subAmount = 20, verySubAmount = 30})
+						assert.are.equal(myInstance._amount, 10)
+						assert.are.equal(myInstance._subAmount, 20)
+						assert.are.equal(myInstance._verySubAmount, 30)
+					end
+				)
+
+				it(
+					"fails invalid types in any interface",
+					function()
+						assert.errors(
+							function()
+								makeClass().new({amount = "nope", subAmount = 20, verySubAmount = 30})
+							end,
+							[[Class VerySubSimple cannot be instantiated
+[interface] bad value for amount:
+	number expected, got string]]
+						)
+						assert.errors(
+							function()
+								makeClass().new({amount = 10, subAmount = "nope", verySubAmount = 30})
+							end,
+							[[Class VerySubSimple cannot be instantiated
+[interface] bad value for subAmount:
+	number expected, got string]]
+						)
+						assert.errors(
+							function()
+								makeClass().new({amount = 10, subAmount = 20, verySubAmount = "nope"})
+							end,
+							[[Class VerySubSimple cannot be instantiated
+[interface] bad value for verySubAmount:
+	number expected, got string]]
+						)
+					end
+				)
+				it(
+					"fails extra types",
+					function()
+						assert.errors(
+							function()
+								makeClass().new({amount = 10, subAmount = 20, verySubAmount = 30, myBadAmount = 40})
+							end,
+							[[Class VerySubSimple cannot be instantiated
+[interface] unexpected field 'myBadAmount']]
+						)
+					end
+				)
+
+				it(
+					"composes function verifiers",
+					function()
+						local MyClass =
+							ClassUtils.makeClassWithInterface(
+							"Simple",
+							function(Class)
+								return {
+									amount = tea.number
+								}
+							end
+						)
+						local MySubClass =
+							MyClass:extendWithInterface(
+							"SubSimple",
+							function(Class)
+								return {
+									subAmount = tea.number
+								}
+							end
+						)
+						local myInstance = MySubClass.new({amount = 10, subAmount = 20})
+						assert.are.equal(myInstance._amount, 10)
+						assert.are.equal(myInstance._subAmount, 20)
+					end
+				)
+
+				it(
+					"composes data and function verifiers",
+					function()
+						local MyClass =
+							ClassUtils.makeClassWithInterface(
+							"Simple",
+							{
+								amount = tea.number
+							}
+						)
+						local MySubClass =
+							MyClass:extendWithInterface(
+							"SubSimple",
+							function(Class)
+								return {
+									subAmount = tea.number
+								}
+							end
+						)
+						local myInstance = MySubClass.new({amount = 10, subAmount = 20})
+						assert.are.equal(myInstance._amount, 10)
+						assert.are.equal(myInstance._subAmount, 20)
+					end
+				)
+
+				it(
+					"composes function with data verifiers",
+					function()
+						local MyClass =
+							ClassUtils.makeClassWithInterface(
+							"Simple",
+							{
+								amount = tea.number
+							}
+						)
+						local MySubClass =
+							MyClass:extendWithInterface(
+							"SubSimple",
+							{
+								subAmount = tea.number
+							}
+						)
+						local myInstance = MySubClass.new({amount = 10, subAmount = 20})
+						assert.are.equal(myInstance._amount, 10)
+						assert.are.equal(myInstance._subAmount, 20)
+					end
+				)
+			end
+		)
+		describe(
 			"makeEnum",
 			function()
 				it(

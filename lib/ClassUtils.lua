@@ -29,6 +29,32 @@ function ClassUtils.makeClass(name, constructor)
 		setmetatable(SubClass, {__index = self})
 		return SubClass
 	end
+	function Class:extendWithInterface(name, interface)
+		local function getComposableInterface(input)
+			if input == nil then
+				return function()
+					return {}
+				end
+			elseif type(input) == "function" then
+				return input
+			else
+				return function()
+					return input
+				end
+			end
+		end
+		local inheritedInterface = self.interface
+		local compositeInterface = function(Class)
+			return TableUtils.assign(
+				{},
+				getComposableInterface(interface)(Class),
+				getComposableInterface(inheritedInterface)(Class)
+			)
+		end
+		local SubClass = ClassUtils.makeClassWithInterface(name, compositeInterface)
+		setmetatable(SubClass, {__index = self})
+		return SubClass
+	end
 	function Class:toString()
 		return self.name
 	end
@@ -61,6 +87,7 @@ function ClassUtils.makeClassWithInterface(name, interface)
 	)
 	implementsInterface =
 		type(interface) == "function" and getImplementsInterface(interface(Class)) or getImplementsInterface(interface)
+	Class.interface = interface
 	return Class
 end
 
