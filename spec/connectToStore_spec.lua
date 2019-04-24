@@ -10,10 +10,10 @@ local function getStoreStub(initialState)
 			return state
 		end,
 		changed = {
-			Connect = function(connection, handler)
+			connect = function(connection, handler)
 				callback = handler
 				return {
-					Disconnect = function()
+					disconnect = function()
 						callback = nil
 					end
 				}

@@ -16,7 +16,7 @@ local function connectToStore(Class, mapStateToFields)
 
 	function ConnectedClass:listen()
 		self._connection =
-			self._store.changed:Connect(
+			self._store.changed:connect(
 			function(state)
 				local nextFields = mapStateToFields(state)
 				if self:shouldUpdate(nextFields) then
@@ -27,13 +27,13 @@ local function connectToStore(Class, mapStateToFields)
 			end
 		)
 		if Class.listen then
-			Class:listen(self)
+			Class.listen(self)
 		end
 		local nextFields = mapStateToFields(self._store:getState())
 		self._fields = nextFields
 		TableUtils.assign(self, nextFields)
 		if Class.didMount then
-			Class:didMount(self)
+			Class.didMount(self)
 		end
 	end
 
@@ -57,7 +57,7 @@ local function connectToStore(Class, mapStateToFields)
 	end
 
 	function ConnectedClass:destroy()
-		self._connection:Disconnect()
+		self._connection:disconnect()
 		if Class.destroy then
 			Class.destroy(self)
 		end
