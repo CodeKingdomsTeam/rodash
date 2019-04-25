@@ -129,13 +129,23 @@ function ClassUtils.applySwitchStrategyForEnum(enum, enumValue, strategies, ...)
 	return strategies[enumValue](...)
 end
 
-function ClassUtils.makeSymbolEnum(keys)
-	return TableUtils.map(
-		ClassUtils.makeEnum(keys),
-		function(key)
-			return ClassUtils.makeSymbol(key)
+function ClassUtils.makeFinal(object)
+	local backend = getmetatable(object)
+	local proxy = {
+		__index = function(t, key)
+			error(string.format("Attempt to access key %s which is missing in final object", key))
+		end,
+		__newindex = function(t, key)
+			error(string.format("Attempt to set key %s on final object", key))
 		end
-	)
+	}
+	if backend then
+		setmetatable(proxy, backend)
+	end
+
+	setmetatable(object, proxy)
+
+	return object
 end
 
 function ClassUtils.isA(instance, classOrEnum)

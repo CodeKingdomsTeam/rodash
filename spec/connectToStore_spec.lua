@@ -50,7 +50,7 @@ describe(
 					connectToStore(
 					MyClass,
 					function(state)
-						return {_field = state.field}
+						return {field = state.field}
 					end
 				)
 				local store =
@@ -68,7 +68,7 @@ describe(
 				)
 				myInstance:mount()
 				assert.spy(MyClass.didMount).was_called()
-				assert.equals(5, myInstance._field)
+				assert.equals(5, myInstance._props.field)
 			end
 		)
 		it(
@@ -128,7 +128,7 @@ describe(
 					connectToStore(
 					MyClass,
 					function(state)
-						return {_field = state.field}
+						return {field = state.field}
 					end
 				)
 				local store =
@@ -152,9 +152,9 @@ describe(
 					}
 				)
 				assert.spy(MyClass.willUpdate).was_called()
-				assert.equals(5, MyClass.willUpdate.calls[1].vals[1]._field)
-				assert.equals(6, MyClass.willUpdate.calls[1].vals[2]._field)
-				assert.equals(6, myInstance._field)
+				assert.equals(5, MyClass.willUpdate.calls[1].vals[1]._props.field)
+				assert.equals(6, MyClass.willUpdate.calls[1].vals[2].field)
+				assert.equals(6, myInstance._props.field)
 			end
 		)
 		it(
@@ -176,7 +176,7 @@ describe(
 					connectToStore(
 					MyClass,
 					function(state)
-						return {_field = state.field}
+						return {field = state.field}
 					end
 				)
 				local store =
@@ -233,7 +233,7 @@ describe(
 					connectToStore(
 					MyClass,
 					function(state)
-						return {_field = state.field}
+						return {field = state.field}
 					end
 				)
 				local store =
@@ -259,7 +259,7 @@ describe(
 				)
 				assert.spy(MyClass.willUpdate).was_not_called()
 				assert.spy(MyClass.shouldUpdate).was_called()
-				assert.equals(12, myInstance._field)
+				assert.equals(12, myInstance._props.field)
 			end
 		)
 		it(
@@ -292,7 +292,7 @@ describe(
 					connectToStore(
 					MyClass,
 					function(state)
-						return {_field = state.field}
+						return {field = state.field}
 					end
 				)
 				local store =
@@ -320,7 +320,7 @@ describe(
 				)
 				assert.spy(MyClass.willUpdate).was_not_called()
 				assert.spy(MyClass.shouldUpdate).was_not_called()
-				assert.equals(5, myInstance._field)
+				assert.equals(5, myInstance._props.field)
 			end
 		)
 	end
