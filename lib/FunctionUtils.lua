@@ -56,7 +56,7 @@ function FunctionUtils.interval(fn, secondsDelay)
 	local callTimeout
 	callTimeout = function()
 		timeout =
-			FunctionUtils:timeout(
+			FunctionUtils.timeout(
 			function()
 				fn()
 				callTimeout()
