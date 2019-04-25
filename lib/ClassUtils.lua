@@ -44,6 +44,8 @@ function ClassUtils.makeClass(name, constructor)
 			end
 		end
 		local inheritedInterface = self.interface
+		-- NOTE: Sub interfaces can at present override super interfaces, so this should be avoided
+		-- to provide better validation detection / true field type inheritence.
 		local compositeInterface = function(Class)
 			return TableUtils.assign(
 				{},

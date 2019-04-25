@@ -472,28 +472,37 @@ bad value for key amount:
 					end
 				)
 
+				local function getClassWithComposedInterfaces(superInterfaceIsFunction, subInterfaceIsFunction)
+					local superInterface = {
+						amount = tea.number
+					}
+
+					local MyClass =
+						ClassUtils.makeClassWithInterface(
+						"Simple",
+						superInterfaceIsFunction and function(Class)
+								return superInterface
+							end or superInterface
+					)
+
+					local subInterface = {
+						subAmount = tea.number
+					}
+
+					local MySubClass =
+						MyClass:extendWithInterface(
+						"SubSimple",
+						subInterfaceIsFunction and function(Class)
+								return subInterface
+							end or subInterface
+					)
+					return MySubClass
+				end
+
 				it(
 					"composes function verifiers",
 					function()
-						local MyClass =
-							ClassUtils.makeClassWithInterface(
-							"Simple",
-							function(Class)
-								return {
-									amount = tea.number
-								}
-							end
-						)
-						local MySubClass =
-							MyClass:extendWithInterface(
-							"SubSimple",
-							function(Class)
-								return {
-									subAmount = tea.number
-								}
-							end
-						)
-						local myInstance = MySubClass.new({amount = 10, subAmount = 20})
+						local myInstance = getClassWithComposedInterfaces(true, true).new({amount = 10, subAmount = 20})
 						assert.are.equal(myInstance._amount, 10)
 						assert.are.equal(myInstance._subAmount, 20)
 					end
@@ -502,23 +511,7 @@ bad value for key amount:
 				it(
 					"composes data and function verifiers",
 					function()
-						local MyClass =
-							ClassUtils.makeClassWithInterface(
-							"Simple",
-							{
-								amount = tea.number
-							}
-						)
-						local MySubClass =
-							MyClass:extendWithInterface(
-							"SubSimple",
-							function(Class)
-								return {
-									subAmount = tea.number
-								}
-							end
-						)
-						local myInstance = MySubClass.new({amount = 10, subAmount = 20})
+						local myInstance = getClassWithComposedInterfaces(true, false).new({amount = 10, subAmount = 20})
 						assert.are.equal(myInstance._amount, 10)
 						assert.are.equal(myInstance._subAmount, 20)
 					end
@@ -527,21 +520,7 @@ bad value for key amount:
 				it(
 					"composes function with data verifiers",
 					function()
-						local MyClass =
-							ClassUtils.makeClassWithInterface(
-							"Simple",
-							{
-								amount = tea.number
-							}
-						)
-						local MySubClass =
-							MyClass:extendWithInterface(
-							"SubSimple",
-							{
-								subAmount = tea.number
-							}
-						)
-						local myInstance = MySubClass.new({amount = 10, subAmount = 20})
+						local myInstance = getClassWithComposedInterfaces(false, true).new({amount = 10, subAmount = 20})
 						assert.are.equal(myInstance._amount, 10)
 						assert.are.equal(myInstance._subAmount, 20)
 					end

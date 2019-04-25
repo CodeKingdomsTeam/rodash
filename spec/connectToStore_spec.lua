@@ -66,7 +66,7 @@ describe(
 						amount = 10
 					}
 				)
-				myInstance:listen()
+				myInstance:mount()
 				assert.spy(MyClass.didMount).was_called()
 				assert.equals(5, myInstance._field)
 			end
@@ -144,7 +144,7 @@ describe(
 						amount = 10
 					}
 				)
-				myInstance:listen()
+				myInstance:mount()
 				assert.spy(MyClass.willUpdate).was_not_called()
 				store.setState(
 					{
@@ -192,7 +192,7 @@ describe(
 						amount = 10
 					}
 				)
-				myInstance:listen()
+				myInstance:mount()
 				assert.spy(MyClass.willUpdate).was_not_called()
 				store.setState(
 					{
@@ -249,7 +249,7 @@ describe(
 						amount = 10
 					}
 				)
-				myInstance:listen()
+				myInstance:mount()
 				assert.spy(MyClass.willUpdate).was_not_called()
 				assert.spy(MyClass.shouldUpdate).was_not_called()
 				store.setState(
@@ -308,7 +308,7 @@ describe(
 						amount = 10
 					}
 				)
-				myInstance:listen()
+				myInstance:mount()
 				assert.spy(MyClass.willUpdate).was_not_called()
 				assert.spy(MyClass.shouldUpdate).was_not_called()
 				myInstance:destroy()
