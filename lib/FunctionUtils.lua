@@ -34,7 +34,7 @@ function FunctionUtils.memoize(fn, serializeArgs)
 	return proxyFunction
 end
 
-function FunctionUtils.timeout(fn, secondsDelay)
+function FunctionUtils.setTimeout(fn, secondsDelay)
 	local cleared = false
 	delay(
 		secondsDelay,
@@ -51,12 +51,12 @@ function FunctionUtils.timeout(fn, secondsDelay)
 	}
 end
 
-function FunctionUtils.interval(fn, secondsDelay)
+function FunctionUtils.setInterval(fn, secondsDelay)
 	local timeout
 	local callTimeout
 	callTimeout = function()
 		timeout =
-			FunctionUtils.timeout(
+			FunctionUtils.setTimeout(
 			function()
 				fn()
 				callTimeout()
@@ -71,11 +71,6 @@ function FunctionUtils.interval(fn, secondsDelay)
 			timeout:clear()
 		end
 	}
-end
-
-function FunctionUtils.intervalNow(fn, secondsDelay)
-	fn()
-	return FunctionUtils.interval(fn, secondsDelay)
 end
 
 --[[
