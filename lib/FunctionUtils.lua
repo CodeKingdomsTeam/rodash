@@ -34,6 +34,45 @@ function FunctionUtils.memoize(fn, serializeArgs)
 	return proxyFunction
 end
 
+function FunctionUtils.setTimeout(fn, secondsDelay)
+	local cleared = false
+	delay(
+		secondsDelay,
+		function()
+			if not cleared then
+				fn()
+			end
+		end
+	)
+	return {
+		clear = function()
+			cleared = true
+		end
+	}
+end
+
+function FunctionUtils.setInterval(fn, secondsDelay)
+	local timeout
+	local callTimeout
+	callTimeout = function()
+		timeout =
+			FunctionUtils.setTimeout(
+			function()
+				fn()
+				callTimeout()
+			end,
+			secondsDelay
+		)
+	end
+	callTimeout()
+
+	return {
+		clear = function()
+			timeout:clear()
+		end
+	}
+end
+
 --[[
 	Creates a debounced function that delays invoking fn until after secondsDelay seconds have elapsed since the last time the debounced function was invoked.
 ]]
