@@ -1,4 +1,5 @@
 local ClassUtils = require "ClassUtils"
+local TableUtils = require "TableUtils"
 local tea = require "tea"
 
 describe(
@@ -15,7 +16,7 @@ describe(
 							return 5
 						end
 						local myInstance = MyClass.new()
-						assert.are.equal(myInstance:getFive(), 5)
+						assert.equals(5, myInstance:getFive())
 					end
 				)
 				it(
@@ -29,7 +30,7 @@ describe(
 							self.amount = amount + self:getFive()
 						end
 						local myInstance = MyClass.new(4)
-						assert.are.equal(myInstance.amount, 9)
+						assert.equals(9, myInstance.amount)
 					end
 				)
 				it(
@@ -37,7 +38,7 @@ describe(
 					function()
 						local MyClass = ClassUtils.makeClass("Simple")
 						local myInstance = MyClass.new()
-						assert.are.equal(tostring(myInstance), "Simple")
+						assert.equals("Simple", tostring(myInstance))
 					end
 				)
 				it(
@@ -56,7 +57,7 @@ describe(
 							return self.amount + 5
 						end
 						local myInstance = MyClass.new(10)
-						assert.are.equal(myInstance:addFive(), 15)
+						assert.equals(15, myInstance:addFive())
 					end
 				)
 			end
@@ -69,9 +70,9 @@ describe(
 					function()
 						local symbol1 = ClassUtils.makeSymbol("TEST")
 						local symbol2 = ClassUtils.makeSymbol("TEST")
-						assert.are.equal(symbol1, symbol1)
+						assert.equals(symbol1, symbol1)
 						assert.are_not.equal(symbol1, symbol2)
-						assert.are.equal("TEST", tostring(symbol1))
+						assert.equals("TEST", tostring(symbol1))
 					end
 				)
 			end
@@ -105,7 +106,7 @@ describe(
 							return 6
 						end
 						local myInstance = MySubclass.new(10)
-						assert.are.equal(myInstance:addVirtual(), 19)
+						assert.equals(19, myInstance:addVirtual())
 					end
 				)
 				it(
@@ -121,7 +122,7 @@ describe(
 						end
 
 						local myInstance = MySubclass.new()
-						assert.are.equal(myInstance:getFive() + myInstance:getEight(), 13)
+						assert.equals(13, myInstance:getFive() + myInstance:getEight())
 					end
 				)
 				it(
@@ -150,7 +151,7 @@ describe(
 						end
 
 						local myInstance = MySubclass.new(2)
-						assert.are.equal(myInstance:getAmount(), 30)
+						assert.equals(30, myInstance:getAmount())
 					end
 				)
 				it(
@@ -170,8 +171,8 @@ describe(
 
 						local myInstance = MyClass.new()
 						local mySubInstance = MySubclass.new()
-						assert.are.equal(myInstance:addFiveToMagicNumber(), 15)
-						assert.are.equal(mySubInstance:addFiveToMagicNumber(), 17)
+						assert.equals(15, myInstance:addFiveToMagicNumber())
+						assert.equals(17, mySubInstance:addFiveToMagicNumber())
 					end
 				)
 			end
@@ -212,7 +213,7 @@ describe(
 							return self._amount
 						end
 						local myInstance = MyClass.new({amount = 10})
-						assert.are.equal(myInstance:getAmount(), 10)
+						assert.equals(10, myInstance:getAmount())
 					end
 				)
 				it(
@@ -326,8 +327,8 @@ bad value for key amount:
 						local data = {amount = 10}
 						local myInstance = MyClass.new(data)
 						myInstance:setAmount(6)
-						assert.are.equal(myInstance._amount, 6)
-						assert.are.equal(data.amount, 10)
+						assert.equals(6, myInstance._amount)
+						assert.equals(10, data.amount)
 					end
 				)
 				it(
@@ -352,8 +353,8 @@ bad value for key amount:
 						end
 						local data = {amount = 10}
 						local myInstance = MyClass.new(data)
-						assert.are.equal(myInstance._amount, 10)
-						assert.are.equal(myInstance._nice, 5)
+						assert.equals(10, myInstance._amount)
+						assert.equals(5, myInstance._nice)
 					end
 				)
 				it(
@@ -386,8 +387,143 @@ bad value for key amount:
 						)
 						local data = {amount = 10}
 						local myInstance = MySubclass.new(data)
-						assert.are.equal(5, myInstance._nice)
-						assert.are.equal(10, myInstance._nicer)
+						assert.equals(5, myInstance._nice)
+						assert.equals(10, myInstance._nicer)
+					end
+				)
+			end
+		)
+		describe(
+			"extendWithInterface",
+			function()
+				local function makeClass()
+					local MyClass =
+						ClassUtils.makeClassWithInterface(
+						"Simple",
+						{
+							amount = tea.number
+						}
+					)
+					local MySubClass =
+						MyClass:extendWithInterface(
+						"SubSimple",
+						{
+							subAmount = tea.number
+						}
+					)
+					local MyVerySubClass =
+						MySubClass:extendWithInterface(
+						"VerySubSimple",
+						{
+							verySubAmount = tea.number
+						}
+					)
+					return MyVerySubClass
+				end
+
+				it(
+					"makes a sub class which verifies types for all interfaces",
+					function()
+						local myInstance = makeClass().new({amount = 10, subAmount = 20, verySubAmount = 30})
+						assert.equals(10, myInstance._amount)
+						assert.equals(20, myInstance._subAmount)
+						assert.equals(30, myInstance._verySubAmount)
+					end
+				)
+
+				it(
+					"fails invalid types in any interface",
+					function()
+						assert.errors(
+							function()
+								makeClass().new({amount = "nope", subAmount = 20, verySubAmount = 30})
+							end,
+							[[Class VerySubSimple cannot be instantiated
+[interface] bad value for amount:
+	number expected, got string]]
+						)
+						assert.errors(
+							function()
+								makeClass().new({amount = 10, subAmount = "nope", verySubAmount = 30})
+							end,
+							[[Class VerySubSimple cannot be instantiated
+[interface] bad value for subAmount:
+	number expected, got string]]
+						)
+						assert.errors(
+							function()
+								makeClass().new({amount = 10, subAmount = 20, verySubAmount = "nope"})
+							end,
+							[[Class VerySubSimple cannot be instantiated
+[interface] bad value for verySubAmount:
+	number expected, got string]]
+						)
+					end
+				)
+				it(
+					"fails extra types",
+					function()
+						assert.errors(
+							function()
+								makeClass().new({amount = 10, subAmount = 20, verySubAmount = 30, myBadAmount = 40})
+							end,
+							[[Class VerySubSimple cannot be instantiated
+[interface] unexpected field 'myBadAmount']]
+						)
+					end
+				)
+
+				local function getClassWithComposedInterfaces(superInterfaceIsFunction, subInterfaceIsFunction)
+					local superInterface = {
+						amount = tea.number
+					}
+
+					local MyClass =
+						ClassUtils.makeClassWithInterface(
+						"Simple",
+						superInterfaceIsFunction and function(Class)
+								return superInterface
+							end or superInterface
+					)
+
+					local subInterface = {
+						subAmount = tea.number
+					}
+
+					local MySubClass =
+						MyClass:extendWithInterface(
+						"SubSimple",
+						subInterfaceIsFunction and function(Class)
+								return subInterface
+							end or subInterface
+					)
+					return MySubClass
+				end
+
+				it(
+					"composes function verifiers",
+					function()
+						local myInstance = getClassWithComposedInterfaces(true, true).new({amount = 10, subAmount = 20})
+						assert.equals(10, myInstance._amount)
+						assert.equals(20, myInstance._subAmount)
+					end
+				)
+
+				it(
+					"composes data and function verifiers",
+					function()
+						local myInstance = getClassWithComposedInterfaces(true, false).new({amount = 10, subAmount = 20})
+						assert.equals(10, myInstance._amount)
+						assert.equals(20, myInstance._subAmount)
+					end
+				)
+
+				it(
+					"composes function with data verifiers",
+					function()
+						local myInstance = getClassWithComposedInterfaces(false, true).new({amount = 10, subAmount = 20})
+						assert.equals(10, myInstance._amount)
+						assert.equals(20, myInstance._subAmount)
 					end
 				)
 			end
@@ -399,9 +535,9 @@ bad value for key amount:
 					"makes an enum from an array",
 					function()
 						local ENUM = ClassUtils.makeEnum({"ONE", "TWO", "THREE_YEAH"})
-						assert.are.equal(ENUM.ONE, "ONE")
-						assert.are.equal(ENUM.TWO, "TWO")
-						assert.are.equal(ENUM.THREE_YEAH, "THREE_YEAH")
+						assert.equals("ONE", ENUM.ONE)
+						assert.equals("TWO", ENUM.TWO)
+						assert.equals("THREE_YEAH", ENUM.THREE_YEAH)
 					end
 				)
 				it(
@@ -498,6 +634,60 @@ bad value for key amount:
 						assert.not_truthy(ClassUtils.isA(MyClass, MyClass))
 						assert.truthy(ClassUtils.isA(MySubclass, MyClass))
 						assert.not_truthy(ClassUtils.isA(MyClass, MySubclass))
+					end
+				)
+			end
+		)
+
+		describe(
+			"makeFinal",
+			function()
+				it(
+					"warns about using a missing key",
+					function()
+						local myObject =
+							ClassUtils.makeFinal(
+							{
+								a = 2
+							}
+						)
+						assert.equals(2, myObject.a)
+						assert.errors(
+							function()
+								return myObject.b
+							end,
+							"Attempt to access key b which is missing in final object"
+						)
+					end
+				)
+				it(
+					"warns about assignment to an unused variable",
+					function()
+						local myObject =
+							ClassUtils.makeFinal(
+							{
+								a = 2
+							}
+						)
+						assert.errors(
+							function()
+								myObject.b = 2
+							end,
+							"Attempt to set key b on final object"
+						)
+					end
+				)
+				it(
+					"allows iteration over a table",
+					function()
+						local myObject =
+							ClassUtils.makeFinal(
+							{
+								a = 2,
+								b = 3
+							}
+						)
+						assert.are.same({2, 3}, TableUtils.values(myObject))
 					end
 				)
 			end
