@@ -1,4 +1,5 @@
 local ClassUtils = require "ClassUtils"
+local TableUtils = require "TableUtils"
 local tea = require "tea"
 
 describe(
@@ -660,7 +661,7 @@ bad value for key amount:
 					end
 				)
 				it(
-					"warns about assignment",
+					"warns about assignment to an unused variable",
 					function()
 						local myObject =
 							ClassUtils.makeFinal(
@@ -674,6 +675,19 @@ bad value for key amount:
 							end,
 							"Attempt to set key b on final object"
 						)
+					end
+				)
+				it(
+					"allows iteration over a table",
+					function()
+						local myObject =
+							ClassUtils.makeFinal(
+							{
+								a = 2,
+								b = 3
+							}
+						)
+						assert.are.same({2, 3}, TableUtils.values(myObject))
 					end
 				)
 			end
