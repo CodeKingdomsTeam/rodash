@@ -72,9 +72,8 @@ function PriorityQueue:put(v, p) -- --
 	Args:
 		v: the item to be stored
 		p(number): the priority of the item
-	]] self.heap[
-			self.current_size + 1
-		] = {v, p}
+	]]
+	self.heap[self.current_size + 1] = {v, p}
 	self.current_size = self.current_size + 1
 	self:swim()
 end
