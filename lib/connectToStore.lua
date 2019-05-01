@@ -15,6 +15,14 @@ local function connectToStore(Class, mapStateToProps)
 		}
 	)
 
+	function ConnectedClass:_init(...)
+		local nextProps = ClassUtils.makeFinal(mapStateToProps(self._store:getState()))
+		self._props = nextProps
+		if Class._init then
+			return Class._init(self, ...)
+		end
+	end
+
 	function ConnectedClass:mount()
 		self._connection =
 			self._store.changed:connect(
@@ -29,8 +37,6 @@ local function connectToStore(Class, mapStateToProps)
 		if Class.mount then
 			Class.mount(self)
 		end
-		local nextProps = ClassUtils.makeFinal(mapStateToProps(self._store:getState()))
-		self._props = nextProps
 		if Class.didMount then
 			Class.didMount(self)
 		end
