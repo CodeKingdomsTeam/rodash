@@ -24,6 +24,9 @@ local function connectToStore(Class, mapStateToProps)
 	end
 
 	function ConnectedClass:mount()
+		if self._connection then
+			error(string.format("Cannot mount %s as it has already been mounted", self.Class.name))
+		end
 		self._connection =
 			self._store.changed:connect(
 			function(state)
