@@ -36,19 +36,21 @@ end
 
 function FunctionUtils.setTimeout(fn, secondsDelay)
 	local cleared = false
+	local timeout
 	delay(
 		secondsDelay,
 		function()
 			if not cleared then
-				fn()
+				fn(timeout)
 			end
 		end
 	)
-	return {
+	timeout = {
 		clear = function()
 			cleared = true
 		end
 	}
+	return timeout
 end
 
 function FunctionUtils.setInterval(fn, secondsDelay)
@@ -58,8 +60,8 @@ function FunctionUtils.setInterval(fn, secondsDelay)
 		timeout =
 			FunctionUtils.setTimeout(
 			function()
-				fn()
 				callTimeout()
+				fn(timeout)
 			end,
 			secondsDelay
 		)
