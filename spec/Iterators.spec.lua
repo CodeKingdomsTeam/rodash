@@ -1,8 +1,8 @@
-local IterateUtils = require "IterateUtils"
-local TableUtils = require "TableUtils"
+local Iterators = require "Iterators"
+local Tables = require "Tables"
 
 describe(
-	"IterateUtils",
+	"Iterators",
 	function()
 		describe(
 			"getInsertionSafeIterator",
@@ -12,8 +12,8 @@ describe(
 					function()
 						assert.are.same(
 							{10, 120, 20, 30, 140, 40, 50, 160, 60},
-							TableUtils.Map(
-								IterateUtils.getInsertionSafeIterator({1, 3, 5}),
+							Tables.Map(
+								Iterators.getInsertionSafeIterator({1, 3, 5}),
 								function(iterator, i)
 									if iterator.value % 2 == 1 then
 										iterator:insertAhead(iterator.value + 1)

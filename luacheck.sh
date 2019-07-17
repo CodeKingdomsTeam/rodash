@@ -8,7 +8,7 @@ export PATH="$PWD/lua_install/bin:$PATH"
 
 if [ $# -eq 0 ]
 then
-	luacheck lib spec
+	luacheck src spec
 else
 	luacheck "$@"
 fi

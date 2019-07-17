@@ -6,7 +6,7 @@ set -o pipefail
 
 if [ $# -eq 0 ]
 then
-	find lib spec -name '*.lua' -exec ./node_modules/lua-fmt/dist/bin/luafmt.js --use-tabs --write-mode replace {} \;
+	find src spec -name '*.lua' -exec ./node_modules/lua-fmt/dist/bin/luafmt.js --use-tabs --write-mode replace {} \;
 else
 	for FILE in "$@"
 	do

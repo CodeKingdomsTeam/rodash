@@ -1,9 +1,9 @@
-local ClassUtils = require "ClassUtils"
-local TableUtils = require "TableUtils"
+local Classes = require "Classes"
+local Tables = require "Tables"
 local t = require "t"
 
 describe(
-	"ClassUtils",
+	"Classes",
 	function()
 		describe(
 			"makeClass",
@@ -11,7 +11,7 @@ describe(
 				it(
 					"makes a class with default constructor",
 					function()
-						local MyClass = ClassUtils.makeClass("Simple")
+						local MyClass = Classes.makeClass("Simple")
 						function MyClass:getFive()
 							return 5
 						end
@@ -22,7 +22,7 @@ describe(
 				it(
 					"allows an init impl which passes self",
 					function()
-						local MyClass = ClassUtils.makeClass("Simple")
+						local MyClass = Classes.makeClass("Simple")
 						function MyClass:getFive()
 							return 5
 						end
@@ -36,7 +36,7 @@ describe(
 				it(
 					"provides a default toString handler",
 					function()
-						local MyClass = ClassUtils.makeClass("Simple")
+						local MyClass = Classes.makeClass("Simple")
 						local myInstance = MyClass.new()
 						assert.equals("Simple", tostring(myInstance))
 					end
@@ -45,7 +45,7 @@ describe(
 					"makes a class with a constructor",
 					function()
 						local MyClass =
-							ClassUtils.makeClass(
+							Classes.makeClass(
 							"Simple",
 							function(amount)
 								return {
@@ -68,8 +68,8 @@ describe(
 				it(
 					"makes a symbol which doesn't alias",
 					function()
-						local symbol1 = ClassUtils.makeSymbol("TEST")
-						local symbol2 = ClassUtils.makeSymbol("TEST")
+						local symbol1 = Classes.makeSymbol("TEST")
+						local symbol2 = Classes.makeSymbol("TEST")
 						assert.equals(symbol1, symbol1)
 						assert.are_not.equal(symbol1, symbol2)
 						assert.equals("TEST", tostring(symbol1))
@@ -84,7 +84,7 @@ describe(
 					"makes a subclass with a constructor",
 					function()
 						local MyClass =
-							ClassUtils.makeClass(
+							Classes.makeClass(
 							"Simple",
 							function(amount)
 								return {
@@ -112,7 +112,7 @@ describe(
 				it(
 					"provides recursive table lookup",
 					function()
-						local MyClass = ClassUtils.makeClass("Simple")
+						local MyClass = Classes.makeClass("Simple")
 						function MyClass:getFive()
 							return 5
 						end
@@ -129,7 +129,7 @@ describe(
 					"override constructor and provide route to super",
 					function()
 						local MyClass =
-							ClassUtils.makeClass(
+							Classes.makeClass(
 							"Simple",
 							function(amount)
 								return {
@@ -157,7 +157,7 @@ describe(
 				it(
 					"provides virtual methods",
 					function()
-						local MyClass = ClassUtils.makeClass("Simple")
+						local MyClass = Classes.makeClass("Simple")
 						function MyClass:addFiveToMagicNumber()
 							return 5 + self.getMagicNumber()
 						end
@@ -183,8 +183,8 @@ describe(
 				it(
 					"returns true or false depending on inheritance tree",
 					function()
-						local MyClass = ClassUtils.makeClass("Simple")
-						local MyOtherClass = ClassUtils.makeClass("Simple2")
+						local MyClass = Classes.makeClass("Simple")
+						local MyOtherClass = Classes.makeClass("Simple2")
 						local MySubclass = MyClass:extend("SimpleSub")
 						local myInstance = MyClass.new()
 						local mySubInstance = MySubclass.new()
@@ -203,7 +203,7 @@ describe(
 					"makes a class which constructs instances from data",
 					function()
 						local MyClass =
-							ClassUtils.makeClassWithInterface(
+							Classes.makeClassWithInterface(
 							"Simple",
 							{
 								amount = t.number
@@ -220,7 +220,7 @@ describe(
 					"throws if the data doesn't match during construction",
 					function()
 						local MyClass =
-							ClassUtils.makeClassWithInterface(
+							Classes.makeClassWithInterface(
 							"Simple",
 							{
 								amount = t.string
@@ -244,7 +244,7 @@ describe(
 					function()
 						assert.errors(
 							function()
-								ClassUtils.makeClassWithInterface(
+								Classes.makeClassWithInterface(
 									"Simple",
 									{
 										amount = "lol"
@@ -260,9 +260,9 @@ bad value for key amount:
 				it(
 					"allows an instance to be passed as child",
 					function()
-						local MyComposite = ClassUtils.makeClass("Composite")
+						local MyComposite = Classes.makeClass("Composite")
 						local MyClass =
-							ClassUtils.makeClassWithInterface(
+							Classes.makeClassWithInterface(
 							"Simple",
 							{
 								child = MyComposite.isInstance
@@ -276,7 +276,7 @@ bad value for key amount:
 					"allows an instance of the same class to be passed as child using a dynamic interface",
 					function()
 						local MyClass =
-							ClassUtils.makeClassWithInterface(
+							Classes.makeClassWithInterface(
 							"Simple",
 							function(Class)
 								return {
@@ -292,10 +292,10 @@ bad value for key amount:
 				it(
 					"throw if an instance passed as child is of incorrect type",
 					function()
-						local MyComposite = ClassUtils.makeClass("Composite")
-						local MyBadComposite = ClassUtils.makeClass("BadComposite")
+						local MyComposite = Classes.makeClass("Composite")
+						local MyBadComposite = Classes.makeClass("BadComposite")
 						local MyClass =
-							ClassUtils.makeClassWithInterface(
+							Classes.makeClassWithInterface(
 							"Simple",
 							{
 								child = MyComposite.isInstance
@@ -315,7 +315,7 @@ bad value for key amount:
 					"takes a shallow copy of the data",
 					function()
 						local MyClass =
-							ClassUtils.makeClassWithInterface(
+							Classes.makeClassWithInterface(
 							"Simple",
 							{
 								amount = t.number
@@ -335,7 +335,7 @@ bad value for key amount:
 					"passes instance to init",
 					function()
 						local MyClass =
-							ClassUtils.makeClassWithInterface(
+							Classes.makeClassWithInterface(
 							"Simple",
 							{
 								amount = t.number
@@ -361,7 +361,7 @@ bad value for key amount:
 					"extends produces correct, separate constructors",
 					function()
 						local MyClass =
-							ClassUtils.makeClassWithInterface(
+							Classes.makeClassWithInterface(
 							"Simple",
 							{
 								amount = t.number
@@ -398,7 +398,7 @@ bad value for key amount:
 			function()
 				local function makeClass()
 					local MyClass =
-						ClassUtils.makeClassWithInterface(
+						Classes.makeClassWithInterface(
 						"Simple",
 						{
 							amount = t.number
@@ -479,7 +479,7 @@ bad value for key amount:
 					}
 
 					local MyClass =
-						ClassUtils.makeClassWithInterface(
+						Classes.makeClassWithInterface(
 						"Simple",
 						superInterfaceIsFunction and function(Class)
 								return superInterface
@@ -534,7 +534,7 @@ bad value for key amount:
 				it(
 					"makes an enum from an array",
 					function()
-						local ENUM = ClassUtils.makeEnum({"ONE", "TWO", "THREE_YEAH"})
+						local ENUM = Classes.makeEnum({"ONE", "TWO", "THREE_YEAH"})
 						assert.equals("ONE", ENUM.ONE)
 						assert.equals("TWO", ENUM.TWO)
 						assert.equals("THREE_YEAH", ENUM.THREE_YEAH)
@@ -546,19 +546,19 @@ bad value for key amount:
 						local errorMessage = "Enum keys must be defined as upper snake case"
 						assert.has_error(
 							function()
-								ClassUtils.makeEnum({"One"})
+								Classes.makeEnum({"One"})
 							end,
 							errorMessage
 						)
 						assert.has_error(
 							function()
-								ClassUtils.makeEnum({"ONOE_!"})
+								Classes.makeEnum({"ONOE_!"})
 							end,
 							errorMessage
 						)
 						assert.has_error(
 							function()
-								ClassUtils.makeEnum({""})
+								Classes.makeEnum({""})
 							end,
 							errorMessage
 						)
@@ -572,7 +572,7 @@ bad value for key amount:
 
 						before_each(
 							function()
-								ENUM = ClassUtils.makeEnum({"ONE", "TWO", "THREE_YEAH"})
+								ENUM = Classes.makeEnum({"ONE", "TWO", "THREE_YEAH"})
 							end
 						)
 
@@ -607,33 +607,33 @@ bad value for key amount:
 				it(
 					"checks an element of an Enum",
 					function()
-						local ENUM = ClassUtils.makeEnum({"ONE", "TWO", "THREE_YEAH"})
-						assert.truthy(ClassUtils.isA(ENUM.ONE, ENUM))
+						local ENUM = Classes.makeEnum({"ONE", "TWO", "THREE_YEAH"})
+						assert.truthy(Classes.isA(ENUM.ONE, ENUM))
 					end
 				)
 
 				it(
 					"checks an instance of a class",
 					function()
-						local MyClass = ClassUtils.makeClass("Simple")
+						local MyClass = Classes.makeClass("Simple")
 						local myInstance = MyClass.new()
-						assert.truthy(ClassUtils.isA(myInstance, MyClass))
-						assert.not_truthy(ClassUtils.isA({}, MyClass))
-						assert.not_truthy(ClassUtils.isA(MyClass, MyClass))
+						assert.truthy(Classes.isA(myInstance, MyClass))
+						assert.not_truthy(Classes.isA({}, MyClass))
+						assert.not_truthy(Classes.isA(MyClass, MyClass))
 					end
 				)
 				it(
 					"checks an instance of a super class",
 					function()
-						local MyClass = ClassUtils.makeClass("Simple")
+						local MyClass = Classes.makeClass("Simple")
 						local MySubclass = MyClass:extend("SimpleSub")
 						local myInstance = MySubclass.new()
-						assert.truthy(ClassUtils.isA(myInstance, MyClass))
-						assert.truthy(ClassUtils.isA(myInstance, MySubclass))
-						assert.not_truthy(ClassUtils.isA({}, MyClass))
-						assert.not_truthy(ClassUtils.isA(MyClass, MyClass))
-						assert.truthy(ClassUtils.isA(MySubclass, MyClass))
-						assert.not_truthy(ClassUtils.isA(MyClass, MySubclass))
+						assert.truthy(Classes.isA(myInstance, MyClass))
+						assert.truthy(Classes.isA(myInstance, MySubclass))
+						assert.not_truthy(Classes.isA({}, MyClass))
+						assert.not_truthy(Classes.isA(MyClass, MyClass))
+						assert.truthy(Classes.isA(MySubclass, MyClass))
+						assert.not_truthy(Classes.isA(MyClass, MySubclass))
 					end
 				)
 			end
@@ -646,7 +646,7 @@ bad value for key amount:
 					"warns about using a missing key",
 					function()
 						local myObject =
-							ClassUtils.makeFinal(
+							Classes.makeFinal(
 							{
 								a = 2
 							}
@@ -664,7 +664,7 @@ bad value for key amount:
 					"warns about assignment to an unused variable",
 					function()
 						local myObject =
-							ClassUtils.makeFinal(
+							Classes.makeFinal(
 							{
 								a = 2
 							}
@@ -681,13 +681,13 @@ bad value for key amount:
 					"allows iteration over a table",
 					function()
 						local myObject =
-							ClassUtils.makeFinal(
+							Classes.makeFinal(
 							{
 								a = 2,
 								b = 3
 							}
 						)
-						assert.are.same({2, 3}, TableUtils.values(myObject))
+						assert.are.same({2, 3}, Tables.values(myObject))
 					end
 				)
 			end
@@ -696,7 +696,7 @@ bad value for key amount:
 		describe(
 			"applySwitchStrategyForEnum",
 			function()
-				local ENUM = ClassUtils.makeEnum({"ONE", "TWO"})
+				local ENUM = Classes.makeEnum({"ONE", "TWO"})
 				local strategies = {
 					ONE = function(x)
 						return x + 1
@@ -709,7 +709,7 @@ bad value for key amount:
 				it(
 					"applies",
 					function()
-						local result = ClassUtils.applySwitchStrategyForEnum(ENUM, ENUM.ONE, strategies, 3)
+						local result = Classes.applySwitchStrategyForEnum(ENUM, ENUM.ONE, strategies, 3)
 
 						assert(result == 4)
 					end
@@ -720,7 +720,7 @@ bad value for key amount:
 					function()
 						assert.has_errors(
 							function()
-								ClassUtils.applySwitchStrategyForEnum(2, ENUM.ONE, strategies)
+								Classes.applySwitchStrategyForEnum(2, ENUM.ONE, strategies)
 							end
 						)
 					end
@@ -731,7 +731,7 @@ bad value for key amount:
 					function()
 						assert.has_errors(
 							function()
-								ClassUtils.applySwitchStrategyForEnum(ENUM, "1", strategies)
+								Classes.applySwitchStrategyForEnum(ENUM, "1", strategies)
 							end
 						)
 					end
@@ -742,13 +742,13 @@ bad value for key amount:
 					function()
 						assert.has_errors(
 							function()
-								ClassUtils.applySwitchStrategyForEnum(ENUM, ENUM.ONE, {})
+								Classes.applySwitchStrategyForEnum(ENUM, ENUM.ONE, {})
 							end
 						)
 
 						assert.has_errors(
 							function()
-								ClassUtils.applySwitchStrategyForEnum(ClassUtils.makeEnum({"FOUR"}), ENUM.ONE, strategies)
+								Classes.applySwitchStrategyForEnum(Classes.makeEnum({"FOUR"}), ENUM.ONE, strategies)
 							end
 						)
 					end

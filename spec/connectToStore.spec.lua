@@ -1,5 +1,5 @@
 local connectToStore = require "connectToStore"
-local ClassUtils = require "ClassUtils"
+local Classes = require "Classes"
 local t = require "t"
 
 local function getStoreStub(initialState)
@@ -35,7 +35,7 @@ describe(
 			"maps fields and calls didMount",
 			function()
 				local MyClass =
-					ClassUtils.makeClassWithInterface(
+					Classes.makeClassWithInterface(
 					"Simple",
 					{
 						amount = t.number
@@ -75,7 +75,7 @@ describe(
 			"complains about invalid fields",
 			function()
 				local MyClass =
-					ClassUtils.makeClassWithInterface(
+					Classes.makeClassWithInterface(
 					"Simple",
 					{
 						amount = t.number
@@ -113,7 +113,7 @@ describe(
 			"calls willUpdate during state change",
 			function()
 				local MyClass =
-					ClassUtils.makeClassWithInterface(
+					Classes.makeClassWithInterface(
 					"Simple",
 					{
 						amount = t.number
@@ -161,7 +161,7 @@ describe(
 			"does not call willUpdate if state is shallow equal",
 			function()
 				local MyClass =
-					ClassUtils.makeClassWithInterface(
+					Classes.makeClassWithInterface(
 					"Simple",
 					{
 						amount = t.number
@@ -212,7 +212,7 @@ describe(
 			"does not call willUpdate if shouldUpdate returns false, but ensures fields are consistent",
 			function()
 				local MyClass =
-					ClassUtils.makeClassWithInterface(
+					Classes.makeClassWithInterface(
 					"Simple",
 					{
 						amount = t.number
@@ -266,7 +266,7 @@ describe(
 			"does not update fields after instance is destroyed",
 			function()
 				local MyClass =
-					ClassUtils.makeClassWithInterface(
+					Classes.makeClassWithInterface(
 					"Simple",
 					{
 						amount = t.number

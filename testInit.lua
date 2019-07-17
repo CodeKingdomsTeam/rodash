@@ -1,10 +1,9 @@
 script = {
+	Tables = "Tables",
+	Classes = "Classes",
+	Functions = "Functions",
 	Parent = {
-		TableUtils = "TableUtils",
-		ClassUtils = "ClassUtils",
-		FunctionUtils = "FunctionUtils",
-		Parent = {
-			t = "t"
-		}
+		t = "t",
+		Promise = "roblox-lua-promise"
 	}
 }

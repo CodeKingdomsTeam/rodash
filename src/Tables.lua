@@ -1,19 +1,19 @@
 local t = require(script.Parent.Parent.t)
 
-local TableUtils = {}
+local Tables = {}
 
 setmetatable(
-	TableUtils,
+	Tables,
 	{
 		__index = function(table, key)
 			local lowerFirst = key:sub(1, 1):lower() .. key:sub(2)
 			if lowerFirst ~= key then
 				print(
 					"DEPRECATED: " ..
-						key .. " and other capitalized functions in TableUtils are deprecated. Please use the lower-case version instead.",
+						key .. " and other capitalized functions in Tables are deprecated. Please use the lower-case version instead.",
 					debug.traceback()
 				)
-				return TableUtils[lowerFirst]
+				return Tables[lowerFirst]
 			end
 		end
 	}
@@ -28,7 +28,7 @@ local function getIterator(source)
 	end
 end
 
-function TableUtils.slice(tbl, first, last, step) --: <T>(T[], number?, number?, number?) => T[]
+function Tables.slice(tbl, first, last, step) --: <T>(T[], number?, number?, number?) => T[]
 	local sliced = {}
 
 	for i = first or 1, last or #tbl, step or 1 do
@@ -38,7 +38,7 @@ function TableUtils.slice(tbl, first, last, step) --: <T>(T[], number?, number?,
 	return sliced
 end
 
-function TableUtils.map(source, handler) --: <T extends Iterable<K,V>, R extends Iterable<K,V2>((T, (element: V, key: K) => V2) => R)
+function Tables.map(source, handler) --: <T extends Iterable<K,V>, R extends Iterable<K,V2>((T, (element: V, key: K) => V2) => R)
 	local result = {}
 	for i, v in getIterator(source) do
 		result[i] = handler(v, i)
@@ -46,7 +46,7 @@ function TableUtils.map(source, handler) --: <T extends Iterable<K,V>, R extends
 	return result
 end
 
-function TableUtils.mapKeys(source, handler) --: <T extends Iterable<K,V>, R extends Iterable<K,V2>((T, (element: V, key: K) => V2) => R)
+function Tables.mapKeys(source, handler) --: <T extends Iterable<K,V>, R extends Iterable<K,V2>((T, (element: V, key: K) => V2) => R)
 	local result = {}
 	for i, v in getIterator(source) do
 		result[handler(v, i)] = v
@@ -54,12 +54,12 @@ function TableUtils.mapKeys(source, handler) --: <T extends Iterable<K,V>, R ext
 	return result
 end
 
-function TableUtils.flatMap(source, handler) --: <T extends Iterable<K,V>, U>((T, (element: V, key: K) => U[] | U) => U[])
+function Tables.flatMap(source, handler) --: <T extends Iterable<K,V>, U>((T, (element: V, key: K) => U[] | U) => U[])
 	local result = {}
 	for i, v in getIterator(source) do
 		local list = handler(v, i)
 		if type(list) == "table" then
-			TableUtils.insertMany(result, list)
+			Tables.insertMany(result, list)
 		else
 			table.insert(result, list)
 		end
@@ -67,8 +67,8 @@ function TableUtils.flatMap(source, handler) --: <T extends Iterable<K,V>, U>((T
 	return result
 end
 
-function TableUtils.shuffle(source) --: <T extends Iterable>(T => T)
-	local result = TableUtils.clone(source)
+function Tables.shuffle(source) --: <T extends Iterable>(T => T)
+	local result = Tables.clone(source)
 	for i = #result, 1, -1 do
 		local j = math.random(i)
 		result[i], result[j] = result[j], result[i]
@@ -76,7 +76,7 @@ function TableUtils.shuffle(source) --: <T extends Iterable>(T => T)
 	return result
 end
 
-function TableUtils.filter(source, handler) --: <T extends Iterable<K,V>>(T, (element: V, key: K => boolean) => V[])
+function Tables.filter(source, handler) --: <T extends Iterable<K,V>>(T, (element: V, key: K => boolean) => V[])
 	local result = {}
 	for i, v in getIterator(source) do
 		if handler(v, i) then
@@ -86,7 +86,7 @@ function TableUtils.filter(source, handler) --: <T extends Iterable<K,V>>(T, (el
 	return result
 end
 
-function TableUtils.filterKeys(source, handler) --: <T extends Iterable<K,V>>(T, (element: V, key: K => boolean) => T)
+function Tables.filterKeys(source, handler) --: <T extends Iterable<K,V>>(T, (element: V, key: K => boolean) => T)
 	local result = {}
 	for i, v in getIterator(source) do
 		if handler(v, i) then
@@ -96,7 +96,7 @@ function TableUtils.filterKeys(source, handler) --: <T extends Iterable<K,V>>(T,
 	return result
 end
 
-function TableUtils.filterKeysMap(source, handler) --: <T extends Iterable<K,V>, R extends Iterable<K,U>>(T, (element: V, key: K => U) => R
+function Tables.filterKeysMap(source, handler) --: <T extends Iterable<K,V>, R extends Iterable<K,U>>(T, (element: V, key: K => U) => R
 	local result = {}
 	for i, v in getIterator(source) do
 		local value = handler(v, i)
@@ -107,7 +107,7 @@ function TableUtils.filterKeysMap(source, handler) --: <T extends Iterable<K,V>,
 	return result
 end
 
-function TableUtils.omitBy(source, handler)
+function Tables.omitBy(source, handler)
 	local result = {}
 
 	for i, v in getIterator(source) do
@@ -119,8 +119,8 @@ function TableUtils.omitBy(source, handler)
 	return result
 end
 
-function TableUtils.without(source, element) --: <T extends Iterable<K,V>>(T, V => T)
-	return TableUtils.filter(
+function Tables.without(source, element) --: <T extends Iterable<K,V>>(T, V => T)
+	return Tables.filter(
 		source,
 		function(child)
 			return child ~= element
@@ -128,8 +128,8 @@ function TableUtils.without(source, element) --: <T extends Iterable<K,V>>(T, V 
 	)
 end
 
-function TableUtils.compact(source) --: <T extends Iterable<K,V>>(T, T)
-	return TableUtils.filter(
+function Tables.compact(source) --: <T extends Iterable<K,V>>(T, T)
+	return Tables.filter(
 		source,
 		function(value)
 			return value
@@ -137,7 +137,7 @@ function TableUtils.compact(source) --: <T extends Iterable<K,V>>(T, T)
 	)
 end
 
-function TableUtils.reduce(source, handler, init) --: <T, R>(T[], (acc: R, current: T, key: number => R), R) => R
+function Tables.reduce(source, handler, init) --: <T, R>(T[], (acc: R, current: T, key: number => R), R) => R
 	local result = init
 	for i, v in getIterator(source) do
 		result = handler(result, v, i)
@@ -145,7 +145,7 @@ function TableUtils.reduce(source, handler, init) --: <T, R>(T[], (acc: R, curre
 	return result
 end
 
-function TableUtils.all(source, handler) --: <T extends Iterable<K,V>>(T => boolean)
+function Tables.all(source, handler) --: <T extends Iterable<K,V>>(T => boolean)
 	if not handler then
 		handler = function(x)
 			return x
@@ -153,7 +153,7 @@ function TableUtils.all(source, handler) --: <T extends Iterable<K,V>>(T => bool
 	end
 	-- Use double negation to coerce the type to a boolean, as there is
 	-- no toboolean() or equivalent in Lua.
-	return not (not TableUtils.reduce(
+	return not (not Tables.reduce(
 		source,
 		function(acc, value, key)
 			return acc and handler(value, key)
@@ -161,7 +161,7 @@ function TableUtils.all(source, handler) --: <T extends Iterable<K,V>>(T => bool
 		true
 	))
 end
-function TableUtils.any(source, handler) --: <T extends Iterable<K,V>>(T => boolean)
+function Tables.any(source, handler) --: <T extends Iterable<K,V>>(T => boolean)
 	if not handler then
 		handler = function(x)
 			return x
@@ -169,7 +169,7 @@ function TableUtils.any(source, handler) --: <T extends Iterable<K,V>>(T => bool
 	end
 	-- Use double negation to coerce the type to a boolean, as there is
 	-- no toboolean() or equivalent in Lua.
-	return not (not TableUtils.reduce(
+	return not (not Tables.reduce(
 		source,
 		function(acc, value, key)
 			return acc or handler(value, key)
@@ -178,8 +178,8 @@ function TableUtils.any(source, handler) --: <T extends Iterable<K,V>>(T => bool
 	))
 end
 
-function TableUtils.reverse(source)
-	local output = TableUtils.clone(source)
+function Tables.reverse(source)
+	local output = Tables.clone(source)
 	local i = 1
 	local j = #source
 	while i < j do
@@ -190,7 +190,7 @@ function TableUtils.reverse(source)
 	return output
 end
 
-function TableUtils.invert(source) --: <K extends Key, V>(Iterable<K,V> => Iterable<V,K>)
+function Tables.invert(source) --: <K extends Key, V>(Iterable<K,V> => Iterable<V,K>)
 	local result = {}
 	for i, v in getIterator(source) do
 		result[v] = i
@@ -198,7 +198,7 @@ function TableUtils.invert(source) --: <K extends Key, V>(Iterable<K,V> => Itera
 	return result
 end
 
-function TableUtils.keyBy(source, handler) --: <T, K extends Key>(T[], (T => K) => Iterable<K,V>)
+function Tables.keyBy(source, handler) --: <T, K extends Key>(T[], (T => K) => Iterable<K,V>)
 	local result = {}
 	for i, v in getIterator(source) do
 		local key = handler(v, i)
@@ -209,7 +209,7 @@ function TableUtils.keyBy(source, handler) --: <T, K extends Key>(T[], (T => K) 
 	return result
 end
 
-function TableUtils.groupBy(source, handler) --: <T extends Iterable<K,V>, I extends Key>((value: T, key: K) => I) => Iterable<I, Iterable<K,V>>)
+function Tables.groupBy(source, handler) --: <T extends Iterable<K,V>, I extends Key>((value: T, key: K) => I) => Iterable<I, Iterable<K,V>>)
 	local result = {}
 	for i, v in getIterator(source) do
 		local key = handler(v, i)
@@ -223,7 +223,7 @@ function TableUtils.groupBy(source, handler) --: <T extends Iterable<K,V>, I ext
 	return result
 end
 
-function TableUtils.merge(target, ...)
+function Tables.merge(target, ...)
 	-- Use select here so that nil arguments can be supported. If instead we
 	-- iterated over ipairs({...}), any arguments after the first nil one
 	-- would be ignored.
@@ -232,7 +232,7 @@ function TableUtils.merge(target, ...)
 		if source ~= nil then
 			for key, value in getIterator(source) do
 				if type(target[key]) == "table" and type(value) == "table" then
-					target[key] = TableUtils.merge(target[key] or {}, value)
+					target[key] = Tables.merge(target[key] or {}, value)
 				else
 					target[key] = value
 				end
@@ -242,7 +242,7 @@ function TableUtils.merge(target, ...)
 	return target
 end
 
-function TableUtils.values(source) --: table => any[]
+function Tables.values(source) --: table => any[]
 	local result = {}
 	for i, v in getIterator(source) do
 		table.insert(result, v)
@@ -250,7 +250,7 @@ function TableUtils.values(source) --: table => any[]
 	return result
 end
 
-function TableUtils.keys(source) --: table => any[]
+function Tables.keys(source) --: table => any[]
 	local result = {}
 	for i, v in getIterator(source) do
 		table.insert(result, i)
@@ -258,7 +258,7 @@ function TableUtils.keys(source) --: table => any[]
 	return result
 end
 
-function TableUtils.entries(source) --: table => [string | number, any][]
+function Tables.entries(source) --: table => [string | number, any][]
 	local result = {}
 	for i, v in getIterator(source) do
 		table.insert(result, {i, v})
@@ -266,7 +266,7 @@ function TableUtils.entries(source) --: table => [string | number, any][]
 	return result
 end
 
-function TableUtils.find(source, handler) --: <T extends Iterable<K,V>>((T, (element: V, key: K) => boolean) => V)
+function Tables.find(source, handler) --: <T extends Iterable<K,V>>((T, (element: V, key: K) => boolean) => V)
 	for i, v in getIterator(source) do
 		if (handler(v, i)) then
 			return v
@@ -274,7 +274,7 @@ function TableUtils.find(source, handler) --: <T extends Iterable<K,V>>((T, (ele
 	end
 end
 
-function TableUtils.findKey(source, handler) --: <T extends Iterable<K,V>>((T, (element: V, key: K) => boolean) => K)
+function Tables.findKey(source, handler) --: <T extends Iterable<K,V>>((T, (element: V, key: K) => boolean) => K)
 	for i, v in getIterator(source) do
 		if (handler(v, i)) then
 			return i
@@ -282,8 +282,8 @@ function TableUtils.findKey(source, handler) --: <T extends Iterable<K,V>>((T, (
 	end
 end
 
-function TableUtils.includes(source, item) --: table, any => boolean
-	return TableUtils.find(
+function Tables.includes(source, item) --: table, any => boolean
+	return Tables.find(
 		source,
 		function(value)
 			return value == item
@@ -291,7 +291,7 @@ function TableUtils.includes(source, item) --: table, any => boolean
 	) ~= nil
 end
 
-function TableUtils.keyOf(source, value) --: (table, any) => number?
+function Tables.keyOf(source, value) --: (table, any) => number?
 	for k, v in getIterator(source) do
 		if (value == v) then
 			return k
@@ -299,14 +299,14 @@ function TableUtils.keyOf(source, value) --: (table, any) => number?
 	end
 end
 
-function TableUtils.insertMany(target, items) --: (any[], any[]) => any[]
+function Tables.insertMany(target, items) --: (any[], any[]) => any[]
 	for _, v in getIterator(items) do
 		table.insert(target, v)
 	end
 	return target
 end
 
-function TableUtils.getLength(table) --: (table) => number
+function Tables.getLength(table) --: (table) => number
 	local count = 0
 	for _ in pairs(table) do
 		count = count + 1
@@ -331,19 +331,19 @@ local function assign(overwriteTarget, target, ...)
 	return target
 end
 
-function TableUtils.assign(target, ...)
+function Tables.assign(target, ...)
 	return assign(true, target, ...)
 end
 
-function TableUtils.defaults(target, ...)
+function Tables.defaults(target, ...)
 	return assign(false, target, ...)
 end
 
-function TableUtils.clone(tbl) --: (table) => table
-	return TableUtils.assign({}, tbl)
+function Tables.clone(tbl) --: (table) => table
+	return Tables.assign({}, tbl)
 end
 
-function TableUtils.isSubset(a, b)
+function Tables.isSubset(a, b)
 	if type(a) ~= "table" or type(b) ~= "table" then
 		return false
 	else
@@ -354,7 +354,7 @@ function TableUtils.isSubset(a, b)
 			elseif aValue ~= bValue then
 				if type(aValue) == "table" then
 					-- The values are tables, so we need to recurse for a deep comparison.
-					if not TableUtils.isSubset(aValue, bValue) then
+					if not Tables.isSubset(aValue, bValue) then
 						return false
 					end
 				else
@@ -366,24 +366,24 @@ function TableUtils.isSubset(a, b)
 	return true
 end
 
-function TableUtils.deepEquals(a, b)
-	return TableUtils.isSubset(a, b) and TableUtils.isSubset(b, a)
+function Tables.deepEquals(a, b)
+	return Tables.isSubset(a, b) and Tables.isSubset(b, a)
 end
 
 -- Based on https://developmentarc.gitbooks.io/react-indepth/content/life_cycle/update/using_should_component_update.html
-function TableUtils.shallowEqual(left, right)
+function Tables.shallowEqual(left, right)
 	if left == right then
 		return true
 	end
 	if type(left) ~= "table" or type(right) ~= "table" then
 		return false
 	end
-	local leftKeys = TableUtils.keys(left)
-	local rightKeys = TableUtils.keys(right)
+	local leftKeys = Tables.keys(left)
+	local rightKeys = Tables.keys(right)
 	if #leftKeys ~= #rightKeys then
 		return false
 	end
-	return TableUtils.all(
+	return Tables.all(
 		left,
 		function(value, key)
 			return value == right[key]
@@ -391,7 +391,7 @@ function TableUtils.shallowEqual(left, right)
 	)
 end
 
-function TableUtils.serialize(input, serializer)
+function Tables.serialize(input, serializer)
 	serializer = serializer or function(value)
 			return tostring(value)
 		end
@@ -399,7 +399,7 @@ function TableUtils.serialize(input, serializer)
 	assert(type(serializer) == "function")
 	return "{" ..
 		table.concat(
-			TableUtils.map(
+			Tables.map(
 				input,
 				function(element, i)
 					return tostring(i) .. "=" .. serializer(element)
@@ -410,7 +410,7 @@ function TableUtils.serialize(input, serializer)
 			"}"
 end
 
-function TableUtils.append(...)
+function Tables.append(...)
 	local result = {}
 	for i = 1, select("#", ...) do
 		local x = select(i, ...)
@@ -426,11 +426,11 @@ function TableUtils.append(...)
 	return result
 end
 
-function TableUtils.sort(input, comparator)
+function Tables.sort(input, comparator)
 	assert(t.table(input), input)
 
-	local FunctionUtils = require(script.Parent.FunctionUtils)
-	assert(comparator == nil or FunctionUtils.isCallable(comparator), "comparator must be callable or nil")
+	local Functions = require(script.Parent.Functions)
+	assert(comparator == nil or Functions.isCallable(comparator), "comparator must be callable or nil")
 
 	comparator = comparator or function(a, b)
 			return a < b
@@ -452,4 +452,4 @@ function TableUtils.sort(input, comparator)
 	return input
 end
 
-return TableUtils
+return Tables

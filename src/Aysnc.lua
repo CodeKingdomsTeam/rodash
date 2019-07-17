@@ -1,6 +1,6 @@
-local TableUtils = require(script.Parent.TableUtils)
-local Promise = require(script.Parent.Parent.Promise)
-local AsyncUtils = {}
+local Tables = require(script.Tables)
+local Promise = require(script.Promise)
+local Async = {}
 
 local baseRandomStream = Random.new()
 
@@ -14,9 +14,9 @@ local baseRandomStream = Random.new()
 
     The promise resolves to an array mapping the input to resolved elements.
 ]]
-function AsyncUtils.parallel(things)
+function Async.parallel(things)
 	local promises =
-		TableUtils.map(
+		Tables.map(
 		things,
 		function(thing)
 			if Promise.is(thing) then
@@ -32,7 +32,7 @@ end
 --[[
     Returns a promise which resolves after the given delayInSeconds.
 ]]
-function AsyncUtils.delay(delayInSeconds)
+function Async.delay(delayInSeconds)
 	assert(type(delayInSeconds) == "number")
 	return Promise.new(
 		function(resolve)
@@ -51,7 +51,7 @@ end
     the function in a coroutine and resolves with the output of the function
     after any asynchronous actions, and rejects if the function throws an error.
 ]]
-function AsyncUtils.wrapAsync(fn)
+function Async.wrapAsync(fn)
 	assert(type(fn) == "function")
 	return Promise.new(
 		function(resolve, reject)
@@ -85,18 +85,18 @@ end
     onDone(response, durationMs) - a hook for when the promise resolves
     onFail(errorMessage) - a hook for when the promise has failed and no more retries are allowed
 ]]
-function AsyncUtils.retryWithBackoff(getPromise, backoffOptions)
+function Async.retryWithBackoff(getPromise, backoffOptions)
 	assert(type(getPromise) == "function")
 	local function backoffThenRetry(errorMessage)
 		local waitTime =
 			(backoffOptions.retryExponentInSeconds ^ backoffOptions.attemptNumber) * backoffOptions.randomStream:NextNumber() +
 			backoffOptions.retryConstantInSeconds
 		backoffOptions.onRetry(waitTime, errorMessage)
-		return AsyncUtils.delay(waitTime):andThen(
+		return Async.delay(waitTime):andThen(
 			function()
-				return AsyncUtils.retryWithBackoff(
+				return Async.retryWithBackoff(
 					getPromise,
-					TableUtils.assign(
+					Tables.assign(
 						{},
 						backoffOptions,
 						{
@@ -114,7 +114,7 @@ function AsyncUtils.retryWithBackoff(getPromise, backoffOptions)
 	end
 
 	backoffOptions =
-		TableUtils.assign(
+		Tables.assign(
 		{
 			startTime = tick(),
 			maxTries = 5,
@@ -176,4 +176,4 @@ function AsyncUtils.retryWithBackoff(getPromise, backoffOptions)
 	end
 end
 
-return AsyncUtils
+return Async

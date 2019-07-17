@@ -47,7 +47,7 @@ luac.out
 /lua_install
 
 # Local python virtualenv
-/lua-utils-venv
+/venv
 
 # JUnit test report
 /testReport.xml

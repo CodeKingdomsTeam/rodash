@@ -1,6 +1,6 @@
 local t = require(script.Parent.Parent.t)
-local TableUtils = require(script.Parent.TableUtils)
-local ClassUtils = require(script.Parent.ClassUtils)
+local Tables = require(script.Parent.Tables)
+local Classes = require(script.Parent.Classes)
 
 local function connectToStore(Class, mapStateToProps)
 	local ConnectedClass =
@@ -16,7 +16,7 @@ local function connectToStore(Class, mapStateToProps)
 	)
 
 	function ConnectedClass:_init(...)
-		local nextProps = ClassUtils.makeFinal(mapStateToProps(self._store:getState()))
+		local nextProps = Classes.makeFinal(mapStateToProps(self._store:getState()))
 		self._props = nextProps
 		if Class._init then
 			return Class._init(self, ...)
@@ -30,7 +30,7 @@ local function connectToStore(Class, mapStateToProps)
 		self._connection =
 			self._store.changed:connect(
 			function(state)
-				local nextProps = ClassUtils.makeFinal(mapStateToProps(state))
+				local nextProps = Classes.makeFinal(mapStateToProps(state))
 				if self:shouldUpdate(nextProps) then
 					self:willUpdate(nextProps)
 				end
@@ -49,7 +49,7 @@ local function connectToStore(Class, mapStateToProps)
 		if Class.shouldUpdate then
 			return Class.shouldUpdate(self, nextProps)
 		end
-		return not TableUtils.shallowEqual(self._props, nextProps)
+		return not Tables.shallowEqual(self._props, nextProps)
 	end
 
 	function ConnectedClass:didMount()

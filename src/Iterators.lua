@@ -1,4 +1,4 @@
-local IterateUtils = {}
+local Iterators = {}
 
 local function getNext(source)
 	if type(source) == "function" then
@@ -17,7 +17,7 @@ local function getNext(source)
 	end
 end
 
-function IterateUtils.getInsertionSafeIterator(source)
+function Iterators.getInsertionSafeIterator(source)
 	local next = getNext(source)
 	local insertStack = {}
 	local outputIndex = 0
@@ -48,4 +48,4 @@ function IterateUtils.getInsertionSafeIterator(source)
 	end
 end
 
-return IterateUtils
+return Iterators

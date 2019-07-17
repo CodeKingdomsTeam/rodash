@@ -1,9 +1,9 @@
-local TableUtils = require(script.Parent.TableUtils)
+local Tables = require(script.Parent.Tables)
 
-local FunctionUtils = {}
+local Functions = {}
 
-function FunctionUtils.defaultSerializeArgs(fnArgs)
-	return TableUtils.serialize(fnArgs)
+function Functions.defaultSerializeArgs(fnArgs)
+	return Tables.serialize(fnArgs)
 end
 
 --[[
@@ -14,9 +14,9 @@ end
 	Optionally memoize takes a serializeArgs function which should return a key that the result
 	should be cached with for a given call signature. Return nil to avoid caching the result.
 ]]
-function FunctionUtils.memoize(fn, serializeArgs)
+function Functions.memoize(fn, serializeArgs)
 	assert(type(fn) == "function")
-	serializeArgs = serializeArgs or FunctionUtils.defaultSerializeArgs
+	serializeArgs = serializeArgs or Functions.defaultSerializeArgs
 	assert(type(serializeArgs) == "function")
 	local cache = {}
 	local proxyFunction = function(...)
@@ -34,7 +34,7 @@ function FunctionUtils.memoize(fn, serializeArgs)
 	return proxyFunction
 end
 
-function FunctionUtils.setTimeout(fn, secondsDelay)
+function Functions.setTimeout(fn, secondsDelay)
 	local cleared = false
 	local timeout
 	delay(
@@ -53,12 +53,12 @@ function FunctionUtils.setTimeout(fn, secondsDelay)
 	return timeout
 end
 
-function FunctionUtils.setInterval(fn, secondsDelay)
+function Functions.setInterval(fn, secondsDelay)
 	local timeout
 	local callTimeout
 	callTimeout = function()
 		timeout =
-			FunctionUtils.setTimeout(
+			Functions.setTimeout(
 			function()
 				callTimeout()
 				fn(timeout)
@@ -78,8 +78,8 @@ end
 --[[
 	Creates a debounced function that delays invoking fn until after secondsDelay seconds have elapsed since the last time the debounced function was invoked.
 ]]
-function FunctionUtils.debounce(fn, secondsDelay)
-	assert(FunctionUtils.isCallable(fn))
+function Functions.debounce(fn, secondsDelay)
+	assert(Functions.isCallable(fn))
 	assert(type(secondsDelay) == "number")
 
 	local lastInvocation = 0
@@ -109,8 +109,8 @@ end
 --[[
 	Creates a throttle function that drops any repeat calls within a cooldown period and instead returns the result of the last call
 ]]
-function FunctionUtils.throttle(fn, secondsCooldown)
-	assert(FunctionUtils.isCallable(fn))
+function Functions.throttle(fn, secondsCooldown)
+	assert(Functions.isCallable(fn))
 	assert(type(secondsCooldown) == "number")
 	assert(secondsCooldown > 0)
 
@@ -132,9 +132,9 @@ function FunctionUtils.throttle(fn, secondsCooldown)
 	end
 end
 
-function FunctionUtils.isCallable(thing)
+function Functions.isCallable(thing)
 	return type(thing) == "function" or
 		(type(thing) == "table" and getmetatable(thing) and getmetatable(thing).__call ~= nil)
 end
 
-return FunctionUtils
+return Functions

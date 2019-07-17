@@ -1,7 +1,7 @@
-local StringUtils = require "StringUtils"
+local Strings = require "Strings"
 
 describe(
-	"StringUtils",
+	"Strings",
 	function()
 		describe(
 			"Split",
@@ -11,7 +11,7 @@ describe(
 					function()
 						local x = "hi guys"
 
-						assert.are.same({"hi", "guys"}, StringUtils.split(x, " "))
+						assert.are.same({"hi", "guys"}, Strings.split(x, " "))
 					end
 				)
 				it(
@@ -19,7 +19,7 @@ describe(
 					function()
 						local x = "hi guys"
 
-						assert.are.same({"h", "i", " ", "g", "u", "y", "s"}, StringUtils.split(x))
+						assert.are.same({"h", "i", " ", "g", "u", "y", "s"}, Strings.split(x))
 					end
 				)
 			end
@@ -33,7 +33,7 @@ describe(
 					function()
 						local x = "  hi guys "
 
-						assert.are.same("hi guys", StringUtils.trim(x))
+						assert.are.same("hi guys", Strings.trim(x))
 					end
 				)
 			end
@@ -47,8 +47,8 @@ describe(
 					function()
 						local x = "roblox"
 
-						assert.True(StringUtils.startsWith(x, "rob"))
-						assert.False(StringUtils.startsWith(x, "x"))
+						assert.True(Strings.startsWith(x, "rob"))
+						assert.False(Strings.startsWith(x, "x"))
 					end
 				)
 			end
@@ -62,8 +62,8 @@ describe(
 					function()
 						local x = "roblox"
 
-						assert.False(StringUtils.endsWith(x, "rob"))
-						assert.True(StringUtils.endsWith(x, "x"))
+						assert.False(Strings.endsWith(x, "rob"))
+						assert.True(Strings.endsWith(x, "x"))
 					end
 				)
 			end
@@ -75,19 +75,19 @@ describe(
 				it(
 					"repeats correctly",
 					function()
-						assert.are.same("    nice", StringUtils.leftPad("nice", 8))
+						assert.are.same("    nice", Strings.leftPad("nice", 8))
 					end
 				)
 				it(
 					"doesn't add extra if string is too long",
 					function()
-						assert.are.same("nice", StringUtils.leftPad("nice", 2))
+						assert.are.same("nice", Strings.leftPad("nice", 2))
 					end
 				)
 				it(
 					"pads with different character",
 					function()
-						assert.are.same("00000nice", StringUtils.leftPad("nice", 9, "0"))
+						assert.are.same("00000nice", Strings.leftPad("nice", 9, "0"))
 					end
 				)
 			end
@@ -99,19 +99,19 @@ describe(
 				it(
 					"repeats correctly",
 					function()
-						assert.are.same("nice    ", StringUtils.rightPad("nice", 8))
+						assert.are.same("nice    ", Strings.rightPad("nice", 8))
 					end
 				)
 				it(
 					"doesn't add extra if string is too long",
 					function()
-						assert.are.same("nice", StringUtils.rightPad("nice", 2))
+						assert.are.same("nice", Strings.rightPad("nice", 2))
 					end
 				)
 				it(
 					"pads with different character",
 					function()
-						assert.are.same("nice00000", StringUtils.rightPad("nice", 9, "0"))
+						assert.are.same("nice00000", Strings.rightPad("nice", 9, "0"))
 					end
 				)
 			end

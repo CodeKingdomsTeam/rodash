@@ -19,8 +19,8 @@ $(which pip2.7 || which pip) install virtualenv
 # Add user local bin for Jenkins
 export PATH="$HOME/.local/bin:$PATH"
 
-virtualenv lua-utils-venv
-VIRTUAL_ENV_DISABLE_PROMPT=true source lua-utils-venv/bin/activate
+virtualenv venv
+VIRTUAL_ENV_DISABLE_PROMPT=true source venv/bin/activate
 
 $(which pip2.7 || which pip) install hererocks==0.19.0
 

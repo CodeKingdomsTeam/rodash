@@ -1,8 +1,8 @@
 local t = require(script.Parent.Parent.t)
-local TableUtils = require(script.Parent.TableUtils)
-local ClassUtils = {}
+local Tables = require(script.Parent.Tables)
+local Classes = {}
 
-function ClassUtils.makeClass(name, constructor)
+function Classes.makeClass(name, constructor)
 	assert(t.string(name), "Class name must be a string")
 	assert(t.optional(t.callback)(constructor), "Class constructor must be a function or nil")
 	constructor = constructor or function()
@@ -21,11 +21,11 @@ function ClassUtils.makeClass(name, constructor)
 		return instance
 	end
 	function Class.isInstance(value)
-		local ok = ClassUtils.isA(value, Class)
+		local ok = Classes.isA(value, Class)
 		return ok, not ok and string.format("Not a %s instance", name) or nil
 	end
 	function Class:extend(name, subConstructor)
-		local SubClass = ClassUtils.makeClass(name, subConstructor or Class.new)
+		local SubClass = Classes.makeClass(name, subConstructor or Class.new)
 		setmetatable(SubClass, {__index = self})
 		return SubClass
 	end
@@ -47,13 +47,9 @@ function ClassUtils.makeClass(name, constructor)
 		-- NOTE: Sub interfaces can at present override super interfaces, so this should be avoided
 		-- to provide better validation detection / true field type inheritence.
 		local compositeInterface = function(Class)
-			return TableUtils.assign(
-				{},
-				getComposableInterface(interface)(Class),
-				getComposableInterface(inheritedInterface)(Class)
-			)
+			return Tables.assign({}, getComposableInterface(interface)(Class), getComposableInterface(inheritedInterface)(Class))
 		end
-		local SubClass = ClassUtils.makeClassWithInterface(name, compositeInterface)
+		local SubClass = Classes.makeClassWithInterface(name, compositeInterface)
 		setmetatable(SubClass, {__index = self})
 		return SubClass
 	end
@@ -63,7 +59,7 @@ function ClassUtils.makeClass(name, constructor)
 	return Class
 end
 
-function ClassUtils.makeClassWithInterface(name, interface)
+function Classes.makeClassWithInterface(name, interface)
 	local function getImplementsInterface(currentInterface)
 		local ok, problem = t.values(t.callback)(currentInterface)
 		assert(ok, string.format([[Class %s does not have a valid interface
@@ -72,14 +68,14 @@ function ClassUtils.makeClassWithInterface(name, interface)
 	end
 	local implementsInterface
 	local Class =
-		ClassUtils.makeClass(
+		Classes.makeClass(
 		name,
 		function(data)
 			data = data or {}
 			local ok, problem = implementsInterface(data)
 			assert(ok, string.format([[Class %s cannot be instantiated
 %s]], name, tostring(problem)))
-			return TableUtils.mapKeys(
+			return Tables.mapKeys(
 				data,
 				function(_, key)
 					return "_" .. key
@@ -93,9 +89,9 @@ function ClassUtils.makeClassWithInterface(name, interface)
 	return Class
 end
 
-function ClassUtils.makeEnum(keys)
+function Classes.makeEnum(keys)
 	local enum =
-		TableUtils.keyBy(
+		Tables.keyBy(
 		keys,
 		function(key)
 			assert(key:match("^[A-Z_]+$"), "Enum keys must be defined as upper snake case")
@@ -118,10 +114,10 @@ function ClassUtils.makeEnum(keys)
 	return enum
 end
 
-function ClassUtils.applySwitchStrategyForEnum(enum, enumValue, strategies, ...)
-	assert(ClassUtils.isA(enumValue, enum), "enumValue must be an instance of enum")
+function Classes.applySwitchStrategyForEnum(enum, enumValue, strategies, ...)
+	assert(Classes.isA(enumValue, enum), "enumValue must be an instance of enum")
 	assert(
-		TableUtils.deepEquals(TableUtils.sort(TableUtils.values(enum)), TableUtils.sort(TableUtils.keys(strategies))),
+		Tables.deepEquals(Tables.sort(Tables.values(enum)), Tables.sort(Tables.keys(strategies))),
 		"keys for strategies must match values for enum"
 	)
 	assert(t.values(t.callback)(strategies), "strategies values must be functions")
@@ -129,7 +125,7 @@ function ClassUtils.applySwitchStrategyForEnum(enum, enumValue, strategies, ...)
 	return strategies[enumValue](...)
 end
 
-function ClassUtils.makeFinal(object)
+function Classes.makeFinal(object)
 	local backend = getmetatable(object)
 	local proxy = {
 		__index = function(t, key)
@@ -148,7 +144,7 @@ function ClassUtils.makeFinal(object)
 	return object
 end
 
-function ClassUtils.isA(instance, classOrEnum)
+function Classes.isA(instance, classOrEnum)
 	local isEnum = type(instance) == "string"
 	if isEnum then
 		local isEnumKeyDefined = type(classOrEnum[instance]) == "string"
@@ -168,7 +164,7 @@ function ClassUtils.isA(instance, classOrEnum)
 	return false
 end
 
-function ClassUtils.makeSymbol(name)
+function Classes.makeSymbol(name)
 	local symbol = {
 		__symbol = name
 	}
@@ -183,4 +179,4 @@ function ClassUtils.makeSymbol(name)
 	return symbol
 end
 
-return ClassUtils
+return Classes
