@@ -1,4 +1,4 @@
-local tea = require(script.Parent.Parent.tea)
+local t = require(script.Parent.Parent.t)
 local TableUtils = require(script.Parent.TableUtils)
 local ClassUtils = require(script.Parent.ClassUtils)
 
@@ -7,9 +7,9 @@ local function connectToStore(Class, mapStateToProps)
 		Class:extendWithInterface(
 		"Connected(" .. Class.name .. ")",
 		{
-			store = tea.interface(
+			store = t.interface(
 				{
-					changed = tea.Signal
+					changed = t.Signal
 				}
 			)
 		}

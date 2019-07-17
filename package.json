@@ -1,8 +1,8 @@
 {
-  "name": "lua-utils",
+  "name": "rodash",
   "version": "1.0.0",
-  "main": "index.js",
-  "repository": "git@github.com:CodeKingdomsTeam/lua-utils.git",
+  "main": "build.sh",
+  "repository": "git@github.com:CodeKingdomsTeam/rodash.git",
   "author": "Andrew Moss <andrew@codekingdoms.com>",
   "license": "MIT",
   "devDependencies": {

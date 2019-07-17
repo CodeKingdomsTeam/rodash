@@ -1,6 +1,6 @@
-# lua-utils
+# Rodash
 
-A utility library for Lua.
+A utility library for Lua in Roblox.
 
 | Name          | Notes                                             |
 | ------------- | ------------------------------------------------- |

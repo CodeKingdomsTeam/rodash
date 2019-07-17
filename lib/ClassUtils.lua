@@ -1,10 +1,10 @@
-local tea = require(script.Parent.Parent.tea)
+local t = require(script.Parent.Parent.t)
 local TableUtils = require(script.Parent.TableUtils)
 local ClassUtils = {}
 
 function ClassUtils.makeClass(name, constructor)
-	assert(tea.string(name), "Class name must be a string")
-	assert(tea.optional(tea.callback)(constructor), "Class constructor must be a function or nil")
+	assert(t.string(name), "Class name must be a string")
+	assert(t.optional(t.callback)(constructor), "Class constructor must be a function or nil")
 	constructor = constructor or function()
 			return {}
 		end
@@ -65,10 +65,10 @@ end
 
 function ClassUtils.makeClassWithInterface(name, interface)
 	local function getImplementsInterface(currentInterface)
-		local ok, problem = tea.values(tea.callback)(currentInterface)
+		local ok, problem = t.values(t.callback)(currentInterface)
 		assert(ok, string.format([[Class %s does not have a valid interface
 %s]], name, tostring(problem)))
-		return tea.strictInterface(currentInterface)
+		return t.strictInterface(currentInterface)
 	end
 	local implementsInterface
 	local Class =
@@ -124,7 +124,7 @@ function ClassUtils.applySwitchStrategyForEnum(enum, enumValue, strategies, ...)
 		TableUtils.deepEquals(TableUtils.sort(TableUtils.values(enum)), TableUtils.sort(TableUtils.keys(strategies))),
 		"keys for strategies must match values for enum"
 	)
-	assert(tea.values(tea.callback)(strategies), "strategies values must be functions")
+	assert(t.values(t.callback)(strategies), "strategies values must be functions")
 
 	return strategies[enumValue](...)
 end

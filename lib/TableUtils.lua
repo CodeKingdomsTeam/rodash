@@ -1,4 +1,4 @@
-local tea = require(script.Parent.Parent.tea)
+local t = require(script.Parent.Parent.t)
 
 local TableUtils = {}
 
@@ -427,7 +427,7 @@ function TableUtils.append(...)
 end
 
 function TableUtils.sort(input, comparator)
-	assert(tea.table(input), input)
+	assert(t.table(input), input)
 
 	local FunctionUtils = require(script.Parent.FunctionUtils)
 	assert(comparator == nil or FunctionUtils.isCallable(comparator), "comparator must be callable or nil")

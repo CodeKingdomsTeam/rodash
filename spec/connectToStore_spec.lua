@@ -1,6 +1,6 @@
 local connectToStore = require "connectToStore"
 local ClassUtils = require "ClassUtils"
-local tea = require "tea"
+local t = require "t"
 
 local function getStoreStub(initialState)
 	local state = initialState
@@ -38,7 +38,7 @@ describe(
 					ClassUtils.makeClassWithInterface(
 					"Simple",
 					{
-						amount = tea.number
+						amount = t.number
 					}
 				)
 				MyClass.didMount =
@@ -78,7 +78,7 @@ describe(
 					ClassUtils.makeClassWithInterface(
 					"Simple",
 					{
-						amount = tea.number
+						amount = t.number
 					}
 				)
 				local MyConnectedClass = connectToStore(MyClass)
@@ -116,7 +116,7 @@ describe(
 					ClassUtils.makeClassWithInterface(
 					"Simple",
 					{
-						amount = tea.number
+						amount = t.number
 					}
 				)
 				MyClass.willUpdate =
@@ -164,7 +164,7 @@ describe(
 					ClassUtils.makeClassWithInterface(
 					"Simple",
 					{
-						amount = tea.number
+						amount = t.number
 					}
 				)
 				MyClass.willUpdate =
@@ -215,7 +215,7 @@ describe(
 					ClassUtils.makeClassWithInterface(
 					"Simple",
 					{
-						amount = tea.number
+						amount = t.number
 					}
 				)
 				MyClass.willUpdate =
@@ -269,7 +269,7 @@ describe(
 					ClassUtils.makeClassWithInterface(
 					"Simple",
 					{
-						amount = tea.number
+						amount = t.number
 					}
 				)
 				MyClass.willUpdate =

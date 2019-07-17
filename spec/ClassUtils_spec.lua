@@ -1,6 +1,6 @@
 local ClassUtils = require "ClassUtils"
 local TableUtils = require "TableUtils"
-local tea = require "tea"
+local t = require "t"
 
 describe(
 	"ClassUtils",
@@ -206,7 +206,7 @@ describe(
 							ClassUtils.makeClassWithInterface(
 							"Simple",
 							{
-								amount = tea.number
+								amount = t.number
 							}
 						)
 						function MyClass:getAmount()
@@ -223,7 +223,7 @@ describe(
 							ClassUtils.makeClassWithInterface(
 							"Simple",
 							{
-								amount = tea.string
+								amount = t.string
 							}
 						)
 						function MyClass:getAmount()
@@ -280,7 +280,7 @@ bad value for key amount:
 							"Simple",
 							function(Class)
 								return {
-									parent = tea.optional(Class.isInstance)
+									parent = t.optional(Class.isInstance)
 								}
 							end
 						)
@@ -318,7 +318,7 @@ bad value for key amount:
 							ClassUtils.makeClassWithInterface(
 							"Simple",
 							{
-								amount = tea.number
+								amount = t.number
 							}
 						)
 						function MyClass:setAmount(amount)
@@ -338,7 +338,7 @@ bad value for key amount:
 							ClassUtils.makeClassWithInterface(
 							"Simple",
 							{
-								amount = tea.number
+								amount = t.number
 							}
 						)
 
@@ -364,7 +364,7 @@ bad value for key amount:
 							ClassUtils.makeClassWithInterface(
 							"Simple",
 							{
-								amount = tea.number
+								amount = t.number
 							}
 						)
 
@@ -401,21 +401,21 @@ bad value for key amount:
 						ClassUtils.makeClassWithInterface(
 						"Simple",
 						{
-							amount = tea.number
+							amount = t.number
 						}
 					)
 					local MySubClass =
 						MyClass:extendWithInterface(
 						"SubSimple",
 						{
-							subAmount = tea.number
+							subAmount = t.number
 						}
 					)
 					local MyVerySubClass =
 						MySubClass:extendWithInterface(
 						"VerySubSimple",
 						{
-							verySubAmount = tea.number
+							verySubAmount = t.number
 						}
 					)
 					return MyVerySubClass
@@ -475,7 +475,7 @@ bad value for key amount:
 
 				local function getClassWithComposedInterfaces(superInterfaceIsFunction, subInterfaceIsFunction)
 					local superInterface = {
-						amount = tea.number
+						amount = t.number
 					}
 
 					local MyClass =
@@ -487,7 +487,7 @@ bad value for key amount:
 					)
 
 					local subInterface = {
-						subAmount = tea.number
+						subAmount = t.number
 					}
 
 					local MySubClass =

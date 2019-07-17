@@ -4,7 +4,7 @@ script = {
 		ClassUtils = "ClassUtils",
 		FunctionUtils = "FunctionUtils",
 		Parent = {
-			tea = "tea"
+			t = "t"
 		}
 	}
 }
