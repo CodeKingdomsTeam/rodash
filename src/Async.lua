@@ -1,5 +1,5 @@
 local Tables = require(script.Tables)
-local Promise = require(script.Promise)
+local Promise = require(script.Parent.Promise)
 local Async = {}
 
 local baseRandomStream = Random.new()
@@ -14,15 +14,15 @@ local baseRandomStream = Random.new()
 
     The promise resolves to an array mapping the input to resolved elements.
 ]]
-function Async.parallel(things)
+function Async.all(objects)
 	local promises =
 		Tables.map(
-		things,
-		function(thing)
-			if Promise.is(thing) then
-				return thing
+		objects,
+		function(object)
+			if Promise.is(object) then
+				return object
 			else
-				return Promise.resolve(thing)
+				return Promise.resolve(object)
 			end
 		end
 	)
@@ -36,22 +36,17 @@ function Async.delay(delayInSeconds)
 	assert(type(delayInSeconds) == "number")
 	return Promise.new(
 		function(resolve)
-			delay(
-				delayInSeconds,
-				function()
-					resolve()
-				end
-			)
+			delay(delayInSeconds, resolve)
 		end
 	)
 end
 
 --[[
-    Returns a promise for a function which may yield. wrapAsync calls the
+    Returns a promise for a function which may yield. wrapFn calls the
     the function in a coroutine and resolves with the output of the function
     after any asynchronous actions, and rejects if the function throws an error.
 ]]
-function Async.wrapAsync(fn)
+function Async.wrapFn(fn)
 	assert(type(fn) == "function")
 	return Promise.new(
 		function(resolve, reject)
