@@ -12,7 +12,7 @@ describe(
 					function()
 						assert.are.same(
 							{10, 120, 20, 30, 140, 40, 50, 160, 60},
-							Tables.Map(
+							Tables.map(
 								Iterators.getInsertionSafeIterator({1, 3, 5}),
 								function(iterator, i)
 									if iterator.value % 2 == 1 then

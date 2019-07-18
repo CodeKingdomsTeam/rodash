@@ -1,4 +1,4 @@
-local Tables = require(script.Parent.Tables)
+local Tables = require(script.Tables)
 
 local Functions = {}
 

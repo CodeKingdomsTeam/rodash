@@ -1,5 +1,5 @@
-local t = require(script.Parent.Parent.t)
-local Tables = require(script.Parent.Tables)
+local t = require(script.Parent.t)
+local Tables = require(script.Tables)
 local Classes = {}
 
 function Classes.makeClass(name, constructor)

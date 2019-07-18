@@ -1,6 +1,6 @@
-local t = require(script.Parent.Parent.t)
-local Tables = require(script.Parent.Tables)
-local Classes = require(script.Parent.Classes)
+local t = require(script.Parent.t)
+local Tables = require(script.Tables)
+local Classes = require(script.Classes)
 
 local function connectToStore(Class, mapStateToProps)
 	local ConnectedClass =

@@ -1,23 +1,6 @@
-local t = require(script.Parent.Parent.t)
+local t = require(script.Parent.t)
 
 local Tables = {}
-
-setmetatable(
-	Tables,
-	{
-		__index = function(table, key)
-			local lowerFirst = key:sub(1, 1):lower() .. key:sub(2)
-			if lowerFirst ~= key then
-				print(
-					"DEPRECATED: " ..
-						key .. " and other capitalized functions in Tables are deprecated. Please use the lower-case version instead.",
-					debug.traceback()
-				)
-				return Tables[lowerFirst]
-			end
-		end
-	}
-)
 
 local function getIterator(source)
 	if type(source) == "function" then
@@ -429,7 +412,7 @@ end
 function Tables.sort(input, comparator)
 	assert(t.table(input), input)
 
-	local Functions = require(script.Parent.Functions)
+	local Functions = require(script.Functions)
 	assert(comparator == nil or Functions.isCallable(comparator), "comparator must be callable or nil")
 
 	comparator = comparator or function(a, b)
