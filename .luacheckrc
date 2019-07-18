@@ -1,4 +1,4 @@
-std = "lua51+roblox"
+std = "lua51+roblox+rodash_spec"
 
 files["spec/*.lua"] = {
 	std = "+busted"
@@ -132,6 +132,18 @@ local workspace = {
         DescendantAdded = read_write_class;
         DescendantRemoving = read_write;
     }
+}
+
+stds.rodash_spec = {
+    globals = {
+		clock = read_write_class;
+		Random = read_write_class;
+		tick = read_write;
+		spawn = read_write;
+		delay = read_write;
+		wait = read_write;
+		warn = read_write;
+	}
 }
 
 stds.roblox = {
