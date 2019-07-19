@@ -172,7 +172,7 @@ function Classes.makeSymbol(name)
 		symbol,
 		{
 			__tostring = function()
-				return name
+				return "Symbol(" .. name .. ")"
 			end
 		}
 	)

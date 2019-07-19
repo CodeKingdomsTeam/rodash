@@ -6,7 +6,7 @@ set -o pipefail
 
 ./setup.sh
 
-./luacheck.sh
+./tools/luacheck.sh
 
 ./test.sh --verbose --coverage "$@"
 

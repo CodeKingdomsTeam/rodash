@@ -1,9 +1,16 @@
+if arg[1] == "debug" then
+	package.cpath = package.cpath .. ";tools/?.dylib"
+	local lrdb = require("lrdb_server")
+	print("Waiting for debugger to attach...")
+	lrdb.activate(21110)
+end
+
 script = {
 	Async = "Async",
-	Iterators = "Iterators",
 	Tables = "Tables",
 	Classes = "Classes",
 	Functions = "Functions",
+	Strings = "Strings",
 	Parent = {
 		t = "t",
 		Promise = "roblox-lua-promise"

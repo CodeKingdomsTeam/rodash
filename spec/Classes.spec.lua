@@ -72,7 +72,7 @@ describe(
 						local symbol2 = Classes.makeSymbol("TEST")
 						assert.equals(symbol1, symbol1)
 						assert.are_not.equal(symbol1, symbol2)
-						assert.equals("TEST", tostring(symbol1))
+						assert.equals("Symbol(TEST)", tostring(symbol1))
 					end
 				)
 			end

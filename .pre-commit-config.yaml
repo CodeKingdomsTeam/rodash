@@ -4,11 +4,11 @@ repos:
     hooks:
       - id: luacheck
         name: luacheck
-        entry: ./luacheck.sh
+        entry: ./tools/luacheck.sh
         language: script
         files: \.lua$
       - id: lua-fmt
         name: lua-fmt
-        entry: ./format.sh
+        entry: ./tools/format.sh
         language: script
         files: \.lua$

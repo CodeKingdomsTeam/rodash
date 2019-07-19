@@ -19,8 +19,8 @@ $(which pip2.7 || which pip) install virtualenv
 # Add user local bin for Jenkins
 export PATH="$HOME/.local/bin:$PATH"
 
-virtualenv venv
-VIRTUAL_ENV_DISABLE_PROMPT=true source venv/bin/activate
+virtualenv tools/venv
+VIRTUAL_ENV_DISABLE_PROMPT=true source tools/venv/bin/activate
 
 $(which pip2.7 || which pip) install hererocks==0.19.0
 
@@ -28,7 +28,7 @@ hererocks lua_install -r^ --$LUA
 
 export PATH="$PWD/lua_install/bin:$PATH"
 
-ROCKS=('busted 2.0.rc12-1' 'luacov 0.13.0-1' 'luacov-console 1.1.0-1' 'luacov-cobertura 0.2-1' 'luacheck 0.22.1-1')
+ROCKS=('busted 2.0.rc12-1' 'luacov 0.13.0-1' 'luacov-console 1.1.0-1' 'luacov-cobertura 0.2-1' 'luacheck 0.22.1-1' 'penlight')
 
 for ROCK in "${ROCKS[@]}"
 do

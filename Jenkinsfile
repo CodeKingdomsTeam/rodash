@@ -30,7 +30,7 @@ pipeline {
 
 		stage('Code style check') {
 			steps {
-				sh './checkFormat.sh'
+				sh './tools/checkFormat.sh'
 			}
 			post {
 				failure {

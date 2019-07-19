@@ -2,6 +2,39 @@ local Tables = require(script.Tables)
 
 local Functions = {}
 
+function Functions.returnsNil()
+	return
+end
+
+function Functions.returnsArgs(...)
+	return ...
+end
+
+function Functions.once(fn, default)
+	local called = false
+	local result = default
+	return function(...)
+		if called then
+			return result
+		else
+			called = true
+			result = fn(...)
+		end
+	end
+end
+
+function Functions.compose(...)
+	local fnCount = select("#", ...)
+	local fns = {...}
+	return function(...)
+		local result = fns[1](...)
+		for i = 2, fnCount do
+			result = fns[i](result)
+		end
+		return result
+	end
+end
+
 function Functions.defaultSerializeArgs(fnArgs)
 	return Tables.serialize(fnArgs)
 end
