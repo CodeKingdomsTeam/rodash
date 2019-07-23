@@ -39,5 +39,5 @@ do
 	fi
 done
 
-pip install pre-commit==1.8.2
+pip install pre-commit==1.8.2 mkdocs mkdocs-material
 pre-commit install

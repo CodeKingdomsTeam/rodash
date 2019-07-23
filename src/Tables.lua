@@ -1,3 +1,17 @@
+--[[
+	Tables is a library to handle tables. There are some reasons for this:
+
+	* Great docs
+	* Some custom
+
+	## Examples
+
+	For example:
+
+		There are two ways to do this
+
+	Right?
+]]
 local t = require(script.Parent.t)
 
 local Tables = {}
@@ -11,17 +25,19 @@ local function getIterator(source)
 	end
 end
 
-function Tables.slice(tbl, first, last, step) --: <T>(T[], number?, number?, number?) => T[]
+--: <T>(T[], int?, int?, int?) -> T[]
+function Tables.slice(source, first, last, step)
 	local sliced = {}
 
-	for i = first or 1, last or #tbl, step or 1 do
-		sliced[#sliced + 1] = tbl[i]
+	for i = first or 1, last or #source, step or 1 do
+		sliced[#sliced + 1] = source[i]
 	end
 
 	return sliced
 end
 
-function Tables.map(source, handler) --: <T extends Iterable<K,V>, R extends Iterable<K,V2>((T, (element: V, key: K) => V2) => R)
+--: <T: Iterable<K,V>, R: Iterable<K,V2>((T, (element: V, key: K) -> V2) -> R)
+function Tables.map(source, handler)
 	local result = {}
 	for i, v in getIterator(source) do
 		result[i] = handler(v, i)
@@ -29,7 +45,8 @@ function Tables.map(source, handler) --: <T extends Iterable<K,V>, R extends Ite
 	return result
 end
 
-function Tables.mapKeys(source, handler) --: <T extends Iterable<K,V>, R extends Iterable<K,V2>((T, (element: V, key: K) => V2) => R)
+--: <T: Iterable<K,V>, R: Iterable<K,V2>((T, (element: V, key: K) -> V2) -> R)
+function Tables.mapKeys(source, handler)
 	local result = {}
 	for i, v in getIterator(source) do
 		result[handler(v, i)] = v
@@ -37,7 +54,8 @@ function Tables.mapKeys(source, handler) --: <T extends Iterable<K,V>, R extends
 	return result
 end
 
-function Tables.flatMap(source, handler) --: <T extends Iterable<K,V>, U>((T, (element: V, key: K) => U[] | U) => U[])
+--: <T: Iterable<K,V>, U>((T, (element: V, key: K) -> U[] | U) -> U[])
+function Tables.flatMap(source, handler)
 	local result = {}
 	for i, v in getIterator(source) do
 		local list = handler(v, i)
@@ -50,7 +68,8 @@ function Tables.flatMap(source, handler) --: <T extends Iterable<K,V>, U>((T, (e
 	return result
 end
 
-function Tables.shuffle(source) --: <T extends Iterable>(T => T)
+--: <T: Iterable>(T -> T)
+function Tables.shuffle(source)
 	local result = Tables.clone(source)
 	for i = #result, 1, -1 do
 		local j = math.random(i)
@@ -59,7 +78,8 @@ function Tables.shuffle(source) --: <T extends Iterable>(T => T)
 	return result
 end
 
-function Tables.filter(source, handler) --: <T extends Iterable<K,V>>(T, (element: V, key: K => boolean) => V[])
+--: <T: Iterable<K,V>>(T, (element: V, key: K -> bool) -> V[])
+function Tables.filter(source, handler)
 	local result = {}
 	for i, v in getIterator(source) do
 		if handler(v, i) then
@@ -69,7 +89,8 @@ function Tables.filter(source, handler) --: <T extends Iterable<K,V>>(T, (elemen
 	return result
 end
 
-function Tables.filterKeys(source, handler) --: <T extends Iterable<K,V>>(T, (element: V, key: K => boolean) => T)
+--: <T: Iterable<K,V>>(T, (element: V, key: K -> bool) -> T)
+function Tables.filterKeys(source, handler)
 	local result = {}
 	for i, v in getIterator(source) do
 		if handler(v, i) then
@@ -79,7 +100,8 @@ function Tables.filterKeys(source, handler) --: <T extends Iterable<K,V>>(T, (el
 	return result
 end
 
-function Tables.filterKeysMap(source, handler) --: <T extends Iterable<K,V>, R extends Iterable<K,U>>(T, (element: V, key: K => U) => R
+--: <T: Iterable<K,V>, R: Iterable<K,U>>(T, (element: V, key: K -> U) -> R
+function Tables.filterKeysMap(source, handler)
 	local result = {}
 	for i, v in getIterator(source) do
 		local value = handler(v, i)
@@ -102,7 +124,8 @@ function Tables.omitBy(source, handler)
 	return result
 end
 
-function Tables.without(source, element) --: <T extends Iterable<K,V>>(T, V => T)
+--: <T: Iterable<K,V>>(T, V -> T)
+function Tables.without(source, element)
 	return Tables.filter(
 		source,
 		function(child)
@@ -111,7 +134,8 @@ function Tables.without(source, element) --: <T extends Iterable<K,V>>(T, V => T
 	)
 end
 
-function Tables.compact(source) --: <T extends Iterable<K,V>>(T, T)
+--: <T: Iterable<K,V>>(T, T)
+function Tables.compact(source)
 	return Tables.filter(
 		source,
 		function(value)
@@ -120,7 +144,8 @@ function Tables.compact(source) --: <T extends Iterable<K,V>>(T, T)
 	)
 end
 
-function Tables.reduce(source, handler, init) --: <T, R>(T[], (acc: R, current: T, key: number => R), R) => R
+--: <T, R>(T[], (acc: R, current: T, key: int -> R), R) -> R
+function Tables.reduce(source, handler, init)
 	local result = init
 	for i, v in getIterator(source) do
 		result = handler(result, v, i)
@@ -128,7 +153,11 @@ function Tables.reduce(source, handler, init) --: <T, R>(T[], (acc: R, current: 
 	return result
 end
 
-function Tables.all(source, handler) --: <T extends Iterable<K,V>>(T => boolean)
+--[[
+	Wow
+]]
+--: <T: Iterable<K,V>>(T -> bool)
+function Tables.all(source, handler)
 	if not handler then
 		handler = function(x)
 			return x
@@ -144,7 +173,8 @@ function Tables.all(source, handler) --: <T extends Iterable<K,V>>(T => boolean)
 		true
 	))
 end
-function Tables.any(source, handler) --: <T extends Iterable<K,V>>(T => boolean)
+--: <T: Iterable<K,V>>(T -> bool)
+function Tables.any(source, handler)
 	if not handler then
 		handler = function(x)
 			return x
@@ -161,6 +191,15 @@ function Tables.any(source, handler) --: <T extends Iterable<K,V>>(T => boolean)
 	))
 end
 
+--[[
+	Summary ends with a period.
+	Some description, can be over
+	several lines.
+	```
+	local test = {}
+	```
+]]
+--: <T>(T[] -> T[])
 function Tables.reverse(source)
 	local output = Tables.clone(source)
 	local i = 1
@@ -173,7 +212,8 @@ function Tables.reverse(source)
 	return output
 end
 
-function Tables.invert(source) --: <K extends Key, V>(Iterable<K,V> => Iterable<V,K>)
+--: <K: Key, V>(Iterable<K,V> -> Iterable<V,K>)
+function Tables.invert(source)
 	local result = {}
 	for i, v in getIterator(source) do
 		result[v] = i
@@ -181,7 +221,8 @@ function Tables.invert(source) --: <K extends Key, V>(Iterable<K,V> => Iterable<
 	return result
 end
 
-function Tables.keyBy(source, handler) --: <T, K extends Key>(T[], (T => K) => Iterable<K,V>)
+--: <T, K: Key>(T[], (T -> K) -> Iterable<K,V>)
+function Tables.keyBy(source, handler)
 	local result = {}
 	for i, v in getIterator(source) do
 		local key = handler(v, i)
@@ -192,7 +233,17 @@ function Tables.keyBy(source, handler) --: <T, K extends Key>(T[], (T => K) => I
 	return result
 end
 
-function Tables.groupBy(source, handler) --: <T extends Iterable<K,V>, I extends Key>((value: T, key: K) => I) => Iterable<I, Iterable<K,V>>)
+--[[
+	Summary ends with a period.
+	This extracts the shortest common substring from the strings _s1_ and _s2_
+	```function M.common_substring(s1,s2)```
+	several lines.
+	@string source first parameter
+	@tparam string->int handler parameter
+	@treturn string a string value
+]]
+--: <T: Iterable<K,V>, I: Key>((value: T, key: K) -> I) -> Iterable<I, Iterable<K,V>>)
+function Tables.groupBy(source, handler)
 	local result = {}
 	for i, v in getIterator(source) do
 		local key = handler(v, i)
@@ -225,7 +276,8 @@ function Tables.merge(target, ...)
 	return target
 end
 
-function Tables.values(source) --: table => any[]
+--: table -> any[]
+function Tables.values(source)
 	local result = {}
 	for i, v in getIterator(source) do
 		table.insert(result, v)
@@ -233,7 +285,8 @@ function Tables.values(source) --: table => any[]
 	return result
 end
 
-function Tables.keys(source) --: table => any[]
+--: table -> any[]
+function Tables.keys(source)
 	local result = {}
 	for i, v in getIterator(source) do
 		table.insert(result, i)
@@ -241,7 +294,8 @@ function Tables.keys(source) --: table => any[]
 	return result
 end
 
-function Tables.entries(source) --: table => [string | number, any][]
+--: table -> [string | int, any][]
+function Tables.entries(source)
 	local result = {}
 	for i, v in getIterator(source) do
 		table.insert(result, {i, v})
@@ -249,7 +303,8 @@ function Tables.entries(source) --: table => [string | number, any][]
 	return result
 end
 
-function Tables.find(source, handler) --: <T extends Iterable<K,V>>((T, (element: V, key: K) => boolean) => V)
+--: <T: Iterable<K,V>>((T, (element: V, key: K) -> bool) -> V)
+function Tables.find(source, handler)
 	for i, v in getIterator(source) do
 		if (handler(v, i)) then
 			return v
@@ -257,7 +312,8 @@ function Tables.find(source, handler) --: <T extends Iterable<K,V>>((T, (element
 	end
 end
 
-function Tables.findKey(source, handler) --: <T extends Iterable<K,V>>((T, (element: V, key: K) => boolean) => K)
+--: <T: Iterable<K,V>>((T, (element: V, key: K) -> bool) -> K)
+function Tables.findKey(source, handler)
 	for i, v in getIterator(source) do
 		if (handler(v, i)) then
 			return i
@@ -265,7 +321,8 @@ function Tables.findKey(source, handler) --: <T extends Iterable<K,V>>((T, (elem
 	end
 end
 
-function Tables.includes(source, item) --: table, any => boolean
+--: table, any -> boolean
+function Tables.includes(source, item)
 	return Tables.find(
 		source,
 		function(value)
@@ -274,7 +331,8 @@ function Tables.includes(source, item) --: table, any => boolean
 	) ~= nil
 end
 
-function Tables.keyOf(source, value) --: (table, any) => number?
+--: (table, any) -> int?
+function Tables.keyOf(source, value)
 	for k, v in getIterator(source) do
 		if (value == v) then
 			return k
@@ -282,14 +340,16 @@ function Tables.keyOf(source, value) --: (table, any) => number?
 	end
 end
 
-function Tables.insertMany(target, items) --: (any[], any[]) => any[]
+--: (any[], any[]) -> any[]
+function Tables.insertMany(target, items)
 	for _, v in getIterator(items) do
 		table.insert(target, v)
 	end
 	return target
 end
 
-function Tables.getLength(table) --: (table) => number
+--: (table) -> int
+function Tables.getLength(table)
 	local count = 0
 	for _ in pairs(table) do
 		count = count + 1
@@ -322,7 +382,8 @@ function Tables.defaults(target, ...)
 	return assign(false, target, ...)
 end
 
-function Tables.clone(tbl) --: (table) => table
+--: (table) -> table
+function Tables.clone(tbl)
 	return Tables.assign({}, tbl)
 end
 

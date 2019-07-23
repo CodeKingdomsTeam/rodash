@@ -52,6 +52,9 @@ luac.out
 # JUnit test report
 /testReport.xml
 
+/site
+.mkdocs.yml
+
 node_modules
 
 # System files

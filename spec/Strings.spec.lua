@@ -4,22 +4,156 @@ describe(
 	"Strings",
 	function()
 		describe(
-			"Split",
+			"camelCase",
 			function()
 				it(
-					"splits",
+					"from snake-case",
 					function()
-						local x = "hi guys"
-
-						assert.are.same({"hi", "guys"}, Strings.split(x, " "))
+						assert.are.same("fooBar", Strings.camelCase("__FOO_BAR__"))
 					end
 				)
 				it(
-					"splits with empty delimiter",
+					"from kebab-case",
 					function()
-						local x = "hi guys"
+						assert.are.same("fooBar", Strings.camelCase("--foo-bar--"))
+					end
+				)
+				it(
+					"from normal-case",
+					function()
+						assert.are.same("fooBar", Strings.camelCase("Foo Bar"))
+					end
+				)
+			end
+		)
 
-						assert.are.same({"h", "i", " ", "g", "u", "y", "s"}, Strings.split(x))
+		describe(
+			"kebabCase",
+			function()
+				it(
+					"from snake-case",
+					function()
+						assert.are.same("foo-bar", Strings.kebabCase("__FOO_BAR__"))
+					end
+				)
+				it(
+					"from kebab-case",
+					function()
+						assert.are.same("foo-bar", Strings.kebabCase("fooBar"))
+					end
+				)
+				it(
+					"from normal-case",
+					function()
+						assert.are.same("foo-bar", Strings.kebabCase(" Foo Bar "))
+					end
+				)
+			end
+		)
+
+		describe(
+			"snakeCase",
+			function()
+				it(
+					"from camel-case",
+					function()
+						assert.are.same("FOO_BAR", Strings.snakeCase("fooBar"))
+					end
+				)
+				it(
+					"from kebab-case",
+					function()
+						assert.are.same("FOO_BAR", Strings.snakeCase("--foo-bar--"))
+					end
+				)
+				it(
+					"from normal-case",
+					function()
+						assert.are.same("FOO_BAR", Strings.snakeCase(" Foo Bar "))
+					end
+				)
+			end
+		)
+
+		describe(
+			"titleCase",
+			function()
+				it(
+					"words",
+					function()
+						assert.are.same("Hello World", Strings.titleCase("hello world"))
+					end
+				)
+				it(
+					"kebabs",
+					function()
+						assert.are.same("Hello-there World_visitor", Strings.titleCase("hello-there world_visitor"))
+					end
+				)
+				it(
+					"apostrophes",
+					function()
+						assert.are.same("Hello World's End Don’t Panic", Strings.titleCase("hello world's end don’t panic"))
+					end
+				)
+			end
+		)
+
+		describe(
+			"escape",
+			function()
+				it(
+					"characters",
+					function()
+						assert.are.same("&lt;a&gt;Fish &amp; Chips&lt;/a&gt;", Strings.escape("<a>Fish & Chips</a>"))
+					end
+				)
+			end
+		)
+
+		describe(
+			"unescape",
+			function()
+				it(
+					"html entities",
+					function()
+						assert.are.same([["Hello" 'World']], Strings.unescape("&#34;Hello&quot; &apos;World&#39;"))
+					end
+				)
+				it(
+					"conflated ampersand",
+					function()
+						assert.are.same("Ampersand is &amp;", Strings.unescape("Ampersand is &#38;amp;"))
+					end
+				)
+			end
+		)
+
+		describe(
+			"Split",
+			function()
+				it(
+					"with char delimiter",
+					function()
+						local x = "greetings friend  of mine"
+
+						assert.are.same({"greetings", "friend", "", "of", "mine"}, Strings.split(x, " "))
+					end
+				)
+				it(
+					"with empty delimiter",
+					function()
+						local x = "howdy"
+
+						assert.are.same({"h", "o", "w", "d", "y"}, Strings.split(x))
+					end
+				)
+				it(
+					"with string delimiter",
+					function()
+						local x = "one::two::three"
+
+						assert.are.same({"one", "two", "three"}, Strings.split(x, "::"))
 					end
 				)
 			end
@@ -31,9 +165,9 @@ describe(
 				it(
 					"trims from start and end",
 					function()
-						local x = "  hi guys "
+						local x = "  greetings friend "
 
-						assert.are.same("hi guys", Strings.trim(x))
+						assert.are.same("greetings friend", Strings.trim(x))
 					end
 				)
 			end
@@ -90,6 +224,12 @@ describe(
 						assert.are.same("00000nice", Strings.leftPad("nice", 9, "0"))
 					end
 				)
+				it(
+					"pads with a string",
+					function()
+						assert.are.same(":-):-):-hi", Strings.leftPad("hi", 10, ":-)"))
+					end
+				)
 			end
 		)
 
@@ -112,6 +252,12 @@ describe(
 					"pads with different character",
 					function()
 						assert.are.same("nice00000", Strings.rightPad("nice", 9, "0"))
+					end
+				)
+				it(
+					"pads with a string",
+					function()
+						assert.are.same("hi:-):-):-", Strings.rightPad("hi", 10, ":-)"))
 					end
 				)
 			end
