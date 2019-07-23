@@ -82,7 +82,7 @@ end
 	@example _.capitalize("hello world") --> "Hello world"
 	@trait Chainable
 ]]
-function Strings.caplitalize(str)
+function Strings.capitalize(str)
 	assert(t.string(str))
 	return str:gsub("^%l", string.upper)
 end
@@ -124,13 +124,15 @@ function Strings.unescape(str)
 end
 
 --[[
-	Splits `str` into parts based on a delimiter and returns a table of the parts.
-	@example _.split("a,b,,c") --> "a", "b", "", "c"
-	@usage split takes a _pattern_ for delimiter, so be sure to escape special characters.
+	Splits `str` into parts based on a pattern delimiter and returns a table of the parts.
+	@example _.split("nice") --> {"n", "i", "c", "e"}
+	@example _.split("one, two,,  four", ",%s*") --> {"one", "two", "", "four"}
+	@usage This method is useful only when you need a _pattern_ for delimiter. Use the Roblox native `string.split` if you a splitting on a simple string.
+	@param delimiter (default = "")
 	@trait Chainable
 ]]
 --: string, pattern -> string[]
-function Strings.split(str, delimiter)
+function Strings.splitByPattern(str, delimiter)
 	assert(t.string(str))
 	assert(t.optional(t.string)(delimiter))
 	local result = {}

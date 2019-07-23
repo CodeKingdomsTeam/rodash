@@ -44,10 +44,10 @@ _.camelCase('__FOO_BAR__') --> 'fooBar'
 ---
 
 <div class="rodocs-trait">Chainable</div>
-### caplitalize 
+### capitalize 
 
 ```lua
-function _.caplitalize(str) --> string
+function _.capitalize(str) --> string
 ```
 Capitalize the first letter of `str`.
 
@@ -303,12 +303,14 @@ _.snakeCase('--foo-bar--') --> 'FOO_BAR'
 ---
 
 <div class="rodocs-trait">Chainable</div>
-### split 
+### splitByPattern 
 
 ```lua
-function _.split(str, delimiter) --> string
+function _.splitByPattern(str, delimiter) --> string
 ```
-Splits `str` into parts based on a delimiter and returns a table of the parts.
+Splits `str` into parts based on a pattern delimiter and returns a table of the parts.
+
+
 
 
 
@@ -329,13 +331,15 @@ Splits `str` into parts based on a delimiter and returns a table of the parts.
 **Examples**
 
 ```lua
-_.split("a,b,,c") --> {"a", "b", "", "c"}
+_.split("nice") --> {"n", "i", "c", "e"}
+
+_.split("one, two,,  four", ",%s*") --> {"one", "two", "", "four"}
 
 ```
 
 **Usage**
 
-* split takes a _pattern_ for delimiter, so be sure to escape special characters.
+* This method is useful only when you need a _pattern_ for delimiter. Use the Roblox native `string.split` if you a splitting on a simple string.
 
 ---
 
@@ -439,7 +443,7 @@ Removes any spaces from the start and end of `str`.
 **Examples**
 
 ```lua
-_.trim("  full moon  ") --> {"full moon"}
+_.trim("  full moon  ") --> "full moon"
 
 ```
 
