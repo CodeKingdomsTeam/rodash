@@ -135,9 +135,9 @@ describe(
 				it(
 					"with char delimiter",
 					function()
-						local x = "one,two,,flour"
+						local x = "one.two::flour"
 
-						assert.are.same({"one", "two", "", "flour"}, Strings.splitByPattern(x, ","))
+						assert.are.same({"one", "two", "", "flour"}, Strings.splitByPattern(x, "[.:]"))
 					end
 				)
 				it(
@@ -257,7 +257,7 @@ describe(
 				it(
 					"pads with a string",
 					function()
-						assert.are.same("toast):):)", Strings.rightPad("toast", 10, ":)"))
+						assert.are.same("toast:):):", Strings.rightPad("toast", 10, ":)"))
 					end
 				)
 			end

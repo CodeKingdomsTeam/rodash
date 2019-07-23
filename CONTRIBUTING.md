@@ -25,3 +25,7 @@ Clone the repo locally with `git clone git@github.com:CodeKingdomsTeam/rodash.gi
 # Branching
 
 - Development should always be done on a branch like `dev-some-descriptive-name`.
+
+# Discussion
+
+Please [join the discussion](https://discord.gg/PyaNeN5) on the Studio+ discord server!

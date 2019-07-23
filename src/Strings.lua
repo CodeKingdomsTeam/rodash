@@ -42,7 +42,7 @@ function Strings.kebabCase(str)
 end
 
 --[[
-	Convert `str` to kebab-case, making all letters uppercase.
+	Convert `str` to snake-case, making all letters uppercase.
 	@example _.snakeCase('sweetChickenCurry') --> 'SWEET_CHICKEN_CURRY'
 	@example _.snakeCase(' Sweet Chicken  Curry ') --> 'SWEET_CHICKEN__CURRY'
 	@example _.snakeCase('--sweet-chicken--curry--') --> 'SWEET_CHICKEN__CURRY'
@@ -125,8 +125,8 @@ end
 
 --[[
 	Splits `str` into parts based on a pattern delimiter and returns a table of the parts.
-	@example _.split("rice") --> {"r", "i", "c", "e"}
-	@example _.split("one, two,,  flour", ",%s*") --> {"one", "two", "", "flour"}
+	@example _.splitByPattern("rice") --> {"r", "i", "c", "e"}
+	@example _.splitByPattern("one.two::flour", "[.:]") --> {"one", "two", "", "flour"}
 	@usage This method is useful only when you need a _pattern_ for delimiter. Use the Roblox native `string.split` if you a splitting on a simple string.
 	@param delimiter (default = "")
 	@trait Chainable

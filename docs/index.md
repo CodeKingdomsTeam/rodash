@@ -57,4 +57,6 @@ There are currently two ways to install Rodash:
 1. Rename the `src` folder to `Robase`
 1. Use [rojo](https://github.com/LPGhatguy/rojo) to sync the files into a place
 
-# Documentation
+# Discussion
+
+If you have any queries or feedback, please [join the discussion](https://discord.gg/PyaNeN5) on the Studio+ discord server!
