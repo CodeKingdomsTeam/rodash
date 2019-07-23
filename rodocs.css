@@ -6,3 +6,10 @@
 	font-size: 0.8em;
 	margin-top: 1em;
 }
+.md-typeset h1 {
+	margin: 2em 0 1em;
+}
+
+[data-md-color-primary='grey'] .md-typeset a {
+	color: #005fe8;
+}

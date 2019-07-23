@@ -75,7 +75,7 @@
   
     
     
-    <body dir="ltr" data-md-color-primary="grey" data-md-color-accent="grey">
+    <body dir="ltr" data-md-color-primary="grey" data-md-color-accent="blue">
   
     <svg class="md-svg">
       <defs>
@@ -373,8 +373,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#caplitalize" title="caplitalize" class="md-nav__link">
-    caplitalize
+  <a href="#capitalize" title="capitalize" class="md-nav__link">
+    capitalize
   </a>
   
 </li>
@@ -422,8 +422,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#split" title="split" class="md-nav__link">
-    split
+  <a href="#splitbypattern" title="splitByPattern" class="md-nav__link">
+    splitByPattern
   </a>
   
 </li>
@@ -525,8 +525,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#caplitalize" title="caplitalize" class="md-nav__link">
-    caplitalize
+  <a href="#capitalize" title="capitalize" class="md-nav__link">
+    capitalize
   </a>
   
 </li>
@@ -574,8 +574,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#split" title="split" class="md-nav__link">
-    split
+  <a href="#splitbypattern" title="splitByPattern" class="md-nav__link">
+    splitByPattern
   </a>
   
 </li>
@@ -651,18 +651,18 @@ Convert <code>str</code> to camel-case.</p>
 <p><em>string</em></p>
 </blockquote>
 <p><strong>Examples</strong></p>
-<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">camelCase</span><span class="p">(</span><span class="s1">&#39;Foo Bar&#39;</span><span class="p">)</span> <span class="c1">--&gt; &#39;fooBar&#39;</span>
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">camelCase</span><span class="p">(</span><span class="s1">&#39;Pepperoni Pizza&#39;</span><span class="p">)</span> <span class="c1">--&gt; &#39;pepperoniPizza&#39;</span>
 
-<span class="n">_</span><span class="p">.</span><span class="n">camelCase</span><span class="p">(</span><span class="s1">&#39;--foo-bar--&#39;</span><span class="p">)</span> <span class="c1">--&gt; &#39;fooBar&#39;</span>
+<span class="n">_</span><span class="p">.</span><span class="n">camelCase</span><span class="p">(</span><span class="s1">&#39;--pepperoni-pizza--&#39;</span><span class="p">)</span> <span class="c1">--&gt; &#39;pepperoniPizza&#39;</span>
 
-<span class="n">_</span><span class="p">.</span><span class="n">camelCase</span><span class="p">(</span><span class="s1">&#39;__FOO_BAR__&#39;</span><span class="p">)</span> <span class="c1">--&gt; &#39;fooBar&#39;</span>
+<span class="n">_</span><span class="p">.</span><span class="n">camelCase</span><span class="p">(</span><span class="s1">&#39;__PEPPERONI_PIZZA&#39;</span><span class="p">)</span> <span class="c1">--&gt; &#39;pepperoniPizza&#39;</span>
 </pre></div>
 
 <hr />
 <div class="rodocs-trait">Chainable</div>
 
-<h3 id="caplitalize">caplitalize<a class="headerlink" href="#caplitalize" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">caplitalize</span><span class="p">(</span><span class="n">str</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<h3 id="capitalize">capitalize<a class="headerlink" href="#capitalize" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">capitalize</span><span class="p">(</span><span class="n">str</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 Capitalize the first letter of <code>str</code>.</p>
 <p><strong>Parameters</strong></p>
@@ -675,7 +675,7 @@ Capitalize the first letter of <code>str</code>.</p>
 <p><em>string</em></p>
 </blockquote>
 <p><strong>Examples</strong></p>
-<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">capitalize</span><span class="p">(</span><span class="s2">&quot;hello world&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;Hello world&quot;</span>
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">capitalize</span><span class="p">(</span><span class="s2">&quot;hello mould&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;Hello mould&quot;</span>
 </pre></div>
 
 <hr />
@@ -696,9 +696,9 @@ Checks if <code>str</code> ends with the string <code>ending</code>.</p>
 <p><em>string</em></p>
 </blockquote>
 <p><strong>Examples</strong></p>
-<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">endsWith</span><span class="p">(</span><span class="s2">&quot;Roblox Games&quot;</span><span class="p">,</span> <span class="s2">&quot;Games&quot;</span><span class="p">)</span> <span class="c1">--&gt; true</span>
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">endsWith</span><span class="p">(</span><span class="s2">&quot;Fun Roblox Games&quot;</span><span class="p">,</span> <span class="s2">&quot;Games&quot;</span><span class="p">)</span> <span class="c1">--&gt; true</span>
 
-<span class="n">_</span><span class="p">.</span><span class="n">endsWith</span><span class="p">(</span><span class="s2">&quot;Roblox Conference&quot;</span><span class="p">,</span> <span class="s2">&quot;Games&quot;</span><span class="p">)</span> <span class="c1">--&gt; false</span>
+<span class="n">_</span><span class="p">.</span><span class="n">endsWith</span><span class="p">(</span><span class="s2">&quot;Bad Roblox Memes&quot;</span><span class="p">,</span> <span class="s2">&quot;Games&quot;</span><span class="p">)</span> <span class="c1">--&gt; false</span>
 </pre></div>
 
 <hr />
@@ -738,11 +738,11 @@ Convert <code>str</code> to kebab-case, making all letters lowercase.</p>
 <p><em>string</em></p>
 </blockquote>
 <p><strong>Examples</strong></p>
-<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">kebabCase</span><span class="p">(</span><span class="s1">&#39;fooBar&#39;</span><span class="p">)</span> <span class="c1">--&gt; &#39;foo-bar&#39;</span>
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">kebabCase</span><span class="p">(</span><span class="s1">&#39;strongStilton&#39;</span><span class="p">)</span> <span class="c1">--&gt; &#39;strong-stilton&#39;</span>
 
-<span class="n">_</span><span class="p">.</span><span class="n">kebabCase</span><span class="p">(</span><span class="s1">&#39; Foo Bar &#39;</span><span class="p">)</span> <span class="c1">--&gt; &#39;foo-bar&#39;</span>
+<span class="n">_</span><span class="p">.</span><span class="n">kebabCase</span><span class="p">(</span><span class="s1">&#39; Strong Stilton &#39;</span><span class="p">)</span> <span class="c1">--&gt; &#39;strong-stilton&#39;</span>
 
-<span class="n">_</span><span class="p">.</span><span class="n">kebabCase</span><span class="p">(</span><span class="s1">&#39;__FOO_BAR__&#39;</span><span class="p">)</span> <span class="c1">--&gt; &#39;foo-bar&#39;</span>
+<span class="n">_</span><span class="p">.</span><span class="n">kebabCase</span><span class="p">(</span><span class="s1">&#39;__STRONG_STILTON__&#39;</span><span class="p">)</span> <span class="c1">--&gt; &#39;strong-stilton&#39;</span>
 </pre></div>
 
 <p><strong>Usage</strong></p>
@@ -768,11 +768,11 @@ Makes a string of <code>length</code> from <code>str</code> by repeating charact
 <p><em>string</em></p>
 </blockquote>
 <p><strong>Examples</strong></p>
-<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">leftPad</span><span class="p">(</span><span class="s2">&quot;yes&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span> <span class="c1">--&gt; &quot; yes&quot;</span>
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">leftPad</span><span class="p">(</span><span class="s2">&quot;toast&quot;</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span> <span class="c1">--&gt; &quot; toast&quot;</span>
 
 <span class="n">_</span><span class="p">.</span><span class="n">leftPad</span><span class="p">(</span><span class="s2">&quot;2&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;02&quot;</span>
 
-<span class="n">_</span><span class="p">.</span><span class="n">leftPad</span><span class="p">(</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;:-)&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;:-):-):-hi&quot;</span>
+<span class="n">_</span><span class="p">.</span><span class="n">leftPad</span><span class="p">(</span><span class="s2">&quot;toast&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;:)&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;:):):toast&quot;</span>
 </pre></div>
 
 <hr />
@@ -794,11 +794,11 @@ Makes a string of <code>length</code> from <code>str</code> by repeating charact
 <p><em>string</em></p>
 </blockquote>
 <p><strong>Examples</strong></p>
-<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">leftPad</span><span class="p">(</span><span class="s2">&quot;yes&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span> <span class="c1">--&gt; &quot;yes &quot;</span>
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">leftPad</span><span class="p">(</span><span class="s2">&quot;toast&quot;</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span> <span class="c1">--&gt; &quot;toast &quot;</span>
 
 <span class="n">_</span><span class="p">.</span><span class="n">leftPad</span><span class="p">(</span><span class="s2">&quot;2&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;!&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;2!&quot;</span>
 
-<span class="n">_</span><span class="p">.</span><span class="n">leftPad</span><span class="p">(</span><span class="s2">&quot;hi&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;:-)&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;hi:-):-):-&quot;</span>
+<span class="n">_</span><span class="p">.</span><span class="n">leftPad</span><span class="p">(</span><span class="s2">&quot;toast&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;:)&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;toast:):):&quot;</span>
 </pre></div>
 
 <hr />
@@ -818,11 +818,11 @@ Convert <code>str</code> to kebab-case, making all letters uppercase.</p>
 <p><em>string</em></p>
 </blockquote>
 <p><strong>Examples</strong></p>
-<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">snakeCase</span><span class="p">(</span><span class="s1">&#39;fooBar&#39;</span><span class="p">)</span> <span class="c1">--&gt; &#39;FOO_BAR&#39;</span>
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">snakeCase</span><span class="p">(</span><span class="s1">&#39;sweetChickenCurry&#39;</span><span class="p">)</span> <span class="c1">--&gt; &#39;SWEET_CHICKEN_CURRY&#39;</span>
 
-<span class="n">_</span><span class="p">.</span><span class="n">snakeCase</span><span class="p">(</span><span class="s1">&#39; Foo Bar &#39;</span><span class="p">)</span> <span class="c1">--&gt; &#39;FOO_BAR&#39;</span>
+<span class="n">_</span><span class="p">.</span><span class="n">snakeCase</span><span class="p">(</span><span class="s1">&#39; Sweet Chicken  Curry &#39;</span><span class="p">)</span> <span class="c1">--&gt; &#39;SWEET_CHICKEN__CURRY&#39;</span>
 
-<span class="n">_</span><span class="p">.</span><span class="n">snakeCase</span><span class="p">(</span><span class="s1">&#39;--foo-bar--&#39;</span><span class="p">)</span> <span class="c1">--&gt; &#39;FOO_BAR&#39;</span>
+<span class="n">_</span><span class="p">.</span><span class="n">snakeCase</span><span class="p">(</span><span class="s1">&#39;--sweet-chicken--curry--&#39;</span><span class="p">)</span> <span class="c1">--&gt; &#39;SWEET_CHICKEN__CURRY&#39;</span>
 </pre></div>
 
 <p><strong>Usage</strong></p>
@@ -832,10 +832,10 @@ Convert <code>str</code> to kebab-case, making all letters uppercase.</p>
 <hr />
 <div class="rodocs-trait">Chainable</div>
 
-<h3 id="split">split<a class="headerlink" href="#split" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">split</span><span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="n">delimiter</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<h3 id="splitbypattern">splitByPattern<a class="headerlink" href="#splitbypattern" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">splitByPattern</span><span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="n">delimiter</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-Splits <code>str</code> into parts based on a delimiter and returns a table of the parts.</p>
+Splits <code>str</code> into parts based on a pattern delimiter and returns a table of the parts.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>str</strong> - <em>string</em></p>
@@ -847,12 +847,14 @@ Splits <code>str</code> into parts based on a delimiter and returns a table of t
 <p><em>string</em></p>
 </blockquote>
 <p><strong>Examples</strong></p>
-<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;a,b,,c&quot;</span><span class="p">)</span> <span class="c1">--&gt; {&quot;a&quot;, &quot;b&quot;, &quot;&quot;, &quot;c&quot;}</span>
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;rice&quot;</span><span class="p">)</span> <span class="c1">--&gt; {&quot;r&quot;, &quot;i&quot;, &quot;c&quot;, &quot;e&quot;}</span>
+
+<span class="n">_</span><span class="p">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;one, two,,  flour&quot;</span><span class="p">,</span> <span class="s2">&quot;,%s*&quot;</span><span class="p">)</span> <span class="c1">--&gt; {&quot;one&quot;, &quot;two&quot;, &quot;&quot;, &quot;flour&quot;}</span>
 </pre></div>
 
 <p><strong>Usage</strong></p>
 <ul>
-<li>split takes a <em>pattern</em> for delimiter, so be sure to escape special characters.</li>
+<li>This method is useful only when you need a <em>pattern</em> for delimiter. Use the Roblox native <code>string.split</code> if you a splitting on a simple string.</li>
 </ul>
 <hr />
 <div class="rodocs-trait">Chainable</div>
@@ -872,7 +874,7 @@ Checks if <code>str</code> starts with the string <code>start</code>.</p>
 <p><em>string</em></p>
 </blockquote>
 <p><strong>Examples</strong></p>
-<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">startsWith</span><span class="p">(</span><span class="s2">&quot;Roblox Games&quot;</span><span class="p">,</span> <span class="s2">&quot;Roblox&quot;</span><span class="p">)</span> <span class="c1">--&gt; true</span>
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">startsWith</span><span class="p">(</span><span class="s2">&quot;Fun Roblox Games&quot;</span><span class="p">,</span> <span class="s2">&quot;Roblox&quot;</span><span class="p">)</span> <span class="c1">--&gt; true</span>
 
 <span class="n">_</span><span class="p">.</span><span class="n">startsWith</span><span class="p">(</span><span class="s2">&quot;Minecraft Games&quot;</span><span class="p">,</span> <span class="s2">&quot;Roblox&quot;</span><span class="p">)</span> <span class="c1">--&gt; false</span>
 </pre></div>
@@ -894,11 +896,11 @@ Convert <code>str</code> to title-case, where the first letter of each word is c
 <p><em>string</em></p>
 </blockquote>
 <p><strong>Examples</strong></p>
-<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">titleCase</span><span class="p">(</span><span class="s2">&quot;hello world&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;Hello World&quot;</span>
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">titleCase</span><span class="p">(</span><span class="s2">&quot;jello world&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;Jello World&quot;</span>
 
-<span class="n">_</span><span class="p">.</span><span class="n">titleCase</span><span class="p">(</span><span class="s2">&quot;hello-there world_visitor&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;Hello-there World_visitor&quot;</span>
+<span class="n">_</span><span class="p">.</span><span class="n">titleCase</span><span class="p">(</span><span class="s2">&quot;yellow-jello with_sprinkles&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;Yellow-jello With_sprinkles&quot;</span>
 
-<span class="n">_</span><span class="p">.</span><span class="n">titleCase</span><span class="p">(</span><span class="s2">&quot;hello world&#39;s end don’t panic&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;Hello World&#39;s End Don’t Panic&quot;</span>
+<span class="n">_</span><span class="p">.</span><span class="n">titleCase</span><span class="p">(</span><span class="s2">&quot;yellow jello&#39;s don’t mellow&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;Yellow Jello&#39;s Dont’t Mellow&quot;</span>
 </pre></div>
 
 <p><strong>Usage</strong></p>
@@ -922,7 +924,7 @@ Removes any spaces from the start and end of <code>str</code>.</p>
 <p><em>string</em></p>
 </blockquote>
 <p><strong>Examples</strong></p>
-<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">trim</span><span class="p">(</span><span class="s2">&quot;  full moon  &quot;</span><span class="p">)</span> <span class="c1">--&gt; {&quot;full moon&quot;}</span>
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">trim</span><span class="p">(</span><span class="s2">&quot;  roast veg  &quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;roast veg&quot;</span>
 </pre></div>
 
 <hr />
@@ -943,7 +945,7 @@ Converts any escaped HTML entities in <code>str</code> to their corresponding ch
 <p><em>string</em></p>
 </blockquote>
 <p><strong>Examples</strong></p>
-<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">unescape</span><span class="p">(</span><span class="s2">&quot;&amp;#34;Hello&amp;quot; &amp;apos;World&amp;#39;&quot;</span><span class="p">)</span> <span class="c1">--&gt; [[&quot;Hello&quot; &#39;World&#39;]]</span>
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">unescape</span><span class="p">(</span><span class="s2">&quot;&amp;#34;Smashed&amp;quot; &amp;apos;Avocado&amp;#39;&quot;</span><span class="p">)</span> <span class="c1">--&gt; [[&quot;Smashed&quot; &#39;Avocado&#39;]]</span>
 </pre></div>
                 
                   
