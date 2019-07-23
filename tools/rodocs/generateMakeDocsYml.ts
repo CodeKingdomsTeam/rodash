@@ -11,7 +11,7 @@ theme:
   name: material
   palette:
     primary: 'Grey'
-    accent: 'Grey'
+    accent: 'Blue'
 
 nav:
   - Home: index.md

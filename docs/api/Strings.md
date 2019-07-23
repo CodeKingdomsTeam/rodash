@@ -33,11 +33,11 @@ Convert `str` to camel-case.
 **Examples**
 
 ```lua
-_.camelCase('Foo Bar') --> 'fooBar'
+_.camelCase('Pepperoni Pizza') --> 'pepperoniPizza'
 
-_.camelCase('--foo-bar--') --> 'fooBar'
+_.camelCase('--pepperoni-pizza--') --> 'pepperoniPizza'
 
-_.camelCase('__FOO_BAR__') --> 'fooBar'
+_.camelCase('__PEPPERONI_PIZZA') --> 'pepperoniPizza'
 
 ```
 
@@ -67,7 +67,7 @@ Capitalize the first letter of `str`.
 **Examples**
 
 ```lua
-_.capitalize("hello world") --> "Hello world"
+_.capitalize("hello mould") --> "Hello mould"
 
 ```
 
@@ -100,9 +100,9 @@ Checks if `str` ends with the string `ending`.
 **Examples**
 
 ```lua
-_.endsWith("Roblox Games", "Games") --> true
+_.endsWith("Fun Roblox Games", "Games") --> true
 
-_.endsWith("Roblox Conference", "Games") --> false
+_.endsWith("Bad Roblox Memes", "Games") --> false
 
 ```
 
@@ -165,11 +165,11 @@ Convert `str` to kebab-case, making all letters lowercase.
 **Examples**
 
 ```lua
-_.kebabCase('fooBar') --> 'foo-bar'
+_.kebabCase('strongStilton') --> 'strong-stilton'
 
-_.kebabCase(' Foo Bar ') --> 'foo-bar'
+_.kebabCase(' Strong Stilton ') --> 'strong-stilton'
 
-_.kebabCase('__FOO_BAR__') --> 'foo-bar'
+_.kebabCase('__STRONG_STILTON__') --> 'strong-stilton'
 
 ```
 
@@ -210,11 +210,11 @@ Makes a string of `length` from `str` by repeating characters from `prefix` at t
 **Examples**
 
 ```lua
-_.leftPad("yes", 4) --> " yes"
+_.leftPad("toast", 6) --> " toast"
 
 _.leftPad("2", 2, "0") --> "02"
 
-_.leftPad("hi", 10, ":-)") --> ":-):-):-hi"
+_.leftPad("toast", 10, ":)") --> ":):):toast"
 
 ```
 
@@ -251,11 +251,11 @@ Makes a string of `length` from `str` by repeating characters from `suffix` at t
 **Examples**
 
 ```lua
-_.leftPad("yes", 4) --> "yes "
+_.leftPad("toast", 6) --> "toast "
 
 _.leftPad("2", 2, "!") --> "2!"
 
-_.leftPad("hi", 10, ":-)") --> "hi:-):-):-"
+_.leftPad("toast", 10, ":)") --> "toast:):):"
 
 ```
 
@@ -288,11 +288,11 @@ Convert `str` to kebab-case, making all letters uppercase.
 **Examples**
 
 ```lua
-_.snakeCase('fooBar') --> 'FOO_BAR'
+_.snakeCase('sweetChickenCurry') --> 'SWEET_CHICKEN_CURRY'
 
-_.snakeCase(' Foo Bar ') --> 'FOO_BAR'
+_.snakeCase(' Sweet Chicken  Curry ') --> 'SWEET_CHICKEN__CURRY'
 
-_.snakeCase('--foo-bar--') --> 'FOO_BAR'
+_.snakeCase('--sweet-chicken--curry--') --> 'SWEET_CHICKEN__CURRY'
 
 ```
 
@@ -331,9 +331,9 @@ Splits `str` into parts based on a pattern delimiter and returns a table of the 
 **Examples**
 
 ```lua
-_.split("nice") --> {"n", "i", "c", "e"}
+_.split("rice") --> {"r", "i", "c", "e"}
 
-_.split("one, two,,  four", ",%s*") --> {"one", "two", "", "four"}
+_.split("one, two,,  flour", ",%s*") --> {"one", "two", "", "flour"}
 
 ```
 
@@ -370,7 +370,7 @@ Checks if `str` starts with the string `start`.
 **Examples**
 
 ```lua
-_.startsWith("Roblox Games", "Roblox") --> true
+_.startsWith("Fun Roblox Games", "Roblox") --> true
 
 _.startsWith("Minecraft Games", "Roblox") --> false
 
@@ -405,11 +405,11 @@ Convert `str` to title-case, where the first letter of each word is capitalized.
 **Examples**
 
 ```lua
-_.titleCase("hello world") --> "Hello World"
+_.titleCase("jello world") --> "Jello World"
 
-_.titleCase("hello-there world_visitor") --> "Hello-there World_visitor"
+_.titleCase("yellow-jello with_sprinkles") --> "Yellow-jello With_sprinkles"
 
-_.titleCase("hello world's end don’t panic") --> "Hello World's End Don’t Panic"
+_.titleCase("yellow jello's don’t mellow") --> "Yellow Jello's Dont’t Mellow"
 
 ```
 
@@ -443,7 +443,7 @@ Removes any spaces from the start and end of `str`.
 **Examples**
 
 ```lua
-_.trim("  full moon  ") --> "full moon"
+_.trim("  roast veg  ") --> "roast veg"
 
 ```
 
@@ -474,7 +474,7 @@ Converts any escaped HTML entities in `str` to their corresponding characters.
 **Examples**
 
 ```lua
-_.unescape("&#34;Hello&quot; &apos;World&#39;") --> [["Hello" 'World']]
+_.unescape("&#34;Smashed&quot; &apos;Avocado&#39;") --> [["Smashed" 'Avocado']]
 
 ```
 

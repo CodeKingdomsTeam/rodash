@@ -1,13 +1,13 @@
 # Rodash
 
-A utility library for Lua in Roblox.
+Rodash is a collection of functions designed to aid everyday game programming in Roblox.
 
-| Name                | Notes                                             |
-| ------------------- | ------------------------------------------------- |
-| `setup.sh`          | Installs Lua 5.1 and dependencies locally.        |
-| `test.sh`           | Run the tests.                                    |
-| `build.sh`          | Run `setup`, `luacheck` and `test` with coverage. |
-| `tools/format.sh`   | Format the code with `lua-fmt`.                   |
-| `tools/luacheck.sh` | Runs `luacheck` against all source.               |
+# [Getting Started](https://codekingdomsteam.github.io/rodash/)
 
-[Contribution guidelines for this project](docs/CONTRIBUTING.md)
+Please download [the latest release](https://codekingdomsteam.github.io/rodash/releases) and [read the docs](https://codekingdomsteam.github.io/rodash/) to learn how to use Rodash in your games.
+
+# Contributing
+
+Please help improve Rodash by submitting any bugs to the [Issue Tracker](https://github.com/CodeKingdomsTeam/rodash/issues) and making a pull request with new functionality.
+
+See [Contributing to this project](CONTRIBUTING.md).
