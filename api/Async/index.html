@@ -11,7 +11,7 @@
       <meta http-equiv="x-ua-compatible" content="ie=edge">
       
       
-        <link rel="canonical" href="https://codekingdomsteam.github.io/rodash/">
+        <link rel="canonical" href="https://codekingdomsteam.github.io/rodash/api/Async/">
       
       
       
@@ -33,18 +33,18 @@
       
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
-      <link rel="shortcut icon" href="assets/images/favicon.png">
+      <link rel="shortcut icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.4.0">
     
     
       
-        <title>Rodash Documentation</title>
+        <title>Async - Rodash Documentation</title>
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/application.0284f74d.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/application.0284f74d.css">
       
-        <link rel="stylesheet" href="assets/stylesheets/application-palette.01803549.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/application-palette.01803549.css">
       
       
         
@@ -53,7 +53,7 @@
       
     
     
-      <script src="assets/javascripts/modernizr.74668098.js"></script>
+      <script src="../../assets/javascripts/modernizr.74668098.js"></script>
     
     
       
@@ -62,10 +62,10 @@
         <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
       
     
-    <link rel="stylesheet" href="assets/fonts/material-icons.css">
+    <link rel="stylesheet" href="../../assets/fonts/material-icons.css">
     
     
-      <link rel="stylesheet" href="rodocs.css">
+      <link rel="stylesheet" href="../../rodocs.css">
     
     
       
@@ -89,6 +89,10 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
+      <a href="#async" tabindex="1" class="md-skip">
+        Skip to content
+      </a>
+    
     
       <header class="md-header" data-md-component="header">
   <nav class="md-header-nav md-grid">
@@ -111,7 +115,7 @@
             </span>
             <span class="md-header-nav__topic">
               
-                Home
+                Async
               
             </span>
           
@@ -220,18 +224,11 @@
       
       
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-    
-    
-    <a href="." title="Home" class="md-nav__link md-nav__link--active">
+  <li class="md-nav__item">
+    <a href="../.." title="Home" class="md-nav__link">
       Home
     </a>
-    
   </li>
 
     
@@ -260,7 +257,7 @@
 
 
   <li class="md-nav__item">
-    <a href="guide/arrays/" title="Arrays" class="md-nav__link">
+    <a href="../../guide/arrays/" title="Arrays" class="md-nav__link">
       Arrays
     </a>
   </li>
@@ -275,10 +272,12 @@
       
       
 
+  
 
-  <li class="md-nav__item md-nav__item--nested">
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" checked>
     
     <label class="md-nav__link" for="nav-3">
       API Reference
@@ -294,11 +293,83 @@
           
           
 
+  
 
-  <li class="md-nav__item">
-    <a href="api/Async/" title="Async" class="md-nav__link">
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Async
+      </label>
+    
+    <a href="./" title="Async" class="md-nav__link md-nav__link--active">
       Async
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#functions" title="Functions" class="md-nav__link">
+    Functions
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#all" title="all" class="md-nav__link">
+    all
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delay" title="delay" class="md-nav__link">
+    delay
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#retrywithbackoff" title="retryWithBackoff" class="md-nav__link">
+    retryWithBackoff
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wrapfn" title="wrapFn" class="md-nav__link">
+    wrapFn
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
   </li>
 
         
@@ -308,7 +379,7 @@
 
 
   <li class="md-nav__item">
-    <a href="api/Classes/" title="Classes" class="md-nav__link">
+    <a href="../Classes/" title="Classes" class="md-nav__link">
       Classes
     </a>
   </li>
@@ -320,7 +391,7 @@
 
 
   <li class="md-nav__item">
-    <a href="api/Functions/" title="Functions" class="md-nav__link">
+    <a href="../Functions/" title="Functions" class="md-nav__link">
       Functions
     </a>
   </li>
@@ -332,7 +403,7 @@
 
 
   <li class="md-nav__item">
-    <a href="api/Strings/" title="Strings" class="md-nav__link">
+    <a href="../Strings/" title="Strings" class="md-nav__link">
       Strings
     </a>
   </li>
@@ -344,7 +415,7 @@
 
 
   <li class="md-nav__item">
-    <a href="api/Tables/" title="Tables" class="md-nav__link">
+    <a href="../Tables/" title="Tables" class="md-nav__link">
       Tables
     </a>
   </li>
@@ -362,18 +433,163 @@
               </div>
             
             
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#functions" title="Functions" class="md-nav__link">
+    Functions
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#all" title="all" class="md-nav__link">
+    all
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#delay" title="delay" class="md-nav__link">
+    delay
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#retrywithbackoff" title="retryWithBackoff" class="md-nav__link">
+    retryWithBackoff
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wrapfn" title="wrapFn" class="md-nav__link">
+    wrapFn
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
           
           <div class="md-content">
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/CodeKingdomsTeam/rodash/edit/master/docs/index.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                  <a href="https://github.com/CodeKingdomsTeam/rodash/edit/master/docs/api/Async.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
                 
                 
-                  <h1>Home</h1>
-                
-                <p><img alt="logo" src="logo.png" />
-Rodash example index</p>
+                <h1 id="async">Async<a class="headerlink" href="#async" title="Permanent link">&para;</a></h1>
+<h2 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h2>
+<h3 id="all">all<a class="headerlink" href="#all" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">all</span><span class="p">(</span><span class="n">objects</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+</pre></div>
+    Given an array of objects, this function returns a promise which
+    resolves once all of the array elements have resolved, or rejects
+    if any of the array elements reject.</p>
+<div class="codehilite"><pre><span></span>Any objects in the array which aren&#39;t promises are considered
+resolved immediately.
+
+The promise resolves to an array mapping the input to resolved elements.
+</pre></div>
+
+
+<p><strong>Parameters</strong></p>
+<blockquote>
+<p><strong>objects</strong> - <em>string</em>
+</p>
+</blockquote>
+<p><strong>Returns</strong></p>
+<blockquote>
+<p><em>string</em></p>
+</blockquote>
+<hr />
+<h3 id="delay">delay<a class="headerlink" href="#delay" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">delay</span><span class="p">(</span><span class="n">delayInSeconds</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+</pre></div>
+    Returns a promise which resolves after the given delayInSeconds.</p>
+<p><strong>Parameters</strong></p>
+<blockquote>
+<p><strong>delayInSeconds</strong> - <em>string</em>
+</p>
+</blockquote>
+<p><strong>Returns</strong></p>
+<blockquote>
+<p><em>string</em></p>
+</blockquote>
+<hr />
+<h3 id="retrywithbackoff">retryWithBackoff<a class="headerlink" href="#retrywithbackoff" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">retryWithBackoff</span><span class="p">(</span><span class="n">getPromise</span><span class="p">,</span> <span class="n">backoffOptions</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+</pre></div>
+    Try running a function which returns a promise and retry if the function throws
+    and error or the promise rejects. The retry behaviour can be adapted using
+    backoffOptions, which can customize the maximum number of retries and the backoff
+    timing of the form [0, x^attemptNumber] + y where x is an exponent that produces
+    a random exponential delay and y is a constant delay.</p>
+<div class="codehilite"><pre><span></span>maxTries - how many tries (including the first one) the function should be called
+retryExponentInSeconds - customize the backoff exponent
+</pre></div>
+
+
+<p>retryConstantInSeconds - customize the backoff constant
+    randomStream - use a Roblox "Random" instance to control the backoff
+shouldRetry(response) - called if maxTries &gt; 1 to determine whether a retry should occur
+    onRetry(waitTime, errorMessage) - a hook for when a retry is triggered, with the delay before retry and error message which caused the failure
+    onDone(response, durationMs) - a hook for when the promise resolves
+    onFail(errorMessage) - a hook for when the promise has failed and no more retries are allowed</p>
+<p><strong>Parameters</strong></p>
+<blockquote>
+<p><strong>getPromise</strong> - <em>string</em></p>
+<p><strong>backoffOptions</strong> - <em>string</em>
+</p>
+</blockquote>
+<p><strong>Returns</strong></p>
+<blockquote>
+<p><em>string</em></p>
+</blockquote>
+<hr />
+<h3 id="wrapfn">wrapFn<a class="headerlink" href="#wrapfn" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">wrapFn</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+</pre></div>
+    Returns a promise for a function which may yield. wrapFn calls the
+    the function in a coroutine and resolves with the output of the function
+    after any asynchronous actions, and rejects if the function throws an error.</p>
+<p><strong>Parameters</strong></p>
+<blockquote>
+<p><strong>fn</strong> - <em>string</em>
+</p>
+</blockquote>
+<p><strong>Returns</strong></p>
+<blockquote>
+<p><em>string</em></p>
+</blockquote>
                 
                   
                 
@@ -394,14 +610,28 @@ Rodash example index</p>
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
+          <a href="../../guide/arrays/" title="Arrays" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Arrays
+              </span>
+            </div>
+          </a>
         
-          <a href="guide/arrays/" title="Arrays" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+        
+          <a href="../Classes/" title="Classes" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
               <span class="md-flex__ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Arrays
+                Classes
               </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink">
@@ -429,9 +659,9 @@ Rodash example index</p>
       
     </div>
     
-      <script src="assets/javascripts/application.245445c6.js"></script>
+      <script src="../../assets/javascripts/application.245445c6.js"></script>
       
-      <script>app.initialize({version:"1.0.4",url:{base:"."}})</script>
+      <script>app.initialize({version:"1.0.4",url:{base:"../.."}})</script>
       
     
   </body>
