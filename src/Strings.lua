@@ -255,7 +255,7 @@ end
 
 --[[
 	Encodes _str_ for use as a url, for example as an entire url.
-	@trait chainable
+	@trait Chainable
 	@example
 		_.encodeUrl("https://Egg+Fried Rice!?")
 		--> "https://Egg+Fried%20Rice!?"
@@ -267,7 +267,7 @@ end
 
 --[[
 	Encodes _str_ for use in a url, for example as a query parameter of a url.
-	@trait chainable
+	@trait Chainable
 	@example
 		_.encodeUrlComponent("https://Egg+Fried Rice!?")
 		--> "https%3A%2F%2FEgg%2BFried%20Rice!%3F"
@@ -290,7 +290,7 @@ local calculateDecodeUrlExceptions =
 
 --[[
 	The inverse of `_.encodeUrl`.
-	@trait chainable
+	@trait Chainable
 	@example
 		_.decodeUrl("https://Egg+Fried%20Rice!?")
 		--> "https://Egg+Fried Rice!?"
@@ -311,7 +311,7 @@ end
 
 --[[
 	The inverse of `_.encodeUrlComponent`.
-	@trait chainable
+	@trait Chainable
 	@example
 		_.decodeUrlComponent("https%3A%2F%2FEgg%2BFried%20Rice!%3F")
 		--> "https://Egg+Fried Rice!?"
