@@ -13,7 +13,8 @@ script = {
 	Strings = "Strings",
 	Parent = {
 		t = "t",
-		Promise = "roblox-lua-promise"
+		Promise = "roblox-lua-promise",
+		luassert = "luassert"
 	}
 }
 Random = {
@@ -32,6 +33,12 @@ clock = {
 	events = {},
 	process = function()
 		local events = {}
+		table.sort(
+			clock.events,
+			function(a, b)
+				return a.time < b.time
+			end
+		)
 		for _, event in ipairs(clock.events) do
 			if event.time <= clock.time then
 				event.fn()

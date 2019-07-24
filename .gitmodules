@@ -4,3 +4,6 @@
 [submodule "modules/roblox-lua-promise"]
 	path = modules/roblox-lua-promise
 	url = git@github.com:LPGhatguy/roblox-lua-promise.git
+[submodule "modules/luassert"]
+	path = modules/luassert
+	url = git@github.com:Olivine-Labs/luassert.git
