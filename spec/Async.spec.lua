@@ -1,5 +1,7 @@
 local Async = require "Async"
+local Functions = require "Functions"
 local Promise = require "roblox-lua-promise"
+local match = require "luassert.match"
 
 local function advanceAndAssertPromiseResolves(promise, assertion)
 	local andThen = spy.new(assertion)
@@ -34,13 +36,13 @@ describe(
 			end
 		)
 		describe(
-			"all",
+			"parellel",
 			function()
 				it(
 					"resolves for an array of promises",
 					function()
-						local one = Promise.resolve(1)
-						local two = Promise.resolve(2)
+						local one = Async.resolve(1)
+						local two = Async.resolve(2)
 						local three =
 							Async.delay(1):andThen(
 							function()
@@ -48,7 +50,7 @@ describe(
 							end
 						)
 						advanceAndAssertPromiseResolves(
-							Async.all({one, two, three}),
+							Async.parallel({one, two, three}),
 							function(result)
 								assert.equal(tick(), 1)
 								assert.are_same({1, 2, 3}, result)
@@ -68,7 +70,7 @@ describe(
 							end
 						)
 						advanceAndAssertPromiseResolves(
-							Async.all({one, two, three}),
+							Async.parallel({one, two, three}),
 							function(result)
 								assert.equal(tick(), 1)
 								assert.are_same({1, 2, 3}, result)
@@ -81,7 +83,7 @@ describe(
 					function()
 						wait(1)
 						advanceAndAssertPromiseResolves(
-							Async.all({}),
+							Async.parallel({}),
 							function(result)
 								assert.equal(0, #result)
 							end
@@ -92,15 +94,88 @@ describe(
 					"rejects if any promise rejects",
 					function()
 						wait(1)
-						local one = Promise.resolve(1)
-						local two = Promise.reject("Bad promise")
+						local one = Async.resolve(1)
+						local two = Promise.reject("Expected error")
 						local three =
 							Async.delay(1):andThen(
 							function()
 								return 3
 							end
 						)
-						advanceAndAssertPromiseRejects(Async.all({one, two, three}), "Bad promise")
+						advanceAndAssertPromiseRejects(Async.parallel({one, two, three}), "Expected error")
+					end
+				)
+			end
+		)
+		describe(
+			"resolve",
+			function()
+				it(
+					"resolves for multiple return values",
+					function()
+						local andThen = spy.new()
+						Async.resolve(1, 2, 3):andThen(andThen)
+						assert.spy(andThen).called_with(1, 2, 3)
+					end
+				)
+			end
+		)
+		describe(
+			"props",
+			function()
+				it(
+					"resolves for an object of promises",
+					function()
+						local one = Async.resolve(1)
+						local two = Async.resolve(2)
+						local three =
+							Async.delay(1):andThen(
+							function()
+								return 3
+							end
+						)
+						advanceAndAssertPromiseResolves(
+							Async.props({one = one, two = two, three = three}),
+							function(result)
+								assert.equal(tick(), 1)
+								assert.are_same({one = 1, two = 2, three = 3}, result)
+							end
+						)
+					end
+				)
+				it(
+					"resolves for a mixed object",
+					function()
+						local one = 1
+						local two = 2
+						local three =
+							Async.delay(1):andThen(
+							function()
+								return 3
+							end
+						)
+						advanceAndAssertPromiseResolves(
+							Async.props({one = one, two = two, three = three}),
+							function(result)
+								assert.equal(tick(), 1)
+								assert.are_same({one = 1, two = 2, three = 3}, result)
+							end
+						)
+					end
+				)
+				it(
+					"rejects if any promise rejects",
+					function()
+						wait(1)
+						local one = Async.resolve(1)
+						local two = Promise.reject("Expected error")
+						local three =
+							Async.delay(1):andThen(
+							function()
+								return 3
+							end
+						)
+						advanceAndAssertPromiseRejects(Async.props({one = one, two = two, three = three}), "Expected error")
 					end
 				)
 			end
@@ -122,19 +197,40 @@ describe(
 			end
 		)
 		describe(
-			"wrapFn",
+			"finally",
+			function()
+				it(
+					"run after a resolution",
+					function()
+						local handler = spy.new()
+						Async.finally(Async.resolve("ok"), handler)
+						assert.spy(handler).called_with(true, "ok")
+					end
+				)
+				it(
+					"run after a rejection",
+					function()
+						local handler = spy.new()
+						Async.finally(Promise.reject("bad"), handler)
+						assert.spy(handler).called_with(false, "bad")
+					end
+				)
+			end
+		)
+		describe(
+			"async",
 			function()
 				it(
 					"can wrap a function that returns in a promise",
 					function()
-						local function resolves()
+						local function cooks(food)
 							wait(1)
-							return "good"
+							return "hot-" .. food
 						end
 						advanceAndAssertPromiseResolves(
-							Async.wrapFn(resolves),
+							Async.async(cooks)("bread"),
 							function(result)
-								assert.equal("good", result)
+								assert.equal("hot-bread", result)
 							end
 						)
 					end
@@ -142,11 +238,101 @@ describe(
 				it(
 					"can wrap a function that errors in a promise",
 					function()
-						local function rejects()
+						local function burns(food)
 							wait(1)
-							error("Bad fn")
+							error("Burnt " .. food)
 						end
-						advanceAndAssertPromiseRejects(Async.wrapFn(rejects), "Bad fn")
+						advanceAndAssertPromiseRejects(Async.async(burns)("bread"), "Burnt bread")
+					end
+				)
+			end
+		)
+		describe(
+			"race",
+			function()
+				it(
+					"resolves immediately for no promises",
+					function()
+						local andThen = spy.new()
+						Async.race({}, 0):andThen(andThen)
+						assert.spy(andThen).called_with(match.is_same({}))
+					end
+				)
+				it(
+					"resolves first promise",
+					function()
+						advanceAndAssertPromiseResolves(
+							Async.race(
+								{
+									Async.delay(1):andThen(Functions.returns("One")),
+									Async.delay(2):andThen(Functions.returns("Two")),
+									Async.delay(3):andThen(Functions.returns("Three"))
+								}
+							),
+							function(result)
+								assert.are_same({"One"}, result)
+							end
+						)
+					end
+				)
+				it(
+					"resolves two promises",
+					function()
+						advanceAndAssertPromiseResolves(
+							Async.race(
+								{
+									Async.delay(0.6):andThen(Functions.returns("One")),
+									Async.delay(3):andThen(Functions.throws("Unexpected Error")),
+									Async.delay(0.5):andThen(Functions.returns("Three"))
+								},
+								2
+							),
+							function(result)
+								assert.are_same({"Three", "One"}, result)
+							end
+						)
+					end
+				)
+				it(
+					"rejects when not enough promises found",
+					function()
+						advanceAndAssertPromiseRejects(
+							Async.race(
+								{
+									Async.delay(0.8):andThen(Functions.returns("One")),
+									Async.delay(0.6):andThen(Functions.throws("Expected Error")),
+									Async.delay(0.5):andThen(Functions.returns("Three"))
+								},
+								2
+							),
+							"Expected Error"
+						)
+					end
+				)
+			end
+		)
+		describe(
+			"timeout",
+			function()
+				it(
+					"can timeout after a delay",
+					function()
+						advanceAndAssertPromiseRejects(Async.timeout(Async.delay(2), 1, "Expected Error"), "Expected Error")
+					end
+				)
+				it(
+					"can resolve within delay",
+					function()
+						advanceAndAssertPromiseResolves(Async.timeout(Async.delay(1):andThen(Functions.returns("Ok")), 2))
+					end
+				)
+				it(
+					"can reject",
+					function()
+						advanceAndAssertPromiseRejects(
+							Async.timeout(Async.delay(1):andThen(Functions.throws("Expected Error")), 10),
+							"Expected Error"
+						)
 					end
 				)
 			end
@@ -212,7 +398,7 @@ describe(
 							if n < 4 then
 								return Promise.reject("Fail " .. n)
 							else
-								return Promise.resolve("Success")
+								return Async.resolve("Success")
 							end
 						end
 						local shouldRetry =
@@ -252,7 +438,7 @@ describe(
 						clock:process()
 						assert.spy(andThen).was_called_with("Success")
 						assert.spy(onFail).was_not_called()
-						assert.spy(onDone).was_called_with("Success", 9000)
+						assert.spy(onDone).was_called_with("Success", 9)
 						assert.equal(3, #onRetry.calls)
 					end
 				)

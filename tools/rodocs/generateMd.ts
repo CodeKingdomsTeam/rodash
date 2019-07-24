@@ -86,22 +86,25 @@ function collectDoc(loc: number, nodes: Nodes): Doc {
 }
 
 function formatComment(commentNode: Comment, entries: DocEntry[]) {
-	return commentNode.value
-		.split('\n')
-		.map(line => {
-			const lineWithoutIndent = line.replace(/^\t/, '');
-			const entryMatch = lineWithoutIndent.match(/^\@([a-z]+)\s(.+)/);
-			if (entryMatch) {
-				entries.push({
-					tag: entryMatch[1],
-					content: entryMatch[2],
-				});
-				return '';
-			} else {
-				return lineWithoutIndent;
-			}
-		})
-		.join('\n');
+	let lastEntry;
+	let content: string[] = [];
+	commentNode.value.split('\n').forEach(line => {
+		const lineWithoutIndent = line.replace(/^[\s\t][\s\t]?/g, '');
+		const entryMatch = lineWithoutIndent.match(/^\@([a-z]+)\s?(.*)/);
+		if (entryMatch) {
+			lastEntry = {
+				tag: entryMatch[1],
+				content: entryMatch[2],
+			};
+			entries.push(lastEntry);
+		} else if (lastEntry) {
+			lastEntry.content += '\n' + lineWithoutIndent;
+		} else {
+			content.push(lineWithoutIndent);
+		}
+	});
+
+	return content.join('\n');
 }
 
 function formatFn(libName: string, node: FunctionDeclaration, doc: Doc): FunctionDoc {
@@ -128,8 +131,34 @@ function ${libName}.${name}(${params.join(', ')}) --> string
 			lines.push('\n**Parameters**\n');
 			lines.push(...params.map(param => `> __${param}__ - _string_\n>`));
 		}
+		const returns = filterEntries(doc.entries, 'returns');
 		lines.push('\n**Returns**\n');
-		lines.push('\n> _string_');
+		if (returns.length) {
+			lines.push(...returns.map(({ content }) => `\n> _string_ - ${content}`));
+		} else {
+			lines.push('\n> _string_');
+		}
+		const throws = filterEntries(doc.entries, 'throws');
+		if (throws.length) {
+			lines.push('\n**Usage**\n');
+			lines.push(...formatList(throws));
+		}
+
+		const rejects = filterEntries(doc.entries, 'rejects');
+		if (rejects.length) {
+			lines.push('\n**Rejects**\n');
+			lines.push(
+				...formatList(rejects, function(line) {
+					switch (line) {
+						case 'passthrough':
+							return '_passthrough_ - The returned promise will reject if promises passed as arguments reject.';
+						default:
+							return line;
+					}
+				}),
+			);
+		}
+
 		const examples = filterEntries(doc.entries, 'example');
 		if (examples.length) {
 			lines.push('\n**Examples**\n');
@@ -140,13 +169,25 @@ function ${libName}.${name}(${params.join(', ')}) --> string
 		const usage = filterEntries(doc.entries, 'usage');
 		if (usage.length) {
 			lines.push('\n**Usage**\n');
-			lines.push(...usage.map(({ content }) => `* ${content}`));
+			lines.push(...formatList(usage));
 		}
 		return {
 			name,
 			content: lines.join('\n'),
 		};
 	}
+}
+
+function formatList(entries: DocEntry[], modifier?: (line: string) => string) {
+	return entries.map(
+		({ content }) =>
+			'* ' +
+			content
+				.split('\n')
+				.filter(line => !line.match(/^\s*$/))
+				.map(line => (modifier ? modifier(line) : line))
+				.join('\n* '),
+	);
 }
 
 function filterEntries(entries: DocEntry[], tag: string) {
