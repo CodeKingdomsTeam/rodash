@@ -2,6 +2,8 @@
 	Useful functions to manipulate strings, based on similar implementations in other standard libraries.
 ]]
 local t = require(script.Parent.t)
+local Functions = require(script.Functions)
+local Tables = require(script.Tables)
 local Strings = {}
 
 --[[
@@ -89,10 +91,10 @@ end
 
 --[[
 	Converts the characters `&<>"'` in `str` to their corresponding HTML entities.
-	@example _.escape("<a>Fish & Chips</a>") --> "&lt;a&gt;Fish &amp; Chips&lt;/a&gt;"
+	@example _.encodeHtml("<a>Fish & Chips</a>") --> "&lt;a&gt;Fish &amp; Chips&lt;/a&gt;"
 	@trait Chainable
 ]]
-function Strings.escape(str)
+function Strings.encodeHtml(str)
 	assert(t.string(str))
 	local entities = {["<"] = "lt", [">"] = "gt", ["&"] = "amp", ['""'] = "quot", ["'"] = "apos"}
 	return str:gsub(
@@ -104,12 +106,12 @@ function Strings.escape(str)
 end
 
 --[==[
-	The inverse of `_.escape`.
-	Converts any escaped HTML entities in `str` to their corresponding characters.
-	@example _.unescape("&#34;Smashed&quot; &apos;Avocado&#39;") --> [["Smashed" 'Avocado']]
+	The inverse of `_.encodeHtml`.
+	Converts any encodeHtmld HTML entities in `str` to their corresponding characters.
+	@example _.decodeHtml("&#34;Smashed&quot; &apos;Avocado&#39;") --> [["Smashed" 'Avocado']]
 	@trait Chainable
 ]==]
-function Strings.unescape(str)
+function Strings.decodeHtml(str)
 	assert(t.string(str))
 	local entities = {lt = "<", gt = ">", amp = "&", quot = '"', apos = "'"}
 	return str:gsub(
@@ -227,6 +229,118 @@ function Strings.rightPad(str, length, suffix)
 	local remainder = padLength % #suffix
 	local repetitions = (padLength - remainder) / #suffix
 	return str .. string.rep(suffix or " ", repetitions) .. suffix:sub(1, remainder)
+end
+
+--[[
+	Converts _char_ into its hex representation
+	@example _.charToHex("_") --> %5F
+]]
+--: char -> str
+function Strings.charToHex(char)
+	assert(t.string(char))
+	return string.format("%%%02X", char:byte(1, 1))
+end
+
+--[[
+	Converts _char_ into its hex representation
+	@example
+		_.charToHex("%5F") --> "_"
+		_.charToHex("5F") --> "_"
+]]
+--: str -> char
+function Strings.hexToChar(char)
+	assert(t.string(char))
+	return string.char(tonumber(char:sub(-2), 16))
+end
+
+--[[
+	Encodes _str_ for use as a url, for example as an entire url.
+	@trait chainable
+	@example
+		_.encodeUrl("https://Egg+Fried Rice!?")
+		--> "https://Egg+Fried%20Rice!?"
+]]
+function Strings.encodeUrl(str)
+	assert(t.string(str))
+	return str:gsub("[^%;%,%/%?%:%@%&%=%+%$%w%-%_%.%!%~%*%'%(%)%#]", Strings.charToHex)
+end
+
+--[[
+	Encodes _str_ for use in a url, for example as a query parameter of a url.
+	@trait chainable
+	@example
+		_.encodeUrlComponent("https://Egg+Fried Rice!?")
+		--> "https%3A%2F%2FEgg%2BFried%20Rice!%3F"
+]]
+function Strings.encodeUrlComponent(str)
+	assert(t.string(str))
+	return str:gsub("[^%w%-_%.%!%~%*%'%(%)]", Strings.charToHex)
+end
+
+local calculateDecodeUrlExceptions =
+	Functions.once(
+	function()
+		local exceptions = {}
+		for char in ("#$&+,/:;=?@"):gmatch(".") do
+			exceptions[string.byte(char)] = true
+		end
+		return exceptions
+	end
+)
+
+--[[
+	The inverse of `_.encodeUrl`
+	@trait chainable
+	@example
+		_.decodeUrl("https://Egg+Fried%20Rice!?")
+		--> "https://Egg+Fried Rice!?"
+]]
+function Strings.decodeUrl(str)
+	assert(t.string(str))
+	local exceptions = calculateDecodeUrlExceptions()
+	return str:gsub(
+		"%%(%x%x)",
+		function(term)
+			local charId = tonumber(term, 16)
+			if not exceptions[charId] then
+				return string.char(charId)
+			end
+		end
+	)
+end
+
+--[[
+	The inverse of `_.encodeUrlComponent`
+	@trait chainable
+	@example
+		_.decodeUrlComponent("https%3A%2F%2FEgg%2BFried%20Rice!%3F")
+		--> "https://Egg+Fried Rice!?"
+]]
+function Strings.decodeUrlComponent(str)
+	assert(t.string(str))
+	return str:gsub("%%(%x%x)", Strings.hexToChar)
+end
+
+--[[
+	Takes a _query_ dictionary of key-value pairs and build a query string that can be concatenated
+	to the end of a url.
+	@example
+		Strings.encodeQueryString({
+			time = 11,
+			biscuits = "hobnobs",
+			chocolatey = true
+		})) --> "?biscuits=hobnobs&time=11&chocolatey=true"
+]]
+function Strings.encodeQueryString(query)
+	assert(t.table(query))
+	local fields =
+		Tables.mapValues(
+		query,
+		function(value, key)
+			return key .. "=" .. Strings.encodeUrlComponent(tostring(value))
+		end
+	)
+	return ("?" .. table.concat(fields, "&"))
 end
 
 return Strings

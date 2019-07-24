@@ -46,6 +46,15 @@ function Tables.map(source, handler)
 end
 
 --: <T: Iterable<K,V>, R: Iterable<K,V2>((T, (element: V, key: K) -> V2) -> R)
+function Tables.mapValues(source, handler)
+	local result = {}
+	for i, v in getIterator(source) do
+		table.insert(result, handler(v, i))
+	end
+	return result
+end
+
+--: <T: Iterable<K,V>, R: Iterable<K,V2>((T, (element: V, key: K) -> V2) -> R)
 function Tables.mapKeys(source, handler)
 	local result = {}
 	for i, v in getIterator(source) do
