@@ -289,7 +289,7 @@ local calculateDecodeUrlExceptions =
 )
 
 --[[
-	The inverse of `_.encodeUrl`
+	The inverse of `_.encodeUrl`.
 	@trait chainable
 	@example
 		_.decodeUrl("https://Egg+Fried%20Rice!?")
@@ -310,7 +310,7 @@ function Strings.decodeUrl(str)
 end
 
 --[[
-	The inverse of `_.encodeUrlComponent`
+	The inverse of `_.encodeUrlComponent`.
 	@trait chainable
 	@example
 		_.decodeUrlComponent("https%3A%2F%2FEgg%2BFried%20Rice!%3F")
@@ -325,7 +325,7 @@ end
 	Takes a _query_ dictionary of key-value pairs and build a query string that can be concatenated
 	to the end of a url.
 	@example
-		Strings.encodeQueryString({
+		_.encodeQueryString({
 			time = 11,
 			biscuits = "hobnobs",
 			chocolatey = true
