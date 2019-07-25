@@ -1,18 +1,35 @@
+--[[
+	A collection of useful utility functions and building blocks for functional programming styles.
+]]
 local Tables = require(script.Tables)
 
 local Functions = {}
 
+--[[
+	A simple function that does nothing, and returns nil.
+	@usage Shorthand for `function() end`.
+]]
+--: () -> nil
 function Functions.noop()
-	return function()
-	end
 end
 
-function Functions.identity()
-	return function(...)
-		return ...
-	end
+--[[
+	A simple function that does nothing, but returns its input parameters.
+	@trait Chainable
+]]
+--: <A>(...A) -> ...A
+function Functions.id(...)
+	return ...
 end
 
+--[[
+	Returns a function that when called, returns the original input parameters.
+	@example
+		findPlayer("builderman"):andThen(_.returns("Found Dave!"))
+		--> "Found Dave!" (soon after)
+	@usage Useful for when you want a callback to discard the arguments passed in and instead use static ones.
+]]
+--: <A>(...A) -> () -> ...A
 function Functions.returns(...)
 	local args = {...}
 	return function()
@@ -20,75 +37,278 @@ function Functions.returns(...)
 	end
 end
 
+--[[
+	Returns a function that wraps the input _fn_ but only passes the first argument to it.
+]]
+--: <A, B>((A) -> B) -> A -> B
+function Functions.unary(fn)
+	return function(first)
+		return fn(first)
+	end
+end
+
+--[[
+	Returns a function that when called, throws the original message.
+	@example
+		findPlayer("builderman"):andThen(_.returns("Found Dave!"))
+		--> "Found Dave!" (soon after)
+	@usage Useful for when you want a callback to discard the arguments passed in and instead use static ones.
+]]
+--: string -> () -> fail
 function Functions.throws(errorMessage)
 	return function()
 		error(errorMessage)
 	end
 end
 
-function Functions.once(fn, default)
-	local called = false
-	local result = default
-	return function(...)
-		if called then
-			return result
-		else
-			called = true
-			result = fn(...)
-			return result
+--[[
+	Takes a function _fn_ and binds _arguments_ to the head of the _fn_ argument list.
+	Returns a function which executes _fn_, passing the bound arguments supplied, followed by any
+	dynamic arguments.
+	@example
+		local function damagePlayer( player, amount )
+			player:Damage(amount)
 		end
+		local damageLocalPlayer = _.bind(damagePlayer, game.Players.LocalPlayer)
+		damageLocalPlayer(5)
+]]
+--: <T, A, B>(((A..., B...) -> T, ...A) -> ...B -> T
+function Functions.bind(fn, ...)
+	local args = {...}
+	return function(...)
+		return fn(unpack(args), ...)
 	end
 end
 
+--[[
+	Takes a chainable function _fn_ and binds _arguments_ to the tail of the _fn_ argument list.
+	Returns a function which executes _fn_, passing a subject ahead of the bound arguments supplied.
+	@example
+		local isHurt = _.feed(_.filter, function(player)
+			return player.Health < player.MaxHealth
+		end)
+		local getName = _.feed(_.map, function(player)
+			return player.Name
+		end)
+		local getHurtNames = _.compose(isHurt, getName)
+		getHurtNames(game.Players) --> {"Frodo", "Boromir"}	
+	@usage Chainable rodash function feeds are mapped to `_.fn`, such as `_.fn.map(handler)`.
+]]
+--: <T, A>(Chainable<T, A>, ...A) -> T -> T
+function Functions.feed(fn, ...)
+	local args = {...}
+	return function(subject)
+		return fn(subject, unpack(args))
+	end
+end
+
+--[[
+	Returns a function that when called, only calls _fn_ the first time the function is called.
+	For subsequent calls, the initial return of _fn_ is returned.
+	@returns the function with method `:clear()` that resets the cached value.
+	@example
+		local fry = _.once(function(item)
+			return "fried " .. tiem
+		end)
+		fry("sardine") --> "fried sardine"
+		fry("squid") --> "fried sardine"
+		fry("owl") --> "fried sardine"
+	@usage Useful for when you want to lazily compute something expensive that doesn't change.
+]]
+--: <...A, B>((...A -> B), B?) -> Clearable & () -> B
+function Functions.once(fn)
+	local called = false
+	local result
+	local once = {
+		clear = function()
+			called = false
+		end
+	}
+	setmetatable(
+		once,
+		{
+			__call = function(_, ...)
+				if called then
+					return result
+				else
+					called = true
+					result = fn(...)
+					return result
+				end
+			end
+		}
+	)
+	return once
+end
+
+--[[
+	Aliased to `_()`, chain takes an optional dictionary of chainable functions and returns a Chain
+	instance with methods mapped to the input functions. Calling a _Chain_ with a subject reduces
+	the chained operations in order on the subject.
+	@param fns (default = `_`)
+	@param awaitAsync (default = false) whether promises returned from chained functions should be resolved before
+		passing them on to successive functions.
+	@example
+		local getHurtNames = _():filter(function(player)
+			return player.Health < player.MaxHealth
+		end):map(function(player)
+			return player.Name
+		end)
+		getHurtNames(game.Players) --> {"Frodo Baggins", "Boromir"}
+
+		local players = _({
+			isHurt = _():filter(function(player)
+				return player.Health < player.MaxHealth
+			end),
+			isBaggins = _.():map(function(player)
+				return player.Name
+			end):endsWith("Baggins")
+		})
+		getHurtNames = players:isHurt():getName()
+		getHurtNames(game.Players) --> {"Frodo Baggins", "Boromir"}
+	@usage A chained function can be made using `_.chain` or built inductively using other chained methods of `_()`.
+]]
+--: <T>(T{}, bool?) -> Chain<T>
+function Functions.chain(fns, awaitAsync)
+	if fns == nil then
+		fns = require(script)
+	end
+	local chain = {}
+	setmetatable(
+		chain,
+		{
+			__index = function(self, name)
+				local fn = fns[name]
+				local feeder = function(parent, ...)
+					local stage = {}
+					local op = Functions.feed(fn, ...)
+					setmetatable(
+						stage,
+						{
+							__index = chain,
+							__call = function(self, subject)
+								local value = parent(subject)
+								return op(value)
+							end,
+							__tostring = function()
+								return tostring(parent) .. "::" .. name
+							end
+						}
+					)
+					return stage
+				end
+				return feeder
+			end,
+			__call = function(_, subject)
+				return subject
+			end,
+			__tostring = function()
+				return "Chain"
+			end
+		}
+	)
+	return chain
+end
+
+--[[
+	Returns a function that calls the argument functions in left-right order, passing the return of
+	the previous function as argument(s) to the next.
+	@example
+		local function fry(item) return "fried " .. item end
+		local function cheesify(item) return "cheesy " .. item end
+		local prepare = _.compose(fry, cheesify)
+		prepare("nachos") --> "cheesy fried nachos"
+	@usage Useful for when you want to lazily compute something expensive that doesn't change.
+]]
+--: <A>((...A -> ...A)[]) -> ...A -> A
 function Functions.compose(...)
 	local fnCount = select("#", ...)
 	local fns = {...}
 	return function(...)
-		local result = fns[1](...)
+		local result = {fns[1](...)}
 		for i = 2, fnCount do
-			result = fns[i](result)
+			result = {fns[i](unpack(result))}
 		end
-		return result
+		return unpack(result)
 	end
-end
-
-function Functions.defaultSerializeArgs(fnArgs)
-	return Tables.serialize(fnArgs)
 end
 
 --[[
-	Cache results of a function such that subsequent calls return the cached result rather than
-	call the function again.
+	Like `_.once`, but caches non-nil results of calls to _fn_ keyed by some serialization of the
+	input arguments to _fn_. By default, args are serialized simply using `tostring`.
 
-	By default, a cached result is stored for each separate combination of serialized input args.
-	Optionally memoize takes a serializeArgs function which should return a key that the result
-	should be cached with for a given call signature. Return nil to avoid caching the result.
+	Optionally memoize takes `function serializeArgs(args, cache)`, a function that should return a string key which a
+	result should be cached at for a given signature. Return nil to avoid caching the result.
+
+	@param serializeArgs (default = `_.serialize`)
+	@returns the function with method `:clear(...)` that resets the cache for the argument specified, or `:clearAll()` to clear the entire cache.
+	@example
+		local menu = {"soup", "bread", "butter"}
+		local heat = _.memoize(function(index)
+			return "hot " ... menu[index]
+		end)
+
+		heat(1) --> "hot soup"
+
+		menu = {"caviar"}
+		heat(1) --> "hot soup"
+		heat(2) --> nil
+
+		menu = {"beef", "potatoes"}
+		heat(1) --> "hot soup"
+		heat(2) --> "hot potatoes"
+
+		heat:clear(1)
+		heat(1) --> "hot beef"
+
+	@usage Use `_.serializeDeep` or `_.chain(_.serializeDeep, depth)` for deeper key serialization.
 ]]
+--: <...A, B>((...A -> B), ...A -> string?) -> Clearable<...A> & AllClearable & (...A) -> B
 function Functions.memoize(fn, serializeArgs)
 	assert(type(fn) == "function")
-	serializeArgs = serializeArgs or Functions.defaultSerializeArgs
+	serializeArgs = serializeArgs or Functions.unary(Tables.serialize)
 	assert(type(serializeArgs) == "function")
 	local cache = {}
-	local proxyFunction = function(...)
-		local proxyArgs = {...}
-		local cacheKey = serializeArgs(proxyArgs)
-		if cacheKey == nil then
-			return fn(...)
-		else
-			if cache[cacheKey] == nil then
-				cache[cacheKey] = fn(...)
+	local clearable = {
+		clear = function(_, ...)
+			local cacheKey = serializeArgs({...}, cache)
+			if cacheKey then
+				cache[cacheKey] = nil
 			end
-			return cache[cacheKey]
+		end,
+		clearAll = function()
+			cache = {}
 		end
-	end
-	return proxyFunction
+	}
+	setmetatable(
+		clearable,
+		{
+			__call = function(_, ...)
+				local cacheKey = serializeArgs({...}, cache)
+				if cacheKey == nil then
+					return fn(...)
+				else
+					if cache[cacheKey] == nil then
+						cache[cacheKey] = fn(...)
+					end
+					return cache[cacheKey]
+				end
+			end
+		}
+	)
+	return clearable
 end
 
-function Functions.setTimeout(fn, secondsDelay)
+--[[
+	Like `delay`, this calls _fn_ after _delayInSeconds_ time has passed, with the added benefit of being cancelable.
+	@returns an instance which `:clear()` can be called on to prevent _fn_ from firing.
+]]
+--: (() -> nil), number -> Clearable
+function Functions.setTimeout(fn, delayInSeconds)
 	local cleared = false
 	local timeout
 	delay(
-		secondsDelay,
+		delayInSeconds,
 		function()
 			if not cleared then
 				fn(timeout)
@@ -103,20 +323,27 @@ function Functions.setTimeout(fn, secondsDelay)
 	return timeout
 end
 
-function Functions.setInterval(fn, secondsDelay)
+--[[
+	Like `_.setTimeout` but calls _fn_ after every interval of _intervalInSeconds_ time has passed.
+	@param delayInSeconds (default = _intervalInSeconds_) The delay before the initial fire.
+	@returns an instance which `:clear()` can be called on to prevent _fn_ from firing.
+]]
+--: (() -> nil), number, number? -> Clearable
+function Functions.setInterval(fn, intervalInSeconds, delayInSeconds)
 	local timeout
 	local callTimeout
-	callTimeout = function()
-		timeout =
-			Functions.setTimeout(
-			function()
-				callTimeout()
-				fn(timeout)
-			end,
-			secondsDelay
-		)
+	local function handleTimeout()
+		callTimeout()
+		fn(timeout)
 	end
-	callTimeout()
+	callTimeout = function()
+		timeout = Functions.setTimeout(handleTimeout, intervalInSeconds)
+	end
+	if delayInSeconds ~= nil then
+		timeout = Functions.setTimeout(handleTimeout, delayInSeconds)
+	else
+		callTimeout()
+	end
 
 	return {
 		clear = function()
@@ -126,65 +353,84 @@ function Functions.setInterval(fn, secondsDelay)
 end
 
 --[[
-	Creates a debounced function that delays invoking fn until after secondsDelay seconds have elapsed since the last time the debounced function was invoked.
+	Creates a debounced function that delays calling _fn_ until after _delayInSeconds_ seconds have
+	elapsed since the last time the debounced function was attempted to be called.
+	@returns the debounced function with method `:clear()` can be called on to cancel any scheduled call.
+	@usage A nice [visualisation of debounce vs. throttle](http://demo.nimius.net/debounce_throttle/), the illustrated point being debounce will only call _fn_ at the end of a spurt of events.
 ]]
-function Functions.debounce(fn, secondsDelay)
+--: <A, B>((...A) -> B), number -> Clearable & (...A) -> B
+function Functions.debounce(fn, delayInSeconds)
 	assert(Functions.isCallable(fn))
-	assert(type(secondsDelay) == "number")
+	assert(type(delayInSeconds) == "number")
 
-	local lastInvocation = 0
 	local lastResult = nil
+	local timeout
 
-	return function(...)
-		local args = {...}
-
-		lastInvocation = lastInvocation + 1
-
-		local thisInvocation = lastInvocation
-		delay(
-			secondsDelay,
-			function()
-				if thisInvocation ~= lastInvocation then
-					return
-				end
-
-				lastResult = fn(unpack(args))
+	local debounced = {
+		clear = function()
+			if timeout then
+				timeout:clear()
 			end
-		)
-
-		return lastResult
-	end
+		end
+	}
+	setmetatable(
+		debounced,
+		{
+			__call = function(_, ...)
+				local args = {...}
+				if timeout then
+					timeout:clear()
+				end
+				timeout =
+					Functions.setTimeout(
+					function()
+						lastResult = fn(unpack(args))
+					end,
+					delayInSeconds
+				)
+				return lastResult
+			end
+		}
+	)
+	return debounced
 end
 
 --[[
-	Creates a throttle function that drops any repeat calls within a cooldown period and instead returns the result of the last call
+	Creates a throttle function that drops any repeat calls within a cooldown period and instead
+	returns the result of the last call.
+	@usage A nice [visualisation of debounce vs. throttle](http://demo.nimius.net/debounce_throttle/), the illustrated point being throttle will call _fn_ every period during a spurt of events.
 ]]
-function Functions.throttle(fn, secondsCooldown)
+--: <A, B>((...A) -> B), number -> ...A -> B
+function Functions.throttle(fn, cooldownInSeconds)
 	assert(Functions.isCallable(fn))
-	assert(type(secondsCooldown) == "number")
-	assert(secondsCooldown > 0)
+	assert(type(cooldownInSeconds) == "number")
+	assert(cooldownInSeconds > 0)
 
 	local cached = false
 	local lastResult = nil
-
 	return function(...)
 		if not cached then
 			cached = true
 			lastResult = fn(...)
-			delay(
-				secondsCooldown,
+			Functions.setTimeout(
 				function()
 					cached = false
-				end
+				end,
+				cooldownInSeconds
 			)
 		end
 		return lastResult
 	end
 end
 
-function Functions.isCallable(thing)
-	return type(thing) == "function" or
-		(type(thing) == "table" and getmetatable(thing) and getmetatable(thing).__call ~= nil)
+--[[
+	Return true if the _value_ can be called ie. it is function or a table with a `__call` entry in its metatable.
+	@usage In general this is a much more suitable test than checking purely for a function type.
+]]
+--: any -> bool
+function Functions.isCallable(value)
+	return type(value) == "function" or
+		(type(value) == "table" and getmetatable(value) and getmetatable(value).__call ~= nil)
 end
 
 return Functions

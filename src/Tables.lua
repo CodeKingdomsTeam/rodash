@@ -162,6 +162,16 @@ function Tables.reduce(source, handler, init)
 	return result
 end
 
+function Tables.sum(source)
+	return Tables.reduce(
+		source,
+		function(current, value)
+			return current + value
+		end,
+		0
+	)
+end
+
 --[[
 	Wow
 ]]
@@ -358,7 +368,7 @@ function Tables.insertMany(target, items)
 end
 
 --: (table) -> int
-function Tables.getLength(table)
+function Tables.len(table)
 	local count = 0
 	for _ in pairs(table) do
 		count = count + 1
@@ -444,16 +454,21 @@ function Tables.shallowEqual(left, right)
 	)
 end
 
-function Tables.serialize(input, serializer)
+function Tables.isOrdered(source)
+	return #Tables.keys(source) == #source
+end
+
+function Tables.serialize(source, serializer)
 	serializer = serializer or function(value)
 			return tostring(value)
 		end
-	assert(type(input) == "table")
-	assert(type(serializer) == "function")
+	assert(type(source) == "table")
+	local Functions = require(script.Functions)
+	assert(Functions.isCallable(serializer))
 	return "{" ..
 		table.concat(
 			Tables.map(
-				input,
+				source,
 				function(element, i)
 					return tostring(i) .. "=" .. serializer(element)
 				end

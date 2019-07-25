@@ -12,6 +12,25 @@ local Async = {}
 local baseRandomStream = Random.new()
 
 --[[
+	Yields completion of a promise `promise:await()`, but returns immediately with the value if it
+	isn't a promise.
+	@example
+		local heat = function( item )
+			return _.delay(1).returns("hot " .. item)
+		end
+		local recipe = {"wrap", heat("steak"), heat("rice")}
+		local burrito = _.map(recipe, _.await)
+		_.print(burrito)
+		-->> {"wrap", "hot steak", "hot rice"} (2 seconds)
+]]
+function Async.await(value)
+	if Promise.is(value) then
+		return value:await()
+	end
+	return value
+end
+
+--[[
     Given an _array_ of values, this function returns a promise which
     resolves once all of the array elements have resolved, or rejects
     if any of the array elements reject.
@@ -104,7 +123,7 @@ end
 		-- >> potato was mashed
 
 ]]
---: ...T -> Promise<...T>
+--: T -> Promise<T>
 function Async.resolve(...)
 	local args = {...}
 	return Promise.new(
@@ -163,7 +182,7 @@ end
 --[[
 	Returns a promise which completes after the _promise_ input has completed, regardless of
 	whether it has resolved or rejected.
-	@param fn _function(ok, result)_ 
+	@param fn _function(ok, result)_
 	@example
 		local getHunger = _.async(function( player )
 			if player.health == 0 then
@@ -177,7 +196,7 @@ end
 			return isAlive and result < 5
 		end)
 ]]
---: <T>(Promise<...T>, (bool, ...T) -> nil) -> Promise<nil>
+--: <T>(Promise<T>, (bool, T) -> nil) -> Promise<nil>
 function Async.finally(promise, fn)
 	assert(Promise.is(promise))
 	return promise:andThen(
@@ -207,7 +226,8 @@ end
 	@rejects **TimeoutError** - or _timeoutMessage_
 	@example
 		let eatGreens = function() return _.never end
-		_.timeout(eatGreens(), 10, "TasteError")
+		_.timeout(eatGreens(), 10, "TasteError"):await()
+		--> throws "TasteError" (after 10s)
 ]]
 --: <T>(Promise<T>, number, string?) -> Promise<T>
 function Async.timeout(promise, deadlineInSeconds, timeoutMessage)
@@ -216,6 +236,31 @@ function Async.timeout(promise, deadlineInSeconds, timeoutMessage)
 			promise,
 			Async.delay(deadlineInSeconds):andThen(Functions.throws(timeoutMessage or "TimeoutError"))
 		}
+	)
+end
+
+--[[
+	Like `_.compose` but takes functions that can return a promise. Returns a promise that resolves
+	once all functions have resolved. Like compose, functions receive the resolution of the
+	previous promise as argument(s).
+	@example
+		local function fry(item) return _.delay(1):andThen(_.returns("fried " .. item)) end
+		local function cheesify(item) return _.delay(1):andThen(_.returns("cheesy " .. item)) end
+		local prepare = _.compose(fry, cheesify)
+		prepare("nachos"):await() --> "cheesy fried nachos" (after 2s)
+]]
+--: <A>((...A -> Promise<A>)[]) -> ...A -> Promise<A>
+function Async.series(...)
+	local fnCount = select("#", ...)
+	local fns = {...}
+	return Async.async(
+		function(...)
+			local result = {fns[1](...)}
+			for i = 2, fnCount do
+				result = {Async.resolve(fns[i](unpack(result))):await()}
+			end
+			return unpack(result)
+		end
 	)
 end
 
@@ -253,7 +298,7 @@ end
 		-->> {burger = "Cheeseburger", fries = "Curly fries"} (ideal response)
 	@usage Used alongside `promise:await`, the `_.async` function forms an equivalence with the `async await` pattern in languages like JS.
 ]]
---: <T, Args>(Yieldable<T, ...Args>) -> (...Args) -> Promise<T>
+--: <T, A>(Yieldable<T, A>) -> ...A -> Promise<T>
 function Async.async(fn)
 	assert(Functions.isCallable(fn))
 	return function(...)
@@ -290,7 +335,7 @@ end
 		end)
 		buyDinner():await() --> "Purchased!" (some time later)
 ]]
---: <T, Args>(Yieldable<T, ...Args>{}) -> (...Args -> Promise<T>){}
+--: <T, Args>(Yieldable<T, Args>{}) -> (...Args -> Promise<T>){}
 function Async.asyncAll(dictionary)
 	assert(t.table(dictionary))
 	local result =

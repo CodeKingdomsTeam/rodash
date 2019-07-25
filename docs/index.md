@@ -10,6 +10,7 @@ local _ = require(game.ReplicatedStorage.Rodash)
 function onlyLocalPlayerHasSpoon()
 
 	local playersWithSpoon = _.filter(game.Players, function( player )
+		_.debug("{} items: {:#?}", _.len(player.Backpack), player.Backpack)
 		return _.some(player.Backpack, function( tool )
 			return _.endsWith(tool.Name, "Spoon")
 		end)

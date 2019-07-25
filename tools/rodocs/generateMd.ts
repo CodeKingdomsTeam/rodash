@@ -1,4 +1,5 @@
 import { Node, Comment, MemberExpression, FunctionDeclaration, Identifier } from './astTypings';
+import { keyBy } from 'lodash';
 
 interface DocEntry {
 	tag: string;
@@ -127,9 +128,19 @@ function ${libName}.${name}(${params.join(', ')}) --> string
 				'```',
 		);
 		lines.push(doc.comments);
+		const paramEntries = filterEntries(doc.entries, 'param');
+		const paramMap = keyBy(
+			paramEntries.map(entry => entry.content.match(/^\s*([A-Za-z]+)\s(.*)/)),
+			entry => entry && entry[1],
+		);
 		if (params.length) {
 			lines.push('\n**Parameters**\n');
-			lines.push(...params.map(param => `> __${param}__ - _string_\n>`));
+			lines.push(
+				...params.map(
+					param =>
+						`> __${param}__ - _string_ ${paramMap[param] ? ' - ' + paramMap[param][2] : ''}\n>`,
+				),
+			);
 		}
 		const returns = filterEntries(doc.entries, 'returns');
 		lines.push('\n**Returns**\n');
