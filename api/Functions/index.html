@@ -354,6 +354,20 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#bind" title="bind" class="md-nav__link">
+    bind
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chain" title="chain" class="md-nav__link">
+    chain
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#compose" title="compose" class="md-nav__link">
     compose
   </a>
@@ -368,8 +382,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#defaultserializeargs" title="defaultSerializeArgs" class="md-nav__link">
-    defaultSerializeArgs
+  <a href="#feed" title="feed" class="md-nav__link">
+    feed
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#id" title="id" class="md-nav__link">
+    id
   </a>
   
 </li>
@@ -389,6 +410,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#noop" title="noop" class="md-nav__link">
+    noop
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#once" title="once" class="md-nav__link">
     once
   </a>
@@ -396,15 +424,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#returnsargs" title="returnsArgs" class="md-nav__link">
-    returnsArgs
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#returnsnil" title="returnsNil" class="md-nav__link">
-    returnsNil
+  <a href="#returns" title="returns" class="md-nav__link">
+    returns
   </a>
   
 </li>
@@ -426,6 +447,20 @@
           <li class="md-nav__item">
   <a href="#throttle" title="throttle" class="md-nav__link">
     throttle
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#throws" title="throws" class="md-nav__link">
+    throws
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unary" title="unary" class="md-nav__link">
+    unary
   </a>
   
 </li>
@@ -504,6 +539,20 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#bind" title="bind" class="md-nav__link">
+    bind
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chain" title="chain" class="md-nav__link">
+    chain
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#compose" title="compose" class="md-nav__link">
     compose
   </a>
@@ -518,8 +567,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#defaultserializeargs" title="defaultSerializeArgs" class="md-nav__link">
-    defaultSerializeArgs
+  <a href="#feed" title="feed" class="md-nav__link">
+    feed
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#id" title="id" class="md-nav__link">
+    id
   </a>
   
 </li>
@@ -539,6 +595,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#noop" title="noop" class="md-nav__link">
+    noop
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#once" title="once" class="md-nav__link">
     once
   </a>
@@ -546,15 +609,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#returnsargs" title="returnsArgs" class="md-nav__link">
-    returnsArgs
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#returnsnil" title="returnsNil" class="md-nav__link">
-    returnsNil
+  <a href="#returns" title="returns" class="md-nav__link">
+    returns
   </a>
   
 </li>
@@ -576,6 +632,20 @@
           <li class="md-nav__item">
   <a href="#throttle" title="throttle" class="md-nav__link">
     throttle
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#throws" title="throws" class="md-nav__link">
+    throws
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unary" title="unary" class="md-nav__link">
+    unary
   </a>
   
 </li>
@@ -605,43 +675,161 @@
                 
                 
                 <h1 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h1>
+<p>A collection of useful utility functions and building blocks for functional programming styles.</p>
 <h2 id="functions_1">Functions<a class="headerlink" href="#functions_1" title="Permanent link">&para;</a></h2>
-<h3 id="compose">compose<a class="headerlink" href="#compose" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">compose</span><span class="p">()</span> <span class="c1">--&gt; string</span>
+<h3 id="bind">bind<a class="headerlink" href="#bind" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">bind</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-
+Takes a function <em>fn</em> and binds <em>arguments</em> to the head of the <em>fn</em> argument list.
+Returns a function which executes <em>fn</em>, passing the bound arguments supplied, followed by any
+dynamic arguments.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>undefined</strong> - <em>string</em>
+<p><strong>fn</strong> - <em>string</em> </p>
+<p><strong>undefined</strong> - <em>string</em> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
 <p><em>string</em></p>
 </blockquote>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="kr">function</span> <span class="nf">damagePlayer</span><span class="p">(</span> <span class="n">player</span><span class="p">,</span> <span class="n">amount</span> <span class="p">)</span>
+    <span class="n">player</span><span class="p">:</span><span class="n">Damage</span><span class="p">(</span><span class="n">amount</span><span class="p">)</span>
+<span class="kr">end</span>
+<span class="kd">local</span> <span class="n">damageLocalPlayer</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">bind</span><span class="p">(</span><span class="n">damagePlayer</span><span class="p">,</span> <span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">.</span><span class="n">LocalPlayer</span><span class="p">)</span>
+<span class="n">damageLocalPlayer</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+<hr />
+<h3 id="chain">chain<a class="headerlink" href="#chain" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">chain</span><span class="p">(</span><span class="n">fns</span><span class="p">,</span> <span class="n">awaitAsync</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+</pre></div>
+Aliased to <code>_()</code>, chain takes an optional dictionary of chainable functions and returns a Chain
+instance with methods mapped to the input functions. Calling a <em>Chain</em> with a subject evaluates
+the result of performing the chained operations on the subject.</p>
+<p><strong>Parameters</strong></p>
+<blockquote>
+<p><strong>fns</strong> - <em>string</em>  - (default = <code>_</code>)</p>
+<p><strong>awaitAsync</strong> - <em>string</em>  - (default = false) whether promises returned from chained functions should be resolved before
+</p>
+</blockquote>
+<p><strong>Returns</strong></p>
+<blockquote>
+<p><em>string</em></p>
+</blockquote>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">getHurtNames</span> <span class="o">=</span> <span class="n">_</span><span class="p">():</span><span class="n">filter</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
+    <span class="kr">return</span> <span class="n">player</span><span class="p">.</span><span class="n">Health</span> <span class="o">&lt;</span> <span class="n">player</span><span class="p">.</span><span class="n">MaxHealth</span>
+<span class="kr">end</span><span class="p">):</span><span class="n">map</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
+    <span class="kr">return</span> <span class="n">player</span><span class="p">.</span><span class="n">Name</span>
+<span class="kr">end</span><span class="p">)</span>
+<span class="n">getHurtNames</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">)</span> <span class="c1">--&gt; {&quot;Frodo Baggins&quot;, &quot;Boromir&quot;}</span>
+
+<span class="kd">local</span> <span class="n">players</span> <span class="o">=</span> <span class="n">_</span><span class="p">({</span>
+    <span class="n">isHurt</span> <span class="o">=</span> <span class="n">_</span><span class="p">():</span><span class="n">filter</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
+        <span class="kr">return</span> <span class="n">player</span><span class="p">.</span><span class="n">Health</span> <span class="o">&lt;</span> <span class="n">player</span><span class="p">.</span><span class="n">MaxHealth</span>
+    <span class="kr">end</span><span class="p">),</span>
+    <span class="n">isBaggins</span> <span class="o">=</span> <span class="n">_</span><span class="p">.():</span><span class="n">map</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
+        <span class="kr">return</span> <span class="n">player</span><span class="p">.</span><span class="n">Name</span>
+    <span class="kr">end</span><span class="p">):</span><span class="n">endsWith</span><span class="p">(</span><span class="s2">&quot;Baggins&quot;</span><span class="p">)</span>
+<span class="p">})</span>
+<span class="n">getHurtNames</span> <span class="o">=</span> <span class="n">players</span><span class="p">:</span><span class="n">isHurt</span><span class="p">():</span><span class="n">getName</span><span class="p">()</span>
+<span class="n">getHurtNames</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">)</span> <span class="c1">--&gt; {&quot;Frodo Baggins&quot;, &quot;Boromir&quot;}</span>
+</pre></div>
+
+<p><strong>Usage</strong></p>
+<ul>
+<li>A chained function can be made using <code>_.chain</code> or built inductively using other chained methods of <code>_()</code>.</li>
+</ul>
+<hr />
+<h3 id="compose">compose<a class="headerlink" href="#compose" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">compose</span><span class="p">()</span> <span class="c1">--&gt; string</span>
+</pre></div>
+Returns a function that calls the argument functions in left-right order, passing the return of
+the previous function as argument(s) to the next.</p>
+<p><strong>Parameters</strong></p>
+<blockquote>
+<p><strong>undefined</strong> - <em>string</em> 
+</p>
+</blockquote>
+<p><strong>Returns</strong></p>
+<blockquote>
+<p><em>string</em></p>
+</blockquote>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="kr">function</span> <span class="nf">fry</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="kr">return</span> <span class="s2">&quot;fried &quot;</span> <span class="o">..</span> <span class="n">item</span> <span class="kr">end</span>
+<span class="kd">local</span> <span class="kr">function</span> <span class="nf">cheesify</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="kr">return</span> <span class="s2">&quot;cheesy &quot;</span> <span class="o">..</span> <span class="n">item</span> <span class="kr">end</span>
+<span class="kd">local</span> <span class="n">prepare</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">compose</span><span class="p">(</span><span class="n">fry</span><span class="p">,</span> <span class="n">cheesify</span><span class="p">)</span>
+<span class="n">prepare</span><span class="p">(</span><span class="s2">&quot;nachos&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;cheesy fried nachos&quot;</span>
+</pre></div>
+
+<p><strong>Usage</strong></p>
+<ul>
+<li>Useful for when you want to lazily compute something expensive that doesn't change.</li>
+</ul>
 <hr />
 <h3 id="debounce">debounce<a class="headerlink" href="#debounce" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">debounce</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">secondsDelay</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">debounce</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">delayInSeconds</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-Creates a debounced function that delays invoking fn until after secondsDelay seconds have elapsed since the last time the debounced function was invoked.</p>
+Creates a debounced function that delays calling <em>fn</em> until after <em>delayInSeconds</em> seconds have
+elapsed since the last time the debounced function was attempted to be called.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>fn</strong> - <em>string</em></p>
-<p><strong>secondsDelay</strong> - <em>string</em>
+<p><strong>fn</strong> - <em>string</em> </p>
+<p><strong>delayInSeconds</strong> - <em>string</em> 
+</p>
+</blockquote>
+<p><strong>Returns</strong></p>
+<blockquote>
+<p><em>string</em> - the debounced function with method <code>:clear()</code> can be called on to cancel any scheduled call.</p>
+</blockquote>
+<p><strong>Usage</strong></p>
+<ul>
+<li>A nice <a href="http://demo.nimius.net/debounce_throttle/">visualisation of debounce vs. throttle</a>, the illustrated point being debounce will only call <em>fn</em> at the end of a spurt of events.</li>
+</ul>
+<hr />
+<h3 id="feed">feed<a class="headerlink" href="#feed" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">feed</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="p">)</span> <span class="c1">--&gt; string</span>
+</pre></div>
+Takes a chainable function <em>fn</em> and binds <em>arguments</em> to the tail of the <em>fn</em> argument list.
+Returns a function which executes <em>fn</em>, passing a subject ahead of the bound arguments supplied.</p>
+<p><strong>Parameters</strong></p>
+<blockquote>
+<p><strong>fn</strong> - <em>string</em> </p>
+<p><strong>undefined</strong> - <em>string</em> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
 <p><em>string</em></p>
 </blockquote>
-<hr />
-<h3 id="defaultserializeargs">defaultSerializeArgs<a class="headerlink" href="#defaultserializeargs" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">defaultSerializeArgs</span><span class="p">(</span><span class="n">fnArgs</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">isHurt</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">feed</span><span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="n">filter</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
+    <span class="kr">return</span> <span class="n">player</span><span class="p">.</span><span class="n">Health</span> <span class="o">&lt;</span> <span class="n">player</span><span class="p">.</span><span class="n">MaxHealth</span>
+<span class="kr">end</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">getName</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">feed</span><span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="n">map</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
+    <span class="kr">return</span> <span class="n">player</span><span class="p">.</span><span class="n">Name</span>
+<span class="kr">end</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">getHurtNames</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">compose</span><span class="p">(</span><span class="n">isHurt</span><span class="p">,</span> <span class="n">getName</span><span class="p">)</span>
+<span class="n">getHurtNames</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">)</span> <span class="c1">--&gt; {&quot;Frodo&quot;, &quot;Boromir&quot;} </span>
 </pre></div>
 
+<p><strong>Usage</strong></p>
+<ul>
+<li>Chainable rodash function feeds are mapped to <code>_.fn</code>, such as <code>_.fn.map(handler)</code>.</li>
+</ul>
+<hr />
+<div class="rodocs-trait">Chainable
+</div>
+
+<h3 id="id">id<a class="headerlink" href="#id" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">id</span><span class="p">()</span> <span class="c1">--&gt; string</span>
+</pre></div>
+A simple function that does nothing, but returns its input parameters.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>fnArgs</strong> - <em>string</em>
+<p><strong>undefined</strong> - <em>string</em> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
@@ -650,114 +838,210 @@ Creates a debounced function that delays invoking fn until after secondsDelay se
 </blockquote>
 <hr />
 <h3 id="iscallable">isCallable<a class="headerlink" href="#iscallable" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">isCallable</span><span class="p">(</span><span class="n">thing</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">isCallable</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-
+Return true if the <em>value</em> can be called ie. it is function or a table with a <code>__call</code> entry in its metatable.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>thing</strong> - <em>string</em>
+<p><strong>value</strong> - <em>string</em> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
 <p><em>string</em></p>
 </blockquote>
+<p><strong>Usage</strong></p>
+<ul>
+<li>In general this is a much more suitable test than checking purely for a function type.</li>
+</ul>
 <hr />
 <h3 id="memoize">memoize<a class="headerlink" href="#memoize" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">memoize</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">serializeArgs</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-Cache results of a function such that subsequent calls return the cached result rather than
-call the function again.</p>
-<p>By default, a cached result is stored for each separate combination of serialized input args.
-Optionally memoize takes a serializeArgs function which should return a key that the result
-should be cached with for a given call signature. Return nil to avoid caching the result.</p>
+Like <code>_.once</code>, but caches non-nil results of calls to <em>fn</em> keyed by some serialization of the
+input arguments to <em>fn</em>. By default, args are serialized simply using <code>tostring</code>.</p>
+<p>Optionally memoize takes <code>function serializeArgs(args, cache)</code>, a function that should return a string key which a
+result should be cached at for a given signature. Return nil to avoid caching the result.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>fn</strong> - <em>string</em></p>
-<p><strong>serializeArgs</strong> - <em>string</em>
+<p><strong>fn</strong> - <em>string</em> </p>
+<p><strong>serializeArgs</strong> - <em>string</em>  - (default = <code>_.serialize</code>)
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
+<p><em>string</em> - the function with method <code>:clear(...)</code> that resets the cache for the argument specified, or <code>:clearAll()</code> to clear the entire cache.</p>
+</blockquote>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">menu</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;soup&quot;</span><span class="p">,</span> <span class="s2">&quot;bread&quot;</span><span class="p">,</span> <span class="s2">&quot;butter&quot;</span><span class="p">}</span>
+<span class="kd">local</span> <span class="n">heat</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">memoize</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+    <span class="kr">return</span> <span class="s2">&quot;hot &quot;</span> <span class="p">...</span> <span class="n">menu</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+<span class="kr">end</span><span class="p">)</span>
+
+<span class="n">heat</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1">--&gt; &quot;hot soup&quot;</span>
+
+<span class="n">menu</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;caviar&quot;</span><span class="p">}</span>
+<span class="n">heat</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1">--&gt; &quot;hot soup&quot;</span>
+<span class="n">heat</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1">--&gt; nil</span>
+
+<span class="n">menu</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;beef&quot;</span><span class="p">,</span> <span class="s2">&quot;potatoes&quot;</span><span class="p">}</span>
+<span class="n">heat</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1">--&gt; &quot;hot soup&quot;</span>
+<span class="n">heat</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1">--&gt; &quot;hot potatoes&quot;</span>
+
+<span class="n">heat</span><span class="p">:</span><span class="n">clear</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">heat</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1">--&gt; &quot;hot beef&quot;</span>
+</pre></div>
+
+<p><strong>Usage</strong></p>
+<ul>
+<li>Use <code>_.serializeDeep</code> or <code>_.chain(_.serializeDeep, depth)</code> for deeper key serialization.</li>
+</ul>
+<hr />
+<h3 id="noop">noop<a class="headerlink" href="#noop" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">noop</span><span class="p">()</span> <span class="c1">--&gt; string</span>
+</pre></div>
+A simple function that does nothing, and returns nil.</p>
+<p><strong>Returns</strong></p>
+<blockquote>
 <p><em>string</em></p>
 </blockquote>
+<p><strong>Usage</strong></p>
+<ul>
+<li>Shorthand for <code>function() end</code>.</li>
+</ul>
 <hr />
 <h3 id="once">once<a class="headerlink" href="#once" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">once</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">once</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-
+Returns a function that when called, only calls <em>fn</em> the first time the function is called.
+For subsequent calls, the initial return of <em>fn</em> is returned.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>fn</strong> - <em>string</em></p>
-<p><strong>default</strong> - <em>string</em>
+<p><strong>fn</strong> - <em>string</em> 
+</p>
+</blockquote>
+<p><strong>Returns</strong></p>
+<blockquote>
+<p><em>string</em> - the function with method <code>:clear()</code> that resets the cached value.</p>
+</blockquote>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">fry</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">once</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+    <span class="kr">return</span> <span class="s2">&quot;fried &quot;</span> <span class="o">..</span> <span class="n">tiem</span>
+<span class="kr">end</span><span class="p">)</span>
+<span class="n">fry</span><span class="p">(</span><span class="s2">&quot;sardine&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;fried sardine&quot;</span>
+<span class="n">fry</span><span class="p">(</span><span class="s2">&quot;squid&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;fried sardine&quot;</span>
+<span class="n">fry</span><span class="p">(</span><span class="s2">&quot;owl&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;fried sardine&quot;</span>
+</pre></div>
+
+<p><strong>Usage</strong></p>
+<ul>
+<li>Useful for when you want to lazily compute something expensive that doesn't change.</li>
+</ul>
+<hr />
+<h3 id="returns">returns<a class="headerlink" href="#returns" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">returns</span><span class="p">()</span> <span class="c1">--&gt; string</span>
+</pre></div>
+Returns a function that when called, returns the original input parameters.</p>
+<p><strong>Parameters</strong></p>
+<blockquote>
+<p><strong>undefined</strong> - <em>string</em> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
 <p><em>string</em></p>
 </blockquote>
-<hr />
-<h3 id="returnsargs">returnsArgs<a class="headerlink" href="#returnsargs" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">returnsArgs</span><span class="p">()</span> <span class="c1">--&gt; string</span>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="n">findPlayer</span><span class="p">(</span><span class="s2">&quot;builderman&quot;</span><span class="p">):</span><span class="n">andThen</span><span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="n">returns</span><span class="p">(</span><span class="s2">&quot;Found Dave!&quot;</span><span class="p">))</span>
+<span class="c1">--&gt; &quot;Found Dave!&quot; (soon after)</span>
 </pre></div>
 
-<p><strong>Parameters</strong></p>
-<blockquote>
-<p><strong>undefined</strong> - <em>string</em>
-</p>
-</blockquote>
-<p><strong>Returns</strong></p>
-<blockquote>
-<p><em>string</em></p>
-</blockquote>
-<hr />
-<h3 id="returnsnil">returnsNil<a class="headerlink" href="#returnsnil" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">returnsNil</span><span class="p">()</span> <span class="c1">--&gt; string</span>
-</pre></div>
-
-<p><strong>Returns</strong></p>
-<blockquote>
-<p><em>string</em></p>
-</blockquote>
+<p><strong>Usage</strong></p>
+<ul>
+<li>Useful for when you want a callback to discard the arguments passed in and instead use static ones.</li>
+</ul>
 <hr />
 <h3 id="setinterval">setInterval<a class="headerlink" href="#setinterval" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">setInterval</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">secondsDelay</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">setInterval</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">intervalInSeconds</span><span class="p">,</span> <span class="n">delayInSeconds</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-
+Like <code>_.setTimeout</code> but calls <em>fn</em> after every interval of <em>intervalInSeconds</em> time has passed.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>fn</strong> - <em>string</em></p>
-<p><strong>secondsDelay</strong> - <em>string</em>
+<p><strong>fn</strong> - <em>string</em> </p>
+<p><strong>intervalInSeconds</strong> - <em>string</em> </p>
+<p><strong>delayInSeconds</strong> - <em>string</em>  - (default = <em>intervalInSeconds</em>) The delay before the initial fire.
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><em>string</em> - an instance which <code>:clear()</code> can be called on to prevent <em>fn</em> from firing.</p>
 </blockquote>
 <hr />
 <h3 id="settimeout">setTimeout<a class="headerlink" href="#settimeout" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">setTimeout</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">secondsDelay</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">setTimeout</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">delayInSeconds</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-
+Like <code>delay</code>, this calls <em>fn</em> after <em>delayInSeconds</em> time has passed, with the added benefit of being cancelable.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>fn</strong> - <em>string</em></p>
-<p><strong>secondsDelay</strong> - <em>string</em>
+<p><strong>fn</strong> - <em>string</em> </p>
+<p><strong>delayInSeconds</strong> - <em>string</em> 
+</p>
+</blockquote>
+<p><strong>Returns</strong></p>
+<blockquote>
+<p><em>string</em> - an instance which <code>:clear()</code> can be called on to prevent <em>fn</em> from firing.</p>
+</blockquote>
+<hr />
+<h3 id="throttle">throttle<a class="headerlink" href="#throttle" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">throttle</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">cooldownInSeconds</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+</pre></div>
+Creates a throttle function that drops any repeat calls within a cooldown period and instead
+returns the result of the last call.</p>
+<p><strong>Parameters</strong></p>
+<blockquote>
+<p><strong>fn</strong> - <em>string</em> </p>
+<p><strong>cooldownInSeconds</strong> - <em>string</em> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
 <p><em>string</em></p>
 </blockquote>
+<p><strong>Usage</strong></p>
+<ul>
+<li>A nice <a href="http://demo.nimius.net/debounce_throttle/">visualisation of debounce vs. throttle</a>, the illustrated point being throttle will call <em>fn</em> every period during a spurt of events.</li>
+</ul>
 <hr />
-<h3 id="throttle">throttle<a class="headerlink" href="#throttle" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">throttle</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">secondsCooldown</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<h3 id="throws">throws<a class="headerlink" href="#throws" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">throws</span><span class="p">(</span><span class="n">errorMessage</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-Creates a throttle function that drops any repeat calls within a cooldown period and instead returns the result of the last call</p>
+Returns a function that when called, throws the original message.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>fn</strong> - <em>string</em></p>
-<p><strong>secondsCooldown</strong> - <em>string</em>
+<p><strong>errorMessage</strong> - <em>string</em> 
+</p>
+</blockquote>
+<p><strong>Returns</strong></p>
+<blockquote>
+<p><em>string</em></p>
+</blockquote>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="n">findPlayer</span><span class="p">(</span><span class="s2">&quot;builderman&quot;</span><span class="p">):</span><span class="n">andThen</span><span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="n">returns</span><span class="p">(</span><span class="s2">&quot;Found Dave!&quot;</span><span class="p">))</span>
+<span class="c1">--&gt; &quot;Found Dave!&quot; (soon after)</span>
+</pre></div>
+
+<p><strong>Usage</strong></p>
+<ul>
+<li>Useful for when you want a callback to discard the arguments passed in and instead use static ones.</li>
+</ul>
+<hr />
+<h3 id="unary">unary<a class="headerlink" href="#unary" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">unary</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+</pre></div>
+Returns a function that wraps the input <em>fn</em> but only passes the first argument to it.</p>
+<p><strong>Parameters</strong></p>
+<blockquote>
+<p><strong>fn</strong> - <em>string</em> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>

@@ -330,8 +330,22 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#all" title="all" class="md-nav__link">
-    all
+  <a href="#async_1" title="async" class="md-nav__link">
+    async
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#asyncall" title="asyncAll" class="md-nav__link">
+    asyncAll
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#await" title="await" class="md-nav__link">
+    await
   </a>
   
 </li>
@@ -344,15 +358,77 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#retrywithbackoff" title="retryWithBackoff" class="md-nav__link">
-    retryWithBackoff
+  <a href="#finally" title="finally" class="md-nav__link">
+    finally
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#wrapfn" title="wrapFn" class="md-nav__link">
-    wrapFn
+  <a href="#never" title="never" class="md-nav__link">
+    never
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parallel" title="parallel" class="md-nav__link">
+    parallel
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#props" title="props" class="md-nav__link">
+    props
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#race" title="race" class="md-nav__link">
+    race
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resolve" title="resolve" class="md-nav__link">
+    resolve
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#retrywithbackoff" title="retryWithBackoff" class="md-nav__link">
+    retryWithBackoff
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#backoff-options" title="Backoff Options" class="md-nav__link">
+    Backoff Options
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#series" title="series" class="md-nav__link">
+    series
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#timeout" title="timeout" class="md-nav__link">
+    timeout
   </a>
   
 </li>
@@ -455,8 +531,22 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#all" title="all" class="md-nav__link">
-    all
+  <a href="#async_1" title="async" class="md-nav__link">
+    async
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#asyncall" title="asyncAll" class="md-nav__link">
+    asyncAll
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#await" title="await" class="md-nav__link">
+    await
   </a>
   
 </li>
@@ -469,15 +559,77 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#retrywithbackoff" title="retryWithBackoff" class="md-nav__link">
-    retryWithBackoff
+  <a href="#finally" title="finally" class="md-nav__link">
+    finally
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#wrapfn" title="wrapFn" class="md-nav__link">
-    wrapFn
+  <a href="#never" title="never" class="md-nav__link">
+    never
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parallel" title="parallel" class="md-nav__link">
+    parallel
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#props" title="props" class="md-nav__link">
+    props
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#race" title="race" class="md-nav__link">
+    race
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resolve" title="resolve" class="md-nav__link">
+    resolve
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#retrywithbackoff" title="retryWithBackoff" class="md-nav__link">
+    retryWithBackoff
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#backoff-options" title="Backoff Options" class="md-nav__link">
+    Backoff Options
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#series" title="series" class="md-nav__link">
+    series
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#timeout" title="timeout" class="md-nav__link">
+    timeout
   </a>
   
 </li>
@@ -507,89 +659,413 @@
                 
                 
                 <h1 id="async">Async<a class="headerlink" href="#async" title="Permanent link">&para;</a></h1>
+<p>Building upon the functionality of <a href="https://github.com/LPGhatguy/roblox-lua-promise">Roblox Lua Promise</a>
+and borrowing ideas from <a href="http://bluebirdjs.com/docs/getting-started.html">Bluebird</a>,
+these functions improve the experience of working with asynchronous code in Roblox.</p>
 <h2 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h2>
-<h3 id="all">all<a class="headerlink" href="#all" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">all</span><span class="p">(</span><span class="n">objects</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<h3 id="async_1">async<a class="headerlink" href="#async_1" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">async</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-    Given an array of objects, this function returns a promise which
-    resolves once all of the array elements have resolved, or rejects
-    if any of the array elements reject.</p>
-<div class="codehilite"><pre><span></span>Any objects in the array which aren&#39;t promises are considered
-resolved immediately.
-
-The promise resolves to an array mapping the input to resolved elements.
-</pre></div>
-
-
+  Returns a promise for a function which may yield. async calls the
+  the function in a coroutine and resolves with the output of the function
+after any asynchronous actions, and rejects if the function throws an error.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>objects</strong> - <em>string</em>
+<p><strong>fn</strong> - <em>string</em> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
 <p><em>string</em></p>
 </blockquote>
+<p><strong>Rejects</strong></p>
+<ul>
+<li><em>passthrough</em> - The returned promise will reject if promises passed as arguments reject.</li>
+</ul>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">fetch</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">async</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span> <span class="n">url</span> <span class="p">)</span>
+    <span class="kd">local</span> <span class="n">HttpService</span> <span class="o">=</span> <span class="n">game</span><span class="p">:</span><span class="n">GetService</span><span class="p">(</span><span class="s2">&quot;HttpService&quot;</span><span class="p">)</span>
+    <span class="kr">return</span> <span class="n">HttpService</span><span class="p">:</span><span class="n">GetAsync</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<span class="kr">end</span><span class="p">)</span>
+<span class="n">_</span><span class="p">.</span><span class="n">props</span><span class="p">({</span>
+    <span class="n">main</span> <span class="o">=</span> <span class="n">fetch</span><span class="p">(</span><span class="s2">&quot;http://example.com/burger&quot;</span><span class="p">),</span>
+    <span class="n">side</span> <span class="o">=</span> <span class="n">fetch</span><span class="p">(</span><span class="s2">&quot;http://example.com/fries&quot;</span><span class="p">)</span> 
+<span class="p">}):</span><span class="n">andThen</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span> <span class="n">meal</span> <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Meal&quot;</span><span class="p">,</span> <span class="n">_</span><span class="p">.</span><span class="n">pretty</span><span class="p">(</span><span class="n">meal</span><span class="p">))</span>
+<span class="kr">end</span><span class="p">)</span>
+<span class="c1">--&gt;&gt; {burger = &quot;Cheeseburger&quot;, fries = &quot;Curly fries&quot;} (ideal response)</span>
+</pre></div>
+
+<p><strong>Usage</strong></p>
+<ul>
+<li>Used alongside <code>promise:await</code>, the <code>_.async</code> function forms an equivalence with the <code>async await</code> pattern in languages like JS.</li>
+</ul>
+<hr />
+<h3 id="asyncall">asyncAll<a class="headerlink" href="#asyncall" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">asyncAll</span><span class="p">(</span><span class="n">dictionary</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+</pre></div>
+Wraps any functions in <em>dictionary</em> with <code>_.async</code>, returning a new dictionary containing
+functions that return promises when called rather than yielding.</p>
+<p><strong>Parameters</strong></p>
+<blockquote>
+<p><strong>dictionary</strong> - <em>string</em> 
+</p>
+</blockquote>
+<p><strong>Returns</strong></p>
+<blockquote>
+<p><em>string</em></p>
+</blockquote>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">buyDinner</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">async</span><span class="p">(</span><span class="kr">function</span><span class="p">()</span>
+    <span class="kd">local</span> <span class="n">http</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">asyncAll</span><span class="p">(</span><span class="n">game</span><span class="p">:</span><span class="n">GetService</span><span class="p">(</span><span class="s2">&quot;HttpService&quot;</span><span class="p">))</span>
+    <span class="kd">local</span> <span class="n">order</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">props</span><span class="p">({</span>
+        <span class="n">main</span> <span class="o">=</span> <span class="n">http</span><span class="p">:</span><span class="n">GetAsync</span><span class="p">(</span><span class="s2">&quot;http://example.com/burger&quot;</span><span class="p">),</span>
+        <span class="n">side</span> <span class="o">=</span> <span class="n">http</span><span class="p">:</span><span class="n">GetAsync</span><span class="p">(</span><span class="s2">&quot;http://example.com/fries&quot;</span><span class="p">)</span>
+    <span class="p">})</span>
+    <span class="n">order</span><span class="p">:</span><span class="n">await</span><span class="p">()</span>
+    <span class="kr">return</span> <span class="n">http</span><span class="p">:</span><span class="n">PostAsync</span><span class="p">(</span><span class="s2">&quot;http://example.com/purchase&quot;</span><span class="p">,</span> <span class="n">order</span><span class="p">)</span>
+<span class="kr">end</span><span class="p">)</span>
+<span class="n">buyDinner</span><span class="p">():</span><span class="n">await</span><span class="p">()</span> <span class="c1">--&gt; &quot;Purchased!&quot; (some time later)</span>
+</pre></div>
+
+<hr />
+<h3 id="await">await<a class="headerlink" href="#await" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">await</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+</pre></div>
+Yields completion of a promise <code>promise:await()</code>, but returns immediately with the value if it
+isn't a promise.</p>
+<p><strong>Parameters</strong></p>
+<blockquote>
+<p><strong>value</strong> - <em>string</em> 
+</p>
+</blockquote>
+<p><strong>Returns</strong></p>
+<blockquote>
+<p><em>string</em></p>
+</blockquote>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">heat</span> <span class="o">=</span> <span class="kr">function</span><span class="p">(</span> <span class="n">item</span> <span class="p">)</span>
+    <span class="kr">return</span> <span class="n">_</span><span class="p">.</span><span class="n">delay</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="n">returns</span><span class="p">(</span><span class="s2">&quot;hot &quot;</span> <span class="o">..</span> <span class="n">item</span><span class="p">)</span>
+<span class="kr">end</span>
+<span class="kd">local</span> <span class="n">recipe</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;wrap&quot;</span><span class="p">,</span> <span class="n">heat</span><span class="p">(</span><span class="s2">&quot;steak&quot;</span><span class="p">),</span> <span class="n">heat</span><span class="p">(</span><span class="s2">&quot;rice&quot;</span><span class="p">)}</span>
+<span class="kd">local</span> <span class="n">burrito</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">recipe</span><span class="p">,</span> <span class="n">_</span><span class="p">.</span><span class="n">await</span><span class="p">)</span>
+<span class="n">_</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="n">burrito</span><span class="p">)</span>
+<span class="c1">--&gt;&gt; {&quot;wrap&quot;, &quot;hot steak&quot;, &quot;hot rice&quot;} (2 seconds)</span>
+</pre></div>
+
 <hr />
 <h3 id="delay">delay<a class="headerlink" href="#delay" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">delay</span><span class="p">(</span><span class="n">delayInSeconds</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-    Returns a promise which resolves after the given delayInSeconds.</p>
+Returns a promise which resolves after the given delayInSeconds.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>delayInSeconds</strong> - <em>string</em>
+<p><strong>delayInSeconds</strong> - <em>string</em> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
 <p><em>string</em></p>
 </blockquote>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">delay</span><span class="p">(</span><span class="mi">1</span><span class="p">):</span><span class="n">andThen</span><span class="p">(</span><span class="kr">function</span><span class="p">()</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Delivered&quot;</span><span class="p">)</span> <span class="kr">end</span><span class="p">)</span>
+<span class="c1">--&gt;&gt; Delivered (1 second later)</span>
+</pre></div>
+
+<hr />
+<h3 id="finally">finally<a class="headerlink" href="#finally" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">finally</span><span class="p">(</span><span class="n">promise</span><span class="p">,</span> <span class="n">fn</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+</pre></div>
+Returns a promise which completes after the <em>promise</em> input has completed, regardless of
+whether it has resolved or rejected.</p>
+<p><strong>Parameters</strong></p>
+<blockquote>
+<p><strong>promise</strong> - <em>string</em> </p>
+<p><strong>fn</strong> - <em>string</em>  - <em>function(ok, result)</em>
+</p>
+</blockquote>
+<p><strong>Returns</strong></p>
+<blockquote>
+<p><em>string</em></p>
+</blockquote>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">getHunger</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">async</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span> <span class="n">player</span> <span class="p">)</span>
+    <span class="kr">if</span> <span class="n">player</span><span class="p">.</span><span class="n">health</span> <span class="o">==</span> <span class="mi">0</span> <span class="kr">then</span>
+        <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;Player is dead!&quot;</span><span class="p">)</span>
+    <span class="kr">else</span>
+        <span class="kr">return</span> <span class="n">game</span><span class="p">.</span><span class="n">ReplicatedStorage</span><span class="p">.</span><span class="n">GetHunger</span><span class="p">:</span><span class="n">InvokeServer</span><span class="p">(</span> <span class="n">player</span> <span class="p">)</span>
+    <span class="kr">end</span>
+<span class="kr">end</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">localPlayer</span> <span class="o">=</span> <span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">.</span><span class="n">LocalPlayer</span>
+<span class="kd">local</span> <span class="n">isHungry</span> <span class="o">=</span> <span class="n">getHunger</span><span class="p">(</span> <span class="n">localPlayer</span> <span class="p">):</span><span class="n">finally</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span> <span class="n">isAlive</span><span class="p">,</span> <span class="n">result</span> <span class="p">)</span>
+    <span class="kr">return</span> <span class="n">isAlive</span> <span class="ow">and</span> <span class="n">result</span> <span class="o">&lt;</span> <span class="mi">5</span>
+<span class="kr">end</span><span class="p">)</span>
+</pre></div>
+
+<hr />
+<h3 id="never">never<a class="headerlink" href="#never" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">never</span><span class="p">()</span> <span class="c1">--&gt; string</span>
+</pre></div>
+Returns a promise which never resolves or rejects.</p>
+<p><strong>Returns</strong></p>
+<blockquote>
+<p><em>string</em></p>
+</blockquote>
+<p><strong>Usage</strong></p>
+<ul>
+<li>Useful in combination with <code>_.race</code> where a resolution or rejection should be ignored.</li>
+</ul>
+<hr />
+<h3 id="parallel">parallel<a class="headerlink" href="#parallel" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">parallel</span><span class="p">(</span><span class="n">array</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+</pre></div>
+  Given an <em>array</em> of values, this function returns a promise which
+  resolves once all of the array elements have resolved, or rejects
+  if any of the array elements reject.</p>
+<p><strong>Parameters</strong></p>
+<blockquote>
+<p><strong>array</strong> - <em>string</em> 
+</p>
+</blockquote>
+<p><strong>Returns</strong></p>
+<blockquote>
+<p><em>string</em> - an array mapping the input to resolved elements.</p>
+</blockquote>
+<p><strong>Rejects</strong></p>
+<ul>
+<li><em>passthrough</em> - The returned promise will reject if promises passed as arguments reject.</li>
+</ul>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">heat</span> <span class="o">=</span> <span class="kr">function</span><span class="p">(</span> <span class="n">item</span> <span class="p">)</span>
+    <span class="kd">local</span> <span class="n">oven</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">parallel</span><span class="p">({</span><span class="n">item</span><span class="p">,</span> <span class="n">_</span><span class="p">.</span><span class="n">delay</span><span class="p">(</span><span class="mi">1</span><span class="p">)})</span>
+    <span class="kr">return</span> <span class="n">oven</span><span class="p">:</span><span class="n">andThen</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span> <span class="n">result</span> <span class="p">)</span>
+        <span class="kr">return</span> <span class="s2">&quot;hot-&quot;</span> <span class="o">..</span> <span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> 
+    <span class="kr">end</span><span class="p">)</span>
+<span class="kr">end</span>
+<span class="kd">local</span> <span class="n">meal</span> <span class="o">=</span><span class="n">_</span><span class="p">.</span><span class="n">parallel</span><span class="p">({</span><span class="n">heat</span><span class="p">(</span><span class="s2">&quot;cheese&quot;</span><span class="p">),</span> <span class="s2">&quot;tomato&quot;</span><span class="p">})</span>
+<span class="n">meal</span><span class="p">:</span><span class="n">await</span><span class="p">()</span> <span class="c1">--&gt; {&quot;hot-cheese&quot;, &quot;tomato&quot;} (1 second later)</span>
+</pre></div>
+
+<p><strong>Usage</strong></p>
+<ul>
+<li>This function is like <code>Promise.all</code> but allows objects in the array which aren't promises. These are considered resolved immediately.</li>
+<li>Promises that return nil values will cause the return array to be sparse.</li>
+</ul>
+<hr />
+<h3 id="props">props<a class="headerlink" href="#props" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">props</span><span class="p">(</span><span class="n">dictionary</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+</pre></div>
+  Given a <em>dictionary</em> of values, this function returns a promise which
+  resolves once all of the values in the dictionary have resolved, or rejects
+  if any of them are promises that reject.</p>
+<p><strong>Parameters</strong></p>
+<blockquote>
+<p><strong>dictionary</strong> - <em>string</em> 
+</p>
+</blockquote>
+<p><strong>Returns</strong></p>
+<blockquote>
+<p><em>string</em> - an array mapping the input to resolved elements.</p>
+</blockquote>
+<p><strong>Rejects</strong></p>
+<ul>
+<li><em>passthrough</em> - The returned promise will reject if promises passed as arguments reject.</li>
+</ul>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">heat</span> <span class="o">=</span> <span class="kr">function</span><span class="p">(</span> <span class="n">item</span> <span class="p">)</span>
+    <span class="kd">local</span> <span class="n">oven</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">parallel</span><span class="p">({</span><span class="n">item</span><span class="p">,</span> <span class="n">_</span><span class="p">.</span><span class="n">delay</span><span class="p">(</span><span class="mi">1</span><span class="p">)})</span>
+    <span class="kr">return</span> <span class="n">oven</span><span class="p">:</span><span class="n">andThen</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span> <span class="n">result</span> <span class="p">)</span>
+        <span class="kr">return</span> <span class="s2">&quot;hot-&quot;</span> <span class="o">..</span> <span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> 
+    <span class="kr">end</span><span class="p">)</span>
+<span class="kr">end</span>
+<span class="kd">local</span> <span class="n">toastie</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">props</span><span class="p">({</span>
+    <span class="n">bread</span> <span class="o">=</span> <span class="s2">&quot;brown&quot;</span><span class="p">,</span>
+    <span class="n">filling</span> <span class="o">=</span> <span class="n">heat</span><span class="p">(</span><span class="s2">&quot;cheese&quot;</span><span class="p">)</span>
+<span class="p">})</span>
+<span class="n">toastie</span><span class="p">:</span><span class="n">await</span><span class="p">()</span> <span class="c1">--&gt; {bread = &quot;brown&quot;, filling = &quot;hot-cheese&quot;} (1 second later)</span>
+</pre></div>
+
+<p><strong>Usage</strong></p>
+<ul>
+<li>Values which are not promises are considered resolved immediately.</li>
+</ul>
+<hr />
+<h3 id="race">race<a class="headerlink" href="#race" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">race</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+</pre></div>
+Returns a promise which completes after the first promise in the <em>array</em> input completes, or
+first <em>n</em> promises if specified. If any promise rejects, race rejects with the first rejection.</p>
+<p><strong>Parameters</strong></p>
+<blockquote>
+<p><strong>array</strong> - <em>string</em> </p>
+<p><strong>n</strong> - <em>string</em>  - the number of promises required (default = 1)
+</p>
+</blockquote>
+<p><strong>Returns</strong></p>
+<blockquote>
+<p><em>string</em> - an array containing the first n resolutions, in the order that they resolved.</p>
+</blockquote>
+<p><strong>Usage</strong></p>
+<ul>
+<li>OutOfBoundsError - if the number of required promises is greater than the input length.</li>
+</ul>
+<p><strong>Rejects</strong></p>
+<ul>
+<li><em>passthrough</em> - The returned promise will reject if promises passed as arguments reject.</li>
+</ul>
+<p><strong>Usage</strong></p>
+<ul>
+<li>Promises which return nil values are ignored due to the in-order constraint.</li>
+<li>The size of <em>array</em> must be equal to or larger than <em>n</em>.</li>
+</ul>
+<hr />
+<h3 id="resolve">resolve<a class="headerlink" href="#resolve" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">resolve</span><span class="p">()</span> <span class="c1">--&gt; string</span>
+</pre></div>
+Like <code>Promise.resolve</code> but can take any number of arguments.</p>
+<p><strong>Parameters</strong></p>
+<blockquote>
+<p><strong>undefined</strong> - <em>string</em> 
+</p>
+</blockquote>
+<p><strong>Returns</strong></p>
+<blockquote>
+<p><em>string</em></p>
+</blockquote>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="kr">function</span> <span class="nf">mash</span><span class="p">(</span> <span class="n">veg</span> <span class="p">)</span>
+    <span class="kr">return</span> <span class="n">_</span><span class="p">.</span><span class="n">resolve</span><span class="p">(</span><span class="s2">&quot;mashed&quot;</span><span class="p">,</span> <span class="n">veg</span><span class="p">)</span>
+<span class="kr">end</span>
+<span class="n">mash</span><span class="p">(</span><span class="s2">&quot;potato&quot;</span><span class="p">):</span><span class="n">andThen</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="n">veg</span><span class="p">)</span>
+    <span class="n">_</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s2">&quot;{} was {}&quot;</span><span class="p">,</span> <span class="n">veg</span><span class="p">,</span> <span class="n">style</span><span class="p">)</span>
+<span class="kr">end</span><span class="p">)</span>
+<span class="c1">-- &gt;&gt; potato was mashed</span>
+</pre></div>
+
 <hr />
 <h3 id="retrywithbackoff">retryWithBackoff<a class="headerlink" href="#retrywithbackoff" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">retryWithBackoff</span><span class="p">(</span><span class="n">getPromise</span><span class="p">,</span> <span class="n">backoffOptions</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-    Try running a function which returns a promise and retry if the function throws
-    and error or the promise rejects. The retry behaviour can be adapted using
-    backoffOptions, which can customize the maximum number of retries and the backoff
-    timing of the form [0, x^attemptNumber] + y where x is an exponent that produces
-    a random exponential delay and y is a constant delay.</p>
-<div class="codehilite"><pre><span></span>maxTries - how many tries (including the first one) the function should be called
-retryExponentInSeconds - customize the backoff exponent
-</pre></div>
-
-
-<p>retryConstantInSeconds - customize the backoff constant
-    randomStream - use a Roblox "Random" instance to control the backoff
-shouldRetry(response) - called if maxTries &gt; 1 to determine whether a retry should occur
-    onRetry(waitTime, errorMessage) - a hook for when a retry is triggered, with the delay before retry and error message which caused the failure
-    onDone(response, durationMs) - a hook for when the promise resolves
-    onFail(errorMessage) - a hook for when the promise has failed and no more retries are allowed</p>
+  Try running a function which returns a promise and retry if the function throws
+  and error or the promise rejects. The retry behaviour can be adapted using
+  backoffOptions, which can customize the maximum number of retries and the backoff
+  timing of the form <code>[0, x^attemptNumber] + y</code> where <em>x</em> is an exponent that produces
+  a random exponential delay and <em>y</em> is a constant delay.</p>
+<h4 id="backoff-options">Backoff Options<a class="headerlink" href="#backoff-options" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>maxTries</strong></td>
+<td><em>int</em></td>
+<td>how many tries (including the first one) the function should be called</td>
+</tr>
+<tr>
+<td><strong>retryExponentInSeconds</strong></td>
+<td><em>number</em></td>
+<td>customize the backoff exponent</td>
+</tr>
+<tr>
+<td><strong>retryConstantInSeconds</strong></td>
+<td><em>number</em></td>
+<td>customize the backoff constant</td>
+</tr>
+<tr>
+<td><strong>randomStream</strong></td>
+<td><em>Random</em></td>
+<td>use a Roblox "Random" instance to control the backoff</td>
+</tr>
+<tr>
+<td><strong>shouldRetry(response)</strong></td>
+<td><em>T -&gt; bool</em></td>
+<td>called if maxTries &gt; 1 to determine whether a retry should occur</td>
+</tr>
+<tr>
+<td><strong>onRetry(waitTime, errorMessage)</strong></td>
+<td><em>(number, string) -&gt; nil</em></td>
+<td>a hook for when a retry is triggered, with the delay before retry and error message which caused the failure</td>
+</tr>
+<tr>
+<td><strong>onDone(response, durationInSeconds)</strong></td>
+<td><em>(T, number) -&gt; nil</em></td>
+<td>a hook for when the promise resolves</td>
+</tr>
+<tr>
+<td><strong>onFail(errorMessage)</strong></td>
+<td><em>string -&gt; nil</em></td>
+<td>a hook for when the promise has failed and no more retries are allowed</td>
+</tr>
+</tbody>
+</table>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>getPromise</strong> - <em>string</em></p>
-<p><strong>backoffOptions</strong> - <em>string</em>
+<p><strong>getPromise</strong> - <em>string</em> </p>
+<p><strong>backoffOptions</strong> - <em>string</em> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
 <p><em>string</em></p>
 </blockquote>
+<p><strong>Rejects</strong></p>
+<ul>
+<li><em>passthrough</em> - The returned promise will reject if promises passed as arguments reject.</li>
+</ul>
 <hr />
-<h3 id="wrapfn">wrapFn<a class="headerlink" href="#wrapfn" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">wrapFn</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<h3 id="series">series<a class="headerlink" href="#series" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">series</span><span class="p">()</span> <span class="c1">--&gt; string</span>
 </pre></div>
-    Returns a promise for a function which may yield. wrapFn calls the
-    the function in a coroutine and resolves with the output of the function
-    after any asynchronous actions, and rejects if the function throws an error.</p>
+Like <code>_.compose</code> but takes functions that can return a promise. Returns a promise that resolves
+once all functions have resolved. Like compose, functions receive the resolution of the
+previous promise as argument(s).</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>fn</strong> - <em>string</em>
+<p><strong>undefined</strong> - <em>string</em> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
 <p><em>string</em></p>
 </blockquote>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="kr">function</span> <span class="nf">fry</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="kr">return</span> <span class="n">_</span><span class="p">.</span><span class="n">delay</span><span class="p">(</span><span class="mi">1</span><span class="p">):</span><span class="n">andThen</span><span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="n">returns</span><span class="p">(</span><span class="s2">&quot;fried &quot;</span> <span class="o">..</span> <span class="n">item</span><span class="p">))</span> <span class="kr">end</span>
+<span class="kd">local</span> <span class="kr">function</span> <span class="nf">cheesify</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="kr">return</span> <span class="n">_</span><span class="p">.</span><span class="n">delay</span><span class="p">(</span><span class="mi">1</span><span class="p">):</span><span class="n">andThen</span><span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="n">returns</span><span class="p">(</span><span class="s2">&quot;cheesy &quot;</span> <span class="o">..</span> <span class="n">item</span><span class="p">))</span> <span class="kr">end</span>
+<span class="kd">local</span> <span class="n">prepare</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">compose</span><span class="p">(</span><span class="n">fry</span><span class="p">,</span> <span class="n">cheesify</span><span class="p">)</span>
+<span class="n">prepare</span><span class="p">(</span><span class="s2">&quot;nachos&quot;</span><span class="p">):</span><span class="n">await</span><span class="p">()</span> <span class="c1">--&gt; &quot;cheesy fried nachos&quot; (after 2s)</span>
+</pre></div>
+
+<hr />
+<h3 id="timeout">timeout<a class="headerlink" href="#timeout" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">timeout</span><span class="p">(</span><span class="n">promise</span><span class="p">,</span> <span class="n">deadlineInSeconds</span><span class="p">,</span> <span class="n">timeoutMessage</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+</pre></div>
+Resolves to the result of <code>promise</code> if it resolves before the deadline, otherwise rejects with
+an error, which can be optionally customized.</p>
+<p><strong>Parameters</strong></p>
+<blockquote>
+<p><strong>promise</strong> - <em>string</em> </p>
+<p><strong>deadlineInSeconds</strong> - <em>string</em> </p>
+<p><strong>timeoutMessage</strong> - <em>string</em>  - (default = "TimeoutError")
+</p>
+</blockquote>
+<p><strong>Returns</strong></p>
+<blockquote>
+<p><em>string</em></p>
+</blockquote>
+<p><strong>Rejects</strong></p>
+<ul>
+<li><strong>TimeoutError</strong> - or <em>timeoutMessage</em></li>
+</ul>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="n">let</span> <span class="n">eatGreens</span> <span class="o">=</span> <span class="kr">function</span><span class="p">()</span> <span class="kr">return</span> <span class="n">_</span><span class="p">.</span><span class="n">never</span> <span class="kr">end</span>
+<span class="n">_</span><span class="p">.</span><span class="n">timeout</span><span class="p">(</span><span class="n">eatGreens</span><span class="p">(),</span> <span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;TasteError&quot;</span><span class="p">):</span><span class="n">await</span><span class="p">()</span>
+<span class="c1">--&gt; throws &quot;TasteError&quot; (after 10s)</span>
+</pre></div>
                 
                   
                 
