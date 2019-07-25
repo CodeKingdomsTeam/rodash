@@ -158,7 +158,7 @@ function Functions.call(subject, fn, ...)
 end
 
 --[[
-	Chain takes an optional dictionary of chainable functions and returns a Chain instance with
+	Chain takes a dictionary of chainable functions and returns a Chain instance with
 	methods mapped to the input functions. Calling a _Chain_ with a subject reduces the chained
 	operations in order on the subject. The "Rodash" chain `_.chain(_)` is aliased to `_.fn`.
 	@param actor called for each result in the chain to determine how the next operation should process it. (default = `_.invoke`)
