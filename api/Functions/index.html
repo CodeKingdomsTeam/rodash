@@ -706,8 +706,8 @@ dynamic arguments.</p>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">chain</span><span class="p">(</span><span class="n">fns</span><span class="p">,</span> <span class="n">awaitAsync</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 Aliased to <code>_()</code>, chain takes an optional dictionary of chainable functions and returns a Chain
-instance with methods mapped to the input functions. Calling a <em>Chain</em> with a subject evaluates
-the result of performing the chained operations on the subject.</p>
+instance with methods mapped to the input functions. Calling a <em>Chain</em> with a subject reduces
+the chained operations in order on the subject.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>fns</strong> - <em>string</em>  - (default = <code>_</code>)</p>
