@@ -190,15 +190,7 @@ function ${libName}.${name}(${params.join(', ')}) --> string
 }
 
 function formatList(entries: DocEntry[], modifier?: (line: string) => string) {
-	return entries.map(
-		({ content }) =>
-			'* ' +
-			content
-				.split('\n')
-				.filter(line => !line.match(/^\s*$/))
-				.map(line => (modifier ? modifier(line) : line))
-				.join('\n* '),
-	);
+	return entries.map(({ content }) => '\n* ' + content);
 }
 
 function filterEntries(entries: DocEntry[], tag: string) {

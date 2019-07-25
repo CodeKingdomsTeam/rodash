@@ -1,5 +1,6 @@
 local Functions = require "Functions"
 local Tables = require "Tables"
+local Strings = require "Strings"
 
 describe(
 	"Functions",
@@ -501,8 +502,12 @@ describe(
 				it(
 					"works with rodash functions",
 					function()
+						local _ = Tables.assign({}, Tables, Strings, Functions)
+						getmetatable(_.fn).__index = function(self, key)
+							return _.chain(_)[key]
+						end
 						local fn =
-							Functions.chain(Tables):map(
+							_.fn:map(
 							function(value)
 								return value + 2
 							end
@@ -511,22 +516,26 @@ describe(
 								return value >= 5
 							end
 						):sum()
-						assert.equals("Chain::map::filter::sum", tostring(fn))
+						assert.equals("_.fn::map::filter::sum", tostring(fn))
 						assert.are.same(12, fn({1, 3, 5}))
 					end
 				)
 				it(
 					"works with custom functions",
 					function()
+						local _ = Tables.assign({}, Tables, Strings, Functions)
+						getmetatable(_.fn).__index = function(self, key)
+							return _.chain(_)[key]
+						end
 						local chain =
 							Functions.chain(
 							{
-								addTwo = Functions.chain(Tables):map(
+								addTwo = _.fn:map(
 									function(value)
 										return value + 2
 									end
 								),
-								sumGteFive = Functions.chain(Tables):filter(
+								sumGteFive = _.fn:filter(
 									function(value)
 										return value >= 5
 									end
@@ -536,6 +545,47 @@ describe(
 						local fn = chain:addTwo():sumGteFive()
 						assert.equals("Chain::addTwo::sumGteFive", tostring(fn))
 						assert.are.same(12, fn({1, 3, 5}))
+					end
+				)
+				it(
+					"works with composed functions",
+					function()
+						local _ = Tables.assign({}, Tables, Strings, Functions)
+						getmetatable(_.fn).__index = function(self, key)
+							return _.chain(_)[key]
+						end
+						local getName = function(player)
+							return player.Name
+						end
+						local players =
+							Functions.chain(
+							{
+								isHurt = _.fn:filter(
+									function(player)
+										return player.Health < 100
+									end
+								),
+								isBaggins = _.fn:filter(_.fn:call(getName):endsWith("Baggins"))
+							}
+						)
+						local hurtHobbits = players:isHurt():isBaggins()
+						local getNames = _.fn:map(getName)
+						local hurtHobbitNames = _.compose(hurtHobbits, getNames)
+						local crew = {
+							{
+								Name = "Frodo Baggins",
+								Health = 50
+							},
+							{
+								Name = "Bilbo Baggins",
+								Health = 100
+							},
+							{
+								Name = "Boromir",
+								Health = 0
+							}
+						}
+						assert.are.same({"Frodo Baggins"}, hurtHobbitNames(crew))
 					end
 				)
 			end

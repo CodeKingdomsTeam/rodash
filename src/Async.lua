@@ -20,7 +20,7 @@ local baseRandomStream = Random.new()
 		end
 		local recipe = {"wrap", heat("steak"), heat("rice")}
 		local burrito = _.map(recipe, _.await)
-		_.print(burrito)
+		_.debug("{:#?}", burrito)
 		-->> {"wrap", "hot steak", "hot rice"} (2 seconds)
 ]]
 function Async.await(value)
@@ -46,9 +46,9 @@ end
 		local meal =_.parallel({heat("cheese"), "tomato"})
 		meal:await() --> {"hot-cheese", "tomato"} (1 second later)
 	@rejects passthrough
-	@usage
-		This function is like `Promise.all` but allows objects in the array which aren't promises. These are considered resolved immediately.
-		Promises that return nil values will cause the return array to be sparse.
+	@usage This function is like `Promise.all` but allows objects in the array which aren't
+		promises. These are considered resolved immediately.
+	@usage Promises that return nil values will cause the return array to be sparse.
 ]]
 --: <T>((Promise<T> | T)[]) -> Promise<T[]>
 function Async.parallel(array)
@@ -118,7 +118,7 @@ end
 			return _.resolve("mashed", veg)
 		end
 		mash("potato"):andThen(function(style, veg)
-			_.print("{} was {}", veg, style)
+			_.debug("{} was {}", veg, style)
 		end)
 		-- >> potato was mashed
 
@@ -140,9 +140,8 @@ end
 	@returns an array containing the first n resolutions, in the order that they resolved.
 	@rejects passthrough
 	@throws OutOfBoundsError - if the number of required promises is greater than the input length.
-	@usage
-		Promises which return nil values are ignored due to the in-order constraint.
-		The size of _array_ must be equal to or larger than _n_.
+	@usage Promises which return nil values are ignored due to the in-order constraint.
+	@usage The size of _array_ must be equal to or larger than _n_.
 ]]
 --: <T>(Promise<T>[], uint?) -> Promise<T[]>
 function Async.race(array, n)
@@ -296,7 +295,8 @@ end
 			print("Meal", _.pretty(meal))
 		end)
 		-->> {burger = "Cheeseburger", fries = "Curly fries"} (ideal response)
-	@usage Used alongside `promise:await`, the `_.async` function forms an equivalence with the `async await` pattern in languages like JS.
+	@usage Used alongside `promise:await`, the `_.async` function forms an equivalence with the
+		`async await` pattern in languages like JS.
 ]]
 --: <T, A>(Yieldable<T, A>) -> ...A -> Promise<T>
 function Async.async(fn)
@@ -330,8 +330,7 @@ end
 				main = http:GetAsync("http://example.com/burger"),
 				side = http:GetAsync("http://example.com/fries")
 			})
-			order:await()
-			return http:PostAsync("http://example.com/purchase", order)
+			return http:PostAsync("http://example.com/purchase", order:await())
 		end)
 		buyDinner():await() --> "Purchased!" (some time later)
 ]]

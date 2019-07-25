@@ -2,6 +2,7 @@
 	A collection of useful utility functions and building blocks for functional programming styles.
 ]]
 local Tables = require(script.Tables)
+local Promise = require(script.Parent.Promise)
 
 local Functions = {}
 
@@ -142,36 +143,64 @@ function Functions.once(fn)
 end
 
 --[[
-	Aliased to `_()`, chain takes an optional dictionary of chainable functions and returns a Chain
-	instance with methods mapped to the input functions. Calling a _Chain_ with a subject reduces
-	the chained operations in order on the subject.
-	@param fns (default = `_`)
-	@param awaitAsync (default = false) whether promises returned from chained functions should be resolved before
-		passing them on to successive functions.
+	Calls the supplied _fn_ with the argument tail.
+]]
+function Functions.invoke(fn, ...)
+	return fn(...)
+end
+
+--[[
+	Calls the supplied _fn_ on the subject and additional arguments, returing the result.
+	@trait Chainable
+]]
+function Functions.call(subject, fn, ...)
+	return fn(subject, ...)
+end
+
+--[[
+	Chain takes an optional dictionary of chainable functions and returns a Chain instance with
+	methods mapped to the input functions. Calling a _Chain_ with a subject reduces the chained
+	operations in order on the subject. The "Rodash" chain `_.chain(_)` is aliased to `_.fn`.
+	@param actor called for each result in the chain to determine how the next operation should process it. (default = `_.invoke`)
 	@example
-		local getHurtNames = _():filter(function(player)
-			return player.Health < player.MaxHealth
-		end):map(function(player)
+		-- Get the name of a player
+		local function getName(player)
 			return player.Name
 		end)
-		getHurtNames(game.Players) --> {"Frodo Baggins", "Boromir"}
 
-		local players = _({
-			isHurt = _():filter(function(player)
+		-- Create a chain that filters for hurt players and finds their name
+		local hurtNames = _.fn:filter(function(player)
+			return player.Health < player.MaxHealth
+		end):map(getName)
+
+		-- Run the chain on the current game players
+		hurtNames(game.Players) --> {"Frodo Baggins", "Boromir"}
+
+		-- For fun, let's encapsulate the functionality above by
+		-- defining a chain of operations on players...
+		local players = _.chain({
+			isHurt = _.fn:filter(function(player)
 				return player.Health < player.MaxHealth
 			end),
-			isBaggins = _.():map(function(player)
-				return player.Name
-			end):endsWith("Baggins")
+			-- Filter players by getting their name and checking it ends with 'Baggins'
+			isBaggins = _.fn:filter(_.fn:call(getName):endsWith("Baggins"))
 		})
-		getHurtNames = players:isHurt():getName()
-		getHurtNames(game.Players) --> {"Frodo Baggins", "Boromir"}
-	@usage A chained function can be made using `_.chain` or built inductively using other chained methods of `_()`.
+
+		local hurtHobbits = players:isHurt():isBaggins()
+		local names = _.fn:map(getName)
+
+		-- Chains are themselves chainable, so you can compose two chains together
+		local hurtHobbitNames = _.compose(hurtHobbits, names)
+
+		hurtHobbitNames(game.Players) --> {"Frodo Baggins"}
+	@trait Chainable
+	@usage A chained function can be made using `_.chain` or built inductively using other chained
+		methods of `_.fn`.
 ]]
---: <T>(T{}, bool?) -> Chain<T>
-function Functions.chain(fns, awaitAsync)
-	if fns == nil then
-		fns = require(script)
+--: <T>(T{}, Actor<T>) -> Chain<T>
+function Functions.chain(fns, actor)
+	if actor == nil then
+		actor = Functions.invoke
 	end
 	local chain = {}
 	setmetatable(
@@ -179,7 +208,9 @@ function Functions.chain(fns, awaitAsync)
 		{
 			__index = function(self, name)
 				local fn = fns[name]
+				assert(Functions.isCallable(fn))
 				local feeder = function(parent, ...)
+					assert(type(parent) == "table", "Chain functions must be called with ':'")
 					local stage = {}
 					local op = Functions.feed(fn, ...)
 					setmetatable(
@@ -188,7 +219,7 @@ function Functions.chain(fns, awaitAsync)
 							__index = chain,
 							__call = function(self, subject)
 								local value = parent(subject)
-								return op(value)
+								return actor(op, value)
 							end,
 							__tostring = function()
 								return tostring(parent) .. "::" .. name
@@ -210,6 +241,43 @@ function Functions.chain(fns, awaitAsync)
 	return chain
 end
 
+local getChain = Functions.once(Functions.invoke(Functions.chain))
+Functions.fn = {}
+setmetatable(
+	Functions.fn,
+	{
+		__index = function(self, key)
+			local _ = require(script)
+			return getChain(_)[key]
+		end,
+		__call = function(self, subject)
+			return subject
+		end,
+		__tostring = function()
+			return "_.fn"
+		end
+	}
+)
+
+--[[
+	Like `_.chain`, but returns a promise, unboxing any returned promises before proceeding.
+]]
+function Functions.chainAsync(fns, actor)
+	return Functions.chain(
+		function(op, value, ...)
+			if Promise.is(value) then
+				return value:andThen(
+					function(...)
+						return actor(op, ...)
+					end
+				)
+			else
+				return actor(op, value, ...)
+			end
+		end
+	)
+end
+
 --[[
 	Returns a function that calls the argument functions in left-right order, passing the return of
 	the previous function as argument(s) to the next.
@@ -219,6 +287,7 @@ end
 		local prepare = _.compose(fry, cheesify)
 		prepare("nachos") --> "cheesy fried nachos"
 	@usage Useful for when you want to lazily compute something expensive that doesn't change.
+	@trait Chainable
 ]]
 --: <A>((...A -> ...A)[]) -> ...A -> A
 function Functions.compose(...)
@@ -356,7 +425,8 @@ end
 	Creates a debounced function that delays calling _fn_ until after _delayInSeconds_ seconds have
 	elapsed since the last time the debounced function was attempted to be called.
 	@returns the debounced function with method `:clear()` can be called on to cancel any scheduled call.
-	@usage A nice [visualisation of debounce vs. throttle](http://demo.nimius.net/debounce_throttle/), the illustrated point being debounce will only call _fn_ at the end of a spurt of events.
+	@usage A nice [visualisation of debounce vs. throttle](http://demo.nimius.net/debounce_throttle/), 
+		the illustrated point being debounce will only call _fn_ at the end of a spurt of events.
 ]]
 --: <A, B>((...A) -> B), number -> Clearable & (...A) -> B
 function Functions.debounce(fn, delayInSeconds)
@@ -398,7 +468,8 @@ end
 --[[
 	Creates a throttle function that drops any repeat calls within a cooldown period and instead
 	returns the result of the last call.
-	@usage A nice [visualisation of debounce vs. throttle](http://demo.nimius.net/debounce_throttle/), the illustrated point being throttle will call _fn_ every period during a spurt of events.
+	@usage A nice [visualisation of debounce vs. throttle](http://demo.nimius.net/debounce_throttle/),
+		the illustrated point being throttle will call _fn_ every period during a spurt of events.
 ]]
 --: <A, B>((...A) -> B), number -> ...A -> B
 function Functions.throttle(fn, cooldownInSeconds)

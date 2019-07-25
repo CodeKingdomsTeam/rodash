@@ -129,7 +129,8 @@ end
 	Splits `str` into parts based on a pattern delimiter and returns a table of the parts.
 	@example _.splitByPattern("rice") --> {"r", "i", "c", "e"}
 	@example _.splitByPattern("one.two::flour", "[.:]") --> {"one", "two", "", "flour"}
-	@usage This method is useful only when you need a _pattern_ for delimiter. Use the Roblox native `string.split` if you a splitting on a simple string.
+	@usage This method is useful only when you need a _pattern_ as a delimiter.
+	@usage Use the Roblox native `string.split` if you are splitting on a simple string.
 	@param delimiter (default = "")
 	@trait Chainable
 ]]
@@ -167,28 +168,28 @@ function Strings.trim(str)
 end
 
 --[[
-	Checks if `str` starts with the string `start`.
-	@example _.startsWith("Fun Roblox Games", "Roblox") --> true
-	@example _.startsWith("Minecraft Games", "Roblox") --> false
+	Checks if `str` starts with the string `prefix`.
+	@example _.startsWith("Fun Roblox Games", "Fun") --> true
+	@example _.startsWith("Minecraft Games", "Fun") --> false
 	@trait Chainable
 ]]
 --: string, string -> bool
-function Strings.startsWith(str, start)
+function Strings.startsWith(str, prefix)
 	assert(t.string(str))
-	return str:sub(1, start:len()) == start
+	return str:sub(1, prefix:len()) == prefix
 end
 
 --[[
-	Checks if `str` ends with the string `ending`.
+	Checks if `str` ends with the string `suffix`.
 	@example _.endsWith("Fun Roblox Games", "Games") --> true
 	@example _.endsWith("Bad Roblox Memes", "Games") --> false
 	@trait Chainable
 ]]
 --: string, string -> bool
-function Strings.endsWith(str, ending)
+function Strings.endsWith(str, suffix)
 	assert(t.string(str))
-	assert(t.string(ending))
-	return str:sub(-ending:len()) == ending
+	assert(t.string(suffix))
+	return str:sub(-suffix:len()) == suffix
 end
 
 --[[
@@ -229,6 +230,46 @@ function Strings.rightPad(str, length, suffix)
 	local remainder = padLength % #suffix
 	local repetitions = (padLength - remainder) / #suffix
 	return str .. string.rep(suffix or " ", repetitions) .. suffix:sub(1, remainder)
+end
+
+--[[
+	This function is a simpler & more powerful version of `string.format`, inspired by `format!` in Rust.
+	If an instance has a `:format()` method, this is used instead, passing the format arguments.
+	
+		* `{}` prints the next variable using or `tostring`.
+		* `{:?}` prints using `_.serializeDeep`.
+		* `{:#?}` prints using `_.pretty`.
+
+	@param subject the format match string
+]]
+function Strings.format(subject, ...)
+	-- TODO
+end
+
+local debugTarget
+
+--[[
+	This function first calls `_.format` on the arguments provided and then outputs the response
+	to the debug target, set using `_.setDebug`. By default, this function does nothing, allowing
+	developers to leave the calls in the source code if that is beneficial.
+	@param subject the format match string
+	@usage A common pattern would be to `_.setDebug()` to alias to `print` during local development,
+		and call e.g. `_.setDebug(_.bind(HttpService.PostAsync, "https://example.com/log"))`
+		on a production build to allow remote debugging.
+]]
+function Strings.debug(subject, ...)
+	if debugTarget == nil then
+		return
+	end
+	debugTarget(Strings.format(...))
+end
+
+--[[
+	Hooks up any debug methods to invoke _fn_, which by default does nothing.
+	@param fn (default = `print`)
+]]
+function Strings.setDebug(fn)
+	debugTarget = fn
 end
 
 --[[
@@ -327,9 +368,9 @@ end
 	@example
 		Strings.encodeQueryString({
 			time = 11,
-			biscuits = "hobnobs",
+			biscuits = "hob nobs",
 			chocolatey = true
-		})) --> "?biscuits=hobnobs&time=11&chocolatey=true"
+		})) --> "?biscuits=hob+nobs&time=11&chocolatey=true"
 ]]
 function Strings.encodeQueryString(query)
 	assert(t.table(query))
