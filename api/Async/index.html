@@ -680,7 +680,7 @@ after any asynchronous actions, and rejects if the function throws an error.</p>
 </blockquote>
 <p><strong>Rejects</strong></p>
 <ul>
-<li><em>passthrough</em> - The returned promise will reject if promises passed as arguments reject.</li>
+<li>passthrough</li>
 </ul>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">fetch</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">async</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span> <span class="n">url</span> <span class="p">)</span>
@@ -698,7 +698,8 @@ after any asynchronous actions, and rejects if the function throws an error.</p>
 
 <p><strong>Usage</strong></p>
 <ul>
-<li>Used alongside <code>promise:await</code>, the <code>_.async</code> function forms an equivalence with the <code>async await</code> pattern in languages like JS.</li>
+<li>Used alongside <code>promise:await</code>, the <code>_.async</code> function forms an equivalence with the
+<code>async await</code> pattern in languages like JS.</li>
 </ul>
 <hr />
 <h3 id="asyncall">asyncAll<a class="headerlink" href="#asyncall" title="Permanent link">&para;</a></h3>
@@ -722,8 +723,7 @@ functions that return promises when called rather than yielding.</p>
         <span class="n">main</span> <span class="o">=</span> <span class="n">http</span><span class="p">:</span><span class="n">GetAsync</span><span class="p">(</span><span class="s2">&quot;http://example.com/burger&quot;</span><span class="p">),</span>
         <span class="n">side</span> <span class="o">=</span> <span class="n">http</span><span class="p">:</span><span class="n">GetAsync</span><span class="p">(</span><span class="s2">&quot;http://example.com/fries&quot;</span><span class="p">)</span>
     <span class="p">})</span>
-    <span class="n">order</span><span class="p">:</span><span class="n">await</span><span class="p">()</span>
-    <span class="kr">return</span> <span class="n">http</span><span class="p">:</span><span class="n">PostAsync</span><span class="p">(</span><span class="s2">&quot;http://example.com/purchase&quot;</span><span class="p">,</span> <span class="n">order</span><span class="p">)</span>
+    <span class="kr">return</span> <span class="n">http</span><span class="p">:</span><span class="n">PostAsync</span><span class="p">(</span><span class="s2">&quot;http://example.com/purchase&quot;</span><span class="p">,</span> <span class="n">order</span><span class="p">:</span><span class="n">await</span><span class="p">())</span>
 <span class="kr">end</span><span class="p">)</span>
 <span class="n">buyDinner</span><span class="p">():</span><span class="n">await</span><span class="p">()</span> <span class="c1">--&gt; &quot;Purchased!&quot; (some time later)</span>
 </pre></div>
@@ -749,7 +749,7 @@ isn't a promise.</p>
 <span class="kr">end</span>
 <span class="kd">local</span> <span class="n">recipe</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;wrap&quot;</span><span class="p">,</span> <span class="n">heat</span><span class="p">(</span><span class="s2">&quot;steak&quot;</span><span class="p">),</span> <span class="n">heat</span><span class="p">(</span><span class="s2">&quot;rice&quot;</span><span class="p">)}</span>
 <span class="kd">local</span> <span class="n">burrito</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">recipe</span><span class="p">,</span> <span class="n">_</span><span class="p">.</span><span class="n">await</span><span class="p">)</span>
-<span class="n">_</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="n">burrito</span><span class="p">)</span>
+<span class="n">_</span><span class="p">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;{:#?}&quot;</span><span class="p">,</span> <span class="n">burrito</span><span class="p">)</span>
 <span class="c1">--&gt;&gt; {&quot;wrap&quot;, &quot;hot steak&quot;, &quot;hot rice&quot;} (2 seconds)</span>
 </pre></div>
 
@@ -833,7 +833,7 @@ Returns a promise which never resolves or rejects.</p>
 </blockquote>
 <p><strong>Rejects</strong></p>
 <ul>
-<li><em>passthrough</em> - The returned promise will reject if promises passed as arguments reject.</li>
+<li>passthrough</li>
 </ul>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">heat</span> <span class="o">=</span> <span class="kr">function</span><span class="p">(</span> <span class="n">item</span> <span class="p">)</span>
@@ -848,8 +848,13 @@ Returns a promise which never resolves or rejects.</p>
 
 <p><strong>Usage</strong></p>
 <ul>
-<li>This function is like <code>Promise.all</code> but allows objects in the array which aren't promises. These are considered resolved immediately.</li>
-<li>Promises that return nil values will cause the return array to be sparse.</li>
+<li>
+<p>This function is like <code>Promise.all</code> but allows objects in the array which aren't
+promises. These are considered resolved immediately.</p>
+</li>
+<li>
+<p>Promises that return nil values will cause the return array to be sparse.</p>
+</li>
 </ul>
 <hr />
 <h3 id="props">props<a class="headerlink" href="#props" title="Permanent link">&para;</a></h3>
@@ -869,7 +874,7 @@ Returns a promise which never resolves or rejects.</p>
 </blockquote>
 <p><strong>Rejects</strong></p>
 <ul>
-<li><em>passthrough</em> - The returned promise will reject if promises passed as arguments reject.</li>
+<li>passthrough</li>
 </ul>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">heat</span> <span class="o">=</span> <span class="kr">function</span><span class="p">(</span> <span class="n">item</span> <span class="p">)</span>
@@ -911,12 +916,16 @@ first <em>n</em> promises if specified. If any promise rejects, race rejects wit
 </ul>
 <p><strong>Rejects</strong></p>
 <ul>
-<li><em>passthrough</em> - The returned promise will reject if promises passed as arguments reject.</li>
+<li>passthrough</li>
 </ul>
 <p><strong>Usage</strong></p>
 <ul>
-<li>Promises which return nil values are ignored due to the in-order constraint.</li>
-<li>The size of <em>array</em> must be equal to or larger than <em>n</em>.</li>
+<li>
+<p>Promises which return nil values are ignored due to the in-order constraint.</p>
+</li>
+<li>
+<p>The size of <em>array</em> must be equal to or larger than <em>n</em>.</p>
+</li>
 </ul>
 <hr />
 <h3 id="resolve">resolve<a class="headerlink" href="#resolve" title="Permanent link">&para;</a></h3>
@@ -937,7 +946,7 @@ Like <code>Promise.resolve</code> but can take any number of arguments.</p>
     <span class="kr">return</span> <span class="n">_</span><span class="p">.</span><span class="n">resolve</span><span class="p">(</span><span class="s2">&quot;mashed&quot;</span><span class="p">,</span> <span class="n">veg</span><span class="p">)</span>
 <span class="kr">end</span>
 <span class="n">mash</span><span class="p">(</span><span class="s2">&quot;potato&quot;</span><span class="p">):</span><span class="n">andThen</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">style</span><span class="p">,</span> <span class="n">veg</span><span class="p">)</span>
-    <span class="n">_</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="s2">&quot;{} was {}&quot;</span><span class="p">,</span> <span class="n">veg</span><span class="p">,</span> <span class="n">style</span><span class="p">)</span>
+    <span class="n">_</span><span class="p">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;{} was {}&quot;</span><span class="p">,</span> <span class="n">veg</span><span class="p">,</span> <span class="n">style</span><span class="p">)</span>
 <span class="kr">end</span><span class="p">)</span>
 <span class="c1">-- &gt;&gt; potato was mashed</span>
 </pre></div>
@@ -1015,7 +1024,7 @@ Like <code>Promise.resolve</code> but can take any number of arguments.</p>
 </blockquote>
 <p><strong>Rejects</strong></p>
 <ul>
-<li><em>passthrough</em> - The returned promise will reject if promises passed as arguments reject.</li>
+<li>passthrough</li>
 </ul>
 <hr />
 <h3 id="series">series<a class="headerlink" href="#series" title="Permanent link">&para;</a></h3>

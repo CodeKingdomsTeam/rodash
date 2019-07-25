@@ -361,8 +361,22 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#call" title="call" class="md-nav__link">
+    call
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#chain" title="chain" class="md-nav__link">
     chain
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chainasync" title="chainAsync" class="md-nav__link">
+    chainAsync
   </a>
   
 </li>
@@ -391,6 +405,13 @@
           <li class="md-nav__item">
   <a href="#id" title="id" class="md-nav__link">
     id
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#invoke" title="invoke" class="md-nav__link">
+    invoke
   </a>
   
 </li>
@@ -546,8 +567,22 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#call" title="call" class="md-nav__link">
+    call
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#chain" title="chain" class="md-nav__link">
     chain
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chainasync" title="chainAsync" class="md-nav__link">
+    chainAsync
   </a>
   
 </li>
@@ -576,6 +611,13 @@
           <li class="md-nav__item">
   <a href="#id" title="id" class="md-nav__link">
     id
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#invoke" title="invoke" class="md-nav__link">
+    invoke
   </a>
   
 </li>
@@ -702,16 +744,37 @@ dynamic arguments.</p>
 </pre></div>
 
 <hr />
-<h3 id="chain">chain<a class="headerlink" href="#chain" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">chain</span><span class="p">(</span><span class="n">fns</span><span class="p">,</span> <span class="n">awaitAsync</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<div class="rodocs-trait">Chainable
+</div>
+
+<h3 id="call">call<a class="headerlink" href="#call" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-Aliased to <code>_()</code>, chain takes an optional dictionary of chainable functions and returns a Chain
-instance with methods mapped to the input functions. Calling a <em>Chain</em> with a subject reduces
-the chained operations in order on the subject.</p>
+Calls the supplied <em>fn</em> on the subject and additional arguments, returing the result.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>fns</strong> - <em>string</em>  - (default = <code>_</code>)</p>
-<p><strong>awaitAsync</strong> - <em>string</em>  - (default = false) whether promises returned from chained functions should be resolved before
+<p><strong>subject</strong> - <em>string</em> </p>
+<p><strong>fn</strong> - <em>string</em> </p>
+<p><strong>undefined</strong> - <em>string</em> 
+</p>
+</blockquote>
+<p><strong>Returns</strong></p>
+<blockquote>
+<p><em>string</em></p>
+</blockquote>
+<hr />
+<div class="rodocs-trait">Chainable</div>
+
+<h3 id="chain">chain<a class="headerlink" href="#chain" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">chain</span><span class="p">(</span><span class="n">fns</span><span class="p">,</span> <span class="n">actor</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+</pre></div>
+Chain takes an optional dictionary of chainable functions and returns a Chain instance with
+methods mapped to the input functions. Calling a <em>Chain</em> with a subject reduces the chained
+operations in order on the subject. The "Rodash" chain <code>_.chain(_)</code> is aliased to <code>_.fn</code>.</p>
+<p><strong>Parameters</strong></p>
+<blockquote>
+<p><strong>fns</strong> - <em>string</em> </p>
+<p><strong>actor</strong> - <em>string</em>  - called for each result in the chain to determine how the next operation should process it. (default = <code>_.invoke</code>)
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
@@ -719,30 +782,62 @@ the chained operations in order on the subject.</p>
 <p><em>string</em></p>
 </blockquote>
 <p><strong>Examples</strong></p>
-<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">getHurtNames</span> <span class="o">=</span> <span class="n">_</span><span class="p">():</span><span class="n">filter</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
-    <span class="kr">return</span> <span class="n">player</span><span class="p">.</span><span class="n">Health</span> <span class="o">&lt;</span> <span class="n">player</span><span class="p">.</span><span class="n">MaxHealth</span>
-<span class="kr">end</span><span class="p">):</span><span class="n">map</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
+<div class="codehilite"><pre><span></span><span class="c1">-- Get the name of a player</span>
+<span class="kd">local</span> <span class="kr">function</span> <span class="nf">getName</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
     <span class="kr">return</span> <span class="n">player</span><span class="p">.</span><span class="n">Name</span>
 <span class="kr">end</span><span class="p">)</span>
-<span class="n">getHurtNames</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">)</span> <span class="c1">--&gt; {&quot;Frodo Baggins&quot;, &quot;Boromir&quot;}</span>
 
-<span class="kd">local</span> <span class="n">players</span> <span class="o">=</span> <span class="n">_</span><span class="p">({</span>
-    <span class="n">isHurt</span> <span class="o">=</span> <span class="n">_</span><span class="p">():</span><span class="n">filter</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
+<span class="c1">-- Create a chain that filters for hurt players and finds their name</span>
+<span class="kd">local</span> <span class="n">hurtNames</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">filter</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
+    <span class="kr">return</span> <span class="n">player</span><span class="p">.</span><span class="n">Health</span> <span class="o">&lt;</span> <span class="n">player</span><span class="p">.</span><span class="n">MaxHealth</span>
+<span class="kr">end</span><span class="p">):</span><span class="n">map</span><span class="p">(</span><span class="n">getName</span><span class="p">)</span>
+
+<span class="c1">-- Run the chain on the current game players</span>
+<span class="n">hurtNames</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">)</span> <span class="c1">--&gt; {&quot;Frodo Baggins&quot;, &quot;Boromir&quot;}</span>
+
+<span class="c1">-- For fun, let&#39;s encapsulate the functionality above by</span>
+<span class="c1">-- defining a chain of operations on players...</span>
+<span class="kd">local</span> <span class="n">players</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">chain</span><span class="p">({</span>
+    <span class="n">isHurt</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">filter</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
         <span class="kr">return</span> <span class="n">player</span><span class="p">.</span><span class="n">Health</span> <span class="o">&lt;</span> <span class="n">player</span><span class="p">.</span><span class="n">MaxHealth</span>
     <span class="kr">end</span><span class="p">),</span>
-    <span class="n">isBaggins</span> <span class="o">=</span> <span class="n">_</span><span class="p">.():</span><span class="n">map</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
-        <span class="kr">return</span> <span class="n">player</span><span class="p">.</span><span class="n">Name</span>
-    <span class="kr">end</span><span class="p">):</span><span class="n">endsWith</span><span class="p">(</span><span class="s2">&quot;Baggins&quot;</span><span class="p">)</span>
+    <span class="c1">-- Filter players by getting their name and checking it ends with &#39;Baggins&#39;</span>
+    <span class="n">isBaggins</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">filter</span><span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">call</span><span class="p">(</span><span class="n">getName</span><span class="p">):</span><span class="n">endsWith</span><span class="p">(</span><span class="s2">&quot;Baggins&quot;</span><span class="p">))</span>
 <span class="p">})</span>
-<span class="n">getHurtNames</span> <span class="o">=</span> <span class="n">players</span><span class="p">:</span><span class="n">isHurt</span><span class="p">():</span><span class="n">getName</span><span class="p">()</span>
-<span class="n">getHurtNames</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">)</span> <span class="c1">--&gt; {&quot;Frodo Baggins&quot;, &quot;Boromir&quot;}</span>
+
+<span class="kd">local</span> <span class="n">hurtHobbits</span> <span class="o">=</span> <span class="n">players</span><span class="p">:</span><span class="n">isHurt</span><span class="p">():</span><span class="n">isBaggins</span><span class="p">()</span>
+<span class="kd">local</span> <span class="n">names</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">map</span><span class="p">(</span><span class="n">getName</span><span class="p">)</span>
+
+<span class="c1">-- Chains are themselves chainable, so you can compose two chains together</span>
+<span class="kd">local</span> <span class="n">hurtHobbitNames</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">compose</span><span class="p">(</span><span class="n">hurtHobbits</span><span class="p">,</span> <span class="n">names</span><span class="p">)</span>
+
+<span class="n">hurtHobbitNames</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">)</span> <span class="c1">--&gt; {&quot;Frodo Baggins&quot;}</span>
 </pre></div>
 
 <p><strong>Usage</strong></p>
 <ul>
-<li>A chained function can be made using <code>_.chain</code> or built inductively using other chained methods of <code>_()</code>.</li>
+<li>A chained function can be made using <code>_.chain</code> or built inductively using other chained
+methods of <code>_.fn</code>.</li>
 </ul>
 <hr />
+<h3 id="chainasync">chainAsync<a class="headerlink" href="#chainasync" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">chainAsync</span><span class="p">(</span><span class="n">fns</span><span class="p">,</span> <span class="n">actor</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+</pre></div>
+Like <code>_.chain</code>, but returns a promise, unboxing any returned promises before proceeding.</p>
+<p><strong>Parameters</strong></p>
+<blockquote>
+<p><strong>fns</strong> - <em>string</em> </p>
+<p><strong>actor</strong> - <em>string</em> 
+</p>
+</blockquote>
+<p><strong>Returns</strong></p>
+<blockquote>
+<p><em>string</em></p>
+</blockquote>
+<hr />
+<div class="rodocs-trait">Chainable
+</div>
+
 <h3 id="compose">compose<a class="headerlink" href="#compose" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">compose</span><span class="p">()</span> <span class="c1">--&gt; string</span>
 </pre></div>
@@ -786,7 +881,8 @@ elapsed since the last time the debounced function was attempted to be called.</
 </blockquote>
 <p><strong>Usage</strong></p>
 <ul>
-<li>A nice <a href="http://demo.nimius.net/debounce_throttle/">visualisation of debounce vs. throttle</a>, the illustrated point being debounce will only call <em>fn</em> at the end of a spurt of events.</li>
+<li>A nice <a href="http://demo.nimius.net/debounce_throttle/">visualisation of debounce vs. throttle</a>, 
+the illustrated point being debounce will only call <em>fn</em> at the end of a spurt of events.</li>
 </ul>
 <hr />
 <h3 id="feed">feed<a class="headerlink" href="#feed" title="Permanent link">&para;</a></h3>
@@ -829,6 +925,21 @@ Returns a function which executes <em>fn</em>, passing a subject ahead of the bo
 A simple function that does nothing, but returns its input parameters.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
+<p><strong>undefined</strong> - <em>string</em> 
+</p>
+</blockquote>
+<p><strong>Returns</strong></p>
+<blockquote>
+<p><em>string</em></p>
+</blockquote>
+<hr />
+<h3 id="invoke">invoke<a class="headerlink" href="#invoke" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">invoke</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="p">)</span> <span class="c1">--&gt; string</span>
+</pre></div>
+Calls the supplied <em>fn</em> with the argument tail.</p>
+<p><strong>Parameters</strong></p>
+<blockquote>
+<p><strong>fn</strong> - <em>string</em> </p>
 <p><strong>undefined</strong> - <em>string</em> 
 </p>
 </blockquote>
@@ -1009,7 +1120,8 @@ returns the result of the last call.</p>
 </blockquote>
 <p><strong>Usage</strong></p>
 <ul>
-<li>A nice <a href="http://demo.nimius.net/debounce_throttle/">visualisation of debounce vs. throttle</a>, the illustrated point being throttle will call <em>fn</em> every period during a spurt of events.</li>
+<li>A nice <a href="http://demo.nimius.net/debounce_throttle/">visualisation of debounce vs. throttle</a>,
+the illustrated point being throttle will call <em>fn</em> every period during a spurt of events.</li>
 </ul>
 <hr />
 <h3 id="throws">throws<a class="headerlink" href="#throws" title="Permanent link">&para;</a></h3>

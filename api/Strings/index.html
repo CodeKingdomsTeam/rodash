@@ -387,6 +387,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#debug" title="debug" class="md-nav__link">
+    debug
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#decodehtml" title="decodeHtml" class="md-nav__link">
     decodeHtml
   </a>
@@ -443,6 +450,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#format" title="format" class="md-nav__link">
+    format
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#hextochar" title="hexToChar" class="md-nav__link">
     hexToChar
   </a>
@@ -466,6 +480,13 @@
           <li class="md-nav__item">
   <a href="#rightpad" title="rightPad" class="md-nav__link">
     rightPad
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setdebug" title="setDebug" class="md-nav__link">
+    setDebug
   </a>
   
 </li>
@@ -588,6 +609,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#debug" title="debug" class="md-nav__link">
+    debug
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#decodehtml" title="decodeHtml" class="md-nav__link">
     decodeHtml
   </a>
@@ -644,6 +672,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#format" title="format" class="md-nav__link">
+    format
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#hextochar" title="hexToChar" class="md-nav__link">
     hexToChar
   </a>
@@ -667,6 +702,13 @@
           <li class="md-nav__item">
   <a href="#rightpad" title="rightPad" class="md-nav__link">
     rightPad
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setdebug" title="setDebug" class="md-nav__link">
+    setDebug
   </a>
   
 </li>
@@ -797,6 +839,29 @@ Converts <em>char</em> into its hex representation</p>
 </pre></div>
 
 <hr />
+<h3 id="debug">debug<a class="headerlink" href="#debug" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">debug</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="p">)</span> <span class="c1">--&gt; string</span>
+</pre></div>
+This function first calls <code>_.format</code> on the arguments provided and then outputs the response
+to the debug target, set using <code>_.setDebug</code>. By default, this function does nothing, allowing
+developers to leave the calls in the source code if that is beneficial.</p>
+<p><strong>Parameters</strong></p>
+<blockquote>
+<p><strong>subject</strong> - <em>string</em>  - the format match string</p>
+<p><strong>undefined</strong> - <em>string</em> 
+</p>
+</blockquote>
+<p><strong>Returns</strong></p>
+<blockquote>
+<p><em>string</em></p>
+</blockquote>
+<p><strong>Usage</strong></p>
+<ul>
+<li>A common pattern would be to <code>_.setDebug()</code> to alias to <code>print</code> during local development,
+and call e.g. <code>_.setDebug(_.bind(HttpService.PostAsync, "https://example.com/log"))</code>
+on a production build to allow remote debugging.</li>
+</ul>
+<hr />
 <div class="rodocs-trait">Chainable
 </div>
 
@@ -899,9 +964,9 @@ to the end of a url.</p>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">Strings</span><span class="p">.</span><span class="n">encodeQueryString</span><span class="p">({</span>
     <span class="n">time</span> <span class="o">=</span> <span class="mi">11</span><span class="p">,</span>
-    <span class="n">biscuits</span> <span class="o">=</span> <span class="s2">&quot;hobnobs&quot;</span><span class="p">,</span>
+    <span class="n">biscuits</span> <span class="o">=</span> <span class="s2">&quot;hob nobs&quot;</span><span class="p">,</span>
     <span class="n">chocolatey</span> <span class="o">=</span> <span class="kc">true</span>
-<span class="p">}))</span> <span class="c1">--&gt; &quot;?biscuits=hobnobs&amp;time=11&amp;chocolatey=true&quot;</span>
+<span class="p">}))</span> <span class="c1">--&gt; &quot;?biscuits=hob+nobs&amp;time=11&amp;chocolatey=true&quot;</span>
 </pre></div>
 
 <hr />
@@ -951,13 +1016,13 @@ Encodes <em>str</em> for use in a url, for example as a query parameter of a url
 </div>
 
 <h3 id="endswith">endsWith<a class="headerlink" href="#endswith" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">endsWith</span><span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="n">ending</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">endsWith</span><span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="n">suffix</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-Checks if <code>str</code> ends with the string <code>ending</code>.</p>
+Checks if <code>str</code> ends with the string <code>suffix</code>.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>str</strong> - <em>string</em> </p>
-<p><strong>ending</strong> - <em>string</em> 
+<p><strong>suffix</strong> - <em>string</em> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
@@ -970,6 +1035,27 @@ Checks if <code>str</code> ends with the string <code>ending</code>.</p>
 <span class="n">_</span><span class="p">.</span><span class="n">endsWith</span><span class="p">(</span><span class="s2">&quot;Bad Roblox Memes&quot;</span><span class="p">,</span> <span class="s2">&quot;Games&quot;</span><span class="p">)</span> <span class="c1">--&gt; false</span>
 </pre></div>
 
+<hr />
+<h3 id="format">format<a class="headerlink" href="#format" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">format</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="p">)</span> <span class="c1">--&gt; string</span>
+</pre></div>
+This function is a simpler &amp; more powerful version of <code>string.format</code>, inspired by <code>format!</code> in Rust.
+If an instance has a <code>:format()</code> method, this is used instead, passing the format arguments.</p>
+<ul>
+<li><code>{}</code> prints the next variable using or <code>tostring</code>.</li>
+<li><code>{:?}</code> prints using <code>_.serializeDeep</code>.</li>
+<li><code>{:#?}</code> prints using <code>_.pretty</code>.</li>
+</ul>
+<p><strong>Parameters</strong></p>
+<blockquote>
+<p><strong>subject</strong> - <em>string</em>  - the format match string</p>
+<p><strong>undefined</strong> - <em>string</em> 
+</p>
+</blockquote>
+<p><strong>Returns</strong></p>
+<blockquote>
+<p><em>string</em></p>
+</blockquote>
 <hr />
 <h3 id="hextochar">hexToChar<a class="headerlink" href="#hextochar" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">hexToChar</span><span class="p">(</span><span class="n">char</span><span class="p">)</span> <span class="c1">--&gt; string</span>
@@ -1073,6 +1159,20 @@ Makes a string of <code>length</code> from <code>str</code> by repeating charact
 </pre></div>
 
 <hr />
+<h3 id="setdebug">setDebug<a class="headerlink" href="#setdebug" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">setDebug</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+</pre></div>
+Hooks up any debug methods to invoke <em>fn</em>, which by default does nothing.</p>
+<p><strong>Parameters</strong></p>
+<blockquote>
+<p><strong>fn</strong> - <em>string</em>  - (default = <code>print</code>)
+</p>
+</blockquote>
+<p><strong>Returns</strong></p>
+<blockquote>
+<p><em>string</em></p>
+</blockquote>
+<hr />
 <div class="rodocs-trait">Chainable
 </div>
 
@@ -1127,20 +1227,25 @@ Splits <code>str</code> into parts based on a pattern delimiter and returns a ta
 
 <p><strong>Usage</strong></p>
 <ul>
-<li>This method is useful only when you need a <em>pattern</em> for delimiter. Use the Roblox native <code>string.split</code> if you a splitting on a simple string.</li>
+<li>
+<p>This method is useful only when you need a <em>pattern</em> as a delimiter.</p>
+</li>
+<li>
+<p>Use the Roblox native <code>string.split</code> if you are splitting on a simple string.</p>
+</li>
 </ul>
 <hr />
 <div class="rodocs-trait">Chainable
 </div>
 
 <h3 id="startswith">startsWith<a class="headerlink" href="#startswith" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">startsWith</span><span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="n">start</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">startsWith</span><span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="n">prefix</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-Checks if <code>str</code> starts with the string <code>start</code>.</p>
+Checks if <code>str</code> starts with the string <code>prefix</code>.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>str</strong> - <em>string</em> </p>
-<p><strong>start</strong> - <em>string</em> 
+<p><strong>prefix</strong> - <em>string</em> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
@@ -1148,9 +1253,9 @@ Checks if <code>str</code> starts with the string <code>start</code>.</p>
 <p><em>string</em></p>
 </blockquote>
 <p><strong>Examples</strong></p>
-<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">startsWith</span><span class="p">(</span><span class="s2">&quot;Fun Roblox Games&quot;</span><span class="p">,</span> <span class="s2">&quot;Roblox&quot;</span><span class="p">)</span> <span class="c1">--&gt; true</span>
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">startsWith</span><span class="p">(</span><span class="s2">&quot;Fun Roblox Games&quot;</span><span class="p">,</span> <span class="s2">&quot;Fun&quot;</span><span class="p">)</span> <span class="c1">--&gt; true</span>
 
-<span class="n">_</span><span class="p">.</span><span class="n">startsWith</span><span class="p">(</span><span class="s2">&quot;Minecraft Games&quot;</span><span class="p">,</span> <span class="s2">&quot;Roblox&quot;</span><span class="p">)</span> <span class="c1">--&gt; false</span>
+<span class="n">_</span><span class="p">.</span><span class="n">startsWith</span><span class="p">(</span><span class="s2">&quot;Minecraft Games&quot;</span><span class="p">,</span> <span class="s2">&quot;Fun&quot;</span><span class="p">)</span> <span class="c1">--&gt; false</span>
 </pre></div>
 
 <hr />
