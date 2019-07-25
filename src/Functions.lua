@@ -150,7 +150,7 @@ function Functions.invoke(fn, ...)
 end
 
 --[[
-	Calls the supplied _fn_ on the subject and additional arguments, returing the result.
+	Calls the supplied _fn_ on the subject and any additional arguments, returing the result.
 	@trait Chainable
 ]]
 function Functions.call(subject, fn, ...)
