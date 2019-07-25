@@ -243,7 +243,14 @@ end
 	@param subject the format match string
 ]]
 function Strings.format(subject, ...)
-	-- TODO
+end
+
+--[[
+	Pretty-prints the _subject_ and its associated metatable if _withMetatable_ is true
+	@param withMetatable (default = false)
+]]
+--: any, bool? -> string
+function Strings.pretty(subject, withMetatable)
 end
 
 local debugTarget
