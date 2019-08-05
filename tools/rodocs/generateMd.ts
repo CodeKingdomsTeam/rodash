@@ -155,7 +155,7 @@ function ${libName}.${name}(${params.join(', ')}) --> string
 		if (rejects.length) {
 			lines.push('\n**Rejects**\n');
 			lines.push(
-				...formatList(rejects, function(line) {
+				...formatList(rejects, line => {
 					switch (line) {
 						case 'passthrough':
 							return '_passthrough_ - The returned promise will reject if promises passed as arguments reject.';

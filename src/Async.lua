@@ -12,9 +12,9 @@ local Async = {}
 local baseRandomStream = Random.new()
 
 --[[
-    Given an _array_ of values, this function returns a promise which
-    resolves once all of the array elements have resolved, or rejects
-    if any of the array elements reject.
+	Given an _array_ of values, this function returns a promise which
+	resolves once all of the array elements have resolved, or rejects
+	if any of the array elements reject.
 	
 	@returns an array mapping the input to resolved elements.
 	@example
@@ -49,11 +49,11 @@ function Async.parallel(array)
 end
 
 --[[
-    Given a _dictionary_ of values, this function returns a promise which
-    resolves once all of the values in the dictionary have resolved, or rejects
-    if any of them are promises that reject.
+	Given a _dictionary_ of values, this function returns a promise which
+	resolves once all of the values in the dictionary have resolved, or rejects
+	if any of them are promises that reject.
 	
-	@returns an array mapping the input to resolved elements.
+	@returns a dictionary mapping the input to resolved elements.
 	@rejects passthrough
 	@example
 		local heat = function( item )
@@ -62,7 +62,7 @@ end
 				return "hot-" .. result[1] 
 			end)
 		end
-		local toastie = _.props({
+		local toastie = _.parallelAll({
 			bread = "brown",
 			filling = heat("cheese")
 		})
@@ -70,7 +70,7 @@ end
 	@usage Values which are not promises are considered resolved immediately.
 ]]
 --: <T>((Promise<T> | T){}) -> Promise<T{}>
-function Async.props(dictionary)
+function Async.parallelAll(dictionary)
 	assert(t.table(dictionary))
 	local keys = Tables.keys(dictionary)
 	local values =
@@ -104,7 +104,7 @@ end
 		-- >> potato was mashed
 
 ]]
---: ...T -> Promise<...T>
+--: <T>(...T) -> Promise<...T>
 function Async.resolve(...)
 	local args = {...}
 	return Promise.new(
@@ -130,34 +130,29 @@ function Async.race(array, n)
 	n = n or 1
 	assert(n >= 0)
 	assert(#array >= n, "OutOfBoundsError")
-	return Promise.new(
-		function(resolve, reject)
-			local results = {}
-			Tables.map(
-				array,
-				function(promise)
-					Async.finally(
-						promise,
-						function(ok, result)
-							if #results < n then
-								if ok then
-									table.insert(results, result)
-									if #results == n then
-										resolve(results)
-									end
-								else
-									reject(result)
-								end
-							end
-						end
-					)
+	local function handler(resolve, reject)
+		local results = {}
+		local function finally(ok, result)
+			if #results < n then
+				if ok then
+					table.insert(results, result)
+					if #results == n then
+						resolve(results)
+					end
+				else
+					reject(result)
 				end
-			)
-			if n == 0 then
-				resolve(results)
 			end
 		end
-	)
+		local function awaitElement(promise)
+			Async.finally(promise, finally)
+		end
+		Tables.map(array, awaitElement)
+		if n == 0 then
+			resolve(results)
+		end
+	end
+	return Promise.new(handler)
 end
 
 --[[
@@ -235,8 +230,8 @@ function Async.delay(delayInSeconds)
 end
 
 --[[
-    Returns a promise for a function which may yield. async calls the
-    the function in a coroutine and resolves with the output of the function
+	Wraps a function which may yield in a promise. When run, async calls the
+	the function in a coroutine and resolves with the output of the function
 	after any asynchronous actions, and rejects if the function throws an error.
 	@rejects passthrough
 	@example
@@ -244,14 +239,14 @@ end
 			local HttpService = game:GetService("HttpService")
 			return HttpService:GetAsync(url)
 		end)
-		_.props({
+		_.parallelAll({
 			main = fetch("http://example.com/burger"),
 			side = fetch("http://example.com/fries") 
 		}):andThen(function( meal )
 			print("Meal", _.pretty(meal))
 		end)
-		-->> {burger = "Cheeseburger", fries = "Curly fries"} (ideal response)
-	@usage Used alongside `promise:await`, the `_.async` function forms an equivalence with the `async await` pattern in languages like JS.
+		-->> Meal {burger = "Cheeseburger", fries = "Curly fries"} (ideal response)
+	@usage With `promise:await` the `_.async` function can be used just like the async-await pattern in languages like JS.
 ]]
 --: <T, Args>(Yieldable<T, ...Args>) -> (...Args) -> Promise<T>
 function Async.async(fn)
@@ -281,7 +276,7 @@ end
 	@example
 		local buyDinner = _.async(function()
 			local http = _.asyncAll(game:GetService("HttpService"))
-			local order = _.props({
+			local order = _.parallelAll({
 				main = http:GetAsync("http://example.com/burger"),
 				side = http:GetAsync("http://example.com/fries")
 			})
@@ -309,22 +304,22 @@ function Async.asyncAll(dictionary)
 end
 
 --[[
-    Try running a function which returns a promise and retry if the function throws
-    and error or the promise rejects. The retry behaviour can be adapted using
-    backoffOptions, which can customize the maximum number of retries and the backoff
-    timing of the form `[0, x^attemptNumber] + y` where _x_ is an exponent that produces
-    a random exponential delay and _y_ is a constant delay.
+	Try running a function which returns a promise and retry if the function throws
+	and error or the promise rejects. The retry behaviour can be adapted using
+	backoffOptions, which can customize the maximum number of retries and the backoff
+	timing of the form `[0, x^attemptNumber] + y` where _x_ is an exponent that produces
+	a random exponential delay and _y_ is a constant delay.
 
 	#### Backoff Options
 	|Option|Type|Description|
 	|---|---|---|
-    | **maxTries** | _int_ | how many tries (including the first one) the function should be called |
-    | **retryExponentInSeconds** | _number_ | customize the backoff exponent |
+	| **maxTries** | _int_ | how many tries (including the first one) the function should be called |
+	| **retryExponentInSeconds** | _number_ | customize the backoff exponent |
 	| **retryConstantInSeconds** | _number_ | customize the backoff constant |
-    | **randomStream** | _Random_ | use a Roblox "Random" instance to control the backoff |
+	| **randomStream** | _Random_ | use a Roblox "Random" instance to control the backoff |
 	| **shouldRetry(response)** | _T -> bool_ | called if maxTries > 1 to determine whether a retry should occur |
-    | **onRetry(waitTime, errorMessage)** | _(number, string) -> nil_ | a hook for when a retry is triggered, with the delay before retry and error message which caused the failure |
-    | **onDone(response, durationInSeconds)** | _(T, number) -> nil_ | a hook for when the promise resolves |
+	| **onRetry(waitTime, errorMessage)** | _(number, string) -> nil_ | a hook for when a retry is triggered, with the delay before retry and error message which caused the failure |
+	| **onDone(response, durationInSeconds)** | _(T, number) -> nil_ | a hook for when the promise resolves |
 	| **onFail(errorMessage)** | _string -> nil_ | a hook for when the promise has failed and no more retries are allowed |
 	
 	@rejects passthrough
