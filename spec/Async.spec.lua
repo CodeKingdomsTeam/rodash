@@ -36,7 +36,7 @@ describe(
 			end
 		)
 		describe(
-			"parellel",
+			"parallel",
 			function()
 				it(
 					"resolves for an array of promises",
@@ -113,7 +113,11 @@ describe(
 				it(
 					"resolves for multiple return values",
 					function()
-						local andThen = spy.new()
+						local andThen =
+							spy.new(
+							function()
+							end
+						)
 						Async.resolve(1, 2, 3):andThen(andThen)
 						assert.spy(andThen).called_with(1, 2, 3)
 					end
@@ -121,7 +125,7 @@ describe(
 			end
 		)
 		describe(
-			"props",
+			"parallelAll",
 			function()
 				it(
 					"resolves for an object of promises",
@@ -135,7 +139,7 @@ describe(
 							end
 						)
 						advanceAndAssertPromiseResolves(
-							Async.props({one = one, two = two, three = three}),
+							Async.parallelAll({one = one, two = two, three = three}),
 							function(result)
 								assert.equal(tick(), 1)
 								assert.are_same({one = 1, two = 2, three = 3}, result)
@@ -155,7 +159,7 @@ describe(
 							end
 						)
 						advanceAndAssertPromiseResolves(
-							Async.props({one = one, two = two, three = three}),
+							Async.parallelAll({one = one, two = two, three = three}),
 							function(result)
 								assert.equal(tick(), 1)
 								assert.are_same({one = 1, two = 2, three = 3}, result)
@@ -175,7 +179,7 @@ describe(
 								return 3
 							end
 						)
-						advanceAndAssertPromiseRejects(Async.props({one = one, two = two, three = three}), "Expected error")
+						advanceAndAssertPromiseRejects(Async.parallelAll({one = one, two = two, three = three}), "Expected error")
 					end
 				)
 			end
@@ -202,7 +206,11 @@ describe(
 				it(
 					"run after a resolution",
 					function()
-						local handler = spy.new()
+						local handler =
+							spy.new(
+							function()
+							end
+						)
 						Async.finally(Async.resolve("ok"), handler)
 						assert.spy(handler).called_with(true, "ok")
 					end
@@ -210,7 +218,11 @@ describe(
 				it(
 					"run after a rejection",
 					function()
-						local handler = spy.new()
+						local handler =
+							spy.new(
+							function()
+							end
+						)
 						Async.finally(Promise.reject("bad"), handler)
 						assert.spy(handler).called_with(false, "bad")
 					end
@@ -253,7 +265,11 @@ describe(
 				it(
 					"resolves immediately for no promises",
 					function()
-						local andThen = spy.new()
+						local andThen =
+							spy.new(
+							function()
+							end
+						)
 						Async.race({}, 0):andThen(andThen)
 						assert.spy(andThen).called_with(match.is_same({}))
 					end
@@ -317,22 +333,25 @@ describe(
 				it(
 					"can timeout after a delay",
 					function()
-						advanceAndAssertPromiseRejects(Async.timeout(Async.delay(2), 1, "Expected Error"), "Expected Error")
+						local promise = Async.delay(2)
+						local timeout = Async.timeout(promise, 1, "Expected Error")
+						advanceAndAssertPromiseRejects(timeout, "Expected Error")
 					end
 				)
 				it(
 					"can resolve within delay",
 					function()
-						advanceAndAssertPromiseResolves(Async.timeout(Async.delay(1):andThen(Functions.returns("Ok")), 2))
+						local promise = Async.delay(1):andThen(Functions.returns("Ok"))
+						local timeout = Async.timeout(promise, 2)
+						advanceAndAssertPromiseResolves(timeout)
 					end
 				)
 				it(
 					"can reject",
 					function()
-						advanceAndAssertPromiseRejects(
-							Async.timeout(Async.delay(1):andThen(Functions.throws("Expected Error")), 10),
-							"Expected Error"
-						)
+						local promise = Async.delay(1):andThen(Functions.throws("Expected Error"))
+						local timeout = Async.timeout(promise, 10)
+						advanceAndAssertPromiseRejects(timeout, "Expected Error")
 					end
 				)
 			end
@@ -354,11 +373,31 @@ describe(
 								return true
 							end
 						)
-						local onRetry = stub.new()
-						local onDone = stub.new()
-						local onFail = stub.new()
-						local andThen = stub.new()
-						local err = stub.new()
+						local onRetry =
+							spy.new(
+							function()
+							end
+						)
+						local onDone =
+							spy.new(
+							function()
+							end
+						)
+						local onFail =
+							spy.new(
+							function()
+							end
+						)
+						local andThen =
+							spy.new(
+							function()
+							end
+						)
+						local err =
+							spy.new(
+							function()
+							end
+						)
 						Async.retryWithBackoff(
 							getPromise,
 							{
@@ -407,10 +446,26 @@ describe(
 								return true
 							end
 						)
-						local onRetry = stub.new()
-						local onDone = stub.new()
-						local onFail = stub.new()
-						local andThen = stub.new()
+						local onRetry =
+							spy.new(
+							function()
+							end
+						)
+						local onDone =
+							spy.new(
+							function()
+							end
+						)
+						local onFail =
+							spy.new(
+							function()
+							end
+						)
+						local andThen =
+							spy.new(
+							function()
+							end
+						)
 						Async.retryWithBackoff(
 							getPromise,
 							{

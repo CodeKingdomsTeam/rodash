@@ -100,36 +100,6 @@ describe(
 		)
 
 		describe(
-			"encodeHtml",
-			function()
-				it(
-					"characters",
-					function()
-						assert.are.same("&lt;a&gt;Fish &amp; Chips&lt;/a&gt;", Strings.encodeHtml("<a>Fish & Chips</a>"))
-					end
-				)
-			end
-		)
-
-		describe(
-			"decodeHtml",
-			function()
-				it(
-					"html entities",
-					function()
-						assert.are.same([["Smashed" 'Avocado']], Strings.decodeHtml("&#34;Smashed&quot; &apos;Avocado&#39;"))
-					end
-				)
-				it(
-					"conflated ampersand",
-					function()
-						assert.are.same("Ampersand is &amp;", Strings.decodeHtml("Ampersand is &#38;amp;"))
-					end
-				)
-			end
-		)
-
-		describe(
 			"splitByPattern",
 			function()
 				it(
@@ -258,95 +228,6 @@ describe(
 					"pads with a string",
 					function()
 						assert.are.same("toast:):):", Strings.rightPad("toast", 10, ":)"))
-					end
-				)
-			end
-		)
-
-		describe(
-			"charToHex",
-			function()
-				it(
-					"encodes correctly",
-					function()
-						assert.equal("%5F", Strings.charToHex("_"))
-					end
-				)
-			end
-		)
-
-		describe(
-			"hexToChar",
-			function()
-				it(
-					"decodes correctly",
-					function()
-						assert.equal("_", Strings.hexToChar("%5F"))
-					end
-				)
-			end
-		)
-
-		describe(
-			"encodeUrlComponent",
-			function()
-				it(
-					"encodes correctly",
-					function()
-						assert.equal("https%3A%2F%2FEgg%2BFried%20Rice!%3F", Strings.encodeUrlComponent("https://Egg+Fried Rice!?"))
-					end
-				)
-			end
-		)
-		describe(
-			"encodeUrl",
-			function()
-				it(
-					"encodes correctly",
-					function()
-						assert.equal("https://Egg+Fried%20Rice!?", Strings.encodeUrl("https://Egg+Fried Rice!?"))
-					end
-				)
-			end
-		)
-		describe(
-			"decodeUrlComponent",
-			function()
-				it(
-					"decodes correctly",
-					function()
-						assert.equal("https://Egg+Fried Rice!?", Strings.decodeUrlComponent("https%3A%2F%2FEgg%2BFried%20Rice!%3F"))
-					end
-				)
-			end
-		)
-		describe(
-			"decodeUrl",
-			function()
-				it(
-					"decodes correctly",
-					function()
-						assert.equal("https://Egg+Fried Rice!?", Strings.decodeUrl("https://Egg+Fried%20Rice!?"))
-					end
-				)
-			end
-		)
-		describe(
-			"makeQueryString",
-			function()
-				it(
-					"makes query",
-					function()
-						assert.equal(
-							"?biscuits=hobnobs&time=11&chocolatey=true",
-							Strings.encodeQueryString(
-								{
-									time = 11,
-									biscuits = "hobnobs",
-									chocolatey = true
-								}
-							)
-						)
 					end
 				)
 			end

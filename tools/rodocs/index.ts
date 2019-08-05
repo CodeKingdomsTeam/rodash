@@ -42,12 +42,12 @@ async function processFiles(source: string, output: string) {
 				const name = basename(file, '.lua');
 				const outputName = name + '.md';
 				const md = generateMd(name, nodesByLine, maxLines, '_');
-				writeFile(join(output, outputName), md);
+				await writeFile(join(output, outputName), md);
 				console.log('Built md:', outputName);
 				return outputName;
 			}),
 	);
-	writeFile('mkdocs.yml', generateMakeDocsYml(mdFiles));
+	await writeFile('mkdocs.yml', generateMakeDocsYml(mdFiles));
 }
 
 (async function() {
