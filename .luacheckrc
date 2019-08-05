@@ -1,6 +1,6 @@
 std = "lua51+roblox+rodash_spec"
 
-files["spec/*.lua"] = {
+files["spec*/*.lua"] = {
 	std = "+busted"
 }
 
