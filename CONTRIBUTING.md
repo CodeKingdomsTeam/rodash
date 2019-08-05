@@ -1,6 +1,37 @@
 # Setup
 
-Clone the repo locally with `git clone git@github.com:CodeKingdomsTeam/rodash.git`.
+1. Ensure you have Git installed:
+
+   ## Windows
+
+   a. Git for Windows - https://gitforwindows.org/
+
+   b. Use a Bash terminal (such as Git BASH which comes with Git for Windows) to run `sh` scripts.
+
+   ## Mac
+
+   Already installed!
+
+2. Clone the repo locally with `git clone git@github.com:CodeKingdomsTeam/rodash.git`.
+3. Install the OS-specific dependencies:
+
+   ## Windows
+
+   a. Install Python - https://www.python.org/downloads/windows/
+
+   b. Install Yarn - https://yarnpkg.com/lang/en/docs/install/#windows-stable
+
+   ## Mac
+
+   ```bash
+   # Install Homebrew (see https://brew.sh/)
+   /usr/bin/ruby -e "\$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+
+   # Install package managers
+   brew install python yarn
+   ```
+
+4. Run setup.sh
 
 | Name                 | Notes                                                          |
 | -------------------- | -------------------------------------------------------------- |
