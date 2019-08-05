@@ -22,8 +22,7 @@ interface Nodes {
 export function generateMd(name: string, nodes: Nodes, maxLine: number, libName?: string) {
 	let topComment = '';
 	let inHeader = true;
-	let functions: FunctionDoc[] = [];
-	let entries: DocEntry[] = [];
+	const functions: FunctionDoc[] = [];
 	for (let i = 0; i <= maxLine; i++) {
 		if (!nodes[i]) {
 			continue;
@@ -31,14 +30,15 @@ export function generateMd(name: string, nodes: Nodes, maxLine: number, libName?
 		const node = nodes[i];
 		if (inHeader) {
 			if (node.type === 'Comment') {
-				topComment += formatComment(node as Comment, entries) + '\n';
+				const { nodeText } = getCommentTextAndEntries(node as Comment);
+				topComment += nodeText + '\n';
 			} else {
 				inHeader = false;
 			}
 		}
 		if (node.type === 'FunctionDeclaration') {
-			const doc = collectDoc(node.loc.start.line, nodes);
-			const fn = formatFn(libName || name, node as FunctionDeclaration, doc);
+			const doc = getDocAtLocation(node.loc.start.line, nodes);
+			const fn = getFnDoc(libName || name, node as FunctionDeclaration, doc);
 			if (fn) {
 				functions.push(fn);
 			}
@@ -58,10 +58,12 @@ ${functions.map(fn => fn.content).join('\n\n---\n\n')}
 `;
 }
 
-function collectDoc(loc: number, nodes: Nodes): Doc {
+function getDocAtLocation(loc: number, nodes: Nodes): Doc {
 	let typing;
-	let comments = [];
-	let entries = [];
+	const comments = [];
+	const entries = [];
+	// Work backwards from the location to find comments above the specified point, which will form
+	// documentation for the node at the location specified.
 	for (let i = loc - 1; i >= 0; i--) {
 		const node = nodes[i];
 		if (!node) {
@@ -72,7 +74,9 @@ function collectDoc(loc: number, nodes: Nodes): Doc {
 			if (comment.raw.match(/^\-\-\:/)) {
 				typing = escapeHtml(comment.value.substring(1));
 			} else {
-				comments.push(formatComment(comment, entries));
+				const { nodeText, nodeEntries } = getCommentTextAndEntries(comment);
+				comments.push(nodeText);
+				entries.push(...nodeEntries);
 			}
 		} else {
 			break;
@@ -85,26 +89,30 @@ function collectDoc(loc: number, nodes: Nodes): Doc {
 	};
 }
 
-function formatComment(commentNode: Comment, entries: DocEntry[]) {
-	return commentNode.value
-		.split('\n')
-		.map(line => {
-			const lineWithoutIndent = line.replace(/^\t/, '');
-			const entryMatch = lineWithoutIndent.match(/^\@([a-z]+)\s(.+)/);
-			if (entryMatch) {
-				entries.push({
-					tag: entryMatch[1],
-					content: entryMatch[2],
-				});
-				return '';
-			} else {
-				return lineWithoutIndent;
-			}
-		})
-		.join('\n');
+function getCommentTextAndEntries(commentNode: Comment) {
+	const nodeEntries = [];
+	return {
+		nodeText: commentNode.value
+			.split('\n')
+			.map(line => {
+				const lineWithoutIndent = line.replace(/^\t/, '');
+				const entryMatch = lineWithoutIndent.match(/^\@([a-z]+)\s(.+)/);
+				if (entryMatch) {
+					nodeEntries.push({
+						tag: entryMatch[1],
+						content: entryMatch[2],
+					});
+					return '';
+				} else {
+					return lineWithoutIndent;
+				}
+			})
+			.join('\n'),
+		nodeEntries,
+	};
 }
 
-function formatFn(libName: string, node: FunctionDeclaration, doc: Doc): FunctionDoc {
+function getFnDoc(libName: string, node: FunctionDeclaration, doc: Doc): FunctionDoc | undefined {
 	const lines = [];
 	if (node.identifier && node.identifier.type === 'MemberExpression') {
 		const member = node.identifier as MemberExpression;
@@ -115,8 +123,8 @@ function formatFn(libName: string, node: FunctionDeclaration, doc: Doc): Functio
 		if (traits.length) {
 			lines.push(`<div class="rodocs-trait">${traits.map(entry => entry.content).join(' ')}</div>`);
 		}
-		lines.push(`### ${name} \n`);
 		lines.push(
+			`### ${name} \n`,
 			'```lua' +
 				`
 function ${libName}.${name}(${params.join(', ')}) --> string
@@ -125,22 +133,22 @@ function ${libName}.${name}(${params.join(', ')}) --> string
 		);
 		lines.push(doc.comments);
 		if (params.length) {
-			lines.push('\n**Parameters**\n');
-			lines.push(...params.map(param => `> __${param}__ - _string_\n>`));
+			lines.push('\n**Parameters**\n', ...params.map(param => `> __${param}__ - _string_\n>`));
 		}
 		lines.push('\n**Returns**\n');
 		lines.push('\n> _string_');
 		const examples = filterEntries(doc.entries, 'example');
 		if (examples.length) {
-			lines.push('\n**Examples**\n');
-			lines.push('```lua');
-			lines.push(...examples.map(example => example.content + '\n'));
-			lines.push('```');
+			lines.push(
+				'\n**Examples**\n',
+				'```lua',
+				...examples.map(example => example.content + '\n'),
+				'```',
+			);
 		}
 		const usage = filterEntries(doc.entries, 'usage');
 		if (usage.length) {
-			lines.push('\n**Usage**\n');
-			lines.push(...usage.map(({ content }) => `* ${content}`));
+			lines.push('\n**Usage**\n', ...usage.map(({ content }) => `* ${content}`));
 		}
 		return {
 			name,

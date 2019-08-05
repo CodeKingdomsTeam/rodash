@@ -5,6 +5,8 @@ local t = require(script.Parent.t)
 local Functions = require(script.Functions)
 local Tables = require(script.Tables)
 local Strings = {}
+local append = table.insert
+local concat = table.concat
 
 --[[
 	Convert `str` to camel-case.
@@ -89,14 +91,14 @@ function Strings.capitalize(str)
 	return str:gsub("^%l", string.upper)
 end
 
---[[
+--[==[
 	Converts the characters `&<>"'` in `str` to their corresponding HTML entities.
-	@example _.encodeHtml("<a>Fish & Chips</a>") --> "&lt;a&gt;Fish &amp; Chips&lt;/a&gt;"
+	@example _.encodeHtml([[Pease < Bacon > "Fish" & 'Chips']]) --> "Peas &lt; Bacon &gt; &quot;Fish&quot; &amp; &apos;Chips&apos;"
 	@trait Chainable
-]]
+]==]
 function Strings.encodeHtml(str)
 	assert(t.string(str))
-	local entities = {["<"] = "lt", [">"] = "gt", ["&"] = "amp", ['""'] = "quot", ["'"] = "apos"}
+	local entities = {["<"] = "lt", [">"] = "gt", ["&"] = "amp", ['"'] = "quot", ["'"] = "apos"}
 	return str:gsub(
 		".",
 		function(char)
@@ -107,8 +109,8 @@ end
 
 --[==[
 	The inverse of `_.encodeHtml`.
-	Converts any encodeHtmld HTML entities in `str` to their corresponding characters.
-	@example _.decodeHtml("&#34;Smashed&quot; &apos;Avocado&#39;") --> [["Smashed" 'Avocado']]
+	Converts any HTML entities in `str` to their corresponding characters.
+	@example _.decodeHtml("&lt;b&gt;&#34;Smashed&quot;&lt;/b&gt; &apos;Avocado&#39; &#x1F60F;") --> [[<b>"Smashed"</b> 'Avocado' 😏]]
 	@trait Chainable
 ]==]
 function Strings.decodeHtml(str)
@@ -118,8 +120,8 @@ function Strings.decodeHtml(str)
 		"(&(#?x?)([%d%a]+);)",
 		function(original, hashPrefix, code)
 			return (hashPrefix == "" and entities[code]) or
-				(hashPrefix == "#x" and tonumber(code, 16)) and string.char(tonumber(code, 16)) or
-				(hashPrefix == "#" and tonumber(code)) and string.char(code) or
+				(hashPrefix == "#x" and tonumber(code, 16)) and utf8.char(tonumber(code, 16)) or
+				(hashPrefix == "#" and tonumber(code)) and utf8.char(code) or
 				original
 		end
 	)
@@ -141,17 +143,17 @@ function Strings.splitByPattern(str, delimiter)
 	local from = 1
 	if (not delimiter) then
 		for i = 1, #str do
-			table.insert(result, str:sub(i, i))
+			append(result, str:sub(i, i))
 		end
 		return result
 	end
 	local delim_from, delim_to = str:find(delimiter, from)
 	while delim_from do
-		table.insert(result, str:sub(from, delim_from - 1))
+		append(result, str:sub(from, delim_from - 1))
 		from = delim_to + 1
 		delim_from, delim_to = str:find(delimiter, from)
 	end
-	table.insert(result, str:sub(from))
+	append(result, str:sub(from))
 	return result
 end
 
@@ -168,8 +170,8 @@ end
 
 --[[
 	Checks if `str` starts with the string `start`.
-	@example _.startsWith("Fun Roblox Games", "Roblox") --> true
-	@example _.startsWith("Minecraft Games", "Roblox") --> false
+	@example _.startsWith("Roblox Games", "Roblox") --> true
+	@example _.startsWith("Chess", "Roblox") --> false
 	@trait Chainable
 ]]
 --: string, string -> bool
@@ -232,49 +234,89 @@ function Strings.rightPad(str, length, suffix)
 end
 
 --[[
-	Converts _char_ into its hex representation
-	@example _.charToHex("_") --> %5F
+	Converts _char_ into a hex representation
+	@param format (optional) a string passed to `_.format` which formats the hex value of each of the character's code points.
+	@param useBytes (default = false) whether to use the character's bytes, rather than UTF-8 code points.
+	@example _.charToHex("<") --> "3C"
+	@example _.charToHex("<", "&#{};") --> "&#3C;"
+	@example _.charToHex("😏") --> "1F60F"
+	@example _.charToHex("😏", "0x{}") --> "0x1F60F"
+	@example _.charToHex("🤷🏼‍♀️", "%{}", true) --> "%F0%9F%A4%B7%F0%9F%8F%BC%E2%80%8D%E2%99%80%EF%B8%8F"
 ]]
---: char -> str
-function Strings.charToHex(char)
+--: char -> str, str?
+function Strings.charToHex(char, format, useBytes)
 	assert(t.string(char))
-	return string.format("%%%02X", char:byte(1, 1))
+	assert(utf8.len(char) == 1)
+	local values = {}
+	if useBytes then
+		for position, codePoint in utf8.codes(char) do
+			append(values, codePoint)
+		end
+	else
+		for i = 1, char:len() do
+			append(values, char:byte(i))
+		end
+	end
+	return concat(
+		Tables.map(
+			values,
+			function(value)
+				return format and Strings.format(format, string.format("%X", value))
+			end,
+			""
+		)
+	)
 end
 
 --[[
-	Converts _char_ into its hex representation
-	@example
-		_.charToHex("%5F") --> "_"
-		_.charToHex("5F") --> "_"
+	Converts a _hex_ represntation of a character in the character.
+	@example _.hexToChar("1F60F") --> "😏"
+	@example _.hexToChar("%1F60F") --> "😏"
+	@example _.hexToChar("#1F60F") --> "😏"
+	@example _.hexToChar("0x1F60F") --> "😏"
+	@throws _MalformedInput_ if _char_ is not a valid encoding.
 ]]
 --: str -> char
-function Strings.hexToChar(char)
-	assert(t.string(char))
-	return string.char(tonumber(char:sub(-2), 16))
+function Strings.hexToChar(hex)
+	assert(t.string(hex))
+	if hex:sub(0, 1) == "%" or hex:sub(0, 1) == "#" then
+		hex = hex:sub(1)
+	elseif hex:sub(0, 2) == "0x" then
+		hex = hex:sub(2)
+	end
+	return utf8.char(tonumber(hex, 16)) or error("MalformedInput")
 end
 
 --[[
-	Encodes _str_ for use as a url, for example as an entire url.
+	Encodes _str_ for use as a URL, for example as an entire URL.
 	@trait Chainable
 	@example
-		_.encodeUrl("https://Egg+Fried Rice!?")
-		--> "https://Egg+Fried%20Rice!?"
+		_.encodeUrl("https://example.com/Egg+Fried Rice!?🤷🏼‍♀️")
+		--> "https://example.com/Egg+Fried%20Rice!?%1F937%1F3FC%200D%2640%FE0F"
+	@usage
+		This method is designed to act like `encodeURI` in JavaScript.
 ]]
+--: string -> string
 function Strings.encodeUrl(str)
 	assert(t.string(str))
-	return str:gsub("[^%;%,%/%?%:%@%&%=%+%$%w%-%_%.%!%~%*%'%(%)%#]", Strings.charToHex)
+	return str:gsub("[^%;%,%/%?%:%@%&%=%+%$%w%-%_%.%!%~%*%'%(%)%#]", Functions.feed(Strings.charToHex, "%{}", true))
 end
 
 --[[
-	Encodes _str_ for use in a url, for example as a query parameter of a url.
+	Encodes _str_ for use in a URL, for example as a query parameter of a URL.
 	@trait Chainable
 	@example
-		_.encodeUrlComponent("https://Egg+Fried Rice!?")
-		--> "https%3A%2F%2FEgg%2BFried%20Rice!%3F"
+		_.encodeUrlComponent("https://example.com/Egg+Fried Rice!?🤷🏼‍♀️")
+		--> "https%3A%2F%2Fexample.com%2FEgg%2BFried%20Rice!%3F%1F937%1F3FC%200D%2640%FE0F"
+	@usage
+		This method is designed to act like `encodeURIComponent` in JavaScript.
+	@usage
+		This is very similar to `HttpService.EncodeUrl`, but is included for parity and conforms closer to the standard (e.g. EncodeUrl unnecessarily encodes `!`).
 ]]
+--: string -> string
 function Strings.encodeUrlComponent(str)
 	assert(t.string(str))
-	return str:gsub("[^%w%-_%.%!%~%*%'%(%)]", Strings.charToHex)
+	return str:gsub("[^%w%-_%.%!%~%*%'%(%)]", Functions.feed(Strings.charToHex, "%{}", true))
 end
 
 local calculateDecodeUrlExceptions =
@@ -294,7 +336,10 @@ local calculateDecodeUrlExceptions =
 	@example
 		_.decodeUrl("https://Egg+Fried%20Rice!?")
 		--> "https://Egg+Fried Rice!?"
+	@usage
+		This method is designed to act like `decodeURI` in JavaScript.
 ]]
+--: string -> string
 function Strings.decodeUrl(str)
 	assert(t.string(str))
 	local exceptions = calculateDecodeUrlExceptions()
@@ -303,7 +348,7 @@ function Strings.decodeUrl(str)
 		function(term)
 			local charId = tonumber(term, 16)
 			if not exceptions[charId] then
-				return string.char(charId)
+				return utf8.char(charId)
 			end
 		end
 	)
@@ -315,15 +360,19 @@ end
 	@example
 		_.decodeUrlComponent("https%3A%2F%2FEgg%2BFried%20Rice!%3F")
 		--> "https://Egg+Fried Rice!?"
+	@usage This method is designed to act like `decodeURIComponent` in JavaScript.
+	@throws _MalformedInput_ if _str_ contains characters encoded incorrectly.
 ]]
+--: string -> string
 function Strings.decodeUrlComponent(str)
 	assert(t.string(str))
 	return str:gsub("%%(%x%x)", Strings.hexToChar)
 end
 
 --[[
-	Takes a _query_ dictionary of key-value pairs and build a query string that can be concatenated
+	Takes a _query_ dictionary of key-value pairs and builds a query string that can be concatenated
 	to the end of a url.
+	
 	@example
 		_.encodeQueryString({
 			time = 11,
@@ -331,16 +380,17 @@ end
 			chocolatey = true
 		})) --> "?biscuits=hobnobs&time=11&chocolatey=true"
 ]]
+--: <K,V>(Iterable<K,V> -> string)
 function Strings.encodeQueryString(query)
 	assert(t.table(query))
 	local fields =
 		Tables.mapValues(
 		query,
 		function(value, key)
-			return key .. "=" .. Strings.encodeUrlComponent(tostring(value))
+			return Strings.encodeUrlComponent(tostring(key)) .. "=" .. Strings.encodeUrlComponent(tostring(value))
 		end
 	)
-	return ("?" .. table.concat(fields, "&"))
+	return ("?" .. concat(fields, "&"))
 end
 
 return Strings
