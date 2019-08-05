@@ -45,7 +45,11 @@ return function()
 					it(
 						"throws for an invalid encoding",
 						function()
-							assert.throw("_", Strings.hexToChar("nope"))
+							assert.errors(
+								function()
+									Strings.hexToChar("nope")
+								end
+							)
 						end
 					)
 				end
