@@ -100,36 +100,6 @@ describe(
 		)
 
 		describe(
-			"escape",
-			function()
-				it(
-					"characters",
-					function()
-						assert.are.same("&lt;a&gt;Fish &amp; Chips&lt;/a&gt;", Strings.escape("<a>Fish & Chips</a>"))
-					end
-				)
-			end
-		)
-
-		describe(
-			"unescape",
-			function()
-				it(
-					"html entities",
-					function()
-						assert.are.same([["Smashed" 'Avocado']], Strings.unescape("&#34;Smashed&quot; &apos;Avocado&#39;"))
-					end
-				)
-				it(
-					"conflated ampersand",
-					function()
-						assert.are.same("Ampersand is &amp;", Strings.unescape("Ampersand is &#38;amp;"))
-					end
-				)
-			end
-		)
-
-		describe(
 			"splitByPattern",
 			function()
 				it(

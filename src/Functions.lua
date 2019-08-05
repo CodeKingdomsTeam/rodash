@@ -35,6 +35,7 @@ function Functions.once(fn, default)
 		else
 			called = true
 			result = fn(...)
+			return result
 		end
 	end
 end
