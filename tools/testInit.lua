@@ -50,6 +50,7 @@ clock = {
 	end,
 	reset = function()
 		clock.time = 0
+		clock.events = {}
 	end
 }
 tick = function()

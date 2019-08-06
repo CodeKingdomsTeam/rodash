@@ -24,10 +24,24 @@ local baseRandomStream = Random.new()
 		-->> {"wrap", "hot steak", "hot rice"} (2 seconds)
 ]]
 function Async.await(value)
-	if Promise.is(value) then
+	if Async.isPromise(value) then
 		return value:await()
 	end
 	return value
+end
+
+--[[
+	Wraps `Promise.is` but catches any errors thrown in attempting to ascertain if _value_ is a
+	promise, which will occur if the value throws when trying to access missing keys.
+]]
+function Async.isPromise(value)
+	local ok, isPromise =
+		pcall(
+		function()
+			return Promise.is(value)
+		end
+	)
+	return ok and isPromise
 end
 
 --[[
@@ -57,7 +71,7 @@ function Async.parallel(array)
 		Tables.map(
 		array,
 		function(object)
-			if Promise.is(object) then
+			if Async.isPromise(object) then
 				return object
 			else
 				return Promise.resolve(object)
@@ -121,7 +135,7 @@ end
 			_.debug("{} was {}", veg, style)
 		end)
 		-- >> potato was mashed
-
+	@usage As `_.resolve(promise) --> promise`, this function can also be used to ensure a value is a promise.
 ]]
 --: T -> Promise<T>
 function Async.resolve(...)
@@ -192,7 +206,7 @@ end
 ]]
 --: <T>(Promise<T>, (bool, T) -> nil) -> Promise<nil>
 function Async.finally(promise, fn)
-	assert(Promise.is(promise))
+	assert(Async.isPromise(promise))
 	return promise:andThen(
 		function(...)
 			fn(true, ...)
@@ -434,7 +448,7 @@ function Async.retryWithBackoff(getPromise, backoffOptions)
 
 	local function callOnDoneAndReturnPromise(response)
 		backoffOptions.onDone(response, getDurationInSeconds())
-		return Promise.is(response) and response or Promise.resolve(response)
+		return Async.isPromise(response) and response or Promise.resolve(response)
 	end
 
 	local ok, response =
@@ -445,7 +459,7 @@ function Async.retryWithBackoff(getPromise, backoffOptions)
 	)
 
 	if ok then
-		if Promise.is(response) then
+		if Async.isPromise(response) then
 			return response:catch(
 				function(response)
 					return retryIfShouldElseCallOnFailAndReturn(response, error)

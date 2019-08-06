@@ -1,6 +1,4 @@
 local Functions = require "Functions"
-local Tables = require "Tables"
-local Strings = require "Strings"
 
 describe(
 	"Functions",
@@ -181,7 +179,7 @@ describe(
 				)
 
 				it(
-					"Can memoize with custom rule",
+					"Can memoize with a custom cache key generator",
 					function()
 						local c = 10
 						local memoizedSum =
@@ -201,7 +199,7 @@ describe(
 				)
 
 				it(
-					"Can clear the cache with custom rule",
+					"Can clear the cache with a custom cache key generator",
 					function()
 						local c = 10
 						local memoizedSum =
@@ -226,7 +224,7 @@ describe(
 			"setTimeout",
 			function()
 				it(
-					"calls a timeout after a delay",
+					"calls a function after a delay",
 					function()
 						Functions.setTimeout(callSpy, 2)
 						assert.spy(callSpy).was_not_called()
@@ -270,7 +268,7 @@ describe(
 			"setInterval",
 			function()
 				it(
-					"calls interval repeatedly after delays",
+					"calls a function repeatedly at intervals",
 					function()
 						Functions.setInterval(callSpy, 2)
 						assert.spy(callSpy).was_not_called()
@@ -312,7 +310,7 @@ describe(
 					end
 				)
 				it(
-					"can be cleared inside the interval",
+					"can be cleared inside the function",
 					function()
 						local clearCallSpy =
 							spy.new(
@@ -492,100 +490,6 @@ describe(
 							},
 							result
 						)
-					end
-				)
-			end
-		)
-		describe(
-			"chain",
-			function()
-				it(
-					"works with rodash functions",
-					function()
-						local _ = Tables.assign({}, Tables, Strings, Functions)
-						getmetatable(_.fn).__index = function(self, key)
-							return _.chain(_)[key]
-						end
-						local fn =
-							_.fn:map(
-							function(value)
-								return value + 2
-							end
-						):filter(
-							function(value)
-								return value >= 5
-							end
-						):sum()
-						assert.equals("_.fn::map::filter::sum", tostring(fn))
-						assert.are.same(12, fn({1, 3, 5}))
-					end
-				)
-				it(
-					"works with custom functions",
-					function()
-						local _ = Tables.assign({}, Tables, Strings, Functions)
-						getmetatable(_.fn).__index = function(self, key)
-							return _.chain(_)[key]
-						end
-						local chain =
-							Functions.chain(
-							{
-								addTwo = _.fn:map(
-									function(value)
-										return value + 2
-									end
-								),
-								sumGteFive = _.fn:filter(
-									function(value)
-										return value >= 5
-									end
-								):sum()
-							}
-						)
-						local fn = chain:addTwo():sumGteFive()
-						assert.equals("Chain::addTwo::sumGteFive", tostring(fn))
-						assert.are.same(12, fn({1, 3, 5}))
-					end
-				)
-				it(
-					"works with composed functions",
-					function()
-						local _ = Tables.assign({}, Tables, Strings, Functions)
-						getmetatable(_.fn).__index = function(self, key)
-							return _.chain(_)[key]
-						end
-						local getName = function(player)
-							return player.Name
-						end
-						local players =
-							Functions.chain(
-							{
-								isHurt = _.fn:filter(
-									function(player)
-										return player.Health < 100
-									end
-								),
-								isBaggins = _.fn:filter(_.fn:call(getName):endsWith("Baggins"))
-							}
-						)
-						local hurtHobbits = players:isHurt():isBaggins()
-						local getNames = _.fn:map(getName)
-						local hurtHobbitNames = _.compose(hurtHobbits, getNames)
-						local crew = {
-							{
-								Name = "Frodo Baggins",
-								Health = 50
-							},
-							{
-								Name = "Bilbo Baggins",
-								Health = 100
-							},
-							{
-								Name = "Boromir",
-								Health = 0
-							}
-						}
-						assert.are.same({"Frodo Baggins"}, hurtHobbitNames(crew))
 					end
 				)
 			end

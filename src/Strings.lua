@@ -255,8 +255,6 @@ end
 function Strings.pretty(subject, withMetatable)
 end
 
-local debugTarget
-
 --[[
 	This function first calls `_.format` on the arguments provided and then outputs the response
 	to the debug target, set using `_.setDebug`. By default, this function does nothing, allowing
@@ -267,18 +265,19 @@ local debugTarget
 		on a production build to allow remote debugging.
 ]]
 function Strings.debug(subject, ...)
-	if debugTarget == nil then
+	if Strings.debugTarget == nil then
 		return
 	end
-	debugTarget(Strings.format(...))
+	Strings.debugTarget(Strings.format(...))
 end
 
 --[[
-	Hooks up any debug methods to invoke _fn_, which by default does nothing.
+	Hooks up any debug methods to invoke _fn_. By default, `_.debug` does nothing.
 	@param fn (default = `print`)
+	@usage Calling `_.setDebug()` will simply print all calls to `_.debug` with formatted arguments.
 ]]
 function Strings.setDebug(fn)
-	debugTarget = fn
+	Strings.debugTarget = fn
 end
 
 --[[
@@ -348,7 +347,7 @@ end
 --: string -> string
 function Strings.encodeUrl(str)
 	assert(t.string(str))
-	return str:gsub("[^%;%,%/%?%:%@%&%=%+%$%w%-%_%.%!%~%*%'%(%)%#]", Functions.feed(Strings.charToHex, "%{}", true))
+	return str:gsub("[^%;%,%/%?%:%@%&%=%+%$%w%-%_%.%!%~%*%'%(%)%#]", Functions.bindTail(Strings.charToHex, "%{}", true))
 end
 
 --[[
@@ -365,7 +364,7 @@ end
 --: string -> string
 function Strings.encodeUrlComponent(str)
 	assert(t.string(str))
-	return str:gsub("[^%w%-_%.%!%~%*%'%(%)]", Functions.feed(Strings.charToHex, "%{}", true))
+	return str:gsub("[^%w%-_%.%!%~%*%'%(%)]", Functions.bindTail(Strings.charToHex, "%{}", true))
 end
 
 local calculateDecodeUrlExceptions =
@@ -428,6 +427,8 @@ end
 			biscuits = "hob nobs",
 			chocolatey = true
 		})) --> "?biscuits=hob+nobs&time=11&chocolatey=true"
+
+	@usage A query string which contains duplicate keys with different values is technically valid, but this function doesn't provide a way to produce them.
 ]]
 --: <K,V>(Iterable<K,V> -> string)
 function Strings.encodeQueryString(query)

@@ -36,6 +36,29 @@ function Tables.slice(source, first, last, step)
 	return sliced
 end
 
+--[[
+	Get a child or descendant of a table, returning nil if any errors are generated.
+	@param ... 
+	@trait Chainable
+]]
+--: <T: Iterable<K, V>>(T, ...K) -> V
+function Tables.get(source, key, ...)
+	local tailkeys = {...}
+	local ok, value =
+		pcall(
+		function()
+			return source[key]
+		end
+	)
+	if ok then
+		if #tailkeys > 0 then
+			return Tables.get(value, unpack(tailkeys))
+		else
+			return value
+		end
+	end
+end
+
 --: <T: Iterable<K,V>, R: Iterable<K,V2>((T, (element: V, key: K) -> V2) -> R)
 function Tables.map(source, handler)
 	local result = {}

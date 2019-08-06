@@ -4,7 +4,16 @@ local Promise = require "roblox-lua-promise"
 local match = require "luassert.match"
 
 local function advanceAndAssertPromiseResolves(promise, assertion)
-	local andThen = spy.new(assertion)
+	local andThen =
+		spy.new(
+		function(...)
+			local ok, error = pcall(assertion, ...)
+			if not ok then
+				print("[Assertion Error]", error)
+			end
+			return ok
+		end
+	)
 	local err = spy.new(warn)
 	promise:andThen(andThen):catch(err)
 	if tick() == 0 then
@@ -12,7 +21,7 @@ local function advanceAndAssertPromiseResolves(promise, assertion)
 		wait(1)
 		clock:process()
 	end
-	assert.spy(andThen).was_called()
+	assert.spy(andThen).was.returned_with(true)
 	assert.spy(err).was_not_called()
 end
 
@@ -120,6 +129,18 @@ describe(
 						)
 						Async.resolve(1, 2, 3):andThen(andThen)
 						assert.spy(andThen).called_with(1, 2, 3)
+					end
+				)
+				it(
+					"resolves a promise",
+					function()
+						local andThen =
+							spy.new(
+							function()
+							end
+						)
+						Async.resolve(Async.resolve(1)):andThen(andThen)
+						assert.spy(andThen).called_with(1)
 					end
 				)
 			end
@@ -343,7 +364,7 @@ describe(
 					function()
 						local promise = Async.delay(1):andThen(Functions.returns("Ok"))
 						local timeout = Async.timeout(promise, 2)
-						advanceAndAssertPromiseResolves(timeout)
+						advanceAndAssertPromiseResolves(timeout, Functions.noop)
 					end
 				)
 				it(

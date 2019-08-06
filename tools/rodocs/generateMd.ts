@@ -159,7 +159,7 @@ function ${libName}.${name}(${params.join(', ')}) --> string
 		}
 		const throws = filterEntries(doc.entries, 'throws');
 		if (throws.length) {
-			lines.push('\n**Usage**\n');
+			lines.push('\n**Throws**\n');
 			lines.push(...formatList(throws));
 		}
 
@@ -182,15 +182,24 @@ function ${libName}.${name}(${params.join(', ')}) --> string
 		if (examples.length) {
 			lines.push(
 				'\n**Examples**\n',
-				'```lua',
-				...examples.map(example => example.content + '\n'),
-				'```',
+				...examples.map(example => '```lua\n' + example.content + '\n```\n\n'),
 			);
 		}
 		const usage = filterEntries(doc.entries, 'usage');
 		if (usage.length) {
-			lines.push('\n**Usage**\n');
-			lines.push(...formatList(usage));
+			lines.push('\n**Usage**\n', ...formatList(usage));
+		}
+		const see = filterEntries(doc.entries, 'see');
+		if (see.length) {
+			lines.push(
+				'\n**See**\n',
+				...see.map(({ content }) => {
+					const [, linkName, suffix] = content.match(/^\s*([^\s]+)\s*(.*)/);
+					const prefix = libName + '.';
+					const link = linkName.startsWith(prefix) ? linkName.substring(prefix.length) : linkName;
+					return `\n* [${linkName}](#${link}) ${suffix}`;
+				}),
+			);
 		}
 		return {
 			name,

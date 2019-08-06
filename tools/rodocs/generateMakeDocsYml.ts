@@ -10,7 +10,7 @@ repo_url: https://github.com/CodeKingdomsTeam/rodash
 theme:
   name: material
   palette:
-    primary: 'Grey'
+    primary: 'Gray'
     accent: 'Blue'
 
 nav:
