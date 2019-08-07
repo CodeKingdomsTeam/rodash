@@ -239,8 +239,8 @@ This function is a simpler & more powerful version of `string.format`, inspired 
 	If an instance has a `:format()` method, this is used instead, passing the format arguments.
 	
 		* `{}` prints the next variable using or `tostring`.
-		* `{:?}` prints using `_.serializeDeep`.
-		* `{:#?}` prints using `_.pretty`.
+		* `{:?}` prints using `_.pretty`.
+		* `{:#?}` prints using multiline `_.pretty`.
 
 	@param subject the format match string
 ]]

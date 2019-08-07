@@ -234,6 +234,22 @@ function Tables.any(source, handler)
 end
 
 --[[
+	Returns a copy source, ensuring each key starts with an underscore `_`.
+	Keys which are already prefixed with an underscore are left unchanged.
+]]
+-- <T>(T{} -> T{})
+function Tables.privatize(source)
+	local Strings = require(script.Strings)
+	return Tables.mapKeys(
+		source,
+		function(_, key)
+			local stringKey = tostring(key)
+			return Strings.startsWith(stringKey, "_") and stringKey or "_" .. stringKey
+		end
+	)
+end
+
+--[[
 	Summary ends with a period.
 	Some description, can be over
 	several lines.
