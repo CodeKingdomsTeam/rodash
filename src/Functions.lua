@@ -2,12 +2,28 @@ local Tables = require(script.Tables)
 
 local Functions = {}
 
-function Functions.returnsNil()
-	return
+function Functions.noop()
+	return function()
+	end
 end
 
-function Functions.returnsArgs(...)
-	return ...
+function Functions.identity()
+	return function(...)
+		return ...
+	end
+end
+
+function Functions.returns(...)
+	local args = {...}
+	return function()
+		return unpack(args)
+	end
+end
+
+function Functions.throws(errorMessage)
+	return function()
+		error(errorMessage)
+	end
 end
 
 function Functions.once(fn, default)

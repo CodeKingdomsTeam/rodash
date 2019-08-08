@@ -25,6 +25,12 @@ return function()
 						end
 					)
 					it(
+						"encodes utf8 with multiple code points correctly",
+						function()
+							assert.equal("&#x1F937;&#x1F3FC;&#x200D;&#x2640;&#xFE0F;", Strings.charToHex("🤷🏼‍♀️", "&#x{};"))
+						end
+					)
+					it(
 						"encodes utf8 bytes correctly",
 						function()
 							assert.equal("%F0%9F%A4%B7%F0%9F%8F%BC%E2%80%8D%E2%99%80%EF%B8%8F", Strings.charToHex("🤷🏼‍♀️", "%{}", true))
