@@ -558,6 +558,7 @@ end
 --: <...A, B>((...A -> B), ...A -> string?) -> Clearable<...A> & AllClearable & (...A) -> B
 function Functions.memoize(fn, serializeArgs)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
+	-- By default, use Tables.serialize but do not pass it the cache argument when called
 	serializeArgs = serializeArgs or Functions.unary(Tables.serialize)
 	assert(Functions.isCallable(serializeArgs), "BadInput: serializeArgs must be callable")
 	local cache = {}
