@@ -2,6 +2,7 @@
 	A collection of useful utility functions and building blocks for functional programming styles.
 ]]
 local Tables = require(script.Tables)
+local t = require(script.Parent.t)
 
 local Functions = {}
 
@@ -18,7 +19,7 @@ end
 	@trait Chainable
 	@usage This is typically referred to as the "identity" function.
 ]]
---: <A>(...A) -> ...A
+--: <A>(...A -> ...A)
 function Functions.id(...)
 	return ...
 end
@@ -31,7 +32,7 @@ end
 		--> "Found Dave!" (soon after)
 	@usage Useful for when you want a callback to discard the arguments passed in and instead use static ones.
 ]]
---: <A>(...A) -> () -> ...A
+--: <A>(...A -> () -> ...A)
 function Functions.returns(...)
 	local args = {...}
 	return function()
@@ -40,10 +41,21 @@ function Functions.returns(...)
 end
 
 --[[
+	Return true if the _value_ can be called ie. it is function or a table with a `__call` entry in its metatable.
+	@usage In general this is a much more suitable test than checking purely for a function type.
+]]
+--: any -> bool
+function Functions.isCallable(value)
+	return type(value) == "function" or
+		(type(value) == "table" and getmetatable(value) and getmetatable(value).__call ~= nil)
+end
+
+--[[
 	Returns a function that wraps the input _fn_ but only passes the first argument to it.
 ]]
---: <A, B>((A) -> B) -> A -> B
+--: <A, B>((A -> B) -> A -> B)
 function Functions.unary(fn)
+	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
 	return function(first)
 		return fn(first)
 	end
@@ -58,6 +70,7 @@ end
 ]]
 --: string -> () -> fail
 function Functions.throws(errorMessage)
+	assert(t.string(errorMessage), "BadInput: errorMessage must be a string")
 	return function()
 		error(errorMessage)
 	end
@@ -74,8 +87,9 @@ end
 		local damageLocalPlayer = _.bind(damagePlayer, game.Players.LocalPlayer)
 		damageLocalPlayer(5)
 ]]
---: <T, A, B>(((A..., B...) -> T, ...A) -> ...B -> T
+--: <A, B, R>(((A..., B... -> R), ...A) -> ...B -> R)
 function Functions.bind(fn, ...)
+	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
 	local args = {...}
 	return function(...)
 		return fn(unpack(args), ...)
@@ -98,6 +112,7 @@ end
 ]]
 --: <T, A>(Chainable<T, A>, ...A) -> T -> T
 function Functions.bindTail(fn, ...)
+	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
 	local args = {...}
 	return function(subject)
 		return fn(subject, unpack(args))
@@ -123,6 +138,7 @@ end
 ]]
 --: <...A, B>((...A -> B), B?) -> Clearable & () -> B
 function Functions.once(fn)
+	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
 	local called = false
 	local result = nil
 	local once = {
@@ -152,7 +168,9 @@ end
 	Calls the supplied _fn_ on the subject and any additional arguments, returing the result.
 	@trait Chainable
 ]]
+-- <T, A, R>(T, (T, ...A -> R), ...A -> R)
 function Functions.call(subject, fn, ...)
+	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
 	return fn(subject, ...)
 end
 
@@ -232,6 +250,7 @@ function Functions.chain(fns, actor)
 	if actor == nil then
 		actor = Functions.invoke
 	end
+	assert(Functions.isCallable(actor), "BadInput: actor must be callable")
 	local chain = {}
 	setmetatable(
 		chain,
@@ -310,7 +329,9 @@ end
 
 	@see _.chain
 ]]
+-- <T, A, R>((...A -> T -> R) -> T, ...A -> R)
 function Functions.chainFn(fn)
+	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
 	return function(source, ...)
 		return fn(...)(source)
 	end
@@ -322,6 +343,7 @@ end
 ]]
 --: <T>(Actor<T>)
 function Functions.invoke(fn, ...)
+	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
 	return fn(...)
 end
 
@@ -376,6 +398,7 @@ end
 --: <T>(Actor<T>) -> Actor<T>
 function Functions.maybe(actor)
 	actor = actor or Functions.invoke
+	assert(Functions.isCallable(actor), "BadInput: actor must be callable")
 	return function(fn, ...)
 		local args = {...}
 		if args[1] == nil then
@@ -444,6 +467,7 @@ end
 --: <T>(Actor<T>) -> Actor<T>
 function Functions.continue(actor)
 	actor = actor or Functions.invoke
+	assert(Functions.isCallable(actor), "BadInput: actor must be callable")
 	return function(fn, value, ...)
 		local Async = require(script.Async)
 		return Async.resolve(value):andThen(
@@ -533,9 +557,9 @@ end
 ]]
 --: <...A, B>((...A -> B), ...A -> string?) -> Clearable<...A> & AllClearable & (...A) -> B
 function Functions.memoize(fn, serializeArgs)
-	assert(type(fn) == "function")
+	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
 	serializeArgs = serializeArgs or Functions.unary(Tables.serialize)
-	assert(type(serializeArgs) == "function")
+	assert(Functions.isCallable(serializeArgs), "BadInput: serializeArgs must be callable")
 	local cache = {}
 	local clearable = {
 		clear = function(_, ...)
@@ -573,6 +597,8 @@ end
 ]]
 --: (() -> nil), number -> Clearable
 function Functions.setTimeout(fn, delayInSeconds)
+	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
+	assert(t.number(delayInSeconds), "BadInput: delayInSeconds must be a number")
 	local cleared = false
 	local timeout
 	delay(
@@ -598,6 +624,9 @@ end
 ]]
 --: (() -> nil), number, number? -> Clearable
 function Functions.setInterval(fn, intervalInSeconds, delayInSeconds)
+	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
+	assert(t.number(intervalInSeconds), "BadInput: intervalInSeconds must be a number")
+	assert(t.optional(t.number)(delayInSeconds), "BadInput: delayInSeconds must be a number")
 	local timeout
 	local callTimeout
 	local function handleTimeout()
@@ -672,9 +701,9 @@ end
 ]]
 --: <A, B>((...A) -> B), number -> ...A -> B
 function Functions.throttle(fn, cooldownInSeconds)
-	assert(Functions.isCallable(fn))
-	assert(type(cooldownInSeconds) == "number")
-	assert(cooldownInSeconds > 0)
+	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
+	assert(t.number(cooldownInSeconds), "BadInput: cooldownInSeconds must be a number")
+	assert(cooldownInSeconds > 0, "BadInput: cooldownInSeconds must be greater than 0")
 
 	local cached = false
 	local lastResult = nil
@@ -691,16 +720,6 @@ function Functions.throttle(fn, cooldownInSeconds)
 		end
 		return lastResult
 	end
-end
-
---[[
-	Return true if the _value_ can be called ie. it is function or a table with a `__call` entry in its metatable.
-	@usage In general this is a much more suitable test than checking purely for a function type.
-]]
---: any -> bool
-function Functions.isCallable(value)
-	return type(value) == "function" or
-		(type(value) == "table" and getmetatable(value) and getmetatable(value).__call ~= nil)
 end
 
 return Functions
