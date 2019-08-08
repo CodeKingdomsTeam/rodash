@@ -1,5 +1,9 @@
 --[[
 	Utility functions and building blocks for functional programming styles.
+
+	In general, there is more tooling for functions with multiple arguments and return values than
+	unary ones, as this is more lua-flavoured, the curried style feeling more useful in pure
+	languages which provide better support and/or syntactic sugar.
 ]]
 local Tables = require(script.Tables)
 
@@ -531,6 +535,8 @@ end
 
 		heat:clear(1)
 		heat(1) --> "hot beef"
+	@see _.serialize
+	@see _.serializeDeep if you want to recursively serialize arguments.
 ]]
 --: <...A, B>((...A -> B), ...A -> string?) -> Clearable<...A> & AllClearable & (...A) -> B
 function Functions.memoize(fn, serializeArgs)
@@ -695,7 +701,7 @@ function Functions.throttle(fn, cooldownInSeconds)
 end
 
 --[[
-	Return true if the _value_ can be called ie. it is function or a table with a `__call` entry in its metatable.
+	Return `true` if the _value_ can be called ie. it is function or a table with a `__call` entry in its metatable.
 	@usage In general this is a much more suitable test than checking purely for a function type.
 ]]
 --: any -> bool

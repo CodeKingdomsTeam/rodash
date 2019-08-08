@@ -10,6 +10,7 @@ script = {
 	Tables = "Tables",
 	Classes = "Classes",
 	Functions = "Functions",
+	Arrays = "Arrays",
 	Strings = "Strings",
 	Parent = {
 		t = "t",

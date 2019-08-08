@@ -1,4 +1,5 @@
 local Tables = require "Tables"
+local Arrays = require "Arrays"
 
 local function lazySequence(firstNumber, lastNumber)
 	local i = 0
@@ -17,20 +18,6 @@ end
 describe(
 	"Tables",
 	function()
-		describe(
-			"slice",
-			function()
-				it(
-					"slices",
-					function()
-						local x = {"h", "e", "l", "l", "o"}
-
-						assert.are.same({"h", "e", "l"}, Tables.slice(x, 1, 3))
-					end
-				)
-			end
-		)
-
 		describe(
 			"len",
 			function()
@@ -178,13 +165,13 @@ describe(
 			end
 		)
 		describe(
-			"deepEquals",
+			"deepEqual",
 			function()
 				it(
 					"returns true if the first argument deep equals the second",
 					function()
 						assert.True(
-							Tables.deepEquals(
+							Tables.deepEqual(
 								{
 									a = 1,
 									b = 2,
@@ -219,7 +206,7 @@ describe(
 					"returns false if one of the arguments has an additional field",
 					function()
 						assert.False(
-							Tables.deepEquals(
+							Tables.deepEqual(
 								{
 									a = 1,
 									b = {}
@@ -232,6 +219,161 @@ describe(
 								}
 							)
 						)
+					end
+				)
+			end
+		)
+		describe(
+			"isArray",
+			function()
+				it(
+					"returns true for an array",
+					function()
+						assert.equal(true, Tables.isArray({1, 2, 3}))
+					end
+				)
+				it(
+					"returns for a table",
+					function()
+						assert.equal(false, Tables.isArray({a = 1, b = 2, c = 3}))
+					end
+				)
+				it(
+					"returns for a sparse array",
+					function()
+						assert.equal(false, Tables.isArray({[1] = 1, [2] = 2, [4] = 3}))
+					end
+				)
+				it(
+					"returns for a sparse array definition",
+					function()
+						assert.equal(false, Tables.isArray({1, 2, nil, 4}))
+					end
+				)
+				it(
+					"can compact a sparse array to an array",
+					function()
+						assert.equal(true, Tables.isArray(Tables.compact({1, 2, nil, nil, 5})))
+					end
+				)
+			end
+		)
+		describe(
+			"occurrences",
+			function()
+				it(
+					"works for a table",
+					function()
+						local x = {a = 1, c = 3, b = 2}
+						assert.are.same({[x] = 1}, Tables.occurences(x))
+					end
+				)
+				it(
+					"works for an array",
+					function()
+						local x = {1, 2, 3}
+						assert.are.same({[x] = 1}, Tables.occurences(x))
+					end
+				)
+				it(
+					"works for multiples and cycles",
+					function()
+						local thrice = {a = 1}
+						local once = {d = thrice}
+						local result = {b = once, c = thrice, d = thrice}
+						result.a = result
+						assert.are.same({[result] = 2, [thrice] = 3, [once] = 1}, Tables.occurences(result))
+					end
+				)
+			end
+		)
+		describe(
+			"serialize",
+			function()
+				it(
+					"works for a table",
+					function()
+						assert.equal('{"a":1,"b":2,"c":3}', Tables.serialize({a = 1, c = 3, b = 2}))
+					end
+				)
+				it(
+					"works for an array",
+					function()
+						assert.equal("{1,2,3}", Tables.serialize({1, 2, 3}))
+					end
+				)
+				it(
+					"works for other natural types",
+					function()
+						local result = {
+							a = true,
+							c = 'hello\\" world',
+							b = function()
+							end,
+							child = {1, 2, 3}
+						}
+						print(Tables.serialize(result))
+						assert(
+							Tables.serialize(result):gmatch(
+								'{"a":true,"b":<function: 0x[0-9a-f]+>,"c":"hello\\\\\\" world","child":<table: 0x[0-9a-f]+>}'
+							)()
+						)
+					end
+				)
+				it(
+					"works for a cycle",
+					function()
+						local result = {a = 1, b = 2, c = 3}
+						result.a = result
+						assert(Tables.serialize(result):gmatch('{"a":<table: 0x[0-9a-f]+>,"b":2,"c":3}')())
+					end
+				)
+			end
+		)
+		describe(
+			"serializeDeep",
+			function()
+				it(
+					"works for a table",
+					function()
+						assert.equal('{"a":1,"b":{"d":4,"e":5},"c":3}', Tables.serializeDeep({a = 1, c = 3, b = {d = 4, e = 5}}))
+					end
+				)
+				it(
+					"works for an array",
+					function()
+						assert.equal('{{1,2},{"d":2,"e":4},3}', Tables.serializeDeep({{1, 2}, {d = 2, e = 4}, 3}))
+					end
+				)
+				it(
+					"works for other natural types",
+					function()
+						local result = {
+							child = {
+								child = {
+									a = true,
+									c = 'hello\\" world',
+									b = function()
+									end,
+									child = {1, 2, 3}
+								}
+							}
+						}
+						assert(
+							Tables.serializeDeep(result):gmatch(
+								'{"child":{"child":{"a":true,"b":<function: 0x[0-9a-f]+>,"c":"hello\\\\\\" world","child":{1,2,3}}}}'
+							)()
+						)
+					end
+				)
+				it(
+					"works for cycles",
+					function()
+						local result = {a = {f = 4}, b = {id = 1}, c = 3}
+						result.b.d = result
+						result.d = result.b
+						result.c = result.a
+						assert.equal('<1>{"a":<2>{"f":4},"b":<3>{"d":&1,"id":1},"c":&2,"d":&3}', Tables.serializeDeep(result))
 					end
 				)
 			end
@@ -271,41 +413,22 @@ describe(
 		)
 
 		describe(
-			"mapKeys",
-			function()
-				it(
-					"maps keys and values of an array",
-					function()
-						assert.are.same(
-							{[2] = "a", [3] = "b", [4] = "c", [5] = "d"},
-							Tables.mapKeys(
-								{"a", "b", "c", "d"},
-								function(x, i)
-									return i + 1
-								end
-							)
-						)
-					end
-				)
-				it(
-					"maps keys and values of a non-sequential table",
-					function()
-						assert.are.same(
-							{a1 = 1, b2 = 2, c3 = 3, d4 = 4},
-							Tables.mapKeys(
-								{a = 1, b = 2, c = 3, d = 4},
-								function(x, i)
-									return i .. x
-								end
-							)
-						)
-					end
-				)
-			end
-		)
-		describe(
 			"flatMap",
 			function()
+				it(
+					"returning a single value",
+					function()
+						assert.are.same(
+							{1, 2},
+							Tables.flatMap(
+								{"a", "b"},
+								function(val, i)
+									return {i}
+								end
+							)
+						)
+					end
+				)
 				it(
 					"inline returned arrays from handler",
 					function()
@@ -321,29 +444,14 @@ describe(
 					end
 				)
 				it(
-					"does not ignore falsy returns",
+					"can use false",
 					function()
 						assert.are.same(
 							{false, false, "c", 3, "d", 4},
 							Tables.flatMap(
 								{"a", "b", "c", "d"},
 								function(x, i)
-									return i > 2 and {x, i}
-								end
-							)
-						)
-					end
-				)
-
-				it(
-					"returning a truthy non-table",
-					function()
-						assert.are.same(
-							{1, 2},
-							Tables.flatMap(
-								{"a", "b"},
-								function(val, i)
-									return i
+									return i > 2 and {x, i} or {false}
 								end
 							)
 						)
@@ -377,10 +485,9 @@ describe(
 										Tables.flatMap(
 										{"c", "d"},
 										function(val, j)
-											return j
+											return {j}
 										end
 									)
-
 									return x
 								end
 							)
@@ -429,38 +536,6 @@ describe(
 				)
 			end
 		)
-
-		describe(
-			"Reverse",
-			function()
-				it(
-					"reverses an array",
-					function()
-						assert.are.same({1, 2, 3, 4, 5}, Tables.reverse({5, 4, 3, 2, 1}))
-					end
-				)
-			end
-		)
-
-		describe(
-			"omitBy",
-			function()
-				it(
-					"omits keys and values of a non-sequential table",
-					function()
-						local output =
-							Tables.omitBy(
-							{one = "a", two = "b", three = "a", four = "d", five = "e"},
-							function(x, i)
-								return x == "b" or i == "five"
-							end
-						)
-						assert.are.same({one = "a", three = "a", four = "d"}, output)
-					end
-				)
-			end
-		)
-
 		describe(
 			"filter",
 			function()
@@ -532,34 +607,18 @@ describe(
 			end
 		)
 		describe(
-			"filterKeysMap",
-			function()
-				it(
-					"filters keys and maps results of a non-sequential table",
-					function()
-						local output =
-							Tables.filterKeysMap(
-							{one = "a", two = "b", three = "a", four = "d", five = "e"},
-							function(x, i)
-								if x == "b" then
-									return "well"
-								elseif i == "five" then
-									return "done"
-								end
-							end
-						)
-						assert.are.same({two = "well", five = "done"}, output)
-					end
-				)
-			end
-		)
-		describe(
 			"without",
 			function()
 				it(
-					"removes elements of a specific value",
+					"removes elements from an array",
 					function()
 						assert.are.same({"b", "e"}, Tables.without({"a", "b", "a", "e"}, "a"))
+					end
+				)
+				it(
+					"removes elements from a table",
+					function()
+						assert.are.same({"b", "e"}, Arrays.sort(Tables.without({e1 = "a", e2 = "b", e3 = "a", e4 = "e"}, "a")))
 					end
 				)
 			end
@@ -568,9 +627,18 @@ describe(
 			"compact",
 			function()
 				it(
-					"filters out falsey values from an array",
+					"compacts a sparse array preserving key order",
 					function()
-						assert.are.same({"b", "e"}, Tables.compact({"b", false, false, "e", false}))
+						assert.are.same(
+							{"a", "b", "c"},
+							Tables.compact(
+								{
+									[6] = "c",
+									[1] = "a",
+									[4] = "b"
+								}
+							)
+						)
 					end
 				)
 			end
@@ -670,35 +738,6 @@ describe(
 			end
 		)
 		describe(
-			"insertMany",
-			function()
-				it(
-					"adds multiple values onto an array",
-					function()
-						local output = {"a", "b"}
-						Tables.insertMany(output, {"c", "d", "e"})
-						assert.are.same({"a", "b", "c", "d", "e"}, output)
-					end
-				)
-				it(
-					"adds no values onto an array",
-					function()
-						local output = {"a", "b"}
-						Tables.insertMany(output, {})
-						assert.are.same({"a", "b"}, output)
-					end
-				)
-				it(
-					"adds values onto an empty array",
-					function()
-						local output = {}
-						Tables.insertMany(output, {"a", "b"})
-						assert.are.same({"a", "b"}, output)
-					end
-				)
-			end
-		)
-		describe(
 			"keys",
 			function()
 				it(
@@ -735,6 +774,54 @@ describe(
 			end
 		)
 		describe(
+			"isEmpty",
+			function()
+				it(
+					"returns true for an empty table",
+					function()
+						assert.are.same(true, Tables.isEmpty({}))
+					end
+				)
+				it(
+					"returns false for a table with keys",
+					function()
+						assert.are.same(false, Tables.isEmpty({a = 1}))
+					end
+				)
+			end
+		)
+		describe(
+			"one",
+			function()
+				it(
+					"returns an element from an array if one exists",
+					function()
+						local list = {2, 3, 4}
+						local value, key = Tables.one(list)
+						assert.is_not_nil(value)
+						assert.is_not_nil(key)
+						assert.are.same(value, list[key])
+					end
+				)
+				it(
+					"returns an element from a dictionary if one exists",
+					function()
+						local list = {a = 2, b = 3, c = 4}
+						local value, key = Tables.one(list)
+						assert.is_not_nil(value)
+						assert.is_not_nil(key)
+						assert.are.same(value, list[key])
+					end
+				)
+				it(
+					"returns nil for an empty table",
+					function()
+						assert.is_nil(Tables.one({}))
+					end
+				)
+			end
+		)
+		describe(
 			"entries",
 			function()
 				it(
@@ -759,13 +846,15 @@ describe(
 					"gets the first matching value from a table",
 					function()
 						assert.are.same(
-							"d",
-							Tables.find(
-								{"a", "b", "c", "d", "e"},
-								function(x)
-									return x == "d" or x == "e"
-								end
-							)
+							{"d", 4},
+							{
+								Tables.find(
+									{"a", "b", "c", "d", "e"},
+									function(x)
+										return x == "d" or x == "e"
+									end
+								)
+							}
 						)
 					end
 				)
@@ -773,13 +862,15 @@ describe(
 					"gets the first matching index from a table",
 					function()
 						assert.are.same(
-							"d",
-							Tables.find(
-								{"a", "b", "c", "d", "e"},
-								function(x, i)
-									return i == 4 or i == 5
-								end
-							)
+							{"d", 4},
+							{
+								Tables.find(
+									{"a", "b", "c", "d", "e"},
+									function(x, i)
+										return i == 4 or i == 5
+									end
+								)
+							}
 						)
 					end
 				)
@@ -800,160 +891,15 @@ describe(
 					"gets the first matching value from a non-sequential table",
 					function()
 						assert.are.same(
-							"d",
-							Tables.find(
-								{one = "a", two = "b", three = "c", four = "d", five = "e"},
-								function(x, i)
-									return x == "d"
-								end
-							)
-						)
-					end
-				)
-			end
-		)
-		describe(
-			"findKey",
-			function()
-				it(
-					"gets the first matching key from a table by value",
-					function()
-						assert.are.same(
-							4,
-							Tables.findKey(
-								{"a", "b", "c", "d", "e"},
-								function(x)
-									return x == "d" or x == "e"
-								end
-							)
-						)
-					end
-				)
-				it(
-					"gets the first matching key from a table by key",
-					function()
-						assert.are.same(
-							4,
-							Tables.findKey(
-								{"a", "b", "c", "d", "e"},
-								function(x, i)
-									return i == 4 or i == 5
-								end
-							)
-						)
-					end
-				)
-				it(
-					"returns nil for a missing value",
-					function()
-						assert.is_nil(
-							Tables.findKey(
-								{"a", "b", "c", "d", "e"},
-								function(x, i)
-									return x == "f"
-								end
-							)
-						)
-					end
-				)
-				it(
-					"gets the first matching key from a non-sequential table",
-					function()
-						assert.are.same(
-							"four",
-							Tables.findKey(
-								{one = "a", two = "b", three = "c", four = "d", five = "e"},
-								function(x, i)
-									return x == "d"
-								end
-							)
-						)
-					end
-				)
-			end
-		)
-		describe(
-			"keyOf",
-			function()
-				it(
-					"gets the first matching value from a table",
-					function()
-						assert.are.same(4, Tables.keyOf({"a", "b", "c", "d", "e"}, "d"))
-					end
-				)
-				it(
-					"returns nil for a missing value",
-					function()
-						assert.is_nil(Tables.keyOf({"a", "b", "c", "d", "e"}, "f"))
-					end
-				)
-				it(
-					"gets the first matching value from a non-sequential table",
-					function()
-						assert.are.same("four", Tables.keyOf({one = "a", two = "b", three = "c", four = "d", five = "e"}, "d"))
-					end
-				)
-			end
-		)
-		describe(
-			"reduce",
-			function()
-				it(
-					"returns the base case for an empty array",
-					function()
-						assert.are.same(
-							"f",
-							Tables.reduce(
-								{},
-								function(prev, next)
-									return prev .. next
-								end,
-								"f"
-							)
-						)
-					end
-				)
-				it(
-					"applies an iterator to reduce a table",
-					function()
-						assert.are.same(
-							"fabcde",
-							Tables.reduce(
-								{"a", "b", "c", "d", "e"},
-								function(prev, next)
-									return prev .. next
-								end,
-								"f"
-							)
-						)
-					end
-				)
-				it(
-					"can operate on the index",
-					function()
-						assert.are.same(
-							"f1a2b3c4d5e",
-							Tables.reduce(
-								{"a", "b", "c", "d", "e"},
-								function(prev, next, i)
-									return (prev or "f") .. i .. next
-								end
-							)
-						)
-					end
-				)
-				it(
-					"works when passed an iterator",
-					function()
-						assert.are.same(
-							15,
-							Tables.reduce(
-								lazySequence(1, 5),
-								function(prev, next, i)
-									return prev + next
-								end,
-								0
-							)
+							{"d", "four"},
+							{
+								Tables.find(
+									{one = "a", two = "b", three = "c", four = "d", five = "e"},
+									function(x, i)
+										return x == "d"
+									end
+								)
+							}
 						)
 					end
 				)
@@ -1059,21 +1005,6 @@ describe(
 		)
 
 		describe(
-			"append",
-			function()
-				it(
-					"concatenates mixed tables and values, ignoring non-arraylike keys",
-					function()
-						local a = {7, 4}
-						local b = 9
-						local c = {[1] = 5, x = 12}
-
-						assert.are.same({7, 4, 9, 5}, Tables.append(a, b, c))
-					end
-				)
-			end
-		)
-		describe(
 			"privatize",
 			function()
 				it(
@@ -1105,47 +1036,20 @@ describe(
 		)
 
 		describe(
-			"sort",
+			"unique",
 			function()
-				local cases = {
-					{
-						input = {1, 3, 2},
-						expected = {1, 2, 3},
-						name = "with no comparator"
-					},
-					{
-						input = {1, 3, 2},
-						expected = {3, 2, 1},
-						comparator = function(a, b)
-							return a > b
-						end,
-						name = "with a comparator"
-					}
-				}
-
-				for _, case in ipairs(cases) do
-					it(
-						case.name,
-						function()
-							local result = Tables.sort(case.input, case.comparator)
-							assert.are.same(case.expected, result)
-						end
-					)
-				end
-
 				it(
-					"throws if the comparator returns a bad value",
+					"removes duplicate values from an array",
 					function()
-						assert.has_errors(
-							function()
-								Tables.sort(
-									{1, 3, 2},
-									function(a, b)
-										return a
-									end
-								)
-							end
-						)
+						local list = {1, 2, 3, 1, 2, 3, 6, 5, 5}
+						assert.are.same({1, 2, 3, 5, 6}, Arrays.sort(Tables.unique(list)))
+					end
+				)
+				it(
+					"removes duplicate values from a table",
+					function()
+						local object = {bez = "woz", foo = "bor", bof = "bor"}
+						assert.are.same({"bor", "woz"}, Arrays.sort(Tables.unique(object)))
 					end
 				)
 			end

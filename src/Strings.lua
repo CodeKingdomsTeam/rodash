@@ -5,7 +5,7 @@ local t = require(script.Parent.t)
 local Functions = require(script.Functions)
 local Tables = require(script.Tables)
 local Strings = {}
-local append = table.insert
+local insert = table.insert
 local concat = table.concat
 
 --[[
@@ -144,17 +144,17 @@ function Strings.splitByPattern(str, delimiter)
 	local from = 1
 	if (not delimiter) then
 		for i = 1, #str do
-			append(result, str:sub(i, i))
+			insert(result, str:sub(i, i))
 		end
 		return result
 	end
 	local delim_from, delim_to = str:find(delimiter, from)
 	while delim_from do
-		append(result, str:sub(from, delim_from - 1))
+		insert(result, str:sub(from, delim_from - 1))
 		from = delim_to + 1
 		delim_from, delim_to = str:find(delimiter, from)
 	end
-	append(result, str:sub(from))
+	insert(result, str:sub(from))
 	return result
 end
 
@@ -298,11 +298,11 @@ function Strings.charToHex(char, format, useBytes)
 	local values = {}
 	if useBytes then
 		for position, codePoint in utf8.codes(char) do
-			append(values, codePoint)
+			insert(values, codePoint)
 		end
 	else
 		for i = 1, char:len() do
-			append(values, char:byte(i))
+			insert(values, char:byte(i))
 		end
 	end
 	return concat(
