@@ -234,38 +234,9 @@
       
     
     
-      <label class="md-nav__link md-nav__link--active" for="__toc">
-        Home
-      </label>
-    
     <a href="." title="Home" class="md-nav__link md-nav__link--active">
       Home
     </a>
-    
-      
-<nav class="md-nav md-nav--secondary">
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">Table of contents</label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#importing" title="Importing" class="md-nav__link">
-    Importing
-  </a>
-  
-</li>
-      
-      
-      
-      
-      
-    </ul>
-  
-</nav>
     
   </li>
 
@@ -324,6 +295,18 @@
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="api/Arrays/" title="Arrays" class="md-nav__link">
+      Arrays
+    </a>
+  </li>
+
         
           
           
@@ -407,22 +390,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">Table of contents</label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#importing" title="Importing" class="md-nav__link">
-    Importing
-  </a>
-  
-</li>
-      
-      
-      
-      
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -441,20 +408,31 @@
 <h1 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h1>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">_</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">ReplicatedStorage</span><span class="p">.</span><span class="n">Rodash</span><span class="p">)</span>
 
-<span class="kr">function</span> <span class="nf">onlyLocalPlayerHasSpoon</span><span class="p">()</span>
+<span class="kr">function</span> <span class="nf">onlyLocalPlayerHasGold</span><span class="p">()</span>
 
-    <span class="kd">local</span> <span class="n">playersWithSpoon</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">:</span><span class="n">GetChildren</span><span class="p">(),</span> <span class="kr">function</span><span class="p">(</span> <span class="n">player</span> <span class="p">)</span>
-        <span class="n">_</span><span class="p">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;{} items: {:#?}&quot;</span><span class="p">,</span> <span class="n">_</span><span class="p">.</span><span class="n">len</span><span class="p">(</span><span class="n">player</span><span class="p">.</span><span class="n">Backpack</span><span class="p">:</span><span class="n">GetChildren</span><span class="p">()),</span> <span class="n">player</span><span class="p">.</span><span class="n">Backpack</span><span class="p">)</span>
-        <span class="kr">return</span> <span class="n">_</span><span class="p">.</span><span class="n">some</span><span class="p">(</span><span class="n">player</span><span class="p">.</span><span class="n">Backpack</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span> <span class="n">tool</span> <span class="p">)</span>
-            <span class="kr">return</span> <span class="n">_</span><span class="p">.</span><span class="n">endsWith</span><span class="p">(</span><span class="n">tool</span><span class="p">.</span><span class="n">Name</span><span class="p">,</span> <span class="s2">&quot;Spoon&quot;</span><span class="p">)</span>
-        <span class="kr">end</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">playersWithGold</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">filter</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">:</span><span class="n">GetChildren</span><span class="p">(),</span> <span class="kr">function</span><span class="p">(</span> <span class="n">player</span> <span class="p">)</span>
+        <span class="n">_</span><span class="p">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Tools: {:#?}&quot;</span><span class="p">,</span> <span class="n">player</span><span class="p">.</span><span class="n">Backpack</span><span class="p">)</span>
+        <span class="kr">return</span> <span class="n">_</span><span class="p">.</span><span class="n">some</span><span class="p">(</span><span class="n">player</span><span class="p">.</span><span class="n">Backpack</span><span class="p">:</span><span class="n">GetChildren</span><span class="p">(),</span> <span class="n">_</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;OreType&quot;</span><span class="p">,</span> <span class="s2">&quot;Value&quot;</span><span class="p">):</span><span class="n">endsWith</span><span class="p">(</span><span class="s2">&quot;Gold&quot;</span><span class="p">)</span> <span class="kr">end</span><span class="p">)</span>
     <span class="kr">end</span><span class="p">)</span>
 
-    <span class="kr">return</span> <span class="n">_</span><span class="p">.</span><span class="n">matches</span><span class="p">(</span><span class="n">playersWithSpoon</span><span class="p">,</span> <span class="p">{</span><span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">.</span><span class="n">LocalPlayer</span><span class="p">})</span>
+    <span class="kr">return</span> <span class="n">_</span><span class="p">.</span><span class="n">shallowEqual</span><span class="p">(</span><span class="n">playersWithGold</span><span class="p">,</span> <span class="p">{</span><span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">.</span><span class="n">LocalPlayer</span><span class="p">})</span>
 
 <span class="kr">end</span>
 </pre></div>
 
+<h1 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h1>
+<p>There are currently two ways to install Rodash:</p>
+<h4 id="method-1-model-file-roblox-studio"><strong>Method 1. Model File (Roblox Studio)</strong><a class="headerlink" href="#method-1-model-file-roblox-studio" title="Permanent link">&para;</a></h4>
+<ol>
+<li>Download the <em>rbxm</em> model from the <a href="https://github.com/CodeKingdomsTeam/rodash/releases">Github releases page</a>.</li>
+<li>Insert the module into Studio and place it in <code>ReplicatedStorage</code></li>
+</ol>
+<h4 id="method-2-filesystem"><strong>Method 2. Filesystem</strong><a class="headerlink" href="#method-2-filesystem" title="Permanent link">&para;</a></h4>
+<ol>
+<li>Clone this repo using <code>git clone git@github.com:CodeKingdomsTeam/rodash.git</code> in a suitable directory</li>
+<li>Rename the <code>src</code> folder to <code>Robase</code></li>
+<li>Use <a href="https://github.com/LPGhatguy/rojo">rojo</a> to sync the files into a place</li>
+</ol>
 <h4 id="importing">Importing<a class="headerlink" href="#importing" title="Permanent link">&para;</a></h4>
 <p>If you prefer not to reuse <code>_</code>, you can also import the library under a different name, or a specific module:</p>
 <div class="codehilite"><pre><span></span>local _r = require(game.ReplicatedStorage.Rodash)
@@ -469,22 +447,10 @@ local Tables = require(game.ReplicatedStorage.Rodash.Tables)
 <li><strong>Avoid abstractions</strong>, working on native lua types to avoid enforcing specific coding styles</li>
 <li><strong>Only do one thing</strong> by avoiding parameter overloading or flags</li>
 <li><strong>Enforce type safety</strong> to avoid silent error propagation</li>
+<li><strong>Prefer immutability</strong> to promote functional design and reduce race conditions</li>
 <li><strong>Avoid duplication</strong>, mimicking existing functionality or aliasing other functions</li>
 <li><strong>Maintain backwards compatibility</strong> with older versions of the library</li>
 </ul>
-<h1 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h1>
-<p>There are currently two ways to install Rodash:</p>
-<h4 id="method-1-model-file-roblox-studio"><strong>Method 1. Model File (Roblox Studio)</strong><a class="headerlink" href="#method-1-model-file-roblox-studio" title="Permanent link">&para;</a></h4>
-<ol>
-<li>Download the <em>rbxm</em> model from the <a href="https://github.com/CodeKingdomsTeam/rodash/releases">Github releases page</a>.</li>
-<li>Insert the module into Studio and place it in <code>ReplicatedStorage</code></li>
-</ol>
-<h4 id="method-2-filesystem"><strong>Method 2. Filesystem</strong><a class="headerlink" href="#method-2-filesystem" title="Permanent link">&para;</a></h4>
-<ol>
-<li>Clone this repo using <code>git clone git@github.com:CodeKingdomsTeam/rodash.git</code> in a suitable directory</li>
-<li>Rename the <code>src</code> folder to <code>Robase</code></li>
-<li>Use <a href="https://github.com/LPGhatguy/rojo">rojo</a> to sync the files into a place</li>
-</ol>
 <h1 id="discussion">Discussion<a class="headerlink" href="#discussion" title="Permanent link">&para;</a></h1>
 <p>If you have any queries or feedback, please <a href="https://discord.gg/PyaNeN5">join the discussion</a> on the Studio+ discord server!</p>
                 

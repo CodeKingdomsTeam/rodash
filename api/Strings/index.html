@@ -295,6 +295,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../Arrays/" title="Arrays" class="md-nav__link">
+      Arrays
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
     <a href="../Async/" title="Async" class="md-nav__link">
       Async
     </a>
@@ -807,10 +819,12 @@ Convert <code>str</code> to camel-case.</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">camelCase</span><span class="p">(</span><span class="s1">&#39;Pepperoni Pizza&#39;</span><span class="p">)</span> <span class="c1">--&gt; &#39;pepperoniPizza&#39;</span>
+</pre></div>
 
-<span class="n">_</span><span class="p">.</span><span class="n">camelCase</span><span class="p">(</span><span class="s1">&#39;--pepperoni-pizza--&#39;</span><span class="p">)</span> <span class="c1">--&gt; &#39;pepperoniPizza&#39;</span>
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">camelCase</span><span class="p">(</span><span class="s1">&#39;--pepperoni-pizza--&#39;</span><span class="p">)</span> <span class="c1">--&gt; &#39;pepperoniPizza&#39;</span>
+</pre></div>
 
-<span class="n">_</span><span class="p">.</span><span class="n">camelCase</span><span class="p">(</span><span class="s1">&#39;__PEPPERONI_PIZZA&#39;</span><span class="p">)</span> <span class="c1">--&gt; &#39;pepperoniPizza&#39;</span>
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">camelCase</span><span class="p">(</span><span class="s1">&#39;__PEPPERONI_PIZZA&#39;</span><span class="p">)</span> <span class="c1">--&gt; &#39;pepperoniPizza&#39;</span>
 </pre></div>
 
 <hr />
@@ -836,12 +850,14 @@ Capitalize the first letter of <code>str</code>.</p>
 
 <hr />
 <h3 id="chartohex">charToHex<a class="headerlink" href="#chartohex" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">charToHex</span><span class="p">(</span><span class="n">char</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">charToHex</span><span class="p">(</span><span class="n">char</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="n">useBytes</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-Converts <em>char</em> into its hex representation</p>
+Converts <em>char</em> into a hex representation</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>char</strong> - <em>string</em> 
+<p><strong>char</strong> - <em>string</em> </p>
+<p><strong>format</strong> - <em>string</em>  - (optional) a string passed to <code>_.format</code> which formats the hex value of each of the character's code points.</p>
+<p><strong>useBytes</strong> - <em>string</em>  - (default = false) whether to use the character's bytes, rather than UTF-8 code points.
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
@@ -849,7 +865,22 @@ Converts <em>char</em> into its hex representation</p>
 <p><em>string</em></p>
 </blockquote>
 <p><strong>Examples</strong></p>
-<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">charToHex</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="c1">--&gt; %5F</span>
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">charToHex</span><span class="p">(</span><span class="s2">&quot;&lt;&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;3C&quot;</span>
+</pre></div>
+
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">charToHex</span><span class="p">(</span><span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&amp;#{};&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;&amp;#3C;&quot;</span>
+</pre></div>
+
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">charToHex</span><span class="p">(</span><span class="s2">&quot;😏&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;1F60F&quot;</span>
+</pre></div>
+
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">charToHex</span><span class="p">(</span><span class="s2">&quot;😏&quot;</span><span class="p">,</span> <span class="s2">&quot;0x{}&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;0x1F60F&quot;</span>
+</pre></div>
+
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">charToHex</span><span class="p">(</span><span class="s2">&quot;🤷🏼‍♀️&quot;</span><span class="p">,</span> <span class="s2">&quot;&amp;#x{};&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;&amp;#x1F937;&amp;#x1F3FC;&amp;#x200D;&amp;#x2640;&amp;#xFE0F;&quot;</span>
+</pre></div>
+
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">charToHex</span><span class="p">(</span><span class="s2">&quot;🤷🏼‍♀️&quot;</span><span class="p">,</span> <span class="s2">&quot;%{}&quot;</span><span class="p">,</span> <span class="kc">true</span><span class="p">)</span> <span class="c1">--&gt; &quot;%F0%9F%A4%B7%F0%9F%8F%BC%E2%80%8D%E2%99%80%EF%B8%8F&quot;</span>
 </pre></div>
 
 <hr />
@@ -883,7 +914,7 @@ on a production build to allow remote debugging.</li>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">decodeHtml</span><span class="p">(</span><span class="n">str</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 The inverse of <code>_.encodeHtml</code>.
-Converts any encodeHtmld HTML entities in <code>str</code> to their corresponding characters.</p>
+Converts any HTML entities in <code>str</code> to their corresponding characters.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>str</strong> - <em>string</em> 
@@ -894,16 +925,16 @@ Converts any encodeHtmld HTML entities in <code>str</code> to their correspondin
 <p><em>string</em></p>
 </blockquote>
 <p><strong>Examples</strong></p>
-<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">decodeHtml</span><span class="p">(</span><span class="s2">&quot;&amp;#34;Smashed&amp;quot; &amp;apos;Avocado&amp;#39;&quot;</span><span class="p">)</span> <span class="c1">--&gt; [[&quot;Smashed&quot; &#39;Avocado&#39;]]</span>
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">decodeHtml</span><span class="p">(</span><span class="s2">&quot;&amp;lt;b&amp;gt;&amp;#34;Smashed&amp;quot;&amp;lt;/b&amp;gt; &amp;apos;Avocado&amp;#39; &amp;#x1F60F;&quot;</span><span class="p">)</span> <span class="c1">--&gt; [[&lt;b&gt;&quot;Smashed&quot;&lt;/b&gt; &#39;Avocado&#39; 😏]]</span>
 </pre></div>
 
 <hr />
-<div class="rodocs-trait">chainable</div>
+<div class="rodocs-trait">Chainable</div>
 
 <h3 id="decodeurl">decodeUrl<a class="headerlink" href="#decodeurl" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">decodeUrl</span><span class="p">(</span><span class="n">str</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-The inverse of <code>_.encodeUrl</code></p>
+The inverse of <code>_.encodeUrl</code>.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>str</strong> - <em>string</em> 
@@ -918,13 +949,17 @@ The inverse of <code>_.encodeUrl</code></p>
 <span class="c1">--&gt; &quot;https://Egg+Fried Rice!?&quot;</span>
 </pre></div>
 
+<p><strong>Usage</strong></p>
+<ul>
+<li>This method is designed to act like <code>decodeURI</code> in JavaScript.</li>
+</ul>
 <hr />
-<div class="rodocs-trait">chainable</div>
+<div class="rodocs-trait">Chainable</div>
 
 <h3 id="decodeurlcomponent">decodeUrlComponent<a class="headerlink" href="#decodeurlcomponent" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">decodeUrlComponent</span><span class="p">(</span><span class="n">str</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-The inverse of <code>_.encodeUrlComponent</code></p>
+The inverse of <code>_.encodeUrlComponent</code>.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>str</strong> - <em>string</em> 
@@ -934,11 +969,19 @@ The inverse of <code>_.encodeUrlComponent</code></p>
 <blockquote>
 <p><em>string</em></p>
 </blockquote>
+<p><strong>Throws</strong></p>
+<ul>
+<li><em>MalformedInput</em> if <em>str</em> contains characters encoded incorrectly.</li>
+</ul>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">decodeUrlComponent</span><span class="p">(</span><span class="s2">&quot;https%3A%2F%2FEgg%2BFried%20Rice!%3F&quot;</span><span class="p">)</span>
 <span class="c1">--&gt; &quot;https://Egg+Fried Rice!?&quot;</span>
 </pre></div>
 
+<p><strong>Usage</strong></p>
+<ul>
+<li>This method is designed to act like <code>decodeURIComponent</code> in JavaScript.</li>
+</ul>
 <hr />
 <div class="rodocs-trait">Chainable
 </div>
@@ -957,14 +1000,14 @@ Converts the characters <code>&amp;&lt;&gt;"'</code> in <code>str</code> to thei
 <p><em>string</em></p>
 </blockquote>
 <p><strong>Examples</strong></p>
-<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">encodeHtml</span><span class="p">(</span><span class="s2">&quot;&lt;a&gt;Fish &amp; Chips&lt;/a&gt;&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;&amp;lt;a&amp;gt;Fish &amp;amp; Chips&amp;lt;/a&amp;gt;&quot;</span>
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">encodeHtml</span><span class="p">(</span><span class="s">[[Pease &lt; Bacon &gt; &quot;Fish&quot; &amp; &#39;Chips&#39;]]</span><span class="p">)</span> <span class="c1">--&gt; &quot;Peas &amp;lt; Bacon &amp;gt; &amp;quot;Fish&amp;quot; &amp;amp; &amp;apos;Chips&amp;apos;&quot;</span>
 </pre></div>
 
 <hr />
 <h3 id="encodequerystring">encodeQueryString<a class="headerlink" href="#encodequerystring" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">encodeQueryString</span><span class="p">(</span><span class="n">query</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-Takes a <em>query</em> dictionary of key-value pairs and build a query string that can be concatenated
+Takes a <em>query</em> dictionary of key-value pairs and builds a query string that can be concatenated
 to the end of a url.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
@@ -976,20 +1019,24 @@ to the end of a url.</p>
 <p><em>string</em></p>
 </blockquote>
 <p><strong>Examples</strong></p>
-<div class="codehilite"><pre><span></span><span class="n">Strings</span><span class="p">.</span><span class="n">encodeQueryString</span><span class="p">({</span>
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">encodeQueryString</span><span class="p">({</span>
     <span class="n">time</span> <span class="o">=</span> <span class="mi">11</span><span class="p">,</span>
     <span class="n">biscuits</span> <span class="o">=</span> <span class="s2">&quot;hob nobs&quot;</span><span class="p">,</span>
     <span class="n">chocolatey</span> <span class="o">=</span> <span class="kc">true</span>
 <span class="p">}))</span> <span class="c1">--&gt; &quot;?biscuits=hob+nobs&amp;time=11&amp;chocolatey=true&quot;</span>
 </pre></div>
 
+<p><strong>Usage</strong></p>
+<ul>
+<li>A query string which contains duplicate keys with different values is technically valid, but this function doesn't provide a way to produce them.</li>
+</ul>
 <hr />
-<div class="rodocs-trait">chainable</div>
+<div class="rodocs-trait">Chainable</div>
 
 <h3 id="encodeurl">encodeUrl<a class="headerlink" href="#encodeurl" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">encodeUrl</span><span class="p">(</span><span class="n">str</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-Encodes <em>str</em> for use as a url, for example as an entire url.</p>
+Encodes <em>str</em> for use as a URL, for example as an entire URL.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>str</strong> - <em>string</em> 
@@ -1000,17 +1047,21 @@ Encodes <em>str</em> for use as a url, for example as an entire url.</p>
 <p><em>string</em></p>
 </blockquote>
 <p><strong>Examples</strong></p>
-<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">encodeUrl</span><span class="p">(</span><span class="s2">&quot;https://Egg+Fried Rice!?&quot;</span><span class="p">)</span>
-<span class="c1">--&gt; &quot;https://Egg+Fried%20Rice!?&quot;</span>
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">encodeUrl</span><span class="p">(</span><span class="s2">&quot;https://example.com/Egg+Fried Rice!?🤷🏼‍♀️&quot;</span><span class="p">)</span>
+<span class="c1">--&gt; &quot;https://example.com/Egg+Fried%20Rice!?%1F937%1F3FC%200D%2640%FE0F&quot;</span>
 </pre></div>
 
+<p><strong>Usage</strong></p>
+<ul>
+<li>This method is designed to act like <code>encodeURI</code> in JavaScript.</li>
+</ul>
 <hr />
-<div class="rodocs-trait">chainable</div>
+<div class="rodocs-trait">Chainable</div>
 
 <h3 id="encodeurlcomponent">encodeUrlComponent<a class="headerlink" href="#encodeurlcomponent" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">encodeUrlComponent</span><span class="p">(</span><span class="n">str</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-Encodes <em>str</em> for use in a url, for example as a query parameter of a url.</p>
+Encodes <em>str</em> for use in a URL, for example as a query parameter of a URL.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>str</strong> - <em>string</em> 
@@ -1021,10 +1072,19 @@ Encodes <em>str</em> for use in a url, for example as a query parameter of a url
 <p><em>string</em></p>
 </blockquote>
 <p><strong>Examples</strong></p>
-<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">encodeUrlComponent</span><span class="p">(</span><span class="s2">&quot;https://Egg+Fried Rice!?&quot;</span><span class="p">)</span>
-<span class="c1">--&gt; &quot;https%3A%2F%2FEgg%2BFried%20Rice!%3F&quot;</span>
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">encodeUrlComponent</span><span class="p">(</span><span class="s2">&quot;https://example.com/Egg+Fried Rice!?🤷🏼‍♀️&quot;</span><span class="p">)</span>
+<span class="c1">--&gt; &quot;https%3A%2F%2Fexample.com%2FEgg%2BFried%20Rice!%3F%1F937%1F3FC%200D%2640%FE0F&quot;</span>
 </pre></div>
 
+<p><strong>Usage</strong></p>
+<ul>
+<li>
+<p>This method is designed to act like <code>encodeURIComponent</code> in JavaScript.</p>
+</li>
+<li>
+<p>This is very similar to <code>HttpService.EncodeUrl</code>, but is included for parity and conforms closer to the standard (e.g. EncodeUrl unnecessarily encodes <code>!</code>).</p>
+</li>
+</ul>
 <hr />
 <div class="rodocs-trait">Chainable
 </div>
@@ -1045,8 +1105,9 @@ Checks if <code>str</code> ends with the string <code>suffix</code>.</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">endsWith</span><span class="p">(</span><span class="s2">&quot;Fun Roblox Games&quot;</span><span class="p">,</span> <span class="s2">&quot;Games&quot;</span><span class="p">)</span> <span class="c1">--&gt; true</span>
+</pre></div>
 
-<span class="n">_</span><span class="p">.</span><span class="n">endsWith</span><span class="p">(</span><span class="s2">&quot;Bad Roblox Memes&quot;</span><span class="p">,</span> <span class="s2">&quot;Games&quot;</span><span class="p">)</span> <span class="c1">--&gt; false</span>
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">endsWith</span><span class="p">(</span><span class="s2">&quot;Bad Roblox Memes&quot;</span><span class="p">,</span> <span class="s2">&quot;Games&quot;</span><span class="p">)</span> <span class="c1">--&gt; false</span>
 </pre></div>
 
 <hr />
@@ -1057,8 +1118,8 @@ This function is a simpler &amp; more powerful version of <code>string.format</c
 If an instance has a <code>:format()</code> method, this is used instead, passing the format arguments.</p>
 <ul>
 <li><code>{}</code> prints the next variable using or <code>tostring</code>.</li>
-<li><code>{:?}</code> prints using <code>_.serializeDeep</code>.</li>
-<li><code>{:#?}</code> prints using <code>_.pretty</code>.</li>
+<li><code>{:?}</code> prints using <code>_.pretty</code>.</li>
+<li><code>{:#?}</code> prints using multiline <code>_.pretty</code>.</li>
 </ul>
 <p><strong>Parameters</strong></p>
 <blockquote>
@@ -1072,21 +1133,33 @@ If an instance has a <code>:format()</code> method, this is used instead, passin
 </blockquote>
 <hr />
 <h3 id="hextochar">hexToChar<a class="headerlink" href="#hextochar" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">hexToChar</span><span class="p">(</span><span class="n">char</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">hexToChar</span><span class="p">(</span><span class="n">hex</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-Converts <em>char</em> into its hex representation</p>
+Converts a <em>hex</em> represntation of a character in the character.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>char</strong> - <em>string</em> 
+<p><strong>hex</strong> - <em>string</em> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
 <p><em>string</em></p>
 </blockquote>
+<p><strong>Throws</strong></p>
+<ul>
+<li><em>MalformedInput</em> if <em>char</em> is not a valid encoding.</li>
+</ul>
 <p><strong>Examples</strong></p>
-<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">charToHex</span><span class="p">(</span><span class="s2">&quot;%5F&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;_&quot;</span>
-<span class="n">_</span><span class="p">.</span><span class="n">charToHex</span><span class="p">(</span><span class="s2">&quot;5F&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;_&quot;</span>
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">hexToChar</span><span class="p">(</span><span class="s2">&quot;1F60F&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;😏&quot;</span>
+</pre></div>
+
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">hexToChar</span><span class="p">(</span><span class="s2">&quot;%1F60F&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;😏&quot;</span>
+</pre></div>
+
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">hexToChar</span><span class="p">(</span><span class="s2">&quot;#1F60F&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;😏&quot;</span>
+</pre></div>
+
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">hexToChar</span><span class="p">(</span><span class="s2">&quot;0x1F60F&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;😏&quot;</span>
 </pre></div>
 
 <hr />
@@ -1108,10 +1181,12 @@ Convert <code>str</code> to kebab-case, making all letters lowercase.</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">kebabCase</span><span class="p">(</span><span class="s1">&#39;strongStilton&#39;</span><span class="p">)</span> <span class="c1">--&gt; &#39;strong-stilton&#39;</span>
+</pre></div>
 
-<span class="n">_</span><span class="p">.</span><span class="n">kebabCase</span><span class="p">(</span><span class="s1">&#39; Strong Stilton &#39;</span><span class="p">)</span> <span class="c1">--&gt; &#39;strong-stilton&#39;</span>
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">kebabCase</span><span class="p">(</span><span class="s1">&#39; Strong Stilton &#39;</span><span class="p">)</span> <span class="c1">--&gt; &#39;strong-stilton&#39;</span>
+</pre></div>
 
-<span class="n">_</span><span class="p">.</span><span class="n">kebabCase</span><span class="p">(</span><span class="s1">&#39;__STRONG_STILTON__&#39;</span><span class="p">)</span> <span class="c1">--&gt; &#39;strong-stilton&#39;</span>
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">kebabCase</span><span class="p">(</span><span class="s1">&#39;__STRONG_STILTON__&#39;</span><span class="p">)</span> <span class="c1">--&gt; &#39;strong-stilton&#39;</span>
 </pre></div>
 
 <p><strong>Usage</strong></p>
@@ -1139,10 +1214,12 @@ Makes a string of <code>length</code> from <code>str</code> by repeating charact
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">leftPad</span><span class="p">(</span><span class="s2">&quot;toast&quot;</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span> <span class="c1">--&gt; &quot; toast&quot;</span>
+</pre></div>
 
-<span class="n">_</span><span class="p">.</span><span class="n">leftPad</span><span class="p">(</span><span class="s2">&quot;2&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;02&quot;</span>
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">leftPad</span><span class="p">(</span><span class="s2">&quot;2&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;02&quot;</span>
+</pre></div>
 
-<span class="n">_</span><span class="p">.</span><span class="n">leftPad</span><span class="p">(</span><span class="s2">&quot;toast&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;:)&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;:):):toast&quot;</span>
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">leftPad</span><span class="p">(</span><span class="s2">&quot;toast&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;:)&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;:):):toast&quot;</span>
 </pre></div>
 
 <hr />
@@ -1181,17 +1258,19 @@ Makes a string of <code>length</code> from <code>str</code> by repeating charact
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">leftPad</span><span class="p">(</span><span class="s2">&quot;toast&quot;</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span> <span class="c1">--&gt; &quot;toast &quot;</span>
+</pre></div>
 
-<span class="n">_</span><span class="p">.</span><span class="n">leftPad</span><span class="p">(</span><span class="s2">&quot;2&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;!&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;2!&quot;</span>
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">leftPad</span><span class="p">(</span><span class="s2">&quot;2&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;!&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;2!&quot;</span>
+</pre></div>
 
-<span class="n">_</span><span class="p">.</span><span class="n">leftPad</span><span class="p">(</span><span class="s2">&quot;toast&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;:)&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;toast:):):&quot;</span>
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">leftPad</span><span class="p">(</span><span class="s2">&quot;toast&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;:)&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;toast:):):&quot;</span>
 </pre></div>
 
 <hr />
 <h3 id="setdebug">setDebug<a class="headerlink" href="#setdebug" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">setDebug</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-Hooks up any debug methods to invoke <em>fn</em>, which by default does nothing.</p>
+Hooks up any debug methods to invoke <em>fn</em>. By default, <code>_.debug</code> does nothing.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>fn</strong> - <em>string</em>  - (default = <code>print</code>)
@@ -1201,6 +1280,10 @@ Hooks up any debug methods to invoke <em>fn</em>, which by default does nothing.
 <blockquote>
 <p><em>string</em></p>
 </blockquote>
+<p><strong>Usage</strong></p>
+<ul>
+<li>Calling <code>_.setDebug()</code> will simply print all calls to <code>_.debug</code> with formatted arguments.</li>
+</ul>
 <hr />
 <div class="rodocs-trait">Chainable
 </div>
@@ -1220,10 +1303,12 @@ Convert <code>str</code> to snake-case, making all letters uppercase.</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">snakeCase</span><span class="p">(</span><span class="s1">&#39;sweetChickenCurry&#39;</span><span class="p">)</span> <span class="c1">--&gt; &#39;SWEET_CHICKEN_CURRY&#39;</span>
+</pre></div>
 
-<span class="n">_</span><span class="p">.</span><span class="n">snakeCase</span><span class="p">(</span><span class="s1">&#39; Sweet Chicken  Curry &#39;</span><span class="p">)</span> <span class="c1">--&gt; &#39;SWEET_CHICKEN__CURRY&#39;</span>
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">snakeCase</span><span class="p">(</span><span class="s1">&#39; Sweet Chicken  Curry &#39;</span><span class="p">)</span> <span class="c1">--&gt; &#39;SWEET_CHICKEN__CURRY&#39;</span>
+</pre></div>
 
-<span class="n">_</span><span class="p">.</span><span class="n">snakeCase</span><span class="p">(</span><span class="s1">&#39;--sweet-chicken--curry--&#39;</span><span class="p">)</span> <span class="c1">--&gt; &#39;SWEET_CHICKEN__CURRY&#39;</span>
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">snakeCase</span><span class="p">(</span><span class="s1">&#39;--sweet-chicken--curry--&#39;</span><span class="p">)</span> <span class="c1">--&gt; &#39;SWEET_CHICKEN__CURRY&#39;</span>
 </pre></div>
 
 <p><strong>Usage</strong></p>
@@ -1250,8 +1335,9 @@ Splits <code>str</code> into parts based on a pattern delimiter and returns a ta
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">splitByPattern</span><span class="p">(</span><span class="s2">&quot;rice&quot;</span><span class="p">)</span> <span class="c1">--&gt; {&quot;r&quot;, &quot;i&quot;, &quot;c&quot;, &quot;e&quot;}</span>
+</pre></div>
 
-<span class="n">_</span><span class="p">.</span><span class="n">splitByPattern</span><span class="p">(</span><span class="s2">&quot;one.two::flour&quot;</span><span class="p">,</span> <span class="s2">&quot;[.:]&quot;</span><span class="p">)</span> <span class="c1">--&gt; {&quot;one&quot;, &quot;two&quot;, &quot;&quot;, &quot;flour&quot;}</span>
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">splitByPattern</span><span class="p">(</span><span class="s2">&quot;one.two::flour&quot;</span><span class="p">,</span> <span class="s2">&quot;[.:]&quot;</span><span class="p">)</span> <span class="c1">--&gt; {&quot;one&quot;, &quot;two&quot;, &quot;&quot;, &quot;flour&quot;}</span>
 </pre></div>
 
 <p><strong>Usage</strong></p>
@@ -1270,7 +1356,7 @@ Splits <code>str</code> into parts based on a pattern delimiter and returns a ta
 <h3 id="startswith">startsWith<a class="headerlink" href="#startswith" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">startsWith</span><span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="n">prefix</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-Checks if <code>str</code> starts with the string <code>prefix</code>.</p>
+Checks if <code>str</code> starts with the string <code>start</code>.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>str</strong> - <em>string</em> </p>
@@ -1283,8 +1369,9 @@ Checks if <code>str</code> starts with the string <code>prefix</code>.</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">startsWith</span><span class="p">(</span><span class="s2">&quot;Fun Roblox Games&quot;</span><span class="p">,</span> <span class="s2">&quot;Fun&quot;</span><span class="p">)</span> <span class="c1">--&gt; true</span>
+</pre></div>
 
-<span class="n">_</span><span class="p">.</span><span class="n">startsWith</span><span class="p">(</span><span class="s2">&quot;Minecraft Games&quot;</span><span class="p">,</span> <span class="s2">&quot;Fun&quot;</span><span class="p">)</span> <span class="c1">--&gt; false</span>
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">startsWith</span><span class="p">(</span><span class="s2">&quot;Chess&quot;</span><span class="p">,</span> <span class="s2">&quot;Fun&quot;</span><span class="p">)</span> <span class="c1">--&gt; false</span>
 </pre></div>
 
 <hr />
@@ -1306,10 +1393,12 @@ Convert <code>str</code> to title-case, where the first letter of each word is c
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">titleCase</span><span class="p">(</span><span class="s2">&quot;jello world&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;Jello World&quot;</span>
+</pre></div>
 
-<span class="n">_</span><span class="p">.</span><span class="n">titleCase</span><span class="p">(</span><span class="s2">&quot;yellow-jello with_sprinkles&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;Yellow-jello With_sprinkles&quot;</span>
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">titleCase</span><span class="p">(</span><span class="s2">&quot;yellow-jello with_sprinkles&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;Yellow-jello With_sprinkles&quot;</span>
+</pre></div>
 
-<span class="n">_</span><span class="p">.</span><span class="n">titleCase</span><span class="p">(</span><span class="s2">&quot;yellow jello&#39;s don’t mellow&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;Yellow Jello&#39;s Dont’t Mellow&quot;</span>
+<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">titleCase</span><span class="p">(</span><span class="s2">&quot;yellow jello&#39;s don’t mellow&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;Yellow Jello&#39;s Dont’t Mellow&quot;</span>
 </pre></div>
 
 <p><strong>Usage</strong></p>

@@ -293,6 +293,18 @@
           
           
 
+
+  <li class="md-nav__item">
+    <a href="../Arrays/" title="Arrays" class="md-nav__link">
+      Arrays
+    </a>
+  </li>
+
+        
+          
+          
+          
+
   
 
 
@@ -365,6 +377,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#ispromise" title="isPromise" class="md-nav__link">
+    isPromise
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#never" title="never" class="md-nav__link">
     never
   </a>
@@ -379,8 +398,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#props" title="props" class="md-nav__link">
-    props
+  <a href="#parallelall" title="parallelAll" class="md-nav__link">
+    parallelAll
   </a>
   
 </li>
@@ -566,6 +585,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#ispromise" title="isPromise" class="md-nav__link">
+    isPromise
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#never" title="never" class="md-nav__link">
     never
   </a>
@@ -580,8 +606,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#props" title="props" class="md-nav__link">
-    props
+  <a href="#parallelall" title="parallelAll" class="md-nav__link">
+    parallelAll
   </a>
   
 </li>
@@ -666,8 +692,8 @@ these functions improve the experience of working with asynchronous code in Robl
 <h3 id="async_1">async<a class="headerlink" href="#async_1" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">async</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-  Returns a promise for a function which may yield. async calls the
-  the function in a coroutine and resolves with the output of the function
+Wraps a function which may yield in a promise. When run, async calls the
+the function in a coroutine and resolves with the output of the function
 after any asynchronous actions, and rejects if the function throws an error.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
@@ -687,19 +713,18 @@ after any asynchronous actions, and rejects if the function throws an error.</p>
     <span class="kd">local</span> <span class="n">HttpService</span> <span class="o">=</span> <span class="n">game</span><span class="p">:</span><span class="n">GetService</span><span class="p">(</span><span class="s2">&quot;HttpService&quot;</span><span class="p">)</span>
     <span class="kr">return</span> <span class="n">HttpService</span><span class="p">:</span><span class="n">GetAsync</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
 <span class="kr">end</span><span class="p">)</span>
-<span class="n">_</span><span class="p">.</span><span class="n">props</span><span class="p">({</span>
+<span class="n">_</span><span class="p">.</span><span class="n">parallelAll</span><span class="p">({</span>
     <span class="n">main</span> <span class="o">=</span> <span class="n">fetch</span><span class="p">(</span><span class="s2">&quot;http://example.com/burger&quot;</span><span class="p">),</span>
     <span class="n">side</span> <span class="o">=</span> <span class="n">fetch</span><span class="p">(</span><span class="s2">&quot;http://example.com/fries&quot;</span><span class="p">)</span> 
 <span class="p">}):</span><span class="n">andThen</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span> <span class="n">meal</span> <span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Meal&quot;</span><span class="p">,</span> <span class="n">_</span><span class="p">.</span><span class="n">pretty</span><span class="p">(</span><span class="n">meal</span><span class="p">))</span>
 <span class="kr">end</span><span class="p">)</span>
-<span class="c1">--&gt;&gt; {burger = &quot;Cheeseburger&quot;, fries = &quot;Curly fries&quot;} (ideal response)</span>
+<span class="c1">--&gt;&gt; Meal {burger = &quot;Cheeseburger&quot;, fries = &quot;Curly fries&quot;} (ideal response)</span>
 </pre></div>
 
 <p><strong>Usage</strong></p>
 <ul>
-<li>Used alongside <code>promise:await</code>, the <code>_.async</code> function forms an equivalence with the
-<code>async await</code> pattern in languages like JS.</li>
+<li>With <code>promise:await</code> the <code>_.async</code> function can be used just like the async-await pattern in languages like JS.</li>
 </ul>
 <hr />
 <h3 id="asyncall">asyncAll<a class="headerlink" href="#asyncall" title="Permanent link">&para;</a></h3>
@@ -719,7 +744,7 @@ functions that return promises when called rather than yielding.</p>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">buyDinner</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">async</span><span class="p">(</span><span class="kr">function</span><span class="p">()</span>
     <span class="kd">local</span> <span class="n">http</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">asyncAll</span><span class="p">(</span><span class="n">game</span><span class="p">:</span><span class="n">GetService</span><span class="p">(</span><span class="s2">&quot;HttpService&quot;</span><span class="p">))</span>
-    <span class="kd">local</span> <span class="n">order</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">props</span><span class="p">({</span>
+    <span class="kd">local</span> <span class="n">order</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">parallelAll</span><span class="p">({</span>
         <span class="n">main</span> <span class="o">=</span> <span class="n">http</span><span class="p">:</span><span class="n">GetAsync</span><span class="p">(</span><span class="s2">&quot;http://example.com/burger&quot;</span><span class="p">),</span>
         <span class="n">side</span> <span class="o">=</span> <span class="n">http</span><span class="p">:</span><span class="n">GetAsync</span><span class="p">(</span><span class="s2">&quot;http://example.com/fries&quot;</span><span class="p">)</span>
     <span class="p">})</span>
@@ -803,6 +828,21 @@ whether it has resolved or rejected.</p>
 </pre></div>
 
 <hr />
+<h3 id="ispromise">isPromise<a class="headerlink" href="#ispromise" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">isPromise</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+</pre></div>
+Wraps <code>Promise.is</code> but catches any errors thrown in attempting to ascertain if <em>value</em> is a
+promise, which will occur if the value throws when trying to access missing keys.</p>
+<p><strong>Parameters</strong></p>
+<blockquote>
+<p><strong>value</strong> - <em>string</em> 
+</p>
+</blockquote>
+<p><strong>Returns</strong></p>
+<blockquote>
+<p><em>string</em></p>
+</blockquote>
+<hr />
 <h3 id="never">never<a class="headerlink" href="#never" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">never</span><span class="p">()</span> <span class="c1">--&gt; string</span>
 </pre></div>
@@ -857,12 +897,12 @@ promises. These are considered resolved immediately.</p>
 </li>
 </ul>
 <hr />
-<h3 id="props">props<a class="headerlink" href="#props" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">props</span><span class="p">(</span><span class="n">dictionary</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<h3 id="parallelall">parallelAll<a class="headerlink" href="#parallelall" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">parallelAll</span><span class="p">(</span><span class="n">dictionary</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-  Given a <em>dictionary</em> of values, this function returns a promise which
-  resolves once all of the values in the dictionary have resolved, or rejects
-  if any of them are promises that reject.</p>
+Given a <em>dictionary</em> of values, this function returns a promise which
+resolves once all of the values in the dictionary have resolved, or rejects
+if any of them are promises that reject.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>dictionary</strong> - <em>string</em> 
@@ -870,7 +910,7 @@ promises. These are considered resolved immediately.</p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em> - an array mapping the input to resolved elements.</p>
+<p><em>string</em> - a dictionary mapping the input to resolved elements.</p>
 </blockquote>
 <p><strong>Rejects</strong></p>
 <ul>
@@ -883,7 +923,7 @@ promises. These are considered resolved immediately.</p>
         <span class="kr">return</span> <span class="s2">&quot;hot-&quot;</span> <span class="o">..</span> <span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> 
     <span class="kr">end</span><span class="p">)</span>
 <span class="kr">end</span>
-<span class="kd">local</span> <span class="n">toastie</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">props</span><span class="p">({</span>
+<span class="kd">local</span> <span class="n">toastie</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">parallelAll</span><span class="p">({</span>
     <span class="n">bread</span> <span class="o">=</span> <span class="s2">&quot;brown&quot;</span><span class="p">,</span>
     <span class="n">filling</span> <span class="o">=</span> <span class="n">heat</span><span class="p">(</span><span class="s2">&quot;cheese&quot;</span><span class="p">)</span>
 <span class="p">})</span>
@@ -910,7 +950,7 @@ first <em>n</em> promises if specified. If any promise rejects, race rejects wit
 <blockquote>
 <p><em>string</em> - an array containing the first n resolutions, in the order that they resolved.</p>
 </blockquote>
-<p><strong>Usage</strong></p>
+<p><strong>Throws</strong></p>
 <ul>
 <li>OutOfBoundsError - if the number of required promises is greater than the input length.</li>
 </ul>
@@ -951,15 +991,19 @@ Like <code>Promise.resolve</code> but can take any number of arguments.</p>
 <span class="c1">-- &gt;&gt; potato was mashed</span>
 </pre></div>
 
+<p><strong>Usage</strong></p>
+<ul>
+<li>As <code>_.resolve(promise) --&gt; promise</code>, this function can also be used to ensure a value is a promise.</li>
+</ul>
 <hr />
 <h3 id="retrywithbackoff">retryWithBackoff<a class="headerlink" href="#retrywithbackoff" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">retryWithBackoff</span><span class="p">(</span><span class="n">getPromise</span><span class="p">,</span> <span class="n">backoffOptions</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-  Try running a function which returns a promise and retry if the function throws
-  and error or the promise rejects. The retry behaviour can be adapted using
-  backoffOptions, which can customize the maximum number of retries and the backoff
-  timing of the form <code>[0, x^attemptNumber] + y</code> where <em>x</em> is an exponent that produces
-  a random exponential delay and <em>y</em> is a constant delay.</p>
+Try running a function which returns a promise and retry if the function throws
+and error or the promise rejects. The retry behaviour can be adapted using
+backoffOptions, which can customize the maximum number of retries and the backoff
+timing of the form <code>[0, x^attemptNumber] + y</code> where <em>x</em> is an exponent that produces
+a random exponential delay and <em>y</em> is a constant delay.</p>
 <h4 id="backoff-options">Backoff Options<a class="headerlink" href="#backoff-options" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
@@ -1095,7 +1139,7 @@ an error, which can be optionally customized.</p>
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href="../../guide/arrays/" title="Arrays" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../Arrays/" title="Arrays" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>

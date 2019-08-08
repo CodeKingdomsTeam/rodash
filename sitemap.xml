@@ -2,37 +2,42 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
      <loc>https://codekingdomsteam.github.io/rodash/</loc>
-     <lastmod>2019-07-25</lastmod>
+     <lastmod>2019-08-08</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://codekingdomsteam.github.io/rodash/guide/arrays/</loc>
-     <lastmod>2019-07-25</lastmod>
+     <lastmod>2019-08-08</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    <url>
+     <loc>https://codekingdomsteam.github.io/rodash/api/Arrays/</loc>
+     <lastmod>2019-08-08</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://codekingdomsteam.github.io/rodash/api/Async/</loc>
-     <lastmod>2019-07-25</lastmod>
+     <lastmod>2019-08-08</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://codekingdomsteam.github.io/rodash/api/Classes/</loc>
-     <lastmod>2019-07-25</lastmod>
+     <lastmod>2019-08-08</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://codekingdomsteam.github.io/rodash/api/Functions/</loc>
-     <lastmod>2019-07-25</lastmod>
+     <lastmod>2019-08-08</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://codekingdomsteam.github.io/rodash/api/Strings/</loc>
-     <lastmod>2019-07-25</lastmod>
+     <lastmod>2019-08-08</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>https://codekingdomsteam.github.io/rodash/api/Tables/</loc>
-     <lastmod>2019-07-25</lastmod>
+     <lastmod>2019-08-08</lastmod>
      <changefreq>daily</changefreq>
     </url>
 </urlset>
