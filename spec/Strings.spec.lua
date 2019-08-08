@@ -37,7 +37,7 @@ describe(
 					end
 				)
 				it(
-					"from kebab-case",
+					"from camel-case",
 					function()
 						assert.are.same("strong-stilton", Strings.kebabCase("strongStilton"))
 					end
