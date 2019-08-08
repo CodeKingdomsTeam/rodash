@@ -12,3 +12,5 @@ set -o pipefail
 
 luacov-console
 luacov-console -s
+
+./tools/buildDocs.sh

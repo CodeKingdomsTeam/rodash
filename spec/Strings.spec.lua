@@ -4,43 +4,147 @@ describe(
 	"Strings",
 	function()
 		describe(
-			"Split",
+			"camelCase",
 			function()
 				it(
-					"splits",
+					"from snake-case",
 					function()
-						local x = "hi guys"
-
-						assert.are.same({"hi", "guys"}, Strings.split(x, " "))
+						assert.are.same("pepperoniPizza", Strings.camelCase("__PEPPERONI_PIZZA__"))
 					end
 				)
 				it(
-					"splits with empty delimiter",
+					"from kebab-case",
 					function()
-						local x = "hi guys"
-
-						assert.are.same({"h", "i", " ", "g", "u", "y", "s"}, Strings.split(x))
+						assert.are.same("pepperoniPizza", Strings.camelCase("--pepperoni-pizza--"))
+					end
+				)
+				it(
+					"from normal-case",
+					function()
+						assert.are.same("pepperoniPizza", Strings.camelCase("Pepperoni Pizza"))
 					end
 				)
 			end
 		)
 
 		describe(
-			"Trim",
+			"kebabCase",
+			function()
+				it(
+					"from snake-case",
+					function()
+						assert.are.same("strong-stilton", Strings.kebabCase("__STRONG_STILTON__"))
+					end
+				)
+				it(
+					"from camel-case",
+					function()
+						assert.are.same("strong-stilton", Strings.kebabCase("strongStilton"))
+					end
+				)
+				it(
+					"from normal-case",
+					function()
+						assert.are.same("strong-stilton", Strings.kebabCase(" Strong Stilton "))
+					end
+				)
+			end
+		)
+
+		describe(
+			"snakeCase",
+			function()
+				it(
+					"from camel-case",
+					function()
+						assert.are.same("SWEET_CHICKEN_CURRY", Strings.snakeCase("sweetChickenCurry"))
+					end
+				)
+				it(
+					"from kebab-case",
+					function()
+						assert.are.same("SWEET_CHICKEN__CURRY", Strings.snakeCase("--sweet-chicken--curry--"))
+					end
+				)
+				it(
+					"from normal-case",
+					function()
+						assert.are.same("SWEET_CHICKEN__CURRY", Strings.snakeCase(" Sweet Chicken  Curry "))
+					end
+				)
+			end
+		)
+
+		describe(
+			"titleCase",
+			function()
+				it(
+					"from plain words",
+					function()
+						assert.are.same("Jello World", Strings.titleCase("jello world"))
+					end
+				)
+				it(
+					"from kebabs",
+					function()
+						assert.are.same("Yellow-jello With_sprinkles", Strings.titleCase("yellow-jello with_sprinkles"))
+					end
+				)
+				it(
+					"from phrases with apostrophes",
+					function()
+						assert.are.same("Yellow Jello's Don’t Mellow", Strings.titleCase("yellow jello's don’t mellow"))
+					end
+				)
+			end
+		)
+
+		describe(
+			"splitByPattern",
+			function()
+				it(
+					"with char delimiter",
+					function()
+						local x = "one.two::flour"
+
+						assert.are.same({"one", "two", "", "flour"}, Strings.splitByPattern(x, "[.:]"))
+					end
+				)
+				it(
+					"with empty delimiter",
+					function()
+						local x = "rice"
+
+						assert.are.same({"r", "i", "c", "e"}, Strings.splitByPattern(x))
+					end
+				)
+				it(
+					"with pattern delimiter",
+					function()
+						local x = "one:*two:@pea"
+
+						assert.are.same({"one", "two", "pea"}, Strings.splitByPattern(x, ":."))
+					end
+				)
+			end
+		)
+
+		describe(
+			"trim",
 			function()
 				it(
 					"trims from start and end",
 					function()
-						local x = "  hi guys "
+						local x = "  greetings friend "
 
-						assert.are.same("hi guys", Strings.trim(x))
+						assert.are.same("greetings friend", Strings.trim(x))
 					end
 				)
 			end
 		)
 
 		describe(
-			"StartsWith",
+			"startsWith",
 			function()
 				it(
 					"returns correctly",
@@ -55,7 +159,7 @@ describe(
 		)
 
 		describe(
-			"EndsWith",
+			"endsWith",
 			function()
 				it(
 					"returns correctly",
@@ -70,7 +174,7 @@ describe(
 		)
 
 		describe(
-			"LeftPad",
+			"leftPad",
 			function()
 				it(
 					"repeats correctly",
@@ -90,11 +194,17 @@ describe(
 						assert.are.same("00000nice", Strings.leftPad("nice", 9, "0"))
 					end
 				)
+				it(
+					"pads with a string",
+					function()
+						assert.are.same(":):):toast", Strings.leftPad("toast", 10, ":)"))
+					end
+				)
 			end
 		)
 
 		describe(
-			"RightPad",
+			"rightPad",
 			function()
 				it(
 					"repeats correctly",
@@ -112,6 +222,12 @@ describe(
 					"pads with different character",
 					function()
 						assert.are.same("nice00000", Strings.rightPad("nice", 9, "0"))
+					end
+				)
+				it(
+					"pads with a string",
+					function()
+						assert.are.same("toast:):):", Strings.rightPad("toast", 10, ":)"))
 					end
 				)
 			end

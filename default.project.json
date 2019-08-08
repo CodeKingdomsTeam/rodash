@@ -1,6 +1,6 @@
 {
-  "name": "Robase",
-  "tree": {
-    "$path": "src"
-  }
+	"name": "Rodash",
+	"tree": {
+		"$path": "src"
+	}
 }
