@@ -257,7 +257,7 @@ function Functions.chain(fns, actor)
 		{
 			__index = function(self, name)
 				local fn = fns[name]
-				assert(Functions.isCallable(fn), "Chain key " .. tostring(name) .. " is not callable")
+				assert(Functions.isCallable(fn), "BadFn: Chain key " .. tostring(name) .. " is not callable")
 				local feeder = function(parent, ...)
 					assert(type(parent) == "table", "Chain functions must be called with ':'")
 					local stage = {}
@@ -280,7 +280,7 @@ function Functions.chain(fns, actor)
 				return feeder
 			end,
 			__newindex = function()
-				error("Cannot assign to a chain, create one with _.chain instead.")
+				error("ReadonlyKey: Cannot assign to a chain, create one with _.chain instead.")
 			end,
 			__call = function(_, subject)
 				return subject
