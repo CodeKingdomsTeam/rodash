@@ -215,9 +215,9 @@ end
 
 --[[
 	Makes a string of `length` from `str` by repeating characters from `suffix` at the end of the string.
-	@example _.leftPad("toast", 6) --> "toast "
-	@example _.leftPad("2", 2, "!") --> "2!"
-	@example _.leftPad("toast", 10, ":)") --> "toast:):):"
+	@example _.rightPad("toast", 6) --> "toast "
+	@example _.rightPad("2", 2, "!") --> "2!"
+	@example _.rightPad("toast", 10, ":)") --> "toast:):):"
 	@param suffix (default = `" "`)
 	@trait Chainable
 ]]
@@ -270,7 +270,7 @@ function Strings.charToHex(char, format, useBytes)
 end
 
 --[[
-	Converts a _hex_ represntation of a character in the character.
+	Generates a character from its _hex_ representation.
 	@example _.hexToChar("1F60F") --> "😏"
 	@example _.hexToChar("%1F60F") --> "😏"
 	@example _.hexToChar("#1F60F") --> "😏"
