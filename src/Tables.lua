@@ -583,7 +583,7 @@ end
 --: <T: Iterable<K,V>>(T -> int)
 function Tables.len(source)
 	local count = 0
-	for _ in pairs(source) do
+	for _ in getIterator(source) do
 		count = count + 1
 	end
 	return count
