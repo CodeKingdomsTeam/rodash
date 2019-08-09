@@ -443,6 +443,24 @@ function Strings.encodeQueryString(query)
 	return ("?" .. concat(fields, "&"))
 end
 
+--[[
+	Returns the _format_ string with placeholders `{...}` substituted with readable represnetations
+	of the subsequent arguments.
+]]
+--: string, ...any -> string
+function Strings.format(format, ...)
+end
+
+--[[
+	Returns a human-readable string for the given _value_. If _multiline_ is `true`, the string
+	will be formatted across multiple lines if a descendant element gets longer than `80`
+	characters.
+
+	@usage This format may be improved in the future, so use `_.serializeDeep` if need a format
+		which won't change.
+	@see _.serializeDeep
+]]
+--: any, bool -> string
 function Strings.pretty(value, multiline)
 	local function serializeValue(value, options)
 		if type(value) == "table" then
