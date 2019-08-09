@@ -238,9 +238,9 @@ end
 This function is a simpler & more powerful version of `string.format`, inspired by `format!` in Rust.
 	If an instance has a `:format()` method, this is used instead, passing the format arguments.
 	
-		* `{}` prints the next variable using or `tostring`.
-		* `{:?}` prints using `_.pretty`.
-		* `{:#?}` prints using multiline `_.pretty`.
+	* `{}` prints the next variable using or `tostring`.
+	* `{:?}` prints using `_.serializeDeep`.
+	* `{:#?}` prints using multiline `_.pretty`.
 
 	@param subject the format match string
 ]]
@@ -441,6 +441,64 @@ function Strings.encodeQueryString(query)
 		end
 	)
 	return ("?" .. concat(fields, "&"))
+end
+
+function Strings.pretty(value, multiline)
+	local function serializeValue(value, options)
+		if type(value) == "table" then
+			local className = ""
+			if value.Class then
+				className = value.Class.name .. " "
+			end
+			return className .. Tables.serialize(value, options)
+		else
+			return Tables.defaultSerializer(value, options)
+		end
+	end
+
+	return Tables.serialize(
+		value,
+		{
+			serializeValue = serializeValue,
+			serializeKey = function(key, options)
+				if type(key) == "string" then
+					return key
+				else
+					return "[" .. serializeValue(key, options) .. "]"
+				end
+			end,
+			serializeElement = multiline and function(key, value)
+					local shortString = key .. " = " .. value
+					if #shortString < 80 or shortString:match("\n") then
+						return shortString
+					end
+					return key .. " =\n\t" .. value
+				end or nil,
+			serializeTable = multiline and
+				function(contents, ref, options)
+					local shortString = ref .. "{" .. table.concat(contents, ", ") .. "}"
+					if #shortString < 80 then
+						return shortString
+					end
+					return ref ..
+						"{\n" ..
+							table.concat(
+								Tables.map(
+									contents,
+									function(element)
+										return "\t" .. element:gsub("\n", "\n\t")
+									end
+								),
+								",\n"
+							) ..
+								"\n}"
+				end or
+				nil,
+			keyDelimiter = " = ",
+			valueDelimiter = ", ",
+			omitKeys = {"Class"}
+		}
+	)
 end
 
 return Strings

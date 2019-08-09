@@ -55,7 +55,8 @@ local typeIndex = {
 	a numeric weight or nil as well as a boolean.
 
 	The default comparator will also sort elements of different types, in the order:
-	boolean, number, string, function, CFunction, userdata, and table.
+	boolean, number, string, function, CFunction, userdata, and table. Elements which cannot be
+	sorted naturally will be sorted by their string value.
 
 	@param comparator (optional) should return `true` or `n < 0` if the first element should be
 		before the second in the resulting array, or `0` or `nil` if the elements have the same
@@ -71,11 +72,23 @@ function Arrays.sort(input, comparator)
 	local Functions = require(script.Functions)
 	assert(comparator == nil or Functions.isCallable(comparator), "BadInput: comparator must be callable or nil")
 
-	comparator = comparator or function(a, b)
+	comparator =
+		comparator or
+		function(a, b)
 			if type(a) ~= type(b) then
 				return typeIndex[type(a)] - typeIndex[type(b)]
 			end
-			return a < b
+			local ok, result =
+				pcall(
+				function()
+					return a < b
+				end
+			)
+			if ok then
+				return result
+			else
+				return tostring(a) < tostring(b)
+			end
 		end
 
 	table.sort(

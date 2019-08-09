@@ -885,10 +885,11 @@ function Tables.isArray(source)
 	return #Tables.keys(source) == #source
 end
 
-local function serializeVisit(source, valueSerializer, keySerializer, cycles)
+local function serializeVisit(source, options)
 	local Arrays = require(script.Arrays)
 	local isArray = Tables.isArray(source)
 	local ref = ""
+	local cycles = options.cycles
 	if cycles.refs[source] then
 		if cycles.visits[source] then
 			return "&" .. cycles.visits[source]
@@ -899,101 +900,26 @@ local function serializeVisit(source, valueSerializer, keySerializer, cycles)
 		end
 	end
 	local contents =
-		table.concat(
 		Tables.map(
-			Arrays.sort(Tables.keys(source)),
-			function(key)
-				local value = source[key]
-				local stringValue = valueSerializer(value, cycles)
-				return isArray and stringValue or keySerializer(key, cycles) .. ":" .. stringValue
-			end
+		Arrays.sort(
+			Tables.filter(
+				Tables.keys(source),
+				function(key)
+					return not Tables.includes(options.omitKeys, key)
+				end
+			)
 		),
-		","
-	)
-	return ref .. "{" .. contents .. "}"
-end
-
---[[
-	Returns a string representation of _source_ including all elements with sorted keys.
-	
-	`_.serialize` preserves the properties of being unique, stable and cycle-safe if the serializer
-	functions provided also obey these properties.
-
-	@param valueSerializer (default = `_.defaultSerializer`) return a string representation of a value
-	@param keySerializer (default = `_.defaultSerializer`) return a string representation of a value
-
-	@example _.serialize({1, 2, 3}) --> "{1,2,3}"
-	@example _.serialize({a = 1, b = true, [3] = "hello"}) --> '{"a":1,"b":true,3:"hello"}'
-	@example 
-		_.serialize({a = function() end, b = {a = "table"})
-		--> '{"a":<function: 0x...>,"b"=<table: 0x...>}'
-	@usage Use `_.serialize` when you need a representation of a table which doesn't need to be
-		human-readable, or you need to customize the way serialization works. `_.pretty` is more
-		appropriate when you need a human-readable string.
-	@see _.serializeDeep
-	@see _.defaultSerializer
-	@see _.pretty
-]]
---: <T: Iterable<K,V>>(T, (V, Cycles<V> -> string), (K, Cycles<V> -> string) -> string)
-function Tables.serialize(source, valueSerializer, keySerializer)
-	valueSerializer = valueSerializer or Tables.defaultSerializer
-	keySerializer = keySerializer or Tables.defaultSerializer
-	local Functions = require(script.Functions)
-	assert(Functions.isCallable(valueSerializer), "BadInput: valueSerializer must be a function if defined")
-	assert(Functions.isCallable(keySerializer), "BadInput: keySerializer must be a function if defined")
-	local cycles = {
-		refs = {},
-		count = 0,
-		visits = {}
-	}
-	if type(source) ~= "table" then
-		return valueSerializer(source, cycles)
-	end
-	-- Find tables which appear more than once, and assign each an index
-	cycles.refs =
-		Tables.map(
-		Tables.occurences(source),
-		function(value)
-			return value > 1 and value or nil
+		function(key)
+			local value = source[key]
+			local stringValue = options.serializeValue(value, options)
+			if isArray then
+				return stringValue
+			else
+				return options.serializeElement(options.serializeKey(key, options), stringValue, options)
+			end
 		end
 	)
-	return serializeVisit(source, valueSerializer, keySerializer, cycles)
-end
-
---[[
-	Like `_.serialize`, but if a child element is a table it is serialized recursively.
-
-	Returns a string representation of _source_ including all elements with sorted keys.
-	
-	This function preserves uniqueness, stability and cycle-safety.
-
-	@param valueSerializer (default = `_.defaultSerializer`) return a string representation of a value
-	@param keySerializer (default = `_.defaultSerializer`) return a string representation of a value
-
-	@example 
-		_.serializeDeep({a = {b = "table"}) --> '{"a":{"b":"table"}}'
-	@example 
-		local kyle = {name = "Kyle"}
-		kyle.child = kyle
-		_.serializeDeep(kyle) --> '<0>{"child":<&0>,"name":"Kyle"}'
-	@see _.serialize
-	@see _.defaultSerializer
-]]
---: <T: Iterable<K,V>>(T, (V, Cycles<V> -> string), (K, Cycles<V> -> string) -> string)
-function Tables.serializeDeep(source, serializer, keySerializer)
-	serializer = serializer or Tables.defaultSerializer
-	keySerializer = keySerializer or Tables.defaultSerializer
-	local Functions = require(script.Functions)
-	assert(Functions.isCallable(serializer), "BadInput: serializer must be a function if defined")
-	assert(Functions.isCallable(keySerializer), "BadInput: keySerializer must be a function if defined")
-	local function deepSerializer(value, cycles)
-		if type(value) == "table" then
-			return serializeVisit(value, deepSerializer, keySerializer, cycles)
-		else
-			return serializer(value, cycles)
-		end
-	end
-	return Tables.serialize(source, deepSerializer, keySerializer)
+	return options.serializeTable(contents, ref, options)
 end
 
 --[[
@@ -1022,6 +948,114 @@ local function countOccurences(source, counts)
 			end
 		end
 	end
+end
+
+local function getDefaultSerializeOptions()
+	return {
+		serializeValue = Tables.defaultSerializer,
+		serializeKey = Tables.defaultSerializer,
+		serializeElement = function(key, value, options)
+			return key .. options.keyDelimiter .. value
+		end,
+		serializeTable = function(contents, ref, options)
+			return ref .. "{" .. table.concat(contents, options.valueDelimiter) .. "}"
+		end,
+		keyDelimiter = ":",
+		valueDelimiter = ",",
+		cycles = {
+			count = 0,
+			visits = {}
+		},
+		omitKeys = {}
+	}
+end
+
+--[[
+	Returns a string representation of _source_ including all elements with sorted keys.
+	
+	`_.serialize` preserves the properties of being unique, stable and cycle-safe if the serializer
+	functions provided also obey these properties.
+
+	@param serializeValue (default = `_.defaultSerializer`) return a string representation of a value
+	@param serializeKey (default = `_.defaultSerializer`) return a string representation of a value
+
+	@example _.serialize({1, 2, 3}) --> "{1,2,3}"
+	@example _.serialize({a = 1, b = true, [3] = "hello"}) --> '{"a":1,"b":true,3:"hello"}'
+	@example 
+		_.serialize({a = function() end, b = {a = "table"})
+		--> '{"a":<function: 0x...>,"b"=<table: 0x...>}'
+	@usage Use `_.serialize` when you need a representation of a table which doesn't need to be
+		human-readable, or you need to customize the way serialization works. `_.pretty` is more
+		appropriate when you need a human-readable string.
+	@see _.serializeDeep
+	@see _.defaultSerializer
+	@see _.pretty
+]]
+--: <T: Iterable<K,V>>(T, (V, Cycles<V> -> string), (K, Cycles<V> -> string) -> string)
+function Tables.serialize(source, options)
+	options = Tables.defaults({}, options, getDefaultSerializeOptions())
+	assert(t.string(options.valueDelimiter), "BadInput: valueDelimiter must be a string if defined")
+	assert(t.string(options.keyDelimiter), "BadInput: keyDelimiter must be a string if defined")
+	local Functions = require(script.Functions)
+	assert(Functions.isCallable(options.serializeValue), "BadInput: options.serializeValue must be a function if defined")
+	assert(Functions.isCallable(options.serializeKey), "BadInput: options.serializeKey must be a function if defined")
+	if type(source) ~= "table" then
+		return options.serializeValue(source, options)
+	end
+	-- Find tables which appear more than once, and assign each an index
+	if not options.cycles.refs then
+		options.cycles.refs =
+			Tables.map(
+			Tables.occurences(source),
+			function(value)
+				return value > 1 and value or nil
+			end
+		)
+	end
+	return serializeVisit(source, options)
+end
+
+--[[
+	Like `_.serialize`, but if a child element is a table it is serialized recursively.
+
+	Returns a string representation of _source_ including all elements with sorted keys.
+	
+	This function preserves uniqueness, stability and cycle-safety.
+
+	@param serializeValue (default = `_.defaultSerializer`) return a string representation of a value
+	@param serializeKey (default = `_.defaultSerializer`) return a string representation of a value
+
+	@example 
+		_.serializeDeep({a = {b = "table"}) --> '{"a":{"b":"table"}}'
+	@example 
+		local kyle = {name = "Kyle"}
+		kyle.child = kyle
+		_.serializeDeep(kyle) --> '<0>{"child":<&0>,"name":"Kyle"}'
+	@see _.serialize
+	@see _.defaultSerializer
+]]
+--: <T: Iterable<K,V>>(T, (V, Cycles<V> -> string), (K, Cycles<V> -> string) -> string)
+function Tables.serializeDeep(source, options)
+	options = Tables.defaults({}, options, getDefaultSerializeOptions())
+	local Functions = require(script.Functions)
+	assert(Functions.isCallable(options.serializeValue), "BadInput: options.serializeValue must be a function if defined")
+	assert(Functions.isCallable(options.serializeKey), "BadInput: options.serializeKey must be a function if defined")
+	local function deepSerializer(fn, value, internalOptions)
+		if type(value) == "table" then
+			return Tables.serialize(value, internalOptions)
+		else
+			return fn(value, internalOptions)
+		end
+	end
+	local serializeOptions =
+		Tables.defaults(
+		{
+			serializeKey = Functions.bind(deepSerializer, options.serializeKey),
+			serializeValue = Functions.bind(deepSerializer, options.serializeValue)
+		},
+		options
+	)
+	return Tables.serialize(source, serializeOptions)
 end
 
 --[[
