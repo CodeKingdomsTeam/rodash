@@ -1,5 +1,5 @@
 --[[
-	A collection of functions that operate specifically arrays, defined as tables with just keys _1..n_.
+	A collection of functions that operate specifically on arrays, defined as tables with just keys _1..n_.
 
 	```lua
 		-- Examples of valid arrays:
