@@ -242,8 +242,7 @@ describe(
 						local getName = function(player)
 							return _.delay(1):andThen(_.throws("NoNameError"))
 						end
-						local players
-						players =
+						local players =
 							_.chain(
 							{
 								-- Any chainable function can be used
@@ -304,8 +303,7 @@ describe(
 						local getName = function(player)
 							return player.Name
 						end
-						local players
-						players =
+						local players =
 							_.chain(
 							{
 								filterHurt = _.fn:filter(

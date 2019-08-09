@@ -38,11 +38,24 @@ local function assertHandlerIsFn(handler)
 	assert(Functions.isCallable(handler), "BadInput: handler must be a function")
 end
 
+local typeIndex = {
+	boolean = 1,
+	number = 2,
+	string = 3,
+	["function"] = 4,
+	["CFunction"] = 5,
+	userdata = 6,
+	table = 7
+}
+
 --[[
 	Returns a sorted array from the _input_ array, based on a _comparator_ function.
 
 	Unlike `table.sort`, the comparator to `_.sort` is optional, but it can also be defined to
 	a numeric weight or nil as well as a boolean.
+
+	The default comparator will also sort elements of different types, in the order:
+	boolean, number, string, function, CFunction, userdata, and table.
 
 	@param comparator (optional) should return `true` or `n < 0` if the first element should be
 		before the second in the resulting array, or `0` or `nil` if the elements have the same
@@ -59,6 +72,9 @@ function Arrays.sort(input, comparator)
 	assert(comparator == nil or Functions.isCallable(comparator), "BadInput: comparator must be callable or nil")
 
 	comparator = comparator or function(a, b)
+			if type(a) ~= type(b) then
+				return typeIndex[type(a)] - typeIndex[type(b)]
+			end
 			return a < b
 		end
 

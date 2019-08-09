@@ -941,19 +941,22 @@ function Tables.serialize(source, valueSerializer, keySerializer)
 	local Functions = require(script.Functions)
 	assert(Functions.isCallable(valueSerializer), "BadInput: valueSerializer must be a function if defined")
 	assert(Functions.isCallable(keySerializer), "BadInput: keySerializer must be a function if defined")
+	local cycles = {
+		refs = {},
+		count = 0,
+		visits = {}
+	}
+	if type(source) ~= "table" then
+		return valueSerializer(source, cycles)
+	end
 	-- Find tables which appear more than once, and assign each an index
-	local tableRefs =
+	cycles.refs =
 		Tables.map(
 		Tables.occurences(source),
 		function(value)
 			return value > 1 and value or nil
 		end
 	)
-	local cycles = {
-		refs = tableRefs,
-		count = 0,
-		visits = {}
-	}
 	return serializeVisit(source, valueSerializer, keySerializer, cycles)
 end
 
