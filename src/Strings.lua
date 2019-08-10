@@ -128,34 +128,37 @@ function Strings.decodeHtml(str)
 end
 
 --[[
-	Splits `str` into parts based on a pattern delimiter and returns a table of the parts.
-	@example _.splitByPattern("rice") --> {"r", "i", "c", "e"}
-	@example _.splitByPattern("one.two::flour", "[.:]") --> {"one", "two", "", "flour"}
+	Splits `str` into parts based on a pattern delimiter and returns a table of the parts, followed
+	by a table of the matched delimiters.
+	@example _.splitOn("rice") --> {"r", "i", "c", "e"}, {"", "", "", ""}
+	@example _.splitOn("one.two::flour", "[.:]") --> {"one", "two", "", "flour"}, {".", ":", ":"}
 	@usage This method is useful only when you need a _pattern_ as a delimiter.
 	@usage Use the Roblox native `string.split` if you are splitting on a simple string.
 	@param delimiter (default = "")
 	@trait Chainable
 ]]
---: string, pattern -> string[]
-function Strings.splitByPattern(str, delimiter)
+--: string, pattern -> string[], string[]
+function Strings.splitOn(str, pattern)
 	assert(t.string(str))
-	assert(t.optional(t.string)(delimiter))
+	assert(t.optional(t.string)(pattern))
 	local result = {}
+	local delimiters = {}
 	local from = 1
-	if (not delimiter) then
+	if not pattern then
 		for i = 1, #str do
 			insert(result, str:sub(i, i))
 		end
 		return result
 	end
-	local delim_from, delim_to = str:find(delimiter, from)
-	while delim_from do
-		insert(result, str:sub(from, delim_from - 1))
-		from = delim_to + 1
-		delim_from, delim_to = str:find(delimiter, from)
+	local delimiterStart, delimiterEnd = str:find(pattern, from)
+	while delimiterStart do
+		insert(delimiters, str:sub(delimiterStart, delimiterEnd))
+		insert(result, str:sub(from, delimiterStart - 1))
+		from = delimiterEnd + 1
+		delimiterStart, delimiterEnd = str:find(pattern, from)
 	end
 	insert(result, str:sub(from))
-	return result
+	return result, delimiters
 end
 
 --[[
@@ -232,27 +235,6 @@ function Strings.rightPad(str, length, suffix)
 	local remainder = padLength % #suffix
 	local repetitions = (padLength - remainder) / #suffix
 	return str .. string.rep(suffix or " ", repetitions) .. suffix:sub(1, remainder)
-end
-
---[[
-This function is a simpler & more powerful version of `string.format`, inspired by `format!` in Rust.
-	If an instance has a `:format()` method, this is used instead, passing the format arguments.
-	
-	* `{}` prints the next variable using or `tostring`.
-	* `{:?}` prints using `_.serializeDeep`.
-	* `{:#?}` prints using multiline `_.pretty`.
-
-	@param subject the format match string
-]]
-function Strings.format(subject, ...)
-end
-
---[[
-	Pretty-prints the _subject_ and its associated metatable if _withMetatable_ is true
-	@param withMetatable (default = false)
-]]
---: any, bool? -> string
-function Strings.pretty(subject, withMetatable)
 end
 
 --[[
@@ -444,11 +426,82 @@ function Strings.encodeQueryString(query)
 end
 
 --[[
-	Returns the _format_ string with placeholders `{...}` substituted with readable represnetations
+	Returns the _format_ string with placeholders `{...}` substituted with readable representations
 	of the subsequent arguments.
+
+	This function is a simpler & more powerful version of `string.format`, inspired by `format!` in Rust.
+	
+	* `{}` formats and prints the next argument using `:format()` if available, or `tostring`.
+	* `{2}` formats and prints the 2nd value argument
+
+	Display parameters can be combined after a `:` in the curly braces:
+
+	#### Serialization
+
+	* `{:?}` formats using `_.serializeDeep`.
+	* `{:#?}` formats using multiline `_.pretty`.
+
+	#### Alignment
+
+	* `{:8}` left-pads the result with spaces so that it takes up at least 8 characters.
+	* `{:08}` left-pads the result with `0` so that it takes up at least 8 characters.
+	* `{:>8}` right-pads the result with spaces so that it takes up at least 8 characters.
+	* `{:>08}` right-pads the result with `0` so that it takes up at least 8 characters.
+
+	#### Numbers
+
+	* `{:.3}` displays a number with 3 digits of precision after the decimal point.
+	* `{:e}` or `{:E}` prints a number with scientific notation.
+	* `{:x}` or `{:X}` prints a number as a lower or upper-case hex value. Use `#x` or `#X` to prefix with `0x`.
+	* `{:b}` prints a number in binary format. Use `#b` to prefix with `0b`.
+	* `{:o}` prints a number in octal format. Use `#o` to prefix with `0o`.
 ]]
 --: string, ...any -> string
 function Strings.format(format, ...)
+	local args = {...}
+	local argIndex = 1
+	local texts, subs = Strings.splitOn(format, "%{[:0-9#?beox>]*%}")
+	local result = {}
+	for i, text in pairs(texts) do
+		local unescaped = text:gsub("{{", "{"):gsub("}}", "}")
+		insert(result, unescaped)
+		local placeholder = subs[i] and subs[i]:sub(2, -2)
+		if placeholder then
+			local escapeMatch = text:gmatch("%{+$")()
+			local isEscaped = escapeMatch and #escapeMatch % 2 == 1
+			if not isEscaped then
+				local placeholderSplit = Strings.splitOn(placeholder, ":")
+				local nextIndex = tonumber(placeholderSplit[1])
+				local displayString = placeholderSplit[2]
+				local arg
+				if nextIndex then
+					arg = args[nextIndex]
+				else
+					arg = args[argIndex]
+					argIndex = argIndex + 1
+				end
+				insert(result, Strings.formatValue(arg, displayString or ""))
+			else
+				local unescapedSub = placeholder
+				insert(result, unescapedSub)
+			end
+		end
+	end
+	return table.concat(result, "")
+end
+
+--[[
+	Format a specific _value_ using the specified _displayString_.
+]]
+--: any, DisplayString -> string
+function Strings.formatValue(value, displayString)
+	if displayString:find("#%?") ~= nil then
+		return Strings.pretty(value)
+	elseif displayString:find("%?") ~= nil then
+		return Tables.serializeDeep(value)
+	else
+		return tostring(value)
+	end
 end
 
 --[[

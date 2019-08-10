@@ -101,14 +101,14 @@ describe(
 		)
 
 		describe(
-			"splitByPattern",
+			"splitOn",
 			function()
 				it(
 					"with char delimiter",
 					function()
 						local x = "one.two::flour"
 
-						assert.are.same({"one", "two", "", "flour"}, Strings.splitByPattern(x, "[.:]"))
+						assert.are.same({{"one", "two", "", "flour"}, {".", ":", ":"}}, {Strings.splitOn(x, "[.:]")})
 					end
 				)
 				it(
@@ -116,7 +116,7 @@ describe(
 					function()
 						local x = "rice"
 
-						assert.are.same({"r", "i", "c", "e"}, Strings.splitByPattern(x))
+						assert.are.same({"r", "i", "c", "e"}, Strings.splitOn(x))
 					end
 				)
 				it(
@@ -124,7 +124,64 @@ describe(
 					function()
 						local x = "one:*two:@pea"
 
-						assert.are.same({"one", "two", "pea"}, Strings.splitByPattern(x, ":."))
+						assert.are.same({{"one", "two", "pea"}, {":*", ":@"}}, {Strings.splitOn(x, ":.")})
+					end
+				)
+			end
+		)
+
+		describe(
+			"format",
+			function()
+				it(
+					"with basic types",
+					function()
+						assert.are.same(
+							"It's true, there are 5 a's in this string: aaaaa",
+							Strings.format("It's {}, there are {} a's in this string: {}", true, 5, "aaaaa")
+						)
+					end
+				)
+				it(
+					"with escaped curly braces",
+					function()
+						assert.are.same(
+							"A value, just braces {}, just {braces}, an {item} in braces",
+							Strings.format("A {}, just braces {{}}, just {{braces}}, an {{{}}} in braces", "value", "item")
+						)
+					end
+				)
+				it(
+					"with args in any order",
+					function()
+						assert.are.same(
+							"An item, just {braces}, a {value} and a value -> item",
+							Strings.format("An {2}, just {{braces}}, a {{{1}}} and a {} -> {}", "value", "item")
+						)
+					end
+				)
+				it(
+					"with serialized args",
+					function()
+						local item = {one = 1, two = 2}
+						item.three = item
+						assert.are.same(
+							'A formatted object: <1>{"one":1,"three":&1,"two":2}',
+							Strings.format("A formatted object: {:?}", item)
+						)
+					end
+				)
+				it(
+					"with pretty args",
+					function()
+						local result = {apple = {fire = "fox"}, badger = {id = 1}, cactus = "crumpet"}
+						result.badger.donkey = result
+						result.donkey = result.badger
+						result.cactus = result.apple
+						assert.are.same(
+							'A pretty object: <1>{"apple":<2>{"fire":"fox"},"badger":<3>{"donkey":&1,"id":1},"cactus":&2,"donkey":&3}',
+							Strings.format("A pretty object: {:?}", result)
+						)
 					end
 				)
 			end
