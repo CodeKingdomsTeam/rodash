@@ -429,45 +429,47 @@ end
 	Returns the _format_ string with placeholders `{...}` substituted with readable representations
 	of the subsequent arguments.
 
-	This function is a simpler & more powerful version of `string.format`, inspired by `format!` in Rust.
+	This function is a simpler & more powerful version of `string.format`, inspired by `format!`
+	in Rust.
 	
-	* `{}` formats and prints the next argument using `:format()` if available, or `tostring`.
+	* `{}` formats and prints the next argument using `:format()` if available, or a suitable
+		default representation depending on its type.
 	* `{2}` formats and prints the 2nd value argument
 
-	Display parameters can be combined after a `:` in the curly braces:
+	Display parameters can be combined after a `:` in the curly braces. Any format parameters used
+	in `string.format` can be used here, along with these extras:
 
-	#### Serialization
-
-	* `{:?}` formats using `_.serializeDeep`.
-	* `{:#?}` formats using multiline `_.pretty`.
-
-	#### Alignment
-
-	* `{:8}` left-pads the result with spaces so that it takes up at least 8 characters.
-	* `{:08}` left-pads the result with `0` so that it takes up at least 8 characters.
-	* `{:>8}` right-pads the result with spaces so that it takes up at least 8 characters.
-	* `{:>08}` right-pads the result with `0` so that it takes up at least 8 characters.
-
-	#### Numbers
-
-	* `{:.3}` displays a number with 3 digits of precision after the decimal point.
-	* `{:e}` or `{:E}` prints a number with scientific notation.
-	* `{:x}` or `{:X}` prints a number as a lower or upper-case hex value. Use `#x` or `#X` to prefix with `0x`.
-	* `{:b}` prints a number in binary format. Use `#b` to prefix with `0b`.
-	* `{:o}` prints a number in octal format. Use `#o` to prefix with `0o`.
+	* `{:?}` formats any value using `_.serializeDeep`.
+	* `{:#?}` formats any value using multiline `_.pretty`.
+	* `{:b}` formats a number in its binary representation.
+	@example
+		local props = {"teeth", "claws", "whiskers", "tail"}
+		_.format("{:?} is in {:#?}", "whiskers", props)
+		-> '"whiskers" is in {"teeth", "claws", "whiskers", "tail"}'
+	@example
+		_.format("{} in binary is {0:b}", 125) -> "125 in binary is 110100"
+	@example
+		_.format("The time is {:02}:{:02}", 2, 4) -> "The time is 02:04"
+	@example
+		_.format("The color blue is #{:06X}", 255) -> "The color blue is #0000FF"
+	@usage Escape `{` with `{{` and `}` similarly with `}}`.
+	@usage See [https://developer.roblox.com/articles/Format-String](https://developer.roblox.com/articles/Format-String)
+		for complete list of formating options and further use cases.
+	@see _.serializeDeep
+	@see _.pretty
 ]]
 --: string, ...any -> string
 function Strings.format(format, ...)
 	local args = {...}
 	local argIndex = 1
-	local texts, subs = Strings.splitOn(format, "%{[:0-9#?beox>]*%}")
+	local texts, subs = Strings.splitOn(format, "{[^{}]*}")
 	local result = {}
 	for i, text in pairs(texts) do
 		local unescaped = text:gsub("{{", "{"):gsub("}}", "}")
 		insert(result, unescaped)
 		local placeholder = subs[i] and subs[i]:sub(2, -2)
 		if placeholder then
-			local escapeMatch = text:gmatch("%{+$")()
+			local escapeMatch = text:gmatch("{+$")()
 			local isEscaped = escapeMatch and #escapeMatch % 2 == 1
 			if not isEscaped then
 				local placeholderSplit = Strings.splitOn(placeholder, ":")
@@ -490,17 +492,54 @@ function Strings.format(format, ...)
 	return table.concat(result, "")
 end
 
+local function octalToBinary(number)
+	local binaryEight = {
+		["1"] = "000",
+		["2"] = "001",
+		["3"] = "010",
+		["4"] = "011",
+		["5"] = "100",
+		["6"] = "101",
+		["7"] = "110",
+		["8"] = "111"
+	}
+	return string.format("%o", number):gsub(
+		".",
+		function(char)
+			return binaryEight[char]
+		end
+	):gsub("^0+", "")
+end
+
 --[[
 	Format a specific _value_ using the specified _displayString_.
 ]]
 --: any, DisplayString -> string
 function Strings.formatValue(value, displayString)
-	if displayString:find("#%?") ~= nil then
-		return Strings.pretty(value)
-	elseif displayString:find("%?") ~= nil then
-		return Tables.serializeDeep(value)
+	local displayTypeStart, displayTypeEnd = displayString:find("[A-Za-z#?]+")
+	if displayTypeStart then
+		local displayType = displayString:sub(displayTypeStart, displayTypeEnd)
+		local formatAsString =
+			"%" .. displayString:sub(1, displayTypeStart - 1) .. displayString:sub(displayTypeEnd + 1) .. "s"
+		if displayType == "#?" then
+			return string.format(formatAsString, Strings.pretty(value, true))
+		elseif displayType == "?" then
+			return string.format(formatAsString, Tables.serializeDeep(value))
+		elseif displayType == "#b" then
+			local result = octalToBinary(value)
+			return string.format(formatAsString, "0b" .. result)
+		elseif displayType == "b" then
+			local result = octalToBinary(value)
+			return string.format(formatAsString, result)
+		end
+		return string.format("%" .. displayString, value)
 	else
-		return tostring(value)
+		local displayType = "s"
+		if type(value) == "number" then
+			local _, fraction = math.modf(value)
+			displayType = fraction == 0 and "d" or "f"
+		end
+		return string.format("%" .. displayString .. displayType, tostring(value))
 	end
 end
 

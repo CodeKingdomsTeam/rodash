@@ -899,23 +899,36 @@ local function serializeVisit(source, options)
 			ref = "<" .. cycles.count .. ">"
 		end
 	end
-	local contents =
+	local filteredKeys =
 		Tables.map(
-		Arrays.sort(
-			Tables.filter(
-				Tables.keys(source),
-				function(key)
-					return not Tables.includes(options.omitKeys, key)
-				end
-			)
+		Tables.filter(
+			-- Sort optimistically so references are more likely to be generated in print order
+			Arrays.sort(Tables.keys(source)),
+			function(key)
+				return not Tables.includes(options.omitKeys, key)
+			end
 		),
 		function(key)
-			local value = source[key]
+			return {key, options.serializeKey(key, options)}
+		end
+	)
+
+	local contents =
+		Tables.map(
+		-- Sort keys again in case the serialization doesn't preserve order
+		Arrays.sort(
+			filteredKeys,
+			function(left, right)
+				return left[2] < right[2]
+			end
+		),
+		function(pair)
+			local value = source[pair[1]]
 			local stringValue = options.serializeValue(value, options)
 			if isArray then
 				return stringValue
 			else
-				return options.serializeElement(options.serializeKey(key, options), stringValue, options)
+				return options.serializeElement(pair[2], stringValue, options)
 			end
 		end
 	)
@@ -931,7 +944,7 @@ function Tables.defaultSerializer(input)
 	elseif type(input) == "number" or type(input) == "boolean" then
 		return tostring(input)
 	elseif type(input) == "string" then
-		return '"' .. input:gsub("\\", "\\\\"):gsub('"', '\\"') .. '"'
+		return '"' .. input:gsub("\\", "\\\\"):gsub('"', '\\"'):gsub("\n", "\\n") .. '"'
 	else
 		return "<" .. tostring(input) .. ">"
 	end

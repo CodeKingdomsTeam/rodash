@@ -172,15 +172,84 @@ describe(
 					end
 				)
 				it(
-					"with pretty args",
+					"with serialized args",
 					function()
 						local result = {apple = {fire = "fox"}, badger = {id = 1}, cactus = "crumpet"}
 						result.badger.donkey = result
 						result.donkey = result.badger
 						result.cactus = result.apple
 						assert.are.same(
-							'A pretty object: <1>{"apple":<2>{"fire":"fox"},"badger":<3>{"donkey":&1,"id":1},"cactus":&2,"donkey":&3}',
-							Strings.format("A pretty object: {:?}", result)
+							'A serialized object: <1>{"apple":<2>{"fire":"fox"},"badger":<3>{"donkey":&1,"id":1},"cactus":&2,"donkey":&3}',
+							Strings.format("A serialized object: {:?}", result)
+						)
+					end
+				)
+				it(
+					"with pretty multiline args",
+					function()
+						local result = {apple = {fire = "fox"}, badger = {id = 1}, cactus = "crumpet"}
+						result.badger.donkey = result
+						result.donkey = result.badger
+						result.cactus = result.apple
+						assert.are.same(
+							[[A pretty object: <1>{
+	apple = <2>{fire = "fox"},
+	badger = <3>{donkey = &1, id = 1},
+	cactus = &2,
+	donkey = &3
+}]],
+							Strings.format("A pretty object: {:#?}", result)
+						)
+					end
+				)
+				it(
+					"using a string.format formatter",
+					function()
+						assert.are.same("The color blue is #0000FF", Strings.format("The color blue is #{:06X}", 255))
+					end
+				)
+				it(
+					"using a pretty string.format formatter",
+					function()
+						assert.are.same("An octal number: 0257411", Strings.format("An octal number: {:#o}", 89865))
+					end
+				)
+				it(
+					"with long binary",
+					function()
+						assert.are.same("A binary number: 0b110100", Strings.format("A binary number: {:#b}", 125))
+					end
+				)
+				it(
+					"a padded number",
+					function()
+						assert.are.same("A padded number: 00056", Strings.format("A padded number: {:05}", 56))
+					end
+				)
+				it(
+					"with scientific precision",
+					function()
+						assert.are.same(
+							"A number with scientific precision: 8.986500e+04",
+							Strings.format("A number with scientific precision: {:e}", 89865)
+						)
+					end
+				)
+				it(
+					"with upper scientific precision",
+					function()
+						assert.are.same(
+							"A number with scientific precision: 8.986500E+04",
+							Strings.format("A number with scientific precision: {:E}", 89865)
+						)
+					end
+				)
+				it(
+					"with specific precision",
+					function()
+						assert.are.same(
+							"A number with scientific precision: 8986.500",
+							Strings.format("A number with scientific precision: {:.3}", 8986.5)
 						)
 					end
 				)
@@ -415,11 +484,11 @@ describe(
 						result.cactus = result.apple
 						assert.equal(
 							[[<1>{
-	apple = <2>{fire = Animal {name = "fox"}},
-	cactus = &2,
 	[Animal {name = "badger"}] =
-		<3>{id = 1, [Animal {name = "donkey kong: revisited"}] = &1},
-	[Animal {name = "donkey kong: revisited"}] = &3
+		<2>{[Animal {name = "donkey kong: revisited"}] = &1, id = 1},
+	[Animal {name = "donkey kong: revisited"}] = &2,
+	apple = <3>{fire = Animal {name = "fox"}},
+	cactus = &3
 }]],
 							Strings.pretty(result, true)
 						)
