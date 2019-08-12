@@ -12,7 +12,7 @@
 
 	Right?
 ]]
-local t = require(script.Parent.t)
+local t = require(script.Parent.Parent.t)
 
 local Tables = {}
 
@@ -34,6 +34,29 @@ function Tables.slice(source, first, last, step)
 	end
 
 	return sliced
+end
+
+--[[
+	Get a child or descendant of a table, returning nil if any errors are generated.
+	@param ... 
+	@trait Chainable
+]]
+--: <T: Iterable<K, V>>(T, ...K) -> V
+function Tables.get(source, key, ...)
+	local tailkeys = {...}
+	local ok, value =
+		pcall(
+		function()
+			return source[key]
+		end
+	)
+	if ok then
+		if #tailkeys > 0 then
+			return Tables.get(value, unpack(tailkeys))
+		else
+			return value
+		end
+	end
 end
 
 --: <T: Iterable<K,V>, R: Iterable<K,V2>((T, (element: V, key: K) -> V2) -> R)
@@ -160,6 +183,16 @@ function Tables.reduce(source, handler, init)
 		result = handler(result, v, i)
 	end
 	return result
+end
+
+function Tables.sum(source)
+	return Tables.reduce(
+		source,
+		function(current, value)
+			return current + value
+		end,
+		0
+	)
 end
 
 --[[
@@ -358,7 +391,7 @@ function Tables.insertMany(target, items)
 end
 
 --: (table) -> int
-function Tables.getLength(table)
+function Tables.len(table)
 	local count = 0
 	for _ in pairs(table) do
 		count = count + 1
@@ -444,16 +477,21 @@ function Tables.shallowEqual(left, right)
 	)
 end
 
-function Tables.serialize(input, serializer)
+function Tables.isOrdered(source)
+	return #Tables.keys(source) == #source
+end
+
+function Tables.serialize(source, serializer)
 	serializer = serializer or function(value)
 			return tostring(value)
 		end
-	assert(type(input) == "table")
-	assert(type(serializer) == "function")
+	assert(type(source) == "table")
+	local Functions = require(script.Parent.Functions)
+	assert(Functions.isCallable(serializer))
 	return "{" ..
 		table.concat(
 			Tables.map(
-				input,
+				source,
 				function(element, i)
 					return tostring(i) .. "=" .. serializer(element)
 				end
@@ -482,7 +520,7 @@ end
 function Tables.sort(input, comparator)
 	assert(t.table(input), input)
 
-	local Functions = require(script.Functions)
+	local Functions = require(script.Parent.Functions)
 	assert(comparator == nil or Functions.isCallable(comparator), "comparator must be callable or nil")
 
 	comparator = comparator or function(a, b)

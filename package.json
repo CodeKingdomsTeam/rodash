@@ -1,16 +1,17 @@
 {
-  "name": "rodash",
-  "version": "1.0.0",
-  "main": "build.sh",
-  "repository": "git@github.com:CodeKingdomsTeam/rodash.git",
-  "author": "Andrew Moss <andrew@codekingdoms.com>",
-  "license": "MIT",
-  "devDependencies": {
-    "lua-fmt": "^2.6.0",
-    "argparse": "^1.0.10",
-    "fs-extra": "^8.1.0",
-    "luaparse": "^0.2.1",
-    "ts-node": "^8.3.0",
-    "typescript": "^3.5.3"
-  }
+	"name": "rodash",
+	"version": "1.0.0",
+	"main": "build.sh",
+	"repository": "git@github.com:CodeKingdomsTeam/rodash.git",
+	"author": "Andrew Moss <andrew@codekingdoms.com>",
+	"license": "MIT",
+	"devDependencies": {
+		"argparse": "^1.0.10",
+		"fs-extra": "^8.1.0",
+		"lua-fmt": "^2.6.0",
+		"luaparse": "^0.2.1",
+		"ts-node": "^8.3.0",
+		"typescript": "^3.5.3",
+		"lodash": "^4.17.15"
+	}
 }

@@ -1,4 +1,5 @@
 import { Node, Comment, MemberExpression, FunctionDeclaration, Identifier } from './astTypings';
+import { keyBy } from 'lodash';
 
 interface DocEntry {
 	tag: string;
@@ -135,8 +136,19 @@ function ${libName}.${name}(${params.join(', ')}) --> string
 				'```',
 		);
 		lines.push(doc.comments);
+		const paramEntries = filterEntries(doc.entries, 'param');
+		const paramMap = keyBy(
+			paramEntries.map(entry => entry.content.match(/^\s*([A-Za-z]+)\s(.*)/)),
+			entry => entry && entry[1],
+		);
 		if (params.length) {
-			lines.push('\n**Parameters**\n', ...params.map(param => `> __${param}__ - _string_\n>`));
+			lines.push(
+				'\n**Parameters**\n',
+				...params.map(
+					param =>
+						`> __${param}__ - _string_ ${paramMap[param] ? ' - ' + paramMap[param][2] : ''}\n>`,
+				),
+			);
 		}
 		const returns = filterEntries(doc.entries, 'returns');
 		lines.push('\n**Returns**\n');
@@ -147,7 +159,7 @@ function ${libName}.${name}(${params.join(', ')}) --> string
 		}
 		const throws = filterEntries(doc.entries, 'throws');
 		if (throws.length) {
-			lines.push('\n**Usage**\n');
+			lines.push('\n**Throws**\n');
 			lines.push(...formatList(throws));
 		}
 
@@ -170,15 +182,24 @@ function ${libName}.${name}(${params.join(', ')}) --> string
 		if (examples.length) {
 			lines.push(
 				'\n**Examples**\n',
-				'```lua',
-				...examples.map(example => example.content + '\n'),
-				'```',
+				...examples.map(example => '```lua\n' + example.content + '\n```\n\n'),
 			);
 		}
 		const usage = filterEntries(doc.entries, 'usage');
 		if (usage.length) {
-			lines.push('\n**Usage**\n');
-			lines.push(...formatList(usage));
+			lines.push('\n**Usage**\n', ...formatList(usage));
+		}
+		const see = filterEntries(doc.entries, 'see');
+		if (see.length) {
+			lines.push(
+				'\n**See**\n',
+				...see.map(({ content }) => {
+					const [, linkName, suffix] = content.match(/^\s*([^\s]+)\s*(.*)/);
+					const prefix = libName + '.';
+					const link = linkName.startsWith(prefix) ? linkName.substring(prefix.length) : linkName;
+					return `\n* [${linkName}](#${link}) ${suffix}`;
+				}),
+			);
 		}
 		return {
 			name,
@@ -188,15 +209,7 @@ function ${libName}.${name}(${params.join(', ')}) --> string
 }
 
 function formatList(entries: DocEntry[], modifier?: (line: string) => string) {
-	return entries.map(
-		({ content }) =>
-			'* ' +
-			content
-				.split('\n')
-				.filter(line => !line.match(/^\s*$/))
-				.map(line => (modifier ? modifier(line) : line))
-				.join('\n* '),
-	);
+	return entries.map(({ content }) => '\n* ' + content);
 }
 
 function filterEntries(entries: DocEntry[], tag: string) {

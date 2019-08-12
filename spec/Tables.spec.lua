@@ -32,14 +32,14 @@ describe(
 		)
 
 		describe(
-			"GetLength",
+			"len",
 			function()
 				it(
 					"gets length",
 					function()
 						local x = {"h", "e", "l", "l", "o"}
 
-						assert.are.same(5, Tables.getLength(x))
+						assert.are.same(5, Tables.len(x))
 					end
 				)
 			end

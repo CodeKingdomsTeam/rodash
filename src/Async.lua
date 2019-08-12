@@ -3,18 +3,51 @@
 	and borrowing ideas from [Bluebird](http://bluebirdjs.com/docs/getting-started.html),
 	these functions improve the experience of working with asynchronous code in Roblox.
 ]]
-local t = require(script.Parent.t)
-local Tables = require(script.Tables)
-local Functions = require(script.Functions)
-local Promise = require(script.Parent.Promise)
+local t = require(script.Parent.Parent.t)
+local Promise = require(script.Parent.Parent.Promise)
+local Tables = require(script.Parent.Tables)
+local Functions = require(script.Parent.Functions)
 local Async = {}
 
 local baseRandomStream = Random.new()
 
 --[[
-	Given an _array_ of values, this function returns a promise which
-	resolves once all of the array elements have resolved, or rejects
-	if any of the array elements reject.
+	Yields completion of a promise `promise:await()`, but returns immediately with the value if it
+	isn't a promise.
+	@example
+		local heat = function( item )
+			return _.delay(1).returns("hot " .. item)
+		end
+		local recipe = {"wrap", heat("steak"), heat("rice")}
+		local burrito = _.map(recipe, _.await)
+		_.debug("{:#?}", burrito)
+		-->> {"wrap", "hot steak", "hot rice"} (2 seconds)
+]]
+function Async.await(value)
+	if Async.isPromise(value) then
+		return value:await()
+	end
+	return value
+end
+
+--[[
+	Wraps `Promise.is` but catches any errors thrown in attempting to ascertain if _value_ is a
+	promise, which will occur if the value throws when trying to access missing keys.
+]]
+function Async.isPromise(value)
+	local ok, isPromise =
+		pcall(
+		function()
+			return Promise.is(value)
+		end
+	)
+	return ok and isPromise
+end
+
+--[[
+    Given an _array_ of values, this function returns a promise which
+    resolves once all of the array elements have resolved, or rejects
+    if any of the array elements reject.
 	
 	@returns an array mapping the input to resolved elements.
 	@example
@@ -27,9 +60,9 @@ local baseRandomStream = Random.new()
 		local meal =_.parallel({heat("cheese"), "tomato"})
 		meal:await() --> {"hot-cheese", "tomato"} (1 second later)
 	@rejects passthrough
-	@usage
-		This function is like `Promise.all` but allows objects in the array which aren't promises. These are considered resolved immediately.
-		Promises that return nil values will cause the return array to be sparse.
+	@usage This function is like `Promise.all` but allows objects in the array which aren't
+		promises. These are considered resolved immediately.
+	@usage Promises that return nil values will cause the return array to be sparse.
 ]]
 --: <T>((Promise<T> | T)[]) -> Promise<T[]>
 function Async.parallel(array)
@@ -38,7 +71,7 @@ function Async.parallel(array)
 		Tables.map(
 		array,
 		function(object)
-			if Promise.is(object) then
+			if Async.isPromise(object) then
 				return object
 			else
 				return Promise.resolve(object)
@@ -99,12 +132,12 @@ end
 			return _.resolve("mashed", veg)
 		end
 		mash("potato"):andThen(function(style, veg)
-			_.print("{} was {}", veg, style)
+			_.debug("{} was {}", veg, style)
 		end)
 		-- >> potato was mashed
-
+	@usage As `_.resolve(promise) --> promise`, this function can also be used to ensure a value is a promise.
 ]]
---: <T>(...T) -> Promise<...T>
+--: T -> Promise<T>
 function Async.resolve(...)
 	local args = {...}
 	return Promise.new(
@@ -121,9 +154,8 @@ end
 	@returns an array containing the first n resolutions, in the order that they resolved.
 	@rejects passthrough
 	@throws OutOfBoundsError - if the number of required promises is greater than the input length.
-	@usage
-		Promises which return nil values are ignored due to the in-order constraint.
-		The size of _array_ must be equal to or larger than _n_.
+	@usage Promises which return nil values are ignored due to the in-order constraint.
+	@usage The size of _array_ must be equal to or larger than _n_.
 ]]
 --: <T>(Promise<T>[], uint?) -> Promise<T[]>
 function Async.race(array, n)
@@ -158,7 +190,7 @@ end
 --[[
 	Returns a promise which completes after the _promise_ input has completed, regardless of
 	whether it has resolved or rejected.
-	@param fn _function(ok, result)_ 
+	@param fn _function(ok, result)_
 	@example
 		local getHunger = _.async(function( player )
 			if player.health == 0 then
@@ -172,9 +204,9 @@ end
 			return isAlive and result < 5
 		end)
 ]]
---: <T>(Promise<...T>, (bool, ...T) -> nil) -> Promise<nil>
+--: <T>(Promise<T>, (bool, T) -> nil) -> Promise<nil>
 function Async.finally(promise, fn)
-	assert(Promise.is(promise))
+	assert(Async.isPromise(promise))
 	return promise:andThen(
 		function(...)
 			fn(true, ...)
@@ -202,7 +234,8 @@ end
 	@rejects **TimeoutError** - or _timeoutMessage_
 	@example
 		let eatGreens = function() return _.never end
-		_.timeout(eatGreens(), 10, "TasteError")
+		_.timeout(eatGreens(), 10, "TasteError"):await()
+		--> throws "TasteError" (after 10s)
 ]]
 --: <T>(Promise<T>, number, string?) -> Promise<T>
 function Async.timeout(promise, deadlineInSeconds, timeoutMessage)
@@ -211,6 +244,31 @@ function Async.timeout(promise, deadlineInSeconds, timeoutMessage)
 			promise,
 			Async.delay(deadlineInSeconds):andThen(Functions.throws(timeoutMessage or "TimeoutError"))
 		}
+	)
+end
+
+--[[
+	Like `_.compose` but takes functions that can return a promise. Returns a promise that resolves
+	once all functions have resolved. Like compose, functions receive the resolution of the
+	previous promise as argument(s).
+	@example
+		local function fry(item) return _.delay(1):andThen(_.returns("fried " .. item)) end
+		local function cheesify(item) return _.delay(1):andThen(_.returns("cheesy " .. item)) end
+		local prepare = _.compose(fry, cheesify)
+		prepare("nachos"):await() --> "cheesy fried nachos" (after 2s)
+]]
+--: <A>((...A -> Promise<A>)[]) -> ...A -> Promise<A>
+function Async.series(...)
+	local fnCount = select("#", ...)
+	local fns = {...}
+	return Async.async(
+		function(...)
+			local result = {fns[1](...)}
+			for i = 2, fnCount do
+				result = {Async.resolve(fns[i](unpack(result))):await()}
+			end
+			return unpack(result)
+		end
 	)
 end
 
@@ -248,7 +306,7 @@ end
 		-->> Meal {burger = "Cheeseburger", fries = "Curly fries"} (ideal response)
 	@usage With `promise:await` the `_.async` function can be used just like the async-await pattern in languages like JS.
 ]]
---: <T, Args>(Yieldable<T, ...Args>) -> (...Args) -> Promise<T>
+--: <T, A>(Yieldable<T, A>) -> ...A -> Promise<T>
 function Async.async(fn)
 	assert(Functions.isCallable(fn))
 	return function(...)
@@ -280,12 +338,11 @@ end
 				main = http:GetAsync("http://example.com/burger"),
 				side = http:GetAsync("http://example.com/fries")
 			})
-			order:await()
-			return http:PostAsync("http://example.com/purchase", order)
+			return http:PostAsync("http://example.com/purchase", order:await())
 		end)
 		buyDinner():await() --> "Purchased!" (some time later)
 ]]
---: <T, Args>(Yieldable<T, ...Args>{}) -> (...Args -> Promise<T>){}
+--: <T, Args>(Yieldable<T, Args>{}) -> (...Args -> Promise<T>){}
 function Async.asyncAll(dictionary)
 	assert(t.table(dictionary))
 	local result =
@@ -391,7 +448,7 @@ function Async.retryWithBackoff(getPromise, backoffOptions)
 
 	local function callOnDoneAndReturnPromise(response)
 		backoffOptions.onDone(response, getDurationInSeconds())
-		return Promise.is(response) and response or Promise.resolve(response)
+		return Async.isPromise(response) and response or Promise.resolve(response)
 	end
 
 	local ok, response =
@@ -402,7 +459,7 @@ function Async.retryWithBackoff(getPromise, backoffOptions)
 	)
 
 	if ok then
-		if Promise.is(response) then
+		if Async.isPromise(response) then
 			return response:catch(
 				function(response)
 					return retryIfShouldElseCallOnFailAndReturn(response, error)

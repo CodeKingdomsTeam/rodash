@@ -118,11 +118,11 @@ return function()
 						"makes query",
 						function()
 							assert.equal(
-								"?biscuits=hobnobs&time=11&chocolatey=true",
+								"?biscuits=hob+nobs&time=11&chocolatey=true",
 								Strings.encodeQueryString(
 									{
 										time = 11,
-										biscuits = "hobnobs",
+										biscuits = "hob nobs",
 										chocolatey = true
 									}
 								)
