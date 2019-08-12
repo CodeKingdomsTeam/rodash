@@ -8,9 +8,6 @@ describe(
 		before_each(
 			function()
 				clock = Clock.setup()
-				getmetatable(_.fn).__index = function(self, key)
-					return _.chain(_)[key]
-				end
 			end
 		)
 		after_each(

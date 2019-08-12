@@ -478,29 +478,6 @@ function Functions.continue(actor)
 	end
 end
 
-local getChain =
-	Functions.once(
-	function(subject)
-		return Functions.chain(subject)
-	end
-)
-Functions.fn = {}
-setmetatable(
-	Functions.fn,
-	{
-		__index = function(self, key)
-			local _ = require(script.Parent)
-			return getChain(_)[key]
-		end,
-		__call = function(self, subject)
-			return subject
-		end,
-		__tostring = function()
-			return "_.fn"
-		end
-	}
-)
-
 --[[
 	Returns a function that calls the argument functions in left-right order, passing the return of
 	the previous function as argument(s) to the next.
