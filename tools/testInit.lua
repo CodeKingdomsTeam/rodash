@@ -12,9 +12,16 @@ script = {
 	Functions = "Functions",
 	Strings = "Strings",
 	Parent = {
-		t = "t",
-		Promise = "roblox-lua-promise",
-		luassert = "luassert"
+		Parent = {
+			t = "t",
+			Promise = "roblox-lua-promise",
+			luassert = "luassert"
+		},
+		Async = "Async",
+		Tables = "Tables",
+		Classes = "Classes",
+		Functions = "Functions",
+		Strings = "Strings"
 	}
 }
 Random = {

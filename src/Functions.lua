@@ -1,8 +1,8 @@
 --[[
 	A collection of useful utility functions and building blocks for functional programming styles.
 ]]
-local Tables = require(script.Tables)
-local t = require(script.Parent.t)
+local Tables = require(script.Parent.Tables)
+local t = require(script.Parent.Parent.t)
 
 local Functions = {}
 
@@ -469,7 +469,7 @@ function Functions.continue(actor)
 	actor = actor or Functions.invoke
 	assert(Functions.isCallable(actor), "BadInput: actor must be callable")
 	return function(fn, value, ...)
-		local Async = require(script.Async)
+		local Async = require(script.Parent.Async)
 		return Async.resolve(value):andThen(
 			function(...)
 				return actor(fn, ...)
@@ -489,7 +489,7 @@ setmetatable(
 	Functions.fn,
 	{
 		__index = function(self, key)
-			local _ = require(script)
+			local _ = require(script.Parent)
 			return getChain(_)[key]
 		end,
 		__call = function(self, subject)
