@@ -915,7 +915,9 @@ local function serializeVisit(source, options)
 
 	local contents =
 		Tables.map(
-		-- Sort keys again in case the serialization doesn't preserve order
+		-- Sort keys again in case the serialization doesn't preserve order.
+		-- Don't rely on the string value of the object as e.g. a table hash will change its value
+		-- between runs.
 		Arrays.sort(
 			filteredKeys,
 			function(left, right)
