@@ -1,4 +1,5 @@
 local Tables = require "Tables"
+local Strings = require "Strings"
 local Arrays = require "Arrays"
 
 local function lazySequence(firstNumber, lastNumber)
@@ -779,6 +780,28 @@ describe(
 							end
 						)
 						assert.are.same({"a", "b", "c", "d", "e"}, output)
+					end
+				)
+			end
+		)
+		describe(
+			"cloneDeep",
+			function()
+				it(
+					"works for a cycle object",
+					function()
+						local Harry = {
+							patronus = "stag",
+							age = 12
+						}
+						local Headwig = {
+							animal = "owl",
+							owner = Harry
+						}
+						Harry.pet = Headwig
+						local clonedHarry = Tables.cloneDeep(Harry)
+						Harry.age = 13
+						assert.equal('<1>{age = 12, patronus = "stag", pet = {animal = "owl", owner = &1}}', Strings.pretty(clonedHarry))
 					end
 				)
 			end

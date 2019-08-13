@@ -716,15 +716,53 @@ end
 		local PastHermione = _.clone(Hermione)
 		PastHermione.time = 9
 		Hermione.time --> 12
-	@see _.cloneDeep
-	@see _.Clone
-	@usage If you also want to clone children of the table you may want to use or `_.cloneDeep` but this can be costly.
-	@usage To change behaviour for particular values use `_.map` with a handler.
-	@usage Alternatively, if working with class instances see `_.Clone`.
+	@see _.cloneDeep - if you also want to clone descendants of the table, though this can be costly.
+	@see `_.map` - if you want to return different values for each key.
+	@see _.Clone - use this to derive a default `:clone()` method for class instances.
 ]]
 --: <T: Iterable<K,V>>(T -> T)
 function Tables.clone(source)
 	return Tables.assign({}, source)
+end
+
+--[[
+	Recursively clones descendants of _source_, returning the cloned object. If references to the
+	same table are found, the same clone is used in the result. This means that `_.cloneDeep` is
+	cycle-safe.
+
+	Elements which are not tables are not modified.
+	@example
+		local Harry = {
+			patronus = "stag",
+			age = 12
+		}
+		local Headwig = {
+			animal = "owl",
+			owner = Harry
+		}
+		Harry.pet = Headwig
+		local clonedHarry = _.cloneDeep(Harry)
+		Harry.age = 13
+		-- The object clonedHarry is completely independent of any changes to Harry:
+		_.pretty(clonedHarry) --> '<1>{age = 12, patronus = "stag", pet = {animal = "owl", owner = &1}}'
+	@see _.clone - if you simply want to perform a shallow clone.
+	@see _.CloneDeep - use this to derive a default `:clone()` method for class instances that clones children recursively.
+]]
+--: <T: Iterable<K,V>>(T -> T)
+function Tables.cloneDeep(source)
+	local visited = {}
+	local function cloneVisit(input)
+		if type(input) == "table" then
+			if visited[input] == nil then
+				visited[input] = {}
+				Tables.assign(visited[input], Tables.map(input, cloneVisit))
+			end
+			return visited[input]
+		else
+			return input
+		end
+	end
+	return cloneVisit(source)
 end
 
 --[[
