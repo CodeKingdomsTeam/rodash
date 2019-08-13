@@ -282,6 +282,32 @@ function Classes.classWithInterface(name, interface, decorators)
 end
 
 --[[
+	Add a dictionary of functions to to a Class table.
+	@example
+		local CanBrake = {
+			brake = function( self )
+				self.speed = 0
+			end
+		}
+		local Car = _.class("Car", function( speed )
+			return {
+				speed = speed
+			}
+		end, {_.mixin(CanBrake)})
+		local car = Car.new(5)
+		car.speed --> 5
+		car:brake()
+		car.speed --> 0
+]]
+function Classes.mixin(fns)
+	assert(t.table(fns), "BadInput: fns must be a table")
+	return function(Class)
+		Tables.assign(Class, fns)
+		return Class
+	end
+end
+
+--[[
 	Create an enumeration from an array string _keys_, provided in upper snake-case.
 
 	An Enum is used when a value should only be one of a limited number of possible states.

@@ -529,6 +529,40 @@ bad value for key amount:
 			end
 		)
 		describe(
+			"mixin",
+			function()
+				it(
+					"mixes in methods to a class prototypes",
+					function()
+						local mixin = {
+							getSix = function(self)
+								return self:getFive() + 1
+							end,
+							getSeven = function(self)
+								return self:getSix() + 1
+							end
+						}
+
+						local MyClass =
+							Classes.class(
+							"Simple",
+							function(number)
+								return {
+									number = number
+								}
+							end,
+							{Classes.mixin(mixin)}
+						)
+						function MyClass:getFive()
+							return self.number
+						end
+						local myInstance = MyClass.new(5)
+						assert.equals(7, myInstance:getSeven())
+					end
+				)
+			end
+		)
+		describe(
 			"enum",
 			function()
 				it(
