@@ -14,9 +14,9 @@ local Classes = {}
 	Optionally, you may provide an array of _decorators_ which compose and reduce the Class, adding
 	additional methods and functionality you may need. Specifically you can:
 	
-	1. Add standard functionality to the class e.g. `_.Clone`, `_.ShallowEq`, `_.PrettyFormat`
+	1. Add standard functionality to the class e.g. `_.Clone`, `_.ShallowEq`
 	2. Mixin an implementation of an interface e.g. `_.mixin( fns )`
-	3. Decorate fields or functions e.g. `_.decorate(_.freeze)`, `_.decorate(_.bindAll)`
+	3. Decorate fields or functions e.g. `_.decorate(_.freeze)`
 
 	@param constructor (default = `_.returns({})`)
 	@param decorators (default = `{}`)
@@ -282,7 +282,7 @@ function Classes.classWithInterface(name, interface, decorators)
 end
 
 --[[
-	Add a dictionary of functions to to a Class table.
+	A decorator which adds a dictionary of functions to to a Class table.
 	@example
 		local CanBrake = {
 			brake = function( self )
@@ -295,14 +295,45 @@ end
 			}
 		end, {_.mixin(CanBrake)})
 		local car = Car.new(5)
-		car.speed --> 5
+		print(car.speed) --> 5
 		car:brake()
-		car.speed --> 0
+		print(car.speed) --> 0
+	@usage Include the return of this function in the decorators argument when creating a class.
 ]]
 function Classes.mixin(fns)
 	assert(t.table(fns), "BadInput: fns must be a table")
 	return function(Class)
 		Tables.assign(Class, fns)
+		return Class
+	end
+end
+
+--[[
+	A decorator which runs _fn_ on each instance that is created of the class, returning
+	the result of the function as the class instance.
+	@example
+		local Frozen = _.decorate(_.freeze)
+		local StaticCar = _.class("StaticCar", function( speed )
+			return {
+				speed = speed
+			}
+		end, {Frozen})
+		function StaticCar:brake()
+			self.speed = 0
+		end
+		local car = Car.new(5)
+		print(car.speed) --> 5
+		car:brake() --!> ReadonlyKey: s
+	@usage Include the return of this function in the decorators argument when creating a class.
+]]
+function Classes.decorate(fn)
+	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
+	return function(Class)
+		local underlyingNew = Class.new
+		function Class.new(...)
+			local instance = underlyingNew(...)
+			return fn(instance)
+		end
 		return Class
 	end
 end
@@ -331,19 +362,8 @@ function Classes.enum(keys)
 			return key
 		end
 	)
-
-	setmetatable(
-		enum,
-		{
-			__index = function(t, key)
-				error(string.format("MissingKey: Attempt to access key %s which is not a valid key of the enum", key))
-			end,
-			__newindex = function(t, key)
-				error(string.format("ReadonlyKey: Attempt to set key %s on enum", key))
-			end
-		}
-	)
-	return enum
+	Classes.finalize(enum)
+	return Classes.freeze(enum)
 end
 
 --[[
@@ -376,18 +396,39 @@ function Classes.match(enum, strategies)
 end
 
 --[[
-	Mutates _object_, making attempts to update or accessing missing keys throw `ReadonlyKey`
-	and `MissingKey` respectively.
+	`_.finalize` takes _object_ and makes updating or accessing missing keys throw `FinalObject`.
+	@example
+		local drink = {
+			mixer = "coke",
+			spirit = "rum"
+		}
+		_.finalize(drink)
+		drink.mixer = "soda"
+		drink.mixer --> "soda"
+		print(drink.syrup) --!> "FinalObject: Attempt to read missing key syrup to final object"
+		drink.syrup = "peach" --!> "FinalObject: Attempt to add key mixer on final object"
 ]]
 --: <T: table>(mut T -> T)
-function Classes.freeze(object)
+function Classes.finalize(object)
 	local backend = getmetatable(object)
 	local proxy = {
-		__index = function(t, key)
-			error(string.format("MissingKey: Attempt to access key %s which is missing in final object", key))
+		__index = function(child, key)
+			-- If there is an __index property use this to lookup and see if it exists first.
+			if backend and backend.__index then
+				local value
+				if type(backend.__index) == "function" then
+					value = backend.__index(child, key)
+				else
+					value = backend.__index[key]
+				end
+				if value ~= nil then
+					return value
+				end
+			end
+			error(string.format("FinalObject: Attempt to read missing key %s in final object", key))
 		end,
-		__newindex = function(t, key)
-			error(string.format("ReadonlyKey: Attempt to set key %s on final object", key))
+		__newindex = function(child, key)
+			error(string.format("FinalObject: Attempt to add key %s to final object", key))
 		end
 	}
 	if backend then
@@ -397,6 +438,78 @@ function Classes.freeze(object)
 	setmetatable(object, proxy)
 
 	return object
+end
+
+--[[
+	Create a symbol with a specified _name_.
+	
+	Symbols are useful when you want a value that isn't equal to any other type, for example if you
+	want to store a unique property on an object that won't be accidentally accessed with a simple
+	string lookup.
+]]
+--: <T>(string -> Symbol<T>)
+function Classes.symbol(name)
+	local symbol = {
+		__symbol = name
+	}
+	setmetatable(
+		symbol,
+		{
+			__tostring = function()
+				return "Symbol(" .. name .. ")"
+			end
+		}
+	)
+	return symbol
+end
+
+--[[
+	`_.freeze` takes _object_ and returns a new read-only version which prevents any values from
+	being changed.
+	
+	Unfortunately you cannot iterate using `pairs` or `ipairs` on frozen objects because Lua 5.1
+	does not support overwriting these in metatables. However, you can use `_.iterator` to get
+	an iterator 
+
+	Iterating functions in Rodash such as `_.map`, `_.filter` etc. can iterate over frozen objects
+	without this. If you want to treat the objects as arrays use `_.iterator(frozenObjet, true)`
+	explicitly.
+	@example
+		local drink = _.freeze({
+			mixer = "coke",
+			spirit = "rum"
+		})
+		print(drink.mixer) --> "coke"
+		drink.mixer = "soda" --!> "ReadonlyKey: Attempt to write to a frozen key mixer"
+		print(drink.syrup) --> nil
+		drink.syrup = "peach" --!> "ReadonlyKey: Attempt to write to a frozen key peach"
+	@see _.iterator
+]]
+--: <T: table>(T -> T)
+function Classes.freeze(object)
+	local proxy = {}
+	setmetatable(
+		proxy,
+		{
+			__index = function(child, key)
+				return object[key]
+			end,
+			__newindex = function(child, key)
+				error(string.format("ReadonlyKey: Attempt to write to a frozen key %s", key))
+			end,
+			__len = function(child)
+				return #object
+			end,
+			__tostring = function(child)
+				return "Freeze(" .. tostring(object) .. ")"
+			end,
+			__call = function(child, ...)
+				return object(...)
+			end,
+			iterable = object
+		}
+	)
+	return proxy
 end
 
 --[[
@@ -450,29 +563,6 @@ function Classes.isA(value, Type)
 		end
 	)
 	return ok and isAType
-end
-
---[[
-	Create a symbol with a specified _name_.
-	
-	Symbols are useful when you want a value that isn't equal to any other type, for example if you
-	want to store a unique property on an object that won't be accidentally accessed with a simple
-	string lookup.
-]]
---: <T>(string -> Symbol<T>)
-function Classes.symbol(name)
-	local symbol = {
-		__symbol = name
-	}
-	setmetatable(
-		symbol,
-		{
-			__tostring = function()
-				return "Symbol(" .. name .. ")"
-			end
-		}
-	)
-	return symbol
 end
 
 return Classes

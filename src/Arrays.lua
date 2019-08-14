@@ -24,15 +24,6 @@ local Tables = require(script.Tables)
 
 local Arrays = {}
 
-local function getIterator(source)
-	if type(source) == "function" then
-		return source
-	else
-		assert(type(source) == "table", "BadInput: Can only iterate over a table or an iterator function")
-		return ipairs(source)
-	end
-end
-
 local function assertHandlerIsFn(handler)
 	local Functions = require(script.Functions)
 	assert(Functions.isCallable(handler), "BadInput: handler must be a function")
@@ -172,7 +163,7 @@ end
 --: <T, R>(T[], (result: R, value: T, key: int -> R), R) -> R
 function Tables.reduce(source, handler, initial)
 	local result = initial
-	for i, v in getIterator(source) do
+	for i, v in Tables.iterator(source, true) do
 		result = handler(result, v, i)
 	end
 	return result
@@ -273,7 +264,7 @@ function Arrays.first(source, handler)
 			return true
 		end
 	assertHandlerIsFn(handler)
-	for i, v in getIterator(source) do
+	for i, v in Tables.iterator(source, true) do
 		if (handler(v, i)) then
 			return v, i
 		end

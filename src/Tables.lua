@@ -11,18 +11,31 @@ local t = require(script.Parent.t)
 
 local Tables = {}
 
-local function getIterator(source)
+local function assertHandlerIsFn(handler)
+	local Functions = require(script.Functions)
+	assert(Functions.isCallable(handler), "BadInput: handler must be a function")
+end
+
+--[[
+	Determines a suitable iterator to use for _source_, allowing _source_ to be either a plain
+	table, a table that has a metatable with an `iterable` key, or a function.
+
+	By default, the iterator is unordered, but passing _asArray_ as true uses `ipairs` to iterate
+	through natural keys _1..n_ in order.
+]]
+function Tables.iterator(source, asArray)
+	local metatable = getmetatable(source)
+	local iterable = metatable and metatable.iterable or source
 	if type(source) == "function" then
 		return source
 	else
 		assert(type(source) == "table", "BadInput: Can only iterate over a table or an iterator function")
-		return pairs(source)
+		if asArray then
+			return ipairs(iterable)
+		else
+			return pairs(iterable)
+		end
 	end
-end
-
-local function assertHandlerIsFn(handler)
-	local Functions = require(script.Functions)
-	assert(Functions.isCallable(handler), "BadInput: handler must be a function")
 end
 
 --[[
@@ -86,7 +99,7 @@ end
 function Tables.map(source, handler)
 	assertHandlerIsFn(handler)
 	local result = {}
-	for i, v in getIterator(source) do
+	for i, v in Tables.iterator(source) do
 		result[i] = handler(v, i)
 	end
 	return result
@@ -106,7 +119,7 @@ end
 function Tables.mapValues(source, handler)
 	assertHandlerIsFn(handler)
 	local result = {}
-	for i, v in getIterator(source) do
+	for i, v in Tables.iterator(source) do
 		table.insert(result, handler(v, i))
 	end
 	return result
@@ -128,7 +141,7 @@ end
 function Tables.keyBy(source, handler)
 	assertHandlerIsFn(handler)
 	local result = {}
-	for i, v in getIterator(source) do
+	for i, v in Tables.iterator(source) do
 		local key = handler(v, i)
 		if key ~= nil then
 			result[key] = v
@@ -155,7 +168,7 @@ function Tables.flatMap(source, handler)
 	assertHandlerIsFn(handler)
 	local Arrays = require(script.Arrays)
 	local result = {}
-	for i, v in getIterator(source) do
+	for i, v in Tables.iterator(source) do
 		local list = handler(v, i)
 		assert(t.table(list), "BadResult: Handler must return an array")
 		Arrays.append(result, list)
@@ -179,7 +192,7 @@ end
 function Tables.filter(source, handler)
 	assertHandlerIsFn(handler)
 	local result = {}
-	for i, v in getIterator(source) do
+	for i, v in Tables.iterator(source) do
 		if handler(v, i) then
 			table.insert(result, v)
 		end
@@ -201,7 +214,7 @@ end
 function Tables.filterKeys(source, handler)
 	assertHandlerIsFn(handler)
 	local result = {}
-	for i, v in getIterator(source) do
+	for i, v in Tables.iterator(source) do
 		if handler(v, i) then
 			result[i] = v
 		end
@@ -358,7 +371,7 @@ end
 --: <K: Key, V>(Iterable<K,V> -> Iterable<V,K>)
 function Tables.invert(source)
 	local result = {}
-	for i, v in getIterator(source) do
+	for i, v in Tables.iterator(source) do
 		result[v] = i
 	end
 	return result
@@ -380,7 +393,7 @@ end
 function Tables.groupBy(source, handler)
 	assertHandlerIsFn(handler)
 	local result = {}
-	for i, v in getIterator(source) do
+	for i, v in Tables.iterator(source) do
 		local key = handler(v, i)
 		if key ~= nil then
 			if not result[key] then
@@ -448,7 +461,7 @@ function Tables.merge(target, ...)
 	for i = 1, select("#", ...) do
 		local source = select(i, ...)
 		if source ~= nil then
-			for key, value in getIterator(source) do
+			for key, value in Tables.iterator(source) do
 				if type(target[key]) == "table" and type(value) == "table" then
 					target[key] = Tables.merge(target[key] or {}, value)
 				else
@@ -471,7 +484,7 @@ end
 --: <T: Iterable<K,V>>(T -> V[])
 function Tables.values(source)
 	local result = {}
-	for i, v in getIterator(source) do
+	for i, v in Tables.iterator(source) do
 		table.insert(result, v)
 	end
 	return result
@@ -488,7 +501,7 @@ end
 --: <T: Iterable<K,V>>(T -> K[])
 function Tables.keys(source)
 	local result = {}
-	for i, v in getIterator(source) do
+	for i, v in Tables.iterator(source) do
 		table.insert(result, i)
 	end
 	return result
@@ -508,7 +521,7 @@ end
 --: <T: Iterable<K,V>>(T -> {K, V}[])
 function Tables.entries(source)
 	local result = {}
-	for i, v in getIterator(source) do
+	for i, v in Tables.iterator(source) do
 		table.insert(result, {i, v})
 	end
 	return result
@@ -542,7 +555,7 @@ end
 --: <T: Iterable<K,V>>((T, (element: V, key: K) -> bool) -> V?)
 function Tables.find(source, handler)
 	assertHandlerIsFn(handler)
-	for i, v in getIterator(source) do
+	for i, v in Tables.iterator(source) do
 		if (handler(v, i)) then
 			return v, i
 		end
@@ -583,7 +596,7 @@ end
 --: <T: Iterable<K,V>>(T -> int)
 function Tables.len(source)
 	local count = 0
-	for _ in getIterator(source) do
+	for _ in Tables.iterator(source) do
 		count = count + 1
 	end
 	return count
@@ -596,7 +609,7 @@ local function assign(shouldOverwriteTarget, target, ...)
 	for i = 1, select("#", ...) do
 		local source = select(i, ...)
 		if source ~= nil then
-			for key, value in getIterator(source) do
+			for key, value in Tables.iterator(source) do
 				if shouldOverwriteTarget or target[key] == nil then
 					target[key] = value
 				end
@@ -819,7 +832,7 @@ end
 ]]
 --: <T: Iterable<K,V>>(T -> bool)
 function Tables.isEmpty(source)
-	return getIterator(source)(source) == nil
+	return Tables.iterator(source)(source) == nil
 end
 
 --[[
@@ -830,7 +843,7 @@ end
 ]]
 --: <T: Iterable<K,V>>(T -> (V, K)?)
 function Tables.one(source)
-	local key, value = getIterator(source)(source)
+	local key, value = Tables.iterator(source)(source)
 	return value, key
 end
 
@@ -991,7 +1004,7 @@ function Tables.defaultSerializer(input)
 end
 
 local function countOccurences(source, counts)
-	for key, value in getIterator(source) do
+	for key, value in Tables.iterator(source) do
 		if type(value) == "table" then
 			if counts[value] then
 				counts[value] = counts[value] + 1

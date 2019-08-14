@@ -563,6 +563,67 @@ bad value for key amount:
 			end
 		)
 		describe(
+			"decorate",
+			function()
+				it(
+					"to make final class instances",
+					function()
+						local Final = Classes.decorate(Classes.finalize)
+						local StaticCar =
+							Classes.class(
+							"StaticCar",
+							function(speed)
+								return {
+									speed = speed
+								}
+							end,
+							{Final}
+						)
+						function StaticCar:brake()
+							self.speed = 0
+							self.stopped = true
+						end
+						local car = StaticCar.new(5)
+
+						assert.errors(
+							function()
+								car:brake() --!> ReadonlyKey: Attempt to set key speed on frozen object
+							end,
+							"FinalObject: Attempt to add key stopped to final object"
+						)
+					end
+				)
+				it(
+					"to make frozen class instances",
+					function()
+						local Final = Classes.decorate(Classes.freeze)
+						local StaticCar =
+							Classes.class(
+							"StaticCar",
+							function(speed)
+								return {
+									speed = speed
+								}
+							end,
+							{Final}
+						)
+						function StaticCar:brake()
+							self.speed = 0
+							self.stopped = true
+						end
+						local car = StaticCar.new(5)
+
+						assert.errors(
+							function()
+								car:brake() --!> ReadonlyKey: Attempt to set key speed on frozen object
+							end,
+							"ReadonlyKey: Attempt to write to a frozen key speed"
+						)
+					end
+				)
+			end
+		)
+		describe(
 			"enum",
 			function()
 				it(
@@ -674,13 +735,13 @@ bad value for key amount:
 		)
 
 		describe(
-			"freeze",
+			"finalize",
 			function()
 				it(
 					"warns about using a missing key",
 					function()
 						local myObject =
-							Classes.freeze(
+							Classes.finalize(
 							{
 								a = 2
 							}
@@ -690,7 +751,7 @@ bad value for key amount:
 							function()
 								return myObject.b
 							end,
-							"MissingKey: Attempt to access key b which is missing in final object"
+							"FinalObject: Attempt to read missing key b in final object"
 						)
 					end
 				)
@@ -698,7 +759,7 @@ bad value for key amount:
 					"warns about assignment to an unused variable",
 					function()
 						local myObject =
-							Classes.freeze(
+							Classes.finalize(
 							{
 								a = 2
 							}
@@ -707,7 +768,7 @@ bad value for key amount:
 							function()
 								myObject.b = 2
 							end,
-							"ReadonlyKey: Attempt to set key b on final object"
+							"FinalObject: Attempt to add key b to final object"
 						)
 					end
 				)
@@ -715,13 +776,31 @@ bad value for key amount:
 					"allows iteration over a table",
 					function()
 						local myObject =
-							Classes.freeze(
+							Classes.finalize(
 							{
 								a = 2,
 								b = 3
 							}
 						)
 						assert.are.same({2, 3}, Tables.values(myObject))
+					end
+				)
+				it(
+					"warns about using a missing key on an instance",
+					function()
+						local MyClass = Classes.class("Simple")
+						function MyClass:getFive()
+							return 5
+						end
+						local myInstance = MyClass.new()
+						Classes.finalize(myInstance)
+						assert.errors(
+							function()
+								return myInstance.b
+							end,
+							"FinalObject: Attempt to read missing key b in final object"
+						)
+						assert.equals(5, myInstance:getFive())
 					end
 				)
 			end
