@@ -65,7 +65,10 @@ function Classes.class(name, constructor, decorators)
 	--: Constructor<T>
 	function Class.new(...)
 		local instance = constructor(...)
-		setmetatable(instance, {__index = Class, __tostring = Class.toString, __eq = Class.equals})
+		setmetatable(
+			instance,
+			{__index = Class, __tostring = Class.toString, __eq = Class.equals, __lt = Class.__lt, __le = Class.__le}
+		)
 		instance:_init(...)
 		instance.Class = Class
 		return instance
@@ -235,6 +238,25 @@ function Classes.class(name, constructor, decorators)
 	--: (T:) -> string
 	function Class:equals(other)
 		return self == other
+	end
+
+	--[[
+		Returns `true` if `self` is considered less than  _other_. This replaces the `<` operator
+		on instances of this class, and can be overwridden to provide a custom implementation.
+	]]
+	--: (T:) -> string
+	function Class:__lt(other)
+		return false
+	end
+
+	--[[
+		Returns `true` if `self` is considered less than or equal to _other_. This replaces the
+		`<=` operator on instances of this class, and can be overwridden to provide a custom
+		implementation.
+	]]
+	--: (T:) -> string
+	function Class:__le(other)
+		return false
 	end
 
 	return decorate(Class)
@@ -412,8 +434,10 @@ function Classes.ShallowEq(Class)
 end
 
 --[[
-	A decorator which derives the equality operator for the _Class_ so that any instances of the
-	class which are shallow equal 
+	A decorator which derives an order for the _Class_ so that any instances of the class which
+	can be compared using `<`, `<=`, `>` and  `>=`. To do this, it compares values of the two
+	instances at the same keys, as defined by the order of the _keys_ passed in.
+	@param keys (default = a sorted array of all the instance's keys)
 	@example
 		local Car =
 			Classes.class(
@@ -434,11 +458,50 @@ end
 		print(fastCar == fastCar2) --> true
 		print(fastCar == slowCar) --> false
 ]]
-function Classes.PartialOrd(Class)
-	function Class:equals(other)
-		return Tables.shallowEqual(self, other)
+function Classes.PartialOrd(keys)
+	if keys then
+		assert(Tables.isArray(keys), "BadInput: keys must be an array if defined")
 	end
-	return Class
+	return function(Class)
+		function Class:equals(other)
+			local instanceKeys = keys or Arrays.sort(Tables.keys(self))
+			for _, key in ipairs(instanceKeys) do
+				if self[key] ~= other[key] then
+					return false
+				end
+			end
+			return true
+		end
+		function Class:__le(other)
+			local instanceKeys = keys or Arrays.sort(Tables.keys(self))
+			for _, key in ipairs(instanceKeys) do
+				if Arrays.defaultComparator(self[key], other[key]) then
+					return true
+				elseif Arrays.defaultComparator(other[key], self[key]) then
+					return false
+				end
+				if self[key] ~= other[key] then
+					return false
+				end
+			end
+			return true
+		end
+		function Class:__lt(other)
+			local instanceKeys = keys or Arrays.sort(Tables.keys(self))
+			for _, key in ipairs(instanceKeys) do
+				if Arrays.defaultComparator(self[key], other[key]) then
+					return true
+				elseif Arrays.defaultComparator(other[key], self[key]) then
+					return false
+				end
+				if self[key] ~= other[key] then
+					return true
+				end
+			end
+			return false
+		end
+		return Class
+	end
 end
 
 --[[

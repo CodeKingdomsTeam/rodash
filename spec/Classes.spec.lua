@@ -681,6 +681,39 @@ bad value for key amount:
 			end
 		)
 		describe(
+			"PartialOrd",
+			function()
+				it(
+					"provides a default ordering for one field",
+					function()
+						local Car =
+							Classes.class(
+							"Car",
+							function(speed)
+								return {
+									speed = speed
+								}
+							end,
+							{Classes.PartialOrd()}
+						)
+						function Car:brake()
+							self.speed = 0
+						end
+						local fastCar = Car.new(500)
+						local fastCar2 = Car.new(500)
+						local slowCar = Car.new(5)
+						assert.is_false(fastCar > fastCar2)
+						assert.is_false(fastCar < fastCar)
+						assert.is_false(fastCar > fastCar)
+						assert.is_true(fastCar > slowCar)
+						assert.is_false(fastCar < slowCar)
+						assert.is_true(fastCar == fastCar2)
+						assert.is_true(fastCar ~= slowCar)
+					end
+				)
+			end
+		)
+		describe(
 			"enum",
 			function()
 				it(
