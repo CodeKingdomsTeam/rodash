@@ -624,6 +624,35 @@ bad value for key amount:
 			end
 		)
 		describe(
+			"Clone",
+			function()
+				it(
+					"provides a clone for a class",
+					function()
+						local Car =
+							Classes.class(
+							"Car",
+							function(speed)
+								return {
+									speed = speed
+								}
+							end,
+							{Classes.Clone}
+						)
+						function Car:brake()
+							self.speed = 0
+						end
+						local car = Car.new(5)
+						local carClone = car:clone()
+						assert.equal(carClone.speed, 5)
+						carClone:brake()
+						assert.equal(carClone.speed, 0)
+						assert.equal(car.speed, 5)
+					end
+				)
+			end
+		)
+		describe(
 			"enum",
 			function()
 				it(

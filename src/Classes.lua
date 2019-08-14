@@ -339,6 +339,19 @@ function Classes.decorate(fn)
 end
 
 --[[
+	A decorator which derives a `:clone()` method for the _Class_ that returns a shallow clone of
+	the instance when called that has the same metatable as the instance it is called on.
+]]
+function Classes.Clone(Class)
+	function Class:clone()
+		local newInstance = Tables.clone(self)
+		setmetatable(newInstance, getmetatable(self))
+		return newInstance
+	end
+	return Class
+end
+
+--[[
 	Create an enumeration from an array string _keys_, provided in upper snake-case.
 
 	An Enum is used when a value should only be one of a limited number of possible states.
@@ -405,8 +418,10 @@ end
 		_.finalize(drink)
 		drink.mixer = "soda"
 		drink.mixer --> "soda"
-		print(drink.syrup) --!> "FinalObject: Attempt to read missing key syrup to final object"
-		drink.syrup = "peach" --!> "FinalObject: Attempt to add key mixer on final object"
+		print(drink.syrup)
+		--!> "FinalObject: Attempt to read missing key syrup to final object"
+		drink.syrup = "peach"
+		--!> "FinalObject: Attempt to add key mixer on final object"
 ]]
 --: <T: table>(mut T -> T)
 function Classes.finalize(object)
@@ -480,9 +495,11 @@ end
 			spirit = "rum"
 		})
 		print(drink.mixer) --> "coke"
-		drink.mixer = "soda" --!> "ReadonlyKey: Attempt to write to a frozen key mixer"
+		drink.mixer = "soda"
+		--!> "ReadonlyKey: Attempt to write to a frozen key mixer"
 		print(drink.syrup) --> nil
-		drink.syrup = "peach" --!> "ReadonlyKey: Attempt to write to a frozen key peach"
+		drink.syrup = "peach"
+		--!> "ReadonlyKey: Attempt to write to a frozen key peach"
 	@see _.iterator
 ]]
 --: <T: table>(T -> T)
