@@ -142,34 +142,6 @@ function Arrays.shuffle(source)
 end
 
 --[[
-	Runs the _handler_ on each element of _source_ in turn, passing the result of the previous call
-	(or _initial_ for the first element) as the first argument, and the current element as a value
-	and key as subsequent arguments.
-	@example
-		local sum = _.reduce({1, 2, 3}, function(result, value)
-			return result + value
-		end, 0)
-		sum --> 6
-	@example
-		local recipe = {first = "cheese", second = "nachos", third = "chillies"}
-		local unzipRecipe = _.reduce(recipe, function(result, value, key)
-			table.insert(result[1], key)
-			table.insert(result[2], value)
-			return result
-		end, {{}, {}})
-		-- (in some order)
-		unzipRecipe --> {{"first", "third", "second"}, {"cheese", "chillies", "nachos"}}
-]]
---: <T, R>(T[], (result: R, value: T, key: int -> R), R) -> R
-function Tables.reduce(source, handler, initial)
-	local result = initial
-	for i, v in Tables.iterator(source, true) do
-		result = handler(result, v, i)
-	end
-	return result
-end
-
---[[
 	Inserts into _target_ the elements from all subsequent arguments in order.
 	@param ... any number of other arrays
 	@example _.append({}, {1, 2, 3}, {4, 5, 6}) --> {1, 2, 3, 4, 5, 6}

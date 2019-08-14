@@ -65,7 +65,7 @@ function Classes.class(name, constructor, decorators)
 	--: Constructor<T>
 	function Class.new(...)
 		local instance = constructor(...)
-		setmetatable(instance, {__index = Class, __tostring = Class.toString})
+		setmetatable(instance, {__index = Class, __tostring = Class.toString, __eq = Class.equals})
 		instance:_init(...)
 		instance.Class = Class
 		return instance
@@ -221,12 +221,22 @@ function Classes.class(name, constructor, decorators)
 
 	--[[
 		Return a string representation of the instance. By default this is the _name_ field (or the
-		Class name if this is not defined), but the method can be overwritten.
+		Class name if this is not defined), but the method can be overwridden.
 	]]
 	--: (T:) -> string
 	function Class:toString()
 		return self.name
 	end
+
+	--[[
+		Returns `true` if `self` is considered equal to _other_. This replaces the `==` operator
+		on instances of this class, and can be overwridden to provide a custom implementation.
+	]]
+	--: (T:) -> string
+	function Class:equals(other)
+		return self == other
+	end
+
 	return decorate(Class)
 end
 
@@ -341,12 +351,92 @@ end
 --[[
 	A decorator which derives a `:clone()` method for the _Class_ that returns a shallow clone of
 	the instance when called that has the same metatable as the instance it is called on.
+	@example
+		local Car =
+			Classes.class(
+			"Car",
+			function(speed)
+				return {
+					speed = speed
+				}
+			end,
+			{_.Clone}
+		)
+		function Car:brake()
+			self.speed = 0
+		end
+		local car = Car.new(5)
+		local carClone = car:clone()
+		print(carClone.speed) --> 5
+		carClone:brake()
+		print(carClone.speed) --> 0
+		print(car.speed) --> 5
 ]]
 function Classes.Clone(Class)
 	function Class:clone()
 		local newInstance = Tables.clone(self)
 		setmetatable(newInstance, getmetatable(self))
 		return newInstance
+	end
+	return Class
+end
+
+--[[
+	A decorator which derives the equality operator for the _Class_ so that any instances of the
+	class which are shallow equal 
+	@example
+		local Car =
+			Classes.class(
+			"Car",
+			function(speed)
+				return {
+					speed = speed
+				}
+			end,
+			{_.ShallowEq}
+		)
+		function Car:brake()
+			self.speed = 0
+		end
+		local fastCar = Car.new(500)
+		local fastCar2 = Car.new(500)
+		local slowCar = Car.new(5)
+		print(fastCar == fastCar2) --> true
+		print(fastCar == slowCar) --> false
+]]
+function Classes.ShallowEq(Class)
+	function Class:equals(other)
+		return Tables.shallowEqual(self, other)
+	end
+	return Class
+end
+
+--[[
+	A decorator which derives the equality operator for the _Class_ so that any instances of the
+	class which are shallow equal 
+	@example
+		local Car =
+			Classes.class(
+			"Car",
+			function(speed)
+				return {
+					speed = speed
+				}
+			end,
+			{_.PartialOrd}
+		)
+		function Car:brake()
+			self.speed = 0
+		end
+		local fastCar = Car.new(500)
+		local fastCar2 = Car.new(500)
+		local slowCar = Car.new(5)
+		print(fastCar == fastCar2) --> true
+		print(fastCar == slowCar) --> false
+]]
+function Classes.PartialOrd(Class)
+	function Class:equals(other)
+		return Tables.shallowEqual(self, other)
 	end
 	return Class
 end

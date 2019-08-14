@@ -1,20 +1,6 @@
 local Arrays = require "Arrays"
 local Tables = require "Tables"
 
-local function lazySequence(firstNumber, lastNumber)
-	local i = 0
-	return function()
-		local currentNumber = firstNumber + i
-		if currentNumber > lastNumber then
-			return
-		else
-			local currentIndex = i
-			i = i + 1
-			return currentIndex, currentNumber
-		end
-	end
-end
-
 describe(
 	"Array",
 	function()
@@ -247,70 +233,6 @@ describe(
 									end
 								)
 							end
-						)
-					end
-				)
-			end
-		)
-		describe(
-			"reduce",
-			function()
-				it(
-					"returns the base case for an empty array",
-					function()
-						assert.are.same(
-							"f",
-							Tables.reduce(
-								{},
-								function(prev, next)
-									return prev .. next
-								end,
-								"f"
-							)
-						)
-					end
-				)
-				it(
-					"applies an iterator to reduce a table",
-					function()
-						assert.are.same(
-							"fabcde",
-							Tables.reduce(
-								{"a", "b", "c", "d", "e"},
-								function(prev, next)
-									return prev .. next
-								end,
-								"f"
-							)
-						)
-					end
-				)
-				it(
-					"can operate on the index",
-					function()
-						assert.are.same(
-							"f1a2b3c4d5e",
-							Tables.reduce(
-								{"a", "b", "c", "d", "e"},
-								function(prev, next, i)
-									return (prev or "f") .. i .. next
-								end
-							)
-						)
-					end
-				)
-				it(
-					"works when passed an iterator",
-					function()
-						assert.are.same(
-							15,
-							Tables.reduce(
-								lazySequence(1, 5),
-								function(prev, next, i)
-									return prev + next
-								end,
-								0
-							)
 						)
 					end
 				)

@@ -304,6 +304,34 @@ function Tables.all(source, handler)
 end
 
 --[[
+	Runs the _handler_ on each element of _source_ in turn, passing the result of the previous call
+	(or _initial_ for the first element) as the first argument, and the current element as a value
+	and key as subsequent arguments.
+	@example
+		local sum = _.reduce({1, 2, 3}, function(result, value)
+			return result + value
+		end, 0)
+		sum --> 6
+	@example
+		local recipe = {first = "cheese", second = "nachos", third = "chillies"}
+		local unzipRecipe = _.reduce(recipe, function(result, value, key)
+			table.insert(result[1], key)
+			table.insert(result[2], value)
+			return result
+		end, {{}, {}})
+		-- (in some order)
+		unzipRecipe --> {{"first", "third", "second"}, {"cheese", "chillies", "nachos"}}
+]]
+--: <T, R>(T[], (result: R, value: T, key: int -> R), R) -> R
+function Tables.reduce(source, handler, initial)
+	local result = initial
+	for i, v in Tables.iterator(source) do
+		result = handler(result, v, i)
+	end
+	return result
+end
+
+--[[
 	Return `true` if _handler_ returns true for at least one element in _source_ it is called with.
 
 	If no handler is provided, `_.any` returns true if some element is non-nil.
@@ -903,11 +931,8 @@ end
 	@see _.deepEqual
 ]]
 function Tables.shallowEqual(left, right)
-	if left == right then
-		return true
-	end
 	if type(left) ~= "table" or type(right) ~= "table" then
-		return false
+		return left == right
 	end
 	local leftKeys = Tables.keys(left)
 	local rightKeys = Tables.keys(right)

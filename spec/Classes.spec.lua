@@ -653,6 +653,34 @@ bad value for key amount:
 			end
 		)
 		describe(
+			"ShallowEq",
+			function()
+				it(
+					"provides an equal opperator for a class",
+					function()
+						local Car =
+							Classes.class(
+							"Car",
+							function(speed)
+								return {
+									speed = speed
+								}
+							end,
+							{Classes.ShallowEq}
+						)
+						function Car:brake()
+							self.speed = 0
+						end
+						local fastCar = Car.new(500)
+						local fastCar2 = Car.new(500)
+						local slowCar = Car.new(5)
+						assert.equal(fastCar, fastCar2)
+						assert.not_equal(fastCar, slowCar)
+					end
+				)
+			end
+		)
+		describe(
 			"enum",
 			function()
 				it(
