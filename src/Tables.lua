@@ -75,6 +75,7 @@ end
 	If any values along the path are not tables, `_.set` will do nothing and return `false`.
 	@example
 		_.set(game.Players, {"LocalPlayer", "Character", "UpperTorso", "Color"}, Color3.new(255, 255, 255))
+		--> true (if the set worked)
 	@trait Chainable
 ]]
 --: <T: Iterable<K, V>>(T, K[], V) -> ()
