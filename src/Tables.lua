@@ -38,7 +38,7 @@ end
 		getUpperTorso(players.LocalPlayer) --> Part
 	@trait Chainable
 ]]
---: <T: Iterable<K, V>>(T, ...K) -> V
+--: <T: {[K]: V}>(T, ...K) -> V
 function Tables.get(source, key, ...)
 	local tailKeys = {...}
 	local ok, value =
@@ -60,27 +60,28 @@ end
 	Return new table from _source_ with each value at the same key, but replaced by the return from
 	the _handler_ function called for each value and key in the table.
 	@example
+		-- Use map to get the same property of each value:
 		local playerNames = _.map(game.Players:GetChildren(), function(player)
 			return player.Name
 		end)
 		playerNames --> {"Frodo Baggins", "Bilbo Baggins", "Boromir"}
 	@example
-		-- nil values naturally do not translate to keys:
-		local balls = {
-			{color: "red", amount: 0},
-			{color: "blue", amount: 10},
-			{color: "yellow", amount: 12}
-		}
-		local foundColors = _.map(balls, function(ball)
-			return ball.amount > 0 and ball.color or nil
+		-- Use map to remove elements while preserving keys:
+		local ingredients = {veg = "carrot", sauce = "tomato", herb = "basil"}
+		local carrotsAndHerbs = _.map(ingredients, function( value, key )
+			if value == "carrot" or key == "herb" then
+				return value
+			end
 		end)
-		foundColors --> {"blue", "yellow"}
+		carrotsAndHerbs --> {veg = "carrot", herb = "basil"}
 	@example
+		-- Use map with multiple values of a table at once:
 		local numbers = {1, 1, 2, 3, 5} 
 		local nextNumbers = _.map(numbers, function( value, key )
 			return value + (numbers[key - 1] or 0)
 		end)
 		nextNumbers --> {1, 2, 3, 5, 8}
+	@see filter if you want to 
 ]]
 --: <T: Iterable<K,V>, R: Iterable<K,V2>((T, (element: V, key: K) -> V2) -> R)
 function Tables.map(source, handler)
@@ -173,7 +174,7 @@ end
 			return _.endsWith(tool.Name, "Spoon")
 		end)
 		mySpoons --> {SilverSpoon, TableSpoon}
-	@see _.filterKeys if you would like to filter but preserve table keys
+	@see _.map if you would like to remove elements but preserve table keys
 ]]
 --: <T: Iterable<K,V>>(T, (element: V, key: K -> bool) -> V[])
 function Tables.filter(source, handler)
@@ -182,28 +183,6 @@ function Tables.filter(source, handler)
 	for i, v in getIterator(source) do
 		if handler(v, i) then
 			table.insert(result, v)
-		end
-	end
-	return result
-end
-
---[[
-	Returns a table of any elements in _source_ that the _handler_ function returned `true` for,
-	preserving the key and value of every accepted element.
-	@example
-		local ingredients = {veg = "carrot", sauce = "tomato", herb = "basil"}
-		local carrotsAndHerbs = _.filterKeys(ingredients, function( value, key )
-			return value == "carrot" or key == "herb"
-		end)
-		carrotsAndHerbs --> {veg = "carrot", herb = "basil"}
-]]
---: <T: Iterable<K,V>>(T, (element: V, key: K -> bool) -> T)
-function Tables.filterKeys(source, handler)
-	assertHandlerIsFn(handler)
-	local result = {}
-	for i, v in getIterator(source) do
-		if handler(v, i) then
-			result[i] = v
 		end
 	end
 	return result
@@ -279,15 +258,12 @@ function Tables.all(source, handler)
 		end
 	end
 	assertHandlerIsFn(handler)
-	-- Use double negation to coerce the type to a boolean, as there is
-	-- no toboolean() or equivalent in Lua.
-	return not (not Tables.reduce(
-		source,
-		function(acc, value, key)
-			return acc and handler(value, key)
-		end,
-		true
-	))
+	for key, value in getIterator(source) do
+		if not handler(value, key) then
+			return false
+		end
+	end
+	return true
 end
 
 --[[
@@ -316,13 +292,12 @@ function Tables.any(source, handler)
 	assertHandlerIsFn(handler)
 	-- Use double negation to coerce the type to a boolean, as there is
 	-- no toboolean() or equivalent in Lua.
-	return not (not Tables.reduce(
-		source,
-		function(acc, value, key)
-			return acc or handler(value, key)
-		end,
-		false
-	))
+	for key, value in getIterator(source) do
+		if handler(value, key) then
+			return true
+		end
+	end
+	return false
 end
 
 --[[
@@ -748,8 +723,8 @@ end
 		_.isSubset(car, {speed = 12}) --> false
 		_.isSubset({}, car) --> false
 ]]
--- <T: Iterable<K,V>>(T, any -> bool)
-function Tables.isSubset(a, b, references)
+-- <T>(T{}, T{}) -> bool
+function Tables.isSubset(a, b)
 	if type(a) ~= "table" or type(b) ~= "table" then
 		return false
 	else
@@ -1029,14 +1004,14 @@ end
 	result have a count of two or more, they may form cycles in the _source_.
 	@example
 		local plate = {veg = "potato", pie = {"stilton", "beef"}}
-		_.census(plate) --> {
+		_.occurences(plate) --> {
 			[{veg = "potato", pie = {"stilton", "beef"}}] = 1
 			[{"stilton", "beef"}] = 1
 		}
 	@example
 		local kyle = {name = "Kyle"}
 		kyle.child = kyle
-		_.census(kyle) --> {
+		_.occurences(kyle) --> {
 			[{name = "Kyle", child = kyle}] = 2
 		}
 ]]
