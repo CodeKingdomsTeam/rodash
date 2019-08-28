@@ -1,5 +1,5 @@
 --[[
-	A collection of functions that operate specifically arrays, defined as tables with just keys _1..n_.
+	A collection of functions that operate specifically on arrays, defined as tables with just keys _1..n_.
 
 	```lua
 		-- Examples of valid arrays:
@@ -13,9 +13,6 @@
 		{[5] = "gold rings"}
 		42
 	```
-
-	Because the operations are immutable it is unlikely that any additional elements in the
-	table will be preserved in most operations.
 
 	Functions can also iterate over custom iterator functions which provide elements with natural keys _1..n_.
 ]]
@@ -34,6 +31,10 @@ local function getIterator(source)
 end
 
 local function assertHandlerIsFn(handler)
+	local Functions = require(script.Functions)
+	assert(Functions.isCallable(handler), "BadInput: handler must be a function")
+end
+local function assertPredicateIsFn(handler)
 	local Functions = require(script.Functions)
 	assert(Functions.isCallable(handler), "BadInput: handler must be a function")
 end
@@ -170,7 +171,7 @@ end
 		unzipRecipe --> {{"first", "third", "second"}, {"cheese", "chillies", "nachos"}}
 ]]
 --: <T, R>(T[], (result: R, value: T, key: int -> R), R) -> R
-function Tables.reduce(source, handler, initial)
+function Arrays.reduce(source, handler, initial)
 	local result = initial
 	for i, v in getIterator(source) do
 		result = handler(result, v, i)
@@ -208,8 +209,8 @@ end
 	Sums all the values in the _source_ array.
 	@example _.sum({1, 2, 3}) --> 6
 ]]
-function Tables.sum(source)
-	return Tables.reduce(
+function Arrays.sum(source)
+	return Arrays.reduce(
 		source,
 		function(current, value)
 			return current + value
@@ -223,23 +224,19 @@ end
 	@example _.reverse({1, 2, 4, 3, 5}) --> {5, 3, 4, 2, 1}
 ]]
 --: <T>(T[] -> T[])
-function Tables.reverse(source)
-	local output = Tables.clone(source)
-	local i = 1
-	local j = #source
-	while i < j do
-		output[i], output[j] = output[j], output[i]
-		i = i + 1
-		j = j - 1
+function Arrays.reverse(source)
+	local output = {}
+	for i = #source, 1, -1 do
+		table.insert(output, source[i])
 	end
 	return output
 end
 
 --[[
-	Returns the earliest value from the array that _handler_ returns `true` for.
+	Returns the earliest value from the array that _predicate_ returns `true` for.
 
-	If the _handler_ is not specified, `_.first` simply returns the first element of the array.
-	@param handler (default = `_.returns(true)`)
+	If the _predicate_ is not specified, `_.first` simply returns the first element of the array.
+	@param predicate (default = `_.returns(true)`)
 	@example
 		local names = {
 			"Boromir",
@@ -268,23 +265,23 @@ end
 	@usage If you need to find a value in a table which isn't an array, use `_.find`.
 ]]
 --: <T: Iterable<K,V>>((T, (element: V, key: K) -> bool) -> V?)
-function Arrays.first(source, handler)
-	handler = handler or function()
+function Arrays.first(source, predicate)
+	predicate = predicate or function()
 			return true
 		end
-	assertHandlerIsFn(handler)
+	assertPredicateIsFn(predicate)
 	for i, v in getIterator(source) do
-		if (handler(v, i)) then
+		if (predicate(v, i)) then
 			return v, i
 		end
 	end
 end
 
 --[[
-	Returns the last value from the array that _handler_ returns `true` for.
+	Returns the last value from the array that _predicate_ returns `true` for.
 
-	If the _handler_ is not specified, `_.last` simply returns the last element of the array.
-	@param handler (default = `_.returns(true)`)
+	If the _predicate_ is not specified, `_.last` simply returns the last element of the array.
+	@param predicate (default = `_.returns(true)`)
 	@example
 		local names = {
 			"Boromir",
@@ -303,14 +300,14 @@ end
 	@see _.first
 ]]
 --: <T: Iterable<K,V>>((T, (element: V, key: K) -> bool) -> V?)
-function Arrays.last(source, handler)
-	handler = handler or function()
+function Arrays.last(source, predicate)
+	predicate = predicate or function()
 			return true
 		end
-	assertHandlerIsFn(handler)
+	assertHandlerIsFn(predicate)
 	for i = #source, 1, -1 do
 		local value = source[i]
-		if (handler(value, i)) then
+		if (predicate(value, i)) then
 			return value, i
 		end
 	end

@@ -1,7 +1,7 @@
 local Tables = require "Tables"
 local Arrays = require "Arrays"
 
-local function lazySequence(firstNumber, lastNumber)
+local function getIteratorForRange(firstNumber, lastNumber)
 	local i = 0
 	return function()
 		local currentNumber = firstNumber + i
@@ -588,30 +588,12 @@ describe(
 						assert.are.same(
 							{5, 6},
 							Tables.filter(
-								lazySequence(5, 10),
+								getIteratorForRange(5, 10),
 								function(value)
 									return value < 7
 								end
 							)
 						)
-					end
-				)
-			end
-		)
-		describe(
-			"filterKeys",
-			function()
-				it(
-					"filters keys and values of a non-sequential table",
-					function()
-						local output =
-							Tables.filterKeys(
-							{one = "a", two = "b", three = "a", four = "d", five = "e"},
-							function(x, i)
-								return x == "b" or i == "five"
-							end
-						)
-						assert.are.same({two = "b", five = "e"}, output)
 					end
 				)
 			end
