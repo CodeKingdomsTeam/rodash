@@ -440,14 +440,14 @@ end
 	in `string.format` can be used here, along with these extras:
 
 	* `{:?}` formats any value using `_.serializeDeep`.
-	* `{:#?}` formats any value using multiline `_.pretty`.
+	* `{:#?}` formats any value using `_.pretty`.
 	* `{:b}` formats a number in its binary representation.
 	@example
 		local props = {"teeth", "claws", "whiskers", "tail"}
 		_.format("{:?} is in {:#?}", "whiskers", props)
 		-> '"whiskers" is in {"teeth", "claws", "whiskers", "tail"}'
 	@example
-		_.format("{} in binary is {0:b}", 125) -> "125 in binary is 110100"
+		_.format("{} in binary is {1:b}", 125) -> "125 in binary is 110100"
 	@example
 		_.format("The time is {:02}:{:02}", 2, 4) -> "The time is 02:04"
 	@example
@@ -522,7 +522,7 @@ function Strings.formatValue(value, displayString)
 		local formatAsString =
 			"%" .. displayString:sub(1, displayTypeStart - 1) .. displayString:sub(displayTypeEnd + 1) .. "s"
 		if displayType == "#?" then
-			return string.format(formatAsString, Strings.pretty(value, true))
+			return string.format(formatAsString, Strings.pretty(value))
 		elseif displayType == "?" then
 			return string.format(formatAsString, Tables.serializeDeep(value))
 		elseif displayType == "#b" then
@@ -553,7 +553,7 @@ end
 	@see _.serializeDeep
 ]]
 --: any, bool -> string
-function Strings.pretty(value, multiline)
+function Strings.pretty(value, serializeOptions)
 	local function serializeValue(value, options)
 		if type(value) == "table" then
 			local className = ""
@@ -568,24 +568,24 @@ function Strings.pretty(value, multiline)
 
 	return Tables.serialize(
 		value,
-		{
-			serializeValue = serializeValue,
-			serializeKey = function(key, options)
-				if type(key) == "string" then
-					return key
-				else
-					return "[" .. serializeValue(key, options) .. "]"
-				end
-			end,
-			serializeElement = multiline and function(key, value)
+		Tables.assign(
+			{
+				serializeValue = serializeValue,
+				serializeKey = function(key, options)
+					if type(key) == "string" then
+						return key
+					else
+						return "[" .. serializeValue(key, options) .. "]"
+					end
+				end,
+				serializeElement = function(key, value)
 					local shortString = key .. " = " .. value
 					if #shortString < 80 or shortString:match("\n") then
 						return shortString
 					end
 					return key .. " =\n\t" .. value
 				end or nil,
-			serializeTable = multiline and
-				function(contents, ref, options)
+				serializeTable = function(contents, ref, options)
 					local shortString = ref .. "{" .. table.concat(contents, ", ") .. "}"
 					if #shortString < 80 then
 						return shortString
@@ -602,12 +602,13 @@ function Strings.pretty(value, multiline)
 								",\n"
 							) ..
 								"\n}"
-				end or
-				nil,
-			keyDelimiter = " = ",
-			valueDelimiter = ", ",
-			omitKeys = {"Class"}
-		}
+				end or nil,
+				keyDelimiter = " = ",
+				valueDelimiter = ", ",
+				omitKeys = {"Class"}
+			},
+			serializeOptions or {}
+		)
 	)
 end
 

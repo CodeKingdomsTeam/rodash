@@ -172,20 +172,7 @@ describe(
 					end
 				)
 				it(
-					"with serialized args",
-					function()
-						local result = {apple = {fire = "fox"}, badger = {id = 1}, cactus = "crumpet"}
-						result.badger.donkey = result
-						result.donkey = result.badger
-						result.cactus = result.apple
-						assert.are.same(
-							'A serialized object: <1>{"apple":<2>{"fire":"fox"},"badger":<3>{"donkey":&1,"id":1},"cactus":&2,"donkey":&3}',
-							Strings.format("A serialized object: {:?}", result)
-						)
-					end
-				)
-				it(
-					"with pretty multiline args",
+					"with pretty args",
 					function()
 						local result = {apple = {fire = "fox"}, badger = {id = 1}, cactus = "crumpet"}
 						result.badger.donkey = result
@@ -389,10 +376,18 @@ describe(
 								}
 							}
 						}
-						assert(
-							Strings.pretty(result):gmatch(
-								'{child = {child = {a = true, b = <function: 0x[0-9a-f]+>, c = "hello\\\\\\" world", child = {1, 2, 3}}}}'
-							)()
+						assert.equal(
+							[[{
+	child = {
+		child = {
+			a = true,
+			b = <function: 0x000000>,
+			c = "hello\\\" world",
+			child = {1, 2, 3}
+		}
+	}
+}]],
+							Strings.pretty(result):gsub("0x[0-9a-f]+", "0x000000")
 						)
 					end
 				)
@@ -407,19 +402,19 @@ describe(
 					end
 				)
 				it(
-					"multiline works for a small table",
+					"works for a small table",
 					function()
-						assert.equal("{a = 1, b = {d = 4, e = 5}, c = 3}", Strings.pretty({a = 1, c = 3, b = {d = 4, e = 5}}, true))
+						assert.equal("{a = 1, b = {d = 4, e = 5}, c = 3}", Strings.pretty({a = 1, c = 3, b = {d = 4, e = 5}}))
 					end
 				)
 				it(
-					"multiline works for a small array",
+					"works for a small array",
 					function()
-						assert.equal("{{1, 2}, {d = 2, e = 4}, 3}", Strings.pretty({{1, 2}, {d = 2, e = 4}, 3}, true))
+						assert.equal("{{1, 2}, {d = 2, e = 4}, 3}", Strings.pretty({{1, 2}, {d = 2, e = 4}, 3}))
 					end
 				)
 				it(
-					"multiline works for other natural types",
+					"works for other natural types",
 					function()
 						local result = {
 							child = {
@@ -443,12 +438,12 @@ describe(
 		}
 	}
 }]],
-							Strings.pretty(result, true):gsub("0x[0-9a-f]+", "0x0000000")
+							Strings.pretty(result):gsub("0x[0-9a-f]+", "0x0000000")
 						)
 					end
 				)
 				it(
-					"multiline works for longer cycles",
+					"works for longer cycles",
 					function()
 						local result = {apple = {fire = "fox"}, badger = {id = 1}, cactus = "crumpet"}
 						result.badger.donkey = result
@@ -461,12 +456,12 @@ describe(
 	cactus = &2,
 	donkey = &3
 }]],
-							Strings.pretty(result, true)
+							Strings.pretty(result)
 						)
 					end
 				)
 				it(
-					"multiline works for classes and class instances",
+					"works for classes and class instances",
 					function()
 						local Animal =
 							Classes.class(
@@ -490,7 +485,7 @@ describe(
 	apple = <3>{fire = Animal {name = "fox"}},
 	cactus = &3
 }]],
-							Strings.pretty(result, true)
+							Strings.pretty(result)
 						)
 					end
 				)
