@@ -1,10 +1,10 @@
 --[[
 	These tools provide implementations of and functions for higher-order abstractions such as classes, enumerations and symbols.
 ]]
-local t = require(script.Parent.t)
-local Tables = require(script.Tables)
-local Arrays = require(script.Arrays)
-local Functions = require(script.Functions)
+local t = require(script.Parent.Parent.t)
+local Tables = require(script.Parent.Tables)
+local Arrays = require(script.Parent.Arrays)
+local Functions = require(script.Parent.Functions)
 local Classes = {}
 
 --[[
@@ -67,10 +67,21 @@ function Classes.class(name, constructor, decorators)
 		local instance = constructor(...)
 		setmetatable(
 			instance,
-			{__index = Class, __tostring = Class.toString, __eq = Class.equals, __lt = Class.__lt, __le = Class.__le}
+			{
+				__index = Class,
+				__tostring = Class.toString,
+				__eq = Class.equals,
+				__lt = Class.__lt,
+				__le = Class.__le,
+				__add = Class.__add,
+				__sub = Class.__sub,
+				__mul = Class.__mul,
+				__div = Class.__div,
+				__mod = Class.__mod
+			}
 		)
-		instance:_init(...)
 		instance.Class = Class
+		instance:_init(...)
 		return instance
 	end
 	--[[
@@ -237,7 +248,7 @@ function Classes.class(name, constructor, decorators)
 	]]
 	--: (T:) -> string
 	function Class:equals(other)
-		return self == other
+		return rawequal(self, other)
 	end
 
 	--[[
@@ -499,6 +510,26 @@ function Classes.PartialOrd(keys)
 				end
 			end
 			return false
+		end
+		return Class
+	end
+end
+
+function Classes.ToString(keys)
+	return function(Class)
+		function Class:toString()
+			local Strings = require(script.Parent.Strings)
+			return Strings.format(
+				"{}({})",
+				Class.name,
+				Tables.serialize(
+					self,
+					{
+						keys = keys,
+						omitKeys = {"Class"}
+					}
+				):sub(2, -2)
+			)
 		end
 		return Class
 	end

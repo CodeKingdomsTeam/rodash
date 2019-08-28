@@ -5,7 +5,7 @@
 	unary ones, as this is more lua-flavoured, the curried style feeling more useful in pure
 	languages which provide better support and/or syntactic sugar.
 ]]
-local Tables = require(script.Tables)
+local Tables = require(script.Parent.Tables)
 
 local Functions = {}
 
@@ -449,7 +449,7 @@ end
 function Functions.continue(actor)
 	actor = actor or Functions.invoke
 	return function(fn, value, ...)
-		local Async = require(script.Async)
+		local Async = require(script.Parent.Async)
 		return Async.resolve(value):andThen(
 			function(...)
 				return actor(fn, ...)

@@ -7,12 +7,12 @@
 	These functions typically act on immutable tables and return new tables in functional style.
 	Note that mutable arguments in Rodash are explicitly typed as such.
 ]]
-local t = require(script.Parent.t)
+local t = require(script.Parent.Parent.t)
 
 local Tables = {}
 
 local function assertHandlerIsFn(handler)
-	local Functions = require(script.Functions)
+	local Functions = require(script.Parent.Functions)
 	assert(Functions.isCallable(handler), "BadInput: handler must be a function")
 end
 
@@ -52,21 +52,44 @@ end
 	@trait Chainable
 ]]
 --: <T: Iterable<K, V>>(T, ...K) -> V
-function Tables.get(source, key, ...)
-	local tailKeys = {...}
+function Tables.get(source, ...)
+	local path = {...}
 	local ok, value =
 		pcall(
 		function()
-			return source[key]
+			local result = source
+			for _, key in ipairs(path) do
+				result = result[key]
+			end
+			return result
 		end
 	)
 	if ok then
-		if #tailKeys > 0 then
-			return Tables.get(value, unpack(tailKeys))
-		else
-			return value
-		end
+		return value
 	end
+end
+
+--[[
+	Set a child or descendant of a table. Returns `true` if the operation completed without error.
+
+	If any values along the path are not tables, `_.set` will do nothing and return `false`.
+	@example
+		_.set(game.Players, {"LocalPlayer", "Character", "UpperTorso", "Color"}, Color3.new(255, 255, 255))
+	@trait Chainable
+]]
+--: <T: Iterable<K, V>>(T, K[], V) -> ()
+function Tables.set(source, path, value)
+	local ok =
+		pcall(
+		function()
+			local result = source
+			for i = 1, #path - 1 do
+				result = result[path[i]]
+			end
+			result[path[#path]] = value
+		end
+	)
+	return ok
 end
 
 --[[
@@ -166,7 +189,7 @@ end
 --: <T: Iterable<K,V>, U>((T, (element: V, key: K) -> U[]) -> U[])
 function Tables.flatMap(source, handler)
 	assertHandlerIsFn(handler)
-	local Arrays = require(script.Arrays)
+	local Arrays = require(script.Parent.Arrays)
 	local result = {}
 	for i, v in Tables.iterator(source) do
 		local list = handler(v, i)
@@ -258,7 +281,7 @@ end
 ]]
 --: <T: Iterable<K,V>>(T -> V[])
 function Tables.compact(source)
-	local Arrays = require(script.Arrays)
+	local Arrays = require(script.Parent.Arrays)
 	local sortedKeys = Arrays.sort(Tables.keys(source))
 	return Tables.map(
 		sortedKeys,
@@ -379,7 +402,7 @@ end
 ]]
 -- <T>(T{} -> T{})
 function Tables.privatize(source)
-	local Strings = require(script.Strings)
+	local Strings = require(script.Parent.Strings)
 	return Tables.keyBy(
 		source,
 		function(_, key)
@@ -962,7 +985,7 @@ function Tables.isArray(source)
 end
 
 local function serializeVisit(source, options)
-	local Arrays = require(script.Arrays)
+	local Arrays = require(script.Parent.Arrays)
 	local isArray = Tables.isArray(source)
 	local ref = ""
 	local cycles = options.cycles
@@ -979,7 +1002,7 @@ local function serializeVisit(source, options)
 		Tables.map(
 		Tables.filter(
 			-- Sort optimistically so references are more likely to be generated in print order
-			Arrays.sort(Tables.keys(source)),
+			options.keys or Arrays.sort(Tables.keys(source)),
 			function(key)
 				return not Tables.includes(options.omitKeys, key)
 			end
@@ -1087,7 +1110,7 @@ function Tables.serialize(source, options)
 	options = Tables.defaults({}, options, getDefaultSerializeOptions())
 	assert(t.string(options.valueDelimiter), "BadInput: valueDelimiter must be a string if defined")
 	assert(t.string(options.keyDelimiter), "BadInput: keyDelimiter must be a string if defined")
-	local Functions = require(script.Functions)
+	local Functions = require(script.Parent.Functions)
 	assert(Functions.isCallable(options.serializeValue), "BadInput: options.serializeValue must be a function if defined")
 	assert(Functions.isCallable(options.serializeKey), "BadInput: options.serializeKey must be a function if defined")
 	if type(source) ~= "table" then
@@ -1128,7 +1151,7 @@ end
 --: <T: Iterable<K,V>>(T, (V, Cycles<V> -> string), (K, Cycles<V> -> string) -> string)
 function Tables.serializeDeep(source, options)
 	options = Tables.defaults({}, options, getDefaultSerializeOptions())
-	local Functions = require(script.Functions)
+	local Functions = require(script.Parent.Functions)
 	assert(Functions.isCallable(options.serializeValue), "BadInput: options.serializeValue must be a function if defined")
 	assert(Functions.isCallable(options.serializeKey), "BadInput: options.serializeKey must be a function if defined")
 	local function deepSerializer(fn, value, internalOptions)
