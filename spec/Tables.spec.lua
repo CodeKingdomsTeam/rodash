@@ -2,7 +2,7 @@ local Tables = require "Tables"
 local Strings = require "Strings"
 local Arrays = require "Arrays"
 
-local function lazySequence(firstNumber, lastNumber)
+local function getIteratorForRange(firstNumber, lastNumber)
 	local i = 0
 	return function()
 		local currentNumber = firstNumber + i
@@ -589,30 +589,12 @@ describe(
 						assert.are.same(
 							{5, 6},
 							Tables.filter(
-								lazySequence(5, 10),
+								getIteratorForRange(5, 10),
 								function(value)
 									return value < 7
 								end
 							)
 						)
-					end
-				)
-			end
-		)
-		describe(
-			"filterKeys",
-			function()
-				it(
-					"filters keys and values of a non-sequential table",
-					function()
-						local output =
-							Tables.filterKeys(
-							{one = "a", two = "b", three = "a", four = "d", five = "e"},
-							function(x, i)
-								return x == "b" or i == "five"
-							end
-						)
-						assert.are.same({two = "b", five = "e"}, output)
 					end
 				)
 			end
@@ -819,70 +801,6 @@ describe(
 					"returns false for a table with keys",
 					function()
 						assert.are.same(false, Tables.isEmpty({a = 1}))
-					end
-				)
-			end
-		)
-		describe(
-			"reduce",
-			function()
-				it(
-					"returns the base case for an empty array",
-					function()
-						assert.are.same(
-							"f",
-							Tables.reduce(
-								{},
-								function(prev, next)
-									return prev .. next
-								end,
-								"f"
-							)
-						)
-					end
-				)
-				it(
-					"applies an iterator to reduce a table",
-					function()
-						assert.are.same(
-							"fabcde",
-							Tables.reduce(
-								{"a", "b", "c", "d", "e"},
-								function(prev, next)
-									return prev .. next
-								end,
-								"f"
-							)
-						)
-					end
-				)
-				it(
-					"can operate on the index",
-					function()
-						assert.are.same(
-							"f1a2b3c4d5e",
-							Tables.reduce(
-								{"a", "b", "c", "d", "e"},
-								function(prev, next, i)
-									return (prev or "f") .. i .. next
-								end
-							)
-						)
-					end
-				)
-				it(
-					"works when passed an iterator",
-					function()
-						assert.are.same(
-							15,
-							Tables.reduce(
-								lazySequence(1, 5),
-								function(prev, next, i)
-									return prev + next
-								end,
-								0
-							)
-						)
 					end
 				)
 			end

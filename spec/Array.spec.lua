@@ -1,5 +1,18 @@
 local Arrays = require "Arrays"
-local Tables = require "Tables"
+
+local function getIteratorForRange(firstNumber, lastNumber)
+	local i = 0
+	return function()
+		local currentNumber = firstNumber + i
+		if currentNumber > lastNumber then
+			return
+		else
+			local currentIndex = i
+			i = i + 1
+			return currentIndex, currentNumber
+		end
+	end
+end
 
 describe(
 	"Array",
@@ -165,10 +178,19 @@ describe(
 			"shuffle",
 			function()
 				it(
-					"shuffle",
+					"uses math.random to randomize the order of elements in an array",
 					function()
 						local x = {20, 30, 40, 10}
-						assert.are.same({10, 20, 30, 40}, Arrays.sort(Arrays.shuffle(x)))
+						local i = 0
+						local oldRandom = math.random
+						-- luacheck: push ignore 122
+						math.random = function()
+							i = i + 1
+							return i
+						end
+						assert.are.same({20, 30, 40, 10}, Arrays.shuffle(x))
+						math.random = oldRandom
+						-- luacheck: pop
 					end
 				)
 			end
@@ -240,12 +262,77 @@ describe(
 		)
 
 		describe(
+			"reduce",
+			function()
+				it(
+					"returns the base case for an empty array",
+					function()
+						assert.are.same(
+							"f",
+							Arrays.reduce(
+								{},
+								function(prev, next)
+									return prev .. next
+								end,
+								"f"
+							)
+						)
+					end
+				)
+				it(
+					"applies an iterator to reduce a table",
+					function()
+						assert.are.same(
+							"fabcde",
+							Arrays.reduce(
+								{"a", "b", "c", "d", "e"},
+								function(prev, next)
+									return prev .. next
+								end,
+								"f"
+							)
+						)
+					end
+				)
+				it(
+					"can operate on the index",
+					function()
+						assert.are.same(
+							"f1a2b3c4d5e",
+							Arrays.reduce(
+								{"a", "b", "c", "d", "e"},
+								function(prev, next, i)
+									return (prev or "f") .. i .. next
+								end
+							)
+						)
+					end
+				)
+				it(
+					"works when passed an iterator",
+					function()
+						assert.are.same(
+							15,
+							Arrays.reduce(
+								getIteratorForRange(1, 5),
+								function(prev, next, i)
+									return prev + next
+								end,
+								0
+							)
+						)
+					end
+				)
+			end
+		)
+
+		describe(
 			"reverse",
 			function()
 				it(
 					"reverses an array",
 					function()
-						assert.are.same({1, 2, 3, 4, 5}, Tables.reverse({5, 4, 3, 2, 1}))
+						assert.are.same({1, 2, 3, 4, 5}, Arrays.reverse({5, 4, 3, 2, 1}))
 					end
 				)
 			end
