@@ -28,17 +28,17 @@ There are currently two ways to install Rodash:
 #### **Method 1. Model File (Roblox Studio)**
 
 1. Download the _rbxm_ model from the [Github releases page](https://github.com/CodeKingdomsTeam/rodash/releases).
-1. Insert the module into Studio and place it in `ReplicatedStorage`
+1. Insert the model into Studio and place it in `ReplicatedStorage`
 
 #### **Method 2. Filesystem**
 
 1. Clone this repo using `git clone git@github.com:CodeKingdomsTeam/rodash.git` in a suitable directory
-1. Rename the `src` folder to `Robase`
+1. Rename the `src` folder to `Rodash`
 1. Use [rojo](https://github.com/LPGhatguy/rojo) to sync the files into a place
 
 #### Importing
 
-If you prefer not to reuse `_`, you can also import the library under a different name, or a specific module:
+If you prefer not to reuse `_`, you can also import the library under a different name, or just import a specific module:
 
 ```
 local _r = require(game.ReplicatedStorage.Rodash)

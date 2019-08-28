@@ -1,9 +1,9 @@
 --[[
 	These tools provide implementations of and functions for higher-order abstractions such as classes, enumerations and symbols.
 ]]
-local t = require(script.Parent.t)
-local Tables = require(script.Tables)
-local Functions = require(script.Functions)
+local Functions = require(script.Parent.Functions)
+local t = require(script.Parent.Parent.t)
+local Tables = require(script.Parent.Tables)
 local Classes = {}
 
 --[[

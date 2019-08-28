@@ -12,7 +12,7 @@
 
 	Right?
 ]]
-local t = require(script.Parent.t)
+local t = require(script.Parent.Parent.t)
 
 local Tables = {}
 
@@ -502,7 +502,7 @@ function Tables.serialize(source, serializer)
 			return tostring(value)
 		end
 	assert(type(source) == "table")
-	local Functions = require(script.Functions)
+	local Functions = require(script.Parent.Functions)
 	assert(Functions.isCallable(serializer))
 	return "{" ..
 		table.concat(
@@ -536,7 +536,7 @@ end
 function Tables.sort(input, comparator)
 	assert(t.table(input), input)
 
-	local Functions = require(script.Functions)
+	local Functions = require(script.Parent.Functions)
 	assert(comparator == nil or Functions.isCallable(comparator), "comparator must be callable or nil")
 
 	comparator = comparator or function(a, b)
