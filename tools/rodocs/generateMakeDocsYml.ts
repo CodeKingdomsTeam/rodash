@@ -15,8 +15,7 @@ theme:
 
 nav:
   - Home: index.md
-  - Guide:
-      - Arrays: guide/arrays.md
+  - Getting Started: getting-started.md
   - API Reference:
 ${files.map(name => `      - ${basename(name, '.md')}: api/${name}`).join('\n')}
 

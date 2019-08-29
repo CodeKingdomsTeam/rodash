@@ -1,0 +1,56 @@
+{
+	"name": "Rodash",
+	"tree": {
+		"$className": "DataModel",
+		"HttpService": {
+			"$className": "HttpService",
+			"$properties": {
+				"HttpEnabled": true
+			}
+		},
+		"Lighting": {
+			"$className": "Lighting",
+			"$properties": {
+				"Ambient": [0.0, 0.0, 0.0],
+				"Technology": "Voxel",
+				"Outlines": false,
+				"GlobalShadows": true,
+				"Brightness": 2.0
+			}
+		},
+		"ReplicatedStorage": {
+			"$className": "ReplicatedStorage",
+			"Rodash": {
+				"$path": "src"
+			},
+			"Promise": {
+				"$path": "modules/roblox-lua-promise/lib"
+			},
+			"t": {
+				"$path": "modules/t/lib/t.lua"
+			}
+		},
+		"SoundService": {
+			"$className": "SoundService",
+			"$properties": {
+				"RespectFilteringEnabled": true
+			}
+		},
+		"Workspace": {
+			"$className": "Workspace",
+			"$properties": {
+				"FilteringEnabled": true
+			},
+			"Baseplate": {
+				"$className": "Part",
+				"$properties": {
+					"Anchored": true,
+					"Locked": true,
+					"Position": [0.0, -10.0, 0.0],
+					"Size": [512.0, 20.0, 512.0],
+					"Color": [0.38823, 0.37254, 0.38823]
+				}
+			}
+		}
+	}
+}

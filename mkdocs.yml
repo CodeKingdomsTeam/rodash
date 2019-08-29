@@ -12,8 +12,7 @@ theme:
 
 nav:
   - Home: index.md
-  - Guide:
-      - Arrays: guide/arrays.md
+  - Getting Started: getting-started.md
   - API Reference:
       - Arrays: api/Arrays.md
       - Async: api/Async.md
@@ -21,6 +20,7 @@ nav:
       - Functions: api/Functions.md
       - Strings: api/Strings.md
       - Tables: api/Tables.md
+      - init: api/init.md
 
 extra_css:
   - rodocs.css
