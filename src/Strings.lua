@@ -439,7 +439,8 @@ end
 	
 	* `{}` formats and prints the next argument using `:format()` if available, or a suitable
 		default representation depending on its type.
-	* `{2}` formats and prints the 2nd value argument
+	* `{2}` formats and prints the 2nd argument.
+	* `{#2}` prints the length of the 2nd argument.
 
 	Display parameters can be combined after a `:` in the curly braces. Any format parameters used
 	in `string.format` can be used here, along with these extras:
@@ -478,7 +479,9 @@ function Strings.format(format, ...)
 			local isEscaped = escapeMatch and #escapeMatch % 2 == 1
 			if not isEscaped then
 				local placeholderSplit = Strings.splitOn(placeholder, ":")
-				local nextIndex = tonumber(placeholderSplit[1])
+				local isLength = Strings.startsWith(placeholderSplit[1], "#")
+				local argString = isLength and placeholderSplit[1]:sub(2) or placeholderSplit[1]
+				local nextIndex = tonumber(argString)
 				local displayString = placeholderSplit[2]
 				local arg
 				if nextIndex then
@@ -486,6 +489,9 @@ function Strings.format(format, ...)
 				else
 					arg = args[argIndex]
 					argIndex = argIndex + 1
+				end
+				if isLength then
+					arg = #arg
 				end
 				insert(result, Strings.formatValue(arg, displayString or ""))
 			else

@@ -5,16 +5,16 @@ Rodash is a collection of functions designed to aid everyday game programming in
 # Usage
 
 ```lua
-local _ = require(game.ReplicatedStorage.Rodash)
+local rd = require(game.ReplicatedStorage.Rodash)
 
 local function onlyLocalPlayerHasGold()
 
-	local playersWithGold = _.filter(game.Players:GetChildren(), function( player )
-		_.debug("Tools: {:#?}", player.Backpack)
-		return _.some(player.Backpack:GetChildren(), _.fn:get("OreType", "Value"):endsWith("Gold") end)
+	local playersWithGold = rd.filter(game.Players:GetChildren(), function( player )
+		rd.debug("Tools: {:#?}", player.Backpack)
+		return rd.some(player.Backpack:GetChildren(), rd.fn:get("OreType", "Value"):endsWith("Gold") end)
 	end)
 
-	return _.shallowEqual(playersWithGold, {game.Players.LocalPlayer})
+	return rd.shallowEqual(playersWithGold, {game.Players.LocalPlayer})
 
 end
 ```

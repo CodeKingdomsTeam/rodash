@@ -107,7 +107,7 @@ describe(
 								return value >= 5
 							end
 						):sum()
-						assert.equals("_.fn::map::filter::sum", tostring(fn))
+						assert.equals("fn::map::filter::sum", tostring(fn))
 						assert.are.same(12, fn({1, 3, 5}))
 					end
 				)

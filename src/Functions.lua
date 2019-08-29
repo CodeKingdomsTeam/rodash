@@ -454,10 +454,11 @@ function Functions.continue(actor)
 	end
 end
 
-local getChain =
+local getRodashChain =
 	Functions.once(
-	function(subject)
-		return Functions.chain(subject)
+	function()
+		local rd = require(script.Parent)
+		return Functions.chain(rd)
 	end
 )
 Functions.fn = {}
@@ -465,14 +466,13 @@ setmetatable(
 	Functions.fn,
 	{
 		__index = function(self, key)
-			local _ = require(script)
-			return getChain(_)[key]
+			return getRodashChain()[key]
 		end,
 		__call = function(self, subject)
 			return subject
 		end,
 		__tostring = function()
-			return "_.fn"
+			return "fn"
 		end
 	}
 )
