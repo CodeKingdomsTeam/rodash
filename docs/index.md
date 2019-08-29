@@ -22,7 +22,7 @@ rd.append(list, {"nachos"}, {}, {"chillies", "bbq sauce"})
 list --> {"cheese", "nachos", "chillies", "bbq sauce"}
 ```
 
-Alternatively, you can alias any Rodash function itself:
+If you prefer, you can alias specific Rodash functions yourself:
 
 ```
 local Rodash = require(game.ReplicatedStorage.Rodash)

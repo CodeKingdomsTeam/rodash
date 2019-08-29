@@ -103,12 +103,14 @@ end
 function Strings.encodeHtml(str)
 	assertStrIsString(str)
 	local entities = {["<"] = "lt", [">"] = "gt", ["&"] = "amp", ['"'] = "quot", ["'"] = "apos"}
-	return str:gsub(
+	local result =
+		str:gsub(
 		".",
 		function(char)
 			return entities[char] and ("&" .. entities[char] .. ";") or char
 		end
 	)
+	return result
 end
 
 --[==[
@@ -120,7 +122,8 @@ end
 function Strings.decodeHtml(str)
 	assertStrIsString(str)
 	local entities = {lt = "<", gt = ">", amp = "&", quot = '"', apos = "'"}
-	return str:gsub(
+	local result =
+		str:gsub(
 		"(&(#?x?)([%d%a]+);)",
 		function(original, hashPrefix, code)
 			return (hashPrefix == "" and entities[code]) or
@@ -129,6 +132,7 @@ function Strings.decodeHtml(str)
 				original
 		end
 	)
+	return result
 end
 
 --[[
@@ -281,22 +285,22 @@ end
 --: char -> str, str?, boolean?
 function Strings.charToHex(char, format, useBytes)
 	assert(t.string(char), "BadInput: char must be a single utf8 character string")
-	assert(utf8.len(char) == 1, "BadInput: char must be a single utf8 character string")
 	local values = {}
 	if useBytes then
-		for position, codePoint in utf8.codes(char) do
-			insert(values, codePoint)
-		end
-	else
 		for i = 1, char:len() do
 			insert(values, char:byte(i))
+		end
+	else
+		for position, codePoint in utf8.codes(char) do
+			insert(values, codePoint)
 		end
 	end
 	return concat(
 		Tables.map(
 			values,
 			function(value)
-				return format and Strings.format(format, string.format("%X", value))
+				local hexValue = string.format("%X", value)
+				return format and Strings.format(format, hexValue) or hexValue
 			end,
 			""
 		)
@@ -315,9 +319,9 @@ end
 function Strings.hexToChar(hex)
 	assert(t.string(hex), "BadInput: hex must be a string")
 	if hex:sub(0, 1) == "%" or hex:sub(0, 1) == "#" then
-		hex = hex:sub(1)
-	elseif hex:sub(0, 2) == "0x" then
 		hex = hex:sub(2)
+	elseif hex:sub(0, 2) == "0x" then
+		hex = hex:sub(3)
 	end
 	return utf8.char(tonumber(hex, 16)) or error("MalformedInput")
 end
@@ -327,14 +331,23 @@ end
 	@trait Chainable
 	@example
 		_.encodeUrl("https://example.com/Egg+Fried Rice!?🤷🏼‍♀️")
-		--> "https://example.com/Egg+Fried%20Rice!?%1F937%1F3FC%200D%2640%FE0F"
+		--> "https://example.com/Egg+Fried%20Rice!?%F0%9F%A4%B7%F0%9F%8F%BC%E2%80%8D%E2%99%80%EF%B8%8F"
 	@usage
 		This method is designed to act like `encodeURI` in JavaScript.
 ]]
 --: string -> string
 function Strings.encodeUrl(str)
 	assertStrIsString(str)
-	return str:gsub("[^%;%,%/%?%:%@%&%=%+%$%w%-%_%.%!%~%*%'%(%)%#]", Functions.bindTail(Strings.charToHex, "%{}", true))
+	local result = {}
+	for _, codePoint in utf8.codes(str) do
+		local char = utf8.char(codePoint)
+		if char:match("^[%;%,%/%?%:%@%&%=%+%$%w%-%_%.%!%~%*%'%(%)%#]$") then
+			table.insert(result, char)
+		else
+			table.insert(result, Strings.charToHex(char, "%{}", true))
+		end
+	end
+	return table.concat(result, "")
 end
 
 --[[
@@ -342,7 +355,7 @@ end
 	@trait Chainable
 	@example
 		_.encodeUrlComponent("https://example.com/Egg+Fried Rice!?🤷🏼‍♀️")
-		--> "https%3A%2F%2Fexample.com%2FEgg%2BFried%20Rice!%3F%1F937%1F3FC%200D%2640%FE0F"
+		--> "https%3A%2F%2Fexample.com%2FEgg%2BFried%20Rice!%3F%F0%9F%A4%B7%F0%9F%8F%BC%E2%80%8D%E2%99%80%EF%B8%8F"
 	@usage
 		This method is designed to act like `encodeURIComponent` in JavaScript.
 	@usage
@@ -351,7 +364,16 @@ end
 --: string -> string
 function Strings.encodeUrlComponent(str)
 	assertStrIsString(str)
-	return str:gsub("[^%w%-_%.%!%~%*%'%(%)]", Functions.bindTail(Strings.charToHex, "%{}", true))
+	local result = {}
+	for _, codePoint in utf8.codes(str) do
+		local char = utf8.char(codePoint)
+		if char:match("^[%;%,%/%?%:%@%&%=%+%$%w%-%_%.%!%~%*%'%(%)%#]$") then
+			table.insert(result, char)
+		else
+			table.insert(result, Strings.charToHex(char, "%{}", true))
+		end
+	end
+	return table.concat(result, "")
 end
 
 local calculateDecodeUrlExceptions =

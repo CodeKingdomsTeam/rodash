@@ -38,26 +38,26 @@
 		<Item class="Camera" referent="RBXf9ad0589e20940158c0001145d47e1b2">
 			<Properties>
 				<CoordinateFrame name="CFrame">
-					<X>202.562592</X>
-					<Y>134.087936</Y>
-					<Z>172.859528</Z>
-					<R00>0.393943161</R00>
-					<R01>-0.692618847</R01>
-					<R02>0.604225099</R02>
-					<R10>-0</R10>
-					<R11>0.657384694</R11>
-					<R12>0.753555179</R12>
-					<R20>-0.919134915</R20>
-					<R21>-0.296857923</R21>
-					<R22>0.258972138</R22>
+					<X>150.158936</X>
+					<Y>69.1109314</Y>
+					<Z>111.396156</Z>
+					<R00>0.783709109</R00>
+					<R01>-0.367723465</R01>
+					<R02>0.500579298</R02>
+					<R10>-1.4901163e-08</R10>
+					<R11>0.805919528</R11>
+					<R12>0.592025101</R12>
+					<R20>-0.621128142</R20>
+					<R21>-0.463975459</R21>
+					<R22>0.6316064</R22>
 				</CoordinateFrame>
 				<Ref name="CameraSubject">null</Ref>
 				<token name="CameraType">0</token>
 				<float name="FieldOfView">70</float>
 				<CoordinateFrame name="Focus">
-					<X>201.354141</X>
-					<Y>132.580826</Y>
-					<Z>172.341583</Z>
+					<X>149.157776</X>
+					<Y>67.9268799</Y>
+					<Z>110.132942</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -487,14 +487,18 @@ gcLgc4RKxr21zq2UlJSM]]></BinaryString>
 				<Content name="LinkedSource"><null></null></Content>
 				<string name="Name">Example</string>
 				<string name="ScriptGuid">{c2891012-18d5-4b2b-baa7-11f8ecce21c3}</string>
-				<ProtectedString name="Source"><![CDATA[print("Examples of using Rodash in your project")
+				<ProtectedString name="Source"><![CDATA[print("Examples of using Rodash in your project:")
 
 local rd = require(game.ReplicatedStorage.Rodash)
+local fn = rd.fn
 
 rd.setInterval(function()
-	local playerNames = rd.map(game.Players:GetChildren(), rd.fn:get("Name"))
+	local getNames = fn:map(fn:get("Name"))
+	local playerNames = getNames(game.Players:GetChildren())
 	print(rd.format("Players online ({#1}): {:#?}", playerNames))
-end, 1)]]></ProtectedString>
+end, 1)
+
+print(rd.encodeUrlComponent("https://example.com/Egg+Fried Rice!?🤷🏼‍♀️"))]]></ProtectedString>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
 		</Item>
@@ -2318,16 +2322,348 @@ return t]]></ProtectedString>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
 		</Item>
-		<Item class="Folder" referent="RBXfd90d0daf82d4e14a606f9c10ecdc50e">
+		<Item class="ModuleScript" referent="RBX6b14cfa6e11743fda98b5160cd7fed88">
 			<Properties>
+				<Content name="LinkedSource"><null></null></Content>
 				<string name="Name">Rodash</string>
+				<string name="ScriptGuid">{b55125cc-ec4c-44c9-a87d-efb2d1b81ac1}</string>
+				<ProtectedString name="Source"><![CDATA[local Async = require(script.Async)
+local Classes = require(script.Classes)
+local Functions = require(script.Functions)
+local Strings = require(script.Strings)
+local Arrays = require(script.Arrays)
+local Tables = require(script.Tables)
+
+local rd = Tables.assign(Async, Classes, Functions, Strings, Arrays, Tables)
+return rd
+]]></ProtectedString>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
-			<Item class="ModuleScript" referent="RBXb907e0b62cb14a56b7754b19a28a6999">
+			<Item class="ModuleScript" referent="RBX1d4297acf9de43b1b0cad0a58ed3c4da">
+				<Properties>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">Arrays</string>
+					<string name="ScriptGuid">{5887ef10-8b1b-465b-afbf-548125a513c2}</string>
+					<ProtectedString name="Source"><![CDATA[--[[
+	A collection of functions that operate specifically on arrays, defined as tables with just keys _1..n_.
+
+	```lua
+		-- Examples of valid arrays:
+		{}
+		{"red", "green", "blue"}
+		{"winter", {is = "coming"}, [3] = "again"}
+		{1966, nil, nil}
+		-- Examples of invalid arrays:
+		{1994, nil, 2002}
+		{you = {"know", "nothing"}}
+		{[5] = "gold rings"}
+		42
+	```
+
+	Functions can also iterate over custom iterator functions which provide elements with natural keys _1..n_.
+]]
+local t = require(script.Parent.Parent.t)
+local Tables = require(script.Parent.Tables)
+
+local Arrays = {}
+
+local function assertHandlerIsFn(handler)
+	local Functions = require(script.Parent.Functions)
+	assert(Functions.isCallable(handler), "BadInput: handler must be a function")
+end
+local function assertPredicateIsFn(handler)
+	local Functions = require(script.Parent.Functions)
+	assert(Functions.isCallable(handler), "BadInput: handler must be a function")
+end
+
+local typeIndex = {
+	boolean = 1,
+	number = 2,
+	string = 3,
+	["function"] = 4,
+	["CFunction"] = 5,
+	userdata = 6,
+	table = 7
+}
+
+--[[
+	The default comparator is used by `_.sort` and can sort elements of different types, in the
+	order: boolean, number, string, function, CFunction, userdata, and table.
+		
+	Elements which cannot be sorted naturally will be sorted by their string value.
+
+	@see _.sort
+]]
+function Arrays.defaultComparator(a, b)
+	if type(a) ~= type(b) then
+		return typeIndex[type(a)] - typeIndex[type(b)]
+	end
+	local ok, result =
+		pcall(
+		function()
+			return a < b
+		end
+	)
+	if ok then
+		return result
+	else
+		return tostring(a) < tostring(b)
+	end
+end
+
+--[[
+	Returns a sorted array from the _input_ array, based on a _comparator_ function.
+
+	Unlike `table.sort`, the comparator to `_.sort` is optional, but it can also be defined to
+	a numeric weight or nil as well as a boolean.
+
+	@param comparator (optional) should return `true` or `n < 0` if the first element should be
+		before the second in the resulting array, or `0` or `nil` if the elements have the same
+		order.
+
+	@example _.sort({2, 5, 3}) --> {2, 3, 5}
+	@example _.sort({"use", "the", "force", "Luke"}) --> {"Luke", "force", "the", "use"}
+]]
+--: <T>(T[], (T -> bool | number | nil) -> T[])
+function Arrays.sort(input, comparator)
+	assert(t.table(input), "BadInput: input must be an array")
+
+	local Functions = require(script.Parent.Functions)
+	assert(comparator == nil or Functions.isCallable(comparator), "BadInput: comparator must be callable or nil")
+
+	comparator = comparator or Arrays.defaultComparator
+
+	table.sort(
+		input,
+		function(a, b)
+			local result = comparator(a, b)
+
+			if type(result) ~= "number" and type(result) ~= "boolean" and result ~= nil then
+				error("BadResult: comparator must return a boolean, a number or nil")
+			end
+
+			return result == true or (type(result) == "number" and result < 0)
+		end
+	)
+
+	return input
+end
+
+--[[
+	Returns a copied portion of the _source_.
+	@param first (default = 1) The index of the first element to include.
+	@param last (default = `#source`) The index of the last element to include.
+	@param step (default = 1) What amount to step the index by during iteration.
+	@example _.slice({10, 20, 30, 40}) --> {10, 20, 30, 40}
+	@example _.slice({10, 20, 30, 40}, 2) --> {20, 30, 40}
+	@example _.slice({10, 20, 30, 40}, 2, 3) --> {20, 30}
+	@example _.slice({10, 20, 30, 40}, 2, 4, 2) --> {20, 40}
+]]
+--: <T>(T[], int?, int?, int? -> T[])
+function Arrays.slice(source, first, last, step)
+	assert(t.table(source), "BadInput: source must be an array")
+	assert(t.optional(t.number)(first), "BadInput: first must be an int")
+	assert(t.optional(t.number)(last), "BadInput: last must be an int")
+	assert(t.optional(t.number)(step), "BadInput: step must be an int")
+	local sliced = {}
+
+	for i = first or 1, last or #source, step or 1 do
+		sliced[#sliced + 1] = source[i]
+	end
+
+	return sliced
+end
+
+--[[
+	Returns a new array with the order of the values from _source_ randomized.
+	@example
+		local teamColors = {"red", "red", "red", "blue", "blue", "blue"}
+		-- (in some order)
+		_.shuffle(teamColors) --> {"blue", "blue", "red", "blue", "red", "red"}
+]]
+--: <T: Iterable>(T -> T)
+function Arrays.shuffle(source)
+	assert(t.table(source), "BadInput: source must be an array")
+	local result = Tables.clone(source)
+	for i = #result, 1, -1 do
+		local j = math.random(i)
+		result[i], result[j] = result[j], result[i]
+	end
+	return result
+end
+
+--[[
+	Runs the _handler_ on each element of _source_ in turn, passing the result of the previous call
+	(or _initial_ for the first element) as the first argument, and the current element as a value
+	and key as subsequent arguments.
+	@example
+		local sum = _.reduce({1, 2, 3}, function(result, value)
+			return result + value
+		end, 0)
+		sum --> 6
+	@example
+		local recipe = {first = "cheese", second = "nachos", third = "chillies"}
+		local unzipRecipe = _.reduce(recipe, function(result, value, key)
+			table.insert(result[1], key)
+			table.insert(result[2], value)
+			return result
+		end, {{}, {}})
+		-- (in some order)
+		unzipRecipe --> {{"first", "third", "second"}, {"cheese", "chillies", "nachos"}}
+]]
+--: <T, R>(T[], (result: R, value: T, key: int -> R), R) -> R
+function Arrays.reduce(source, handler, initial)
+	local result = initial
+	for i, v in Tables.iterator(source) do
+		result = handler(result, v, i)
+	end
+	return result
+end
+
+--[[
+	Inserts into _target_ the elements from all subsequent arguments in order.
+	@param ... any number of other arrays
+	@example _.append({}, {1, 2, 3}, {4, 5, 6}) --> {1, 2, 3, 4, 5, 6}
+	@example _.append({1, 2, 3}) --> {1, 2, 3}
+	@example
+		local list = {"cheese"}
+		_.append(list, {"nachos"}, {}, {"chillies"})
+		list --> {"cheese", "nachos", "chillies"}
+]]
+--: <T>(mut T[], ...T[] -> T[])
+function Arrays.append(target, ...)
+	for i = 1, select("#", ...) do
+		local x = select(i, ...)
+		if type(x) == "table" then
+			for _, y in ipairs(x) do
+				table.insert(target, y)
+			end
+		else
+			table.insert(target, x)
+		end
+	end
+
+	return target
+end
+
+--[[
+	Sums all the values in the _source_ array.
+	@example _.sum({1, 2, 3}) --> 6
+]]
+function Arrays.sum(source)
+	return Arrays.reduce(
+		source,
+		function(current, value)
+			return current + value
+		end,
+		0
+	)
+end
+
+--[[
+	Swaps the order of elements in _source_.
+	@example _.reverse({1, 2, 4, 3, 5}) --> {5, 3, 4, 2, 1}
+]]
+--: <T>(T[] -> T[])
+function Arrays.reverse(source)
+	local output = {}
+	for i = #source, 1, -1 do
+		table.insert(output, source[i])
+	end
+	return output
+end
+
+--[[
+	Returns the earliest value from the array that _predicate_ returns `true` for.
+
+	If the _predicate_ is not specified, `_.first` simply returns the first element of the array.
+	@param predicate (default = `_.returns(true)`)
+	@example
+		local names = {
+			"Boromir",
+			"Frodo",
+			"Bilbo"
+		}
+
+		_.first(names) --> "Boromir", 1
+
+		-- Find a particular value:
+		local firstNameWithF = _.first(names, function(name)
+			return _.startsWith(name, "F")
+		end)
+		firstNameWithF --> "Frodo", 2
+
+		-- What about a value whcih doesn't exist?
+		local firstNameWithC = _.first(names, function(name)
+			return _.startsWith(name, "C")
+		end)
+		firstNameWithC --> nil
+
+		-- Find the index of a value:
+		local _, index = _.first(names, _.fn:matches("Bilbo"))
+		index --> 2
+	@see _.find 
+	@usage If you need to find a value in a table which isn't an array, use `_.find`.
+]]
+--: <T: Iterable<K,V>>((T, (element: V, key: K) -> bool) -> V?)
+function Arrays.first(source, predicate)
+	predicate = predicate or function()
+			return true
+		end
+	assertPredicateIsFn(predicate)
+	for i, v in Tables.iterator(source, true) do
+		if (predicate(v, i)) then
+			return v, i
+		end
+	end
+end
+
+--[[
+	Returns the last value from the array that _predicate_ returns `true` for.
+
+	If the _predicate_ is not specified, `_.last` simply returns the last element of the array.
+	@param predicate (default = `_.returns(true)`)
+	@example
+		local names = {
+			"Boromir",
+			"Frodo",
+			"Bilbo"
+		}
+
+		_.last(names) --> "Bilbo", 3
+
+		local lastNameWithB = _.last(names, _.fn:startsWith("B"))
+		lastNameWithB --> "Bilbo", 3
+
+		local _, key = _.last(names, _.fn:matches("Frodo"))
+		key --> 2
+	@see _.find
+	@see _.first
+]]
+--: <T: Iterable<K,V>>((T, (element: V, key: K) -> bool) -> V?)
+function Arrays.last(source, predicate)
+	predicate = predicate or function()
+			return true
+		end
+	assertHandlerIsFn(predicate)
+	for i = #source, 1, -1 do
+		local value = source[i]
+		if (predicate(value, i)) then
+			return value, i
+		end
+	end
+end
+
+return Arrays
+]]></ProtectedString>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+			</Item>
+			<Item class="ModuleScript" referent="RBXa39ea473f3494770a7dc73d5cc7ad69b">
 				<Properties>
 					<Content name="LinkedSource"><null></null></Content>
 					<string name="Name">Async</string>
-					<string name="ScriptGuid"></string>
+					<string name="ScriptGuid">{248c7254-b1f6-4a52-9d73-5e57c5b576bd}</string>
 					<ProtectedString name="Source"><![CDATA[--[[
 	Building upon the functionality of [Roblox Lua Promise](https://github.com/LPGhatguy/roblox-lua-promise)
 	and borrowing ideas from [Bluebird](http://bluebirdjs.com/docs/getting-started.html),
@@ -2396,7 +2732,7 @@ end
 ]]
 --: <T>((Promise<T> | T)[]) -> Promise<T[]>
 function Async.parallel(array)
-	assert(t.table(array))
+	assert(t.table(array), "BadInput: array must be an array")
 	local promises =
 		Tables.map(
 		array,
@@ -2434,7 +2770,7 @@ end
 ]]
 --: <T>((Promise<T> | T){}) -> Promise<T{}>
 function Async.parallelAll(dictionary)
-	assert(t.table(dictionary))
+	assert(t.table(dictionary), "BadInput: dictionary must be a table")
 	local keys = Tables.keys(dictionary)
 	local values =
 		Tables.map(
@@ -2490,8 +2826,8 @@ end
 --: <T>(Promise<T>[], uint?) -> Promise<T[]>
 function Async.race(array, n)
 	n = n or 1
-	assert(n >= 0)
-	assert(#array >= n, "OutOfBoundsError")
+	assert(n >= 0, "BadInput: n must be an integer >= 0")
+	assert(#array >= n, "OutOfBoundsError: n must be less than #array")
 	local function handler(resolve, reject)
 		local results = {}
 		local function finally(ok, result)
@@ -2536,7 +2872,7 @@ end
 ]]
 --: <T>(Promise<T>, (bool, T) -> nil) -> Promise<nil>
 function Async.finally(promise, fn)
-	assert(Async.isPromise(promise))
+	assert(Async.isPromise(promise), "BadInput: promise must be a promise")
 	return promise:andThen(
 		function(...)
 			fn(true, ...)
@@ -2609,7 +2945,7 @@ end
 ]]
 --: number -> Promise<nil>
 function Async.delay(delayInSeconds)
-	assert(t.number(delayInSeconds))
+	assert(t.number(delayInSeconds), "BadInput: delayInSeconds must be a number")
 	return Promise.new(
 		function(resolve)
 			delay(delayInSeconds, resolve)
@@ -2638,7 +2974,7 @@ end
 ]]
 --: <T, A>(Yieldable<T, A>) -> ...A -> Promise<T>
 function Async.async(fn)
-	assert(Functions.isCallable(fn))
+	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
 	return function(...)
 		local callArgs = {...}
 		return Promise.new(
@@ -2674,7 +3010,7 @@ end
 ]]
 --: <T, Args>(Yieldable<T, Args>{}) -> (...Args -> Promise<T>){}
 function Async.asyncAll(dictionary)
-	assert(t.table(dictionary))
+	assert(t.table(dictionary), "BadInput: dictionary must be a table")
 	local result =
 		Tables.map(
 		dictionary,
@@ -2713,7 +3049,7 @@ end
 ]]
 --: <T>(() -> Promise<T>, BackoffOptions) -> Promise<T>
 function Async.retryWithBackoff(getPromise, backoffOptions)
-	assert(Functions.isCallable(getPromise))
+	assert(Functions.isCallable(getPromise), "BadInput: getPromise must be callable")
 	local function backoffThenRetry(errorMessage)
 		local waitTime =
 			(backoffOptions.retryExponentInSeconds ^ backoffOptions.attemptNumber) * backoffOptions.randomStream:NextNumber() +
@@ -2761,7 +3097,7 @@ function Async.retryWithBackoff(getPromise, backoffOptions)
 		},
 		backoffOptions
 	)
-	assert(backoffOptions.maxTries > 0, "You must try a function at least once")
+	assert(backoffOptions.maxTries > 0, "BadInput: maxTries must be > 0")
 
 	local function shouldRetry(response)
 		return backoffOptions.maxTries > 1 and backoffOptions.shouldRetry(response)
@@ -2808,11 +3144,11 @@ return Async
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="ModuleScript" referent="RBXb666ea13a9404058a6403539778b9502">
+			<Item class="ModuleScript" referent="RBXeadb4d77f80b46ae9ff1e3b97307090d">
 				<Properties>
 					<Content name="LinkedSource"><null></null></Content>
 					<string name="Name">Classes</string>
-					<string name="ScriptGuid"></string>
+					<string name="ScriptGuid">{3d17cb8d-c370-4c27-8f37-0c34f9f9ee34}</string>
 					<ProtectedString name="Source"><![CDATA[--[[
 	These tools provide implementations of and functions for higher-order abstractions such as classes, enumerations and symbols.
 ]]
@@ -2864,9 +3200,9 @@ local Classes = {}
 ]]
 --: <T>(string, Constructor<T>?, Decorator<T>[]?) -> Class<T>
 function Classes.class(name, constructor, decorators)
-	assert(t.string(name), "Class name must be a string")
-	assert(t.optional(t.callback)(constructor), "Class constructor must be a function or nil")
-	assert(t.optional(t.table)(decorators), "Class decorators must be a table")
+	assert(t.string(name), "BadInput: name must be a string")
+	assert(t.optional(Functions.isCallable)(constructor), "BadInput: constructor must be callable or nil")
+	assert(t.optional(t.table)(decorators), "BadInput: decorators must be a table or nil")
 	local decorate = Functions.compose(unpack(decorators or {}))
 	constructor = constructor or function()
 			return {}
@@ -3611,11 +3947,11 @@ return Classes
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="ModuleScript" referent="RBXb94df1c385bc4cf0941cae7cd2ac60ec">
+			<Item class="ModuleScript" referent="RBX9e04096f9bb249afa56dc2996127509c">
 				<Properties>
 					<Content name="LinkedSource"><null></null></Content>
 					<string name="Name">Functions</string>
-					<string name="ScriptGuid"></string>
+					<string name="ScriptGuid">{b3faec9d-0959-43f1-9d5f-659306ae974b}</string>
 					<ProtectedString name="Source"><![CDATA[--[[
 	Utility functions and building blocks for functional programming styles.
 ]]
@@ -4348,11 +4684,11 @@ return Functions
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="ModuleScript" referent="RBXec55de60c5ae4a7289c445fb8957ea0c">
+			<Item class="ModuleScript" referent="RBX908b4924fc8b452c9ca0dbf1a86d3216">
 				<Properties>
 					<Content name="LinkedSource"><null></null></Content>
 					<string name="Name">Strings</string>
-					<string name="ScriptGuid"></string>
+					<string name="ScriptGuid">{8191d0f6-0cff-452f-9ece-58fb065c5697}</string>
 					<ProtectedString name="Source"><![CDATA[--[[
 	Useful functions to manipulate strings, based on similar implementations in other standard libraries.
 ]]
@@ -4363,6 +4699,10 @@ local Strings = {}
 local insert = table.insert
 local concat = table.concat
 
+local function assertStrIsString(str)
+	assert(t.string(str), "BadInput: str must be a string")
+end
+
 --[[
 	Convert `str` to camel-case.
 	@example _.camelCase('Pepperoni Pizza') --> 'pepperoniPizza'
@@ -4372,7 +4712,7 @@ local concat = table.concat
 ]]
 --: string -> string
 function Strings.camelCase(str)
-	assert(t.string(str))
+	assertStrIsString(str)
 	return str:gsub(
 		"(%a)([%w]*)",
 		function(head, tail)
@@ -4391,7 +4731,7 @@ end
 ]]
 --: string -> string
 function Strings.kebabCase(str)
-	assert(t.string(str))
+	assertStrIsString(str)
 	return str:gsub(
 		"(%l)(%u)",
 		function(a, b)
@@ -4409,7 +4749,7 @@ end
 	@trait Chainable
 ]]
 function Strings.snakeCase(str)
-	assert(t.string(str))
+	assertStrIsString(str)
 	return str:gsub(
 		"(%l)(%u)",
 		function(a, b)
@@ -4427,7 +4767,7 @@ end
 	@trait Chainable
 ]]
 function Strings.titleCase(str)
-	assert(t.string(str))
+	assertStrIsString(str)
 	return str:gsub(
 		"(%a)([%w_%-'’]*)",
 		function(head, tail)
@@ -4442,7 +4782,7 @@ end
 	@trait Chainable
 ]]
 function Strings.capitalize(str)
-	assert(t.string(str))
+	assertStrIsString(str)
 	return str:gsub("^%l", string.upper)
 end
 
@@ -4452,14 +4792,15 @@ end
 	@trait Chainable
 ]==]
 function Strings.encodeHtml(str)
-	assert(t.string(str))
+	assertStrIsString(str)
 	local entities = {["<"] = "lt", [">"] = "gt", ["&"] = "amp", ['"'] = "quot", ["'"] = "apos"}
-	return str:gsub(
+	local result = str:gsub(
 		".",
 		function(char)
 			return entities[char] and ("&" .. entities[char] .. ";") or char
 		end
 	)
+	return result
 end
 
 --[==[
@@ -4469,9 +4810,9 @@ end
 	@trait Chainable
 ]==]
 function Strings.decodeHtml(str)
-	assert(t.string(str))
+	assertStrIsString(str)
 	local entities = {lt = "<", gt = ">", amp = "&", quot = '"', apos = "'"}
-	return str:gsub(
+	local result = str:gsub(
 		"(&(#?x?)([%d%a]+);)",
 		function(original, hashPrefix, code)
 			return (hashPrefix == "" and entities[code]) or
@@ -4480,37 +4821,41 @@ function Strings.decodeHtml(str)
 				original
 		end
 	)
+	return result
 end
 
 --[[
-	Splits `str` into parts based on a pattern delimiter and returns a table of the parts.
-	@example _.splitByPattern("rice") --> {"r", "i", "c", "e"}
-	@example _.splitByPattern("one.two::flour", "[.:]") --> {"one", "two", "", "flour"}
+	Splits `str` into parts based on a pattern delimiter and returns a table of the parts, followed
+	by a table of the matched delimiters.
+	@example _.splitOn("rice") --> {"r", "i", "c", "e"}, {"", "", "", ""}
+	@example _.splitOn("one.two::flour", "[.:]") --> {"one", "two", "", "flour"}, {".", ":", ":"}
 	@usage This method is useful only when you need a _pattern_ as a delimiter.
 	@usage Use the Roblox native `string.split` if you are splitting on a simple string.
 	@param delimiter (default = "")
 	@trait Chainable
 ]]
---: string, pattern -> string[]
-function Strings.splitByPattern(str, delimiter)
-	assert(t.string(str))
-	assert(t.optional(t.string)(delimiter))
+--: string, pattern -> string[], string[]
+function Strings.splitOn(str, pattern)
+	assertStrIsString(str)
+	assert(t.optional(t.string)(pattern), "BadInput: pattern must be a string or nil")
 	local result = {}
+	local delimiters = {}
 	local from = 1
-	if (not delimiter) then
+	if not pattern then
 		for i = 1, #str do
 			insert(result, str:sub(i, i))
 		end
 		return result
 	end
-	local delim_from, delim_to = str:find(delimiter, from)
-	while delim_from do
-		insert(result, str:sub(from, delim_from - 1))
-		from = delim_to + 1
-		delim_from, delim_to = str:find(delimiter, from)
+	local delimiterStart, delimiterEnd = str:find(pattern, from)
+	while delimiterStart do
+		insert(delimiters, str:sub(delimiterStart, delimiterEnd))
+		insert(result, str:sub(from, delimiterStart - 1))
+		from = delimiterEnd + 1
+		delimiterStart, delimiterEnd = str:find(pattern, from)
 	end
 	insert(result, str:sub(from))
-	return result
+	return result, delimiters
 end
 
 --[[
@@ -4520,7 +4865,7 @@ end
 ]]
 --: string -> string
 function Strings.trim(str)
-	assert(t.string(str))
+	assertStrIsString(str)
 	return str:match("^%s*(.-)%s*$")
 end
 
@@ -4532,7 +4877,8 @@ end
 ]]
 --: string, string -> bool
 function Strings.startsWith(str, prefix)
-	assert(t.string(str))
+	assertStrIsString(str)
+	assert(t.string(prefix), "BadInput: prefix must be a string")
 	return str:sub(1, prefix:len()) == prefix
 end
 
@@ -4544,8 +4890,8 @@ end
 ]]
 --: string, string -> bool
 function Strings.endsWith(str, suffix)
-	assert(t.string(str))
-	assert(t.string(suffix))
+	assertStrIsString(str)
+	assert(t.string(suffix), "BadInput: suffix must be a string")
 	return str:sub(-suffix:len()) == suffix
 end
 
@@ -4559,9 +4905,9 @@ end
 ]]
 --: string, number, string -> string
 function Strings.leftPad(str, length, prefix)
-	assert(t.string(str))
-	assert(t.number(length))
-	assert(t.optional(t.string)(prefix))
+	assertStrIsString(str)
+	assert(t.number(length), "BadInput: length must be a number")
+	assert(t.optional(t.string)(prefix), "BadInput: prefix must be a string or nil")
 	prefix = prefix or " "
 	local padLength = length - #str
 	local remainder = padLength % #prefix
@@ -4579,35 +4925,14 @@ end
 ]]
 --: string, number, string -> string
 function Strings.rightPad(str, length, suffix)
-	assert(t.string(str))
-	assert(t.number(length))
-	assert(t.optional(t.string)(suffix))
+	assertStrIsString(str)
+	assert(t.number(length), "BadInput: length must be a number")
+	assert(t.optional(t.string)(suffix), "BadInput: suffix must be a string or nil")
 	suffix = suffix or " "
 	local padLength = length - #str
 	local remainder = padLength % #suffix
 	local repetitions = (padLength - remainder) / #suffix
 	return str .. string.rep(suffix or " ", repetitions) .. suffix:sub(1, remainder)
-end
-
---[[
-This function is a simpler & more powerful version of `string.format`, inspired by `format!` in Rust.
-	If an instance has a `:format()` method, this is used instead, passing the format arguments.
-	
-		* `{}` prints the next variable using or `tostring`.
-		* `{:?}` prints using `_.pretty`.
-		* `{:#?}` prints using multiline `_.pretty`.
-
-	@param subject the format match string
-]]
-function Strings.format(subject, ...)
-end
-
---[[
-	Pretty-prints the _subject_ and its associated metatable if _withMetatable_ is true
-	@param withMetatable (default = false)
-]]
---: any, bool? -> string
-function Strings.pretty(subject, withMetatable)
 end
 
 --[[
@@ -4648,23 +4973,23 @@ end
 ]]
 --: char -> str, str?, boolean?
 function Strings.charToHex(char, format, useBytes)
-	assert(t.string(char))
-	assert(utf8.len(char) == 1)
+	assert(t.string(char), "BadInput: char must be a single utf8 character string")
 	local values = {}
 	if useBytes then
-		for position, codePoint in utf8.codes(char) do
-			insert(values, codePoint)
-		end
-	else
 		for i = 1, char:len() do
 			insert(values, char:byte(i))
+		end
+	else
+		for position, codePoint in utf8.codes(char) do
+			insert(values, codePoint)
 		end
 	end
 	return concat(
 		Tables.map(
 			values,
 			function(value)
-				return format and Strings.format(format, string.format("%X", value))
+				local hexValue = string.format("%X", value)
+				return format and Strings.format(format, hexValue) or hexValue
 			end,
 			""
 		)
@@ -4681,11 +5006,11 @@ end
 ]]
 --: str -> char
 function Strings.hexToChar(hex)
-	assert(t.string(hex))
+	assert(t.string(hex), "BadInput: hex must be a string")
 	if hex:sub(0, 1) == "%" or hex:sub(0, 1) == "#" then
-		hex = hex:sub(1)
-	elseif hex:sub(0, 2) == "0x" then
 		hex = hex:sub(2)
+	elseif hex:sub(0, 2) == "0x" then
+		hex = hex:sub(3)
 	end
 	return utf8.char(tonumber(hex, 16)) or error("MalformedInput")
 end
@@ -4695,14 +5020,23 @@ end
 	@trait Chainable
 	@example
 		_.encodeUrl("https://example.com/Egg+Fried Rice!?🤷🏼‍♀️")
-		--> "https://example.com/Egg+Fried%20Rice!?%1F937%1F3FC%200D%2640%FE0F"
+		--> "https://example.com/Egg+Fried%20Rice!?%F0%9F%A4%B7%F0%9F%8F%BC%E2%80%8D%E2%99%80%EF%B8%8F"
 	@usage
 		This method is designed to act like `encodeURI` in JavaScript.
 ]]
 --: string -> string
 function Strings.encodeUrl(str)
-	assert(t.string(str))
-	return str:gsub("[^%;%,%/%?%:%@%&%=%+%$%w%-%_%.%!%~%*%'%(%)%#]", Functions.bindTail(Strings.charToHex, "%{}", true))
+	assertStrIsString(str)
+	local result = {}
+	for _, codePoint in utf8.codes(str) do
+		local char = utf8.char(codePoint)
+		if char:match("^[%;%,%/%?%:%@%&%=%+%$%w%-%_%.%!%~%*%'%(%)%#]$") then
+			table.insert(result, char)
+		else
+			table.insert(result, Strings.charToHex(char, "%{}", true))
+		end
+	end
+	return table.concat(result, "")
 end
 
 --[[
@@ -4710,7 +5044,7 @@ end
 	@trait Chainable
 	@example
 		_.encodeUrlComponent("https://example.com/Egg+Fried Rice!?🤷🏼‍♀️")
-		--> "https%3A%2F%2Fexample.com%2FEgg%2BFried%20Rice!%3F%1F937%1F3FC%200D%2640%FE0F"
+		--> "https%3A%2F%2Fexample.com%2FEgg%2BFried%20Rice!%3F%F0%9F%A4%B7%F0%9F%8F%BC%E2%80%8D%E2%99%80%EF%B8%8F"
 	@usage
 		This method is designed to act like `encodeURIComponent` in JavaScript.
 	@usage
@@ -4718,8 +5052,17 @@ end
 ]]
 --: string -> string
 function Strings.encodeUrlComponent(str)
-	assert(t.string(str))
-	return str:gsub("[^%w%-_%.%!%~%*%'%(%)]", Functions.bindTail(Strings.charToHex, "%{}", true))
+	assertStrIsString(str)
+	local result = {}
+	for _, codePoint in utf8.codes(str) do
+		local char = utf8.char(codePoint)
+		if char:match("^[%;%,%/%?%:%@%&%=%+%$%w%-%_%.%!%~%*%'%(%)%#]$") then
+			table.insert(result, char)
+		else
+			table.insert(result, Strings.charToHex(char, "%{}", true))
+		end
+	end
+	return table.concat(result, "")
 end
 
 local calculateDecodeUrlExceptions =
@@ -4744,7 +5087,7 @@ local calculateDecodeUrlExceptions =
 ]]
 --: string -> string
 function Strings.decodeUrl(str)
-	assert(t.string(str))
+	assertStrIsString(str)
 	local exceptions = calculateDecodeUrlExceptions()
 	return str:gsub(
 		"%%(%x%x)",
@@ -4768,7 +5111,7 @@ end
 ]]
 --: string -> string
 function Strings.decodeUrlComponent(str)
-	assert(t.string(str))
+	assertStrIsString(str)
 	return str:gsub("%%(%x%x)", Strings.hexToChar)
 end
 
@@ -4787,7 +5130,7 @@ end
 ]]
 --: <K,V>(Iterable<K,V> -> string)
 function Strings.encodeQueryString(query)
-	assert(t.table(query))
+	assert(t.table(query), "BadInput: query must be a table")
 	local fields =
 		Tables.mapValues(
 		query,
@@ -4798,16 +5141,209 @@ function Strings.encodeQueryString(query)
 	return ("?" .. concat(fields, "&"))
 end
 
+--[[
+	Returns the _format_ string with placeholders `{...}` substituted with readable representations
+	of the subsequent arguments.
+
+	This function is a simpler & more powerful version of `string.format`, inspired by `format!`
+	in Rust.
+	
+	* `{}` formats and prints the next argument using `:format()` if available, or a suitable
+		default representation depending on its type.
+	* `{2}` formats and prints the 2nd argument.
+	* `{#2}` prints the length of the 2nd argument.
+
+	Display parameters can be combined after a `:` in the curly braces. Any format parameters used
+	in `string.format` can be used here, along with these extras:
+
+	* `{:?}` formats any value using `_.serializeDeep`.
+	* `{:#?}` formats any value using `_.pretty`.
+	* `{:b}` formats a number in its binary representation.
+	@example
+		local props = {"teeth", "claws", "whiskers", "tail"}
+		_.format("{:?} is in {:#?}", "whiskers", props)
+		-> '"whiskers" is in {"teeth", "claws", "whiskers", "tail"}'
+	@example
+		_.format("{} in binary is {1:b}", 125) -> "125 in binary is 110100"
+	@example
+		_.format("The time is {:02}:{:02}", 2, 4) -> "The time is 02:04"
+	@example
+		_.format("The color blue is #{:06X}", 255) -> "The color blue is #0000FF"
+	@usage Escape `{` with `{{` and `}` similarly with `}}`.
+	@usage See [https://developer.roblox.com/articles/Format-String](https://developer.roblox.com/articles/Format-String)
+		for complete list of formating options and further use cases.
+	@see _.serializeDeep
+	@see _.pretty
+]]
+--: string, ...any -> string
+function Strings.format(format, ...)
+	local args = {...}
+	local argIndex = 1
+	local texts, subs = Strings.splitOn(format, "{[^{}]*}")
+	local result = {}
+	for i, text in pairs(texts) do
+		local unescaped = text:gsub("{{", "{"):gsub("}}", "}")
+		insert(result, unescaped)
+		local placeholder = subs[i] and subs[i]:sub(2, -2)
+		if placeholder then
+			local escapeMatch = text:gmatch("{+$")()
+			local isEscaped = escapeMatch and #escapeMatch % 2 == 1
+			if not isEscaped then
+				local placeholderSplit = Strings.splitOn(placeholder, ":")
+				local isLength = Strings.startsWith(placeholderSplit[1], "#")
+				local argString = isLength and placeholderSplit[1]:sub(2) or placeholderSplit[1]
+				local nextIndex = tonumber(argString)
+				local displayString = placeholderSplit[2]
+				local arg
+				if nextIndex then
+					arg = args[nextIndex]
+				else
+					arg = args[argIndex]
+					argIndex = argIndex + 1
+				end
+				if isLength then
+					arg = #arg
+				end
+				insert(result, Strings.formatValue(arg, displayString or ""))
+			else
+				local unescapedSub = placeholder
+				insert(result, unescapedSub)
+			end
+		end
+	end
+	return table.concat(result, "")
+end
+
+local function octalToBinary(number)
+	local binaryEight = {
+		["1"] = "000",
+		["2"] = "001",
+		["3"] = "010",
+		["4"] = "011",
+		["5"] = "100",
+		["6"] = "101",
+		["7"] = "110",
+		["8"] = "111"
+	}
+	return string.format("%o", number):gsub(
+		".",
+		function(char)
+			return binaryEight[char]
+		end
+	):gsub("^0+", "")
+end
+
+--[[
+	Format a specific _value_ using the specified _displayString_.
+]]
+--: any, DisplayString -> string
+function Strings.formatValue(value, displayString)
+	local displayTypeStart, displayTypeEnd = displayString:find("[A-Za-z#?]+")
+	if displayTypeStart then
+		local displayType = displayString:sub(displayTypeStart, displayTypeEnd)
+		local formatAsString =
+			"%" .. displayString:sub(1, displayTypeStart - 1) .. displayString:sub(displayTypeEnd + 1) .. "s"
+		if displayType == "#?" then
+			return string.format(formatAsString, Strings.pretty(value))
+		elseif displayType == "?" then
+			return string.format(formatAsString, Tables.serializeDeep(value))
+		elseif displayType == "#b" then
+			local result = octalToBinary(value)
+			return string.format(formatAsString, "0b" .. result)
+		elseif displayType == "b" then
+			local result = octalToBinary(value)
+			return string.format(formatAsString, result)
+		end
+		return string.format("%" .. displayString, value)
+	else
+		local displayType = "s"
+		if type(value) == "number" then
+			local _, fraction = math.modf(value)
+			displayType = fraction == 0 and "d" or "f"
+		end
+		return string.format("%" .. displayString .. displayType, tostring(value))
+	end
+end
+
+--[[
+	Returns a human-readable string for the given _value_. If _multiline_ is `true`, the string
+	will be formatted across multiple lines if a descendant element gets longer than `80`
+	characters.
+
+	@usage This format may be improved in the future, so use `_.serializeDeep` if need a format
+		which won't change.
+	@see _.serializeDeep
+]]
+--: any, bool -> string
+function Strings.pretty(value, serializeOptions)
+	local function serializeValue(value, options)
+		if type(value) == "table" then
+			local className = ""
+			if value.Class then
+				className = value.Class.name .. " "
+			end
+			return className .. Tables.serialize(value, options)
+		else
+			return Tables.defaultSerializer(value, options)
+		end
+	end
+
+	return Tables.serialize(
+		value,
+		Tables.assign(
+			{
+				serializeValue = serializeValue,
+				serializeKey = function(key, options)
+					if type(key) == "string" then
+						return key
+					else
+						return "[" .. serializeValue(key, options) .. "]"
+					end
+				end,
+				serializeElement = function(key, value)
+					local shortString = key .. " = " .. value
+					if #shortString < 80 or shortString:match("\n") then
+						return shortString
+					end
+					return key .. " =\n\t" .. value
+				end or nil,
+				serializeTable = function(contents, ref, options)
+					local shortString = ref .. "{" .. table.concat(contents, ", ") .. "}"
+					if #shortString < 80 then
+						return shortString
+					end
+					return ref ..
+						"{\n" ..
+							table.concat(
+								Tables.map(
+									contents,
+									function(element)
+										return "\t" .. element:gsub("\n", "\n\t")
+									end
+								),
+								",\n"
+							) ..
+								"\n}"
+				end or nil,
+				keyDelimiter = " = ",
+				valueDelimiter = ", ",
+				omitKeys = {"Class"}
+			},
+			serializeOptions or {}
+		)
+	)
+end
+
 return Strings
 ]]></ProtectedString>
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>
 			</Item>
-			<Item class="ModuleScript" referent="RBX9a18e155841449a3b54369ba645e4031">
+			<Item class="ModuleScript" referent="RBXf4643e91cad242958df8c432071169a3">
 				<Properties>
 					<Content name="LinkedSource"><null></null></Content>
 					<string name="Name">Tables</string>
-					<string name="ScriptGuid"></string>
+					<string name="ScriptGuid">{434140cc-bd6d-47aa-94e7-52c79fac66cb}</string>
 					<ProtectedString name="Source"><![CDATA[--[[
 	A collection of functions that operate on Lua tables. These can operate on arrays,
 	dictionaries and any collection types implemented with tables.
@@ -5972,326 +6508,6 @@ function Tables.unique(source)
 end
 
 return Tables
-]]></ProtectedString>
-					<BinaryString name="Tags"></BinaryString>
-				</Properties>
-			</Item>
-			<Item class="ModuleScript" referent="RBXcc9015c57c6e4df0ac6c3a86c6298b5a">
-				<Properties>
-					<Content name="LinkedSource"><null></null></Content>
-					<string name="Name">Arrays</string>
-					<string name="ScriptGuid"></string>
-					<ProtectedString name="Source"><![CDATA[--[[
-	A collection of functions that operate specifically on arrays, defined as tables with just keys _1..n_.
-
-	```lua
-		-- Examples of valid arrays:
-		{}
-		{"red", "green", "blue"}
-		{"winter", {is = "coming"}, [3] = "again"}
-		{1966, nil, nil}
-		-- Examples of invalid arrays:
-		{1994, nil, 2002}
-		{you = {"know", "nothing"}}
-		{[5] = "gold rings"}
-		42
-	```
-
-	Functions can also iterate over custom iterator functions which provide elements with natural keys _1..n_.
-]]
-local t = require(script.Parent.Parent.t)
-local Tables = require(script.Parent.Tables)
-
-local Arrays = {}
-
-local function assertHandlerIsFn(handler)
-	local Functions = require(script.Parent.Functions)
-	assert(Functions.isCallable(handler), "BadInput: handler must be a function")
-end
-local function assertPredicateIsFn(handler)
-	local Functions = require(script.Parent.Functions)
-	assert(Functions.isCallable(handler), "BadInput: handler must be a function")
-end
-
-local typeIndex = {
-	boolean = 1,
-	number = 2,
-	string = 3,
-	["function"] = 4,
-	["CFunction"] = 5,
-	userdata = 6,
-	table = 7
-}
-
---[[
-	The default comparator is used by `_.sort` and can sort elements of different types, in the
-	order: boolean, number, string, function, CFunction, userdata, and table.
-		
-	Elements which cannot be sorted naturally will be sorted by their string value.
-
-	@see _.sort
-]]
-function Arrays.defaultComparator(a, b)
-	if type(a) ~= type(b) then
-		return typeIndex[type(a)] - typeIndex[type(b)]
-	end
-	local ok, result =
-		pcall(
-		function()
-			return a < b
-		end
-	)
-	if ok then
-		return result
-	else
-		return tostring(a) < tostring(b)
-	end
-end
-
---[[
-	Returns a sorted array from the _input_ array, based on a _comparator_ function.
-
-	Unlike `table.sort`, the comparator to `_.sort` is optional, but it can also be defined to
-	a numeric weight or nil as well as a boolean.
-
-	@param comparator (optional) should return `true` or `n < 0` if the first element should be
-		before the second in the resulting array, or `0` or `nil` if the elements have the same
-		order.
-
-	@example _.sort({2, 5, 3}) --> {2, 3, 5}
-	@example _.sort({"use", "the", "force", "Luke"}) --> {"Luke", "force", "the", "use"}
-]]
---: <T>(T[], (T -> bool | number | nil) -> T[])
-function Arrays.sort(input, comparator)
-	assert(t.table(input), "BadInput: input must be an array")
-
-	local Functions = require(script.Parent.Functions)
-	assert(comparator == nil or Functions.isCallable(comparator), "BadInput: comparator must be callable or nil")
-
-	comparator = comparator or Arrays.defaultComparator
-
-	table.sort(
-		input,
-		function(a, b)
-			local result = comparator(a, b)
-
-			if type(result) ~= "number" and type(result) ~= "boolean" and result ~= nil then
-				error("BadResult: comparator must return a boolean, a number or nil")
-			end
-
-			return result == true or (type(result) == "number" and result < 0)
-		end
-	)
-
-	return input
-end
-
---[[
-	Returns a copied portion of the _source_.
-	@param first (default = 1) The index of the first element to include.
-	@param last (default = `#source`) The index of the last element to include.
-	@param step (default = 1) What amount to step the index by during iteration.
-	@example _.slice({10, 20, 30, 40}) --> {10, 20, 30, 40}
-	@example _.slice({10, 20, 30, 40}, 2) --> {20, 30, 40}
-	@example _.slice({10, 20, 30, 40}, 2, 3) --> {20, 30}
-	@example _.slice({10, 20, 30, 40}, 2, 4, 2) --> {20, 40}
-]]
---: <T>(T[], int?, int?, int? -> T[])
-function Arrays.slice(source, first, last, step)
-	assert(t.table(source), "BadInput: source must be an array")
-	assert(t.optional(t.number)(first), "BadInput: first must be an int")
-	assert(t.optional(t.number)(last), "BadInput: last must be an int")
-	assert(t.optional(t.number)(step), "BadInput: step must be an int")
-	local sliced = {}
-
-	for i = first or 1, last or #source, step or 1 do
-		sliced[#sliced + 1] = source[i]
-	end
-
-	return sliced
-end
-
---[[
-	Returns a new array with the order of the values from _source_ randomized.
-	@example
-		local teamColors = {"red", "red", "red", "blue", "blue", "blue"}
-		-- (in some order)
-		_.shuffle(teamColors) --> {"blue", "blue", "red", "blue", "red", "red"}
-]]
---: <T: Iterable>(T -> T)
-function Arrays.shuffle(source)
-	assert(t.table(source), "BadInput: source must be an array")
-	local result = Tables.clone(source)
-	for i = #result, 1, -1 do
-		local j = math.random(i)
-		result[i], result[j] = result[j], result[i]
-	end
-	return result
-end
-
---[[
-	Runs the _handler_ on each element of _source_ in turn, passing the result of the previous call
-	(or _initial_ for the first element) as the first argument, and the current element as a value
-	and key as subsequent arguments.
-	@example
-		local sum = _.reduce({1, 2, 3}, function(result, value)
-			return result + value
-		end, 0)
-		sum --> 6
-	@example
-		local recipe = {first = "cheese", second = "nachos", third = "chillies"}
-		local unzipRecipe = _.reduce(recipe, function(result, value, key)
-			table.insert(result[1], key)
-			table.insert(result[2], value)
-			return result
-		end, {{}, {}})
-		-- (in some order)
-		unzipRecipe --> {{"first", "third", "second"}, {"cheese", "chillies", "nachos"}}
-]]
---: <T, R>(T[], (result: R, value: T, key: int -> R), R) -> R
-function Arrays.reduce(source, handler, initial)
-	local result = initial
-	for i, v in Tables.iterator(source) do
-		result = handler(result, v, i)
-	end
-	return result
-end
-
---[[
-	Inserts into _target_ the elements from all subsequent arguments in order.
-	@param ... any number of other arrays
-	@example _.append({}, {1, 2, 3}, {4, 5, 6}) --> {1, 2, 3, 4, 5, 6}
-	@example _.append({1, 2, 3}) --> {1, 2, 3}
-	@example
-		local list = {"cheese"}
-		_.append(list, {"nachos"}, {}, {"chillies"})
-		list --> {"cheese", "nachos", "chillies"}
-]]
---: <T>(mut T[], ...T[] -> T[])
-function Arrays.append(target, ...)
-	for i = 1, select("#", ...) do
-		local x = select(i, ...)
-		if type(x) == "table" then
-			for _, y in ipairs(x) do
-				table.insert(target, y)
-			end
-		else
-			table.insert(target, x)
-		end
-	end
-
-	return target
-end
-
---[[
-	Sums all the values in the _source_ array.
-	@example _.sum({1, 2, 3}) --> 6
-]]
-function Arrays.sum(source)
-	return Arrays.reduce(
-		source,
-		function(current, value)
-			return current + value
-		end,
-		0
-	)
-end
-
---[[
-	Swaps the order of elements in _source_.
-	@example _.reverse({1, 2, 4, 3, 5}) --> {5, 3, 4, 2, 1}
-]]
---: <T>(T[] -> T[])
-function Arrays.reverse(source)
-	local output = {}
-	for i = #source, 1, -1 do
-		table.insert(output, source[i])
-	end
-	return output
-end
-
---[[
-	Returns the earliest value from the array that _predicate_ returns `true` for.
-
-	If the _predicate_ is not specified, `_.first` simply returns the first element of the array.
-	@param predicate (default = `_.returns(true)`)
-	@example
-		local names = {
-			"Boromir",
-			"Frodo",
-			"Bilbo"
-		}
-
-		_.first(names) --> "Boromir", 1
-
-		-- Find a particular value:
-		local firstNameWithF = _.first(names, function(name)
-			return _.startsWith(name, "F")
-		end)
-		firstNameWithF --> "Frodo", 2
-
-		-- What about a value whcih doesn't exist?
-		local firstNameWithC = _.first(names, function(name)
-			return _.startsWith(name, "C")
-		end)
-		firstNameWithC --> nil
-
-		-- Find the index of a value:
-		local _, index = _.first(names, _.fn:matches("Bilbo"))
-		index --> 2
-	@see _.find 
-	@usage If you need to find a value in a table which isn't an array, use `_.find`.
-]]
---: <T: Iterable<K,V>>((T, (element: V, key: K) -> bool) -> V?)
-function Arrays.first(source, predicate)
-	predicate = predicate or function()
-			return true
-		end
-	assertPredicateIsFn(predicate)
-	for i, v in Tables.iterator(source, true) do
-		if (predicate(v, i)) then
-			return v, i
-		end
-	end
-end
-
---[[
-	Returns the last value from the array that _predicate_ returns `true` for.
-
-	If the _predicate_ is not specified, `_.last` simply returns the last element of the array.
-	@param predicate (default = `_.returns(true)`)
-	@example
-		local names = {
-			"Boromir",
-			"Frodo",
-			"Bilbo"
-		}
-
-		_.last(names) --> "Bilbo", 3
-
-		local lastNameWithB = _.last(names, _.fn:startsWith("B"))
-		lastNameWithB --> "Bilbo", 3
-
-		local _, key = _.last(names, _.fn:matches("Frodo"))
-		key --> 2
-	@see _.find
-	@see _.first
-]]
---: <T: Iterable<K,V>>((T, (element: V, key: K) -> bool) -> V?)
-function Arrays.last(source, predicate)
-	predicate = predicate or function()
-			return true
-		end
-	assertHandlerIsFn(predicate)
-	for i = #source, 1, -1 do
-		local value = source[i]
-		if (predicate(value, i)) then
-			return value, i
-		end
-	end
-end
-
-return Arrays
 ]]></ProtectedString>
 					<BinaryString name="Tags"></BinaryString>
 				</Properties>

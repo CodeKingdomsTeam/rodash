@@ -28,7 +28,7 @@ hererocks lua_install -r^ --$LUA
 
 export PATH="$PWD/lua_install/bin:$PATH"
 
-ROCKS=('busted 2.0.rc12-1' 'luacov 0.13.0-1' 'luacov-console 1.1.0-1' 'luacov-cobertura 0.2-1' 'luacheck 0.22.1-1' 'penlight')
+ROCKS=('busted 2.0.rc12-1' 'luacov 0.13.0-1' 'luacov-console 1.1.0-1' 'luacov-cobertura 0.2-1' 'luacheck 0.22.1-1' 'penlight', 'utf8')
 
 for ROCK in "${ROCKS[@]}"
 do
