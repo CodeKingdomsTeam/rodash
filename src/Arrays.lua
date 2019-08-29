@@ -26,7 +26,7 @@ local function assertHandlerIsFn(handler)
 	assert(Functions.isCallable(handler), "BadInput: handler must be a function")
 end
 local function assertPredicateIsFn(handler)
-	local Functions = require(script.Functions)
+	local Functions = require(script.Parent.Functions)
 	assert(Functions.isCallable(handler), "BadInput: handler must be a function")
 end
 

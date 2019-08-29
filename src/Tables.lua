@@ -1064,6 +1064,7 @@ function Tables.serialize(source, options)
 	if type(source) ~= "table" then
 		return options.serializeValue(source, options)
 	end
+
 	-- Find tables which appear more than once, and assign each an index
 	if not options.cycles.refs then
 		options.cycles.refs =

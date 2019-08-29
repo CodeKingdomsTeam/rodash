@@ -901,19 +901,19 @@ bad value for key amount:
 			function()
 				local ENUM = Classes.enum({"ONE", "TWO"})
 				local strategies = {
-					ONE = function()
-						return 1
+					ONE = function(suffix)
+						return 1 .. suffix
 					end,
-					TWO = function()
-						return 2
+					TWO = function(suffix)
+						return 2 .. suffix
 					end
 				}
 
 				it(
 					"applies a strategy correctly",
 					function()
-						local result = Classes.match(ENUM, strategies)(ENUM.ONE)
-						assert.equal(1, result)
+						local result = Classes.match(ENUM, strategies)(ENUM.ONE, "f")
+						assert.equal("1f", result)
 					end
 				)
 
