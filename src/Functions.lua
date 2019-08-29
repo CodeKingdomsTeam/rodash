@@ -1,5 +1,5 @@
 --[[
-	A collection of useful utility functions and building blocks for functional programming styles.
+	Utility functions and building blocks for functional programming styles.
 ]]
 local Tables = require(script.Parent.Tables)
 local t = require(script.Parent.Parent.t)
@@ -479,8 +479,8 @@ function Functions.continue(actor)
 end
 
 --[[
-	Returns a function that calls the argument functions in left-right order, passing the return of
-	the previous function as argument(s) to the next.
+	Returns a function that calls the argument functions in left-right order on an input, passing
+	the return of the previous function as argument(s) to the next.
 	@example
 		local function fry(item) return "fried " .. item end
 		local function cheesify(item) return "cheesy " .. item end
@@ -492,6 +492,9 @@ end
 --: <A>((...A -> ...A)[]) -> ...A -> A
 function Functions.compose(...)
 	local fnCount = select("#", ...)
+	if fnCount == 0 then
+		return Functions.id
+	end
 	local fns = {...}
 	return function(...)
 		local result = {fns[1](...)}
@@ -529,8 +532,6 @@ end
 
 		heat:clear(1)
 		heat(1) --> "hot beef"
-
-	@usage Use `_.serializeDeep` or `_.chain(_.serializeDeep, depth)` for deeper key serialization.
 ]]
 --: <...A, B>((...A -> B), ...A -> string?) -> Clearable<...A> & AllClearable & (...A) -> B
 function Functions.memoize(fn, serializeArgs)

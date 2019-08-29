@@ -18,7 +18,7 @@ describe(
 	"Tables",
 	function()
 		describe(
-			"Slice",
+			"slice",
 			function()
 				it(
 					"slices",
@@ -45,7 +45,7 @@ describe(
 			end
 		)
 		describe(
-			"Clone",
+			"clone",
 			function()
 				it(
 					"performs a shallow clone",
@@ -65,7 +65,7 @@ describe(
 			end
 		)
 		describe(
-			"Assign",
+			"assign",
 			function()
 				it(
 					"copies fields from the source tables left to right and overwrites any fields in the target with the same keys",
@@ -81,7 +81,7 @@ describe(
 			end
 		)
 		describe(
-			"Merge",
+			"merge",
 			function()
 				it(
 					"copies fields from the source tables left to right and merges any fields in the target with the same keys",
@@ -97,7 +97,7 @@ describe(
 			end
 		)
 		describe(
-			"IsSubset",
+			"isSubset",
 			function()
 				it(
 					"returns true for two empty tables",
@@ -178,7 +178,7 @@ describe(
 			end
 		)
 		describe(
-			"DeepEquals",
+			"deepEquals",
 			function()
 				it(
 					"returns true if the first argument deep equals the second",
@@ -237,7 +237,7 @@ describe(
 			end
 		)
 		describe(
-			"Map",
+			"map",
 			function()
 				it(
 					"maps keys and values of an array",
@@ -304,7 +304,7 @@ describe(
 			end
 		)
 		describe(
-			"FlatMap",
+			"flatMap",
 			function()
 				it(
 					"inline returned arrays from handler",
@@ -390,7 +390,7 @@ describe(
 			end
 		)
 		describe(
-			"Invert",
+			"invert",
 			function()
 				it(
 					"inverts an array",
@@ -411,7 +411,7 @@ describe(
 		)
 
 		describe(
-			"Includes",
+			"includes",
 			function()
 				it(
 					"checks array",
@@ -462,7 +462,7 @@ describe(
 		)
 
 		describe(
-			"Filter",
+			"filter",
 			function()
 				it(
 					"filters keys and values of an array",
@@ -514,7 +514,7 @@ describe(
 			end
 		)
 		describe(
-			"FilterKeys",
+			"filterKeys",
 			function()
 				it(
 					"filters keys and values of a non-sequential table",
@@ -532,7 +532,7 @@ describe(
 			end
 		)
 		describe(
-			"FilterKeysMap",
+			"filterKeysMap",
 			function()
 				it(
 					"filters keys and maps results of a non-sequential table",
@@ -554,7 +554,7 @@ describe(
 			end
 		)
 		describe(
-			"Without",
+			"without",
 			function()
 				it(
 					"removes elements of a specific value",
@@ -565,7 +565,7 @@ describe(
 			end
 		)
 		describe(
-			"Compact",
+			"compact",
 			function()
 				it(
 					"filters out falsey values from an array",
@@ -576,7 +576,7 @@ describe(
 			end
 		)
 		describe(
-			"KeyBy",
+			"keyBy",
 			function()
 				it(
 					"can use number keys",
@@ -623,7 +623,7 @@ describe(
 			end
 		)
 		describe(
-			"GroupBy",
+			"groupBy",
 			function()
 				it(
 					"can use number keys",
@@ -670,7 +670,7 @@ describe(
 			end
 		)
 		describe(
-			"InsertMany",
+			"insertMany",
 			function()
 				it(
 					"adds multiple values onto an array",
@@ -699,7 +699,7 @@ describe(
 			end
 		)
 		describe(
-			"Keys",
+			"keys",
 			function()
 				it(
 					"gets the keys from a table",
@@ -717,7 +717,7 @@ describe(
 			end
 		)
 		describe(
-			"Values",
+			"values",
 			function()
 				it(
 					"gets the values from a table",
@@ -735,7 +735,7 @@ describe(
 			end
 		)
 		describe(
-			"Entries",
+			"entries",
 			function()
 				it(
 					"gets the entries from a table",
@@ -753,7 +753,7 @@ describe(
 			end
 		)
 		describe(
-			"Find",
+			"find",
 			function()
 				it(
 					"gets the first matching value from a table",
@@ -813,7 +813,7 @@ describe(
 			end
 		)
 		describe(
-			"FindKey",
+			"findKey",
 			function()
 				it(
 					"gets the first matching key from a table by value",
@@ -873,7 +873,7 @@ describe(
 			end
 		)
 		describe(
-			"KeyOf",
+			"keyOf",
 			function()
 				it(
 					"gets the first matching value from a table",
@@ -896,7 +896,7 @@ describe(
 			end
 		)
 		describe(
-			"Reduce",
+			"reduce",
 			function()
 				it(
 					"returns the base case for an empty array",
@@ -960,7 +960,7 @@ describe(
 			end
 		)
 		describe(
-			"All",
+			"all",
 			function()
 				it(
 					"returns true if the table is empty",
@@ -1009,7 +1009,7 @@ describe(
 			end
 		)
 		describe(
-			"Any",
+			"any",
 			function()
 				it(
 					"returns false if the table is empty",
@@ -1073,6 +1073,20 @@ describe(
 				)
 			end
 		)
+		describe(
+			"privatize",
+			function()
+				it(
+					"changes public keys and not private ones",
+					function()
+						assert.are.same(
+							{_1 = 1, _public = 2, _private = 3},
+							Tables.privatize({[1] = 1, ["public"] = 2, ["_private"] = 3})
+						)
+					end
+				)
+			end
+		)
 
 		describe(
 			"defaults",
@@ -1114,7 +1128,6 @@ describe(
 						case.name,
 						function()
 							local result = Tables.sort(case.input, case.comparator)
-
 							assert.are.same(case.expected, result)
 						end
 					)

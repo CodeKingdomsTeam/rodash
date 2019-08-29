@@ -55,6 +55,7 @@ Functions:
 - **Avoid abstractions**, working on native lua types to avoid enforcing specific coding styles
 - **Only do one thing** by avoiding parameter overloading or flags
 - **Enforce type safety** to avoid silent error propagation
+- **Prefer immutability** to promote functional design and reduce race conditions
 - **Avoid duplication**, mimicking existing functionality or aliasing other functions
 - **Maintain backwards compatibility** with older versions of the library
 

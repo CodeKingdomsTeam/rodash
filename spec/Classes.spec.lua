@@ -6,12 +6,12 @@ describe(
 	"Classes",
 	function()
 		describe(
-			"makeClass",
+			"class",
 			function()
 				it(
 					"makes a class with default constructor",
 					function()
-						local MyClass = Classes.makeClass("Simple")
+						local MyClass = Classes.class("Simple")
 						function MyClass:getFive()
 							return 5
 						end
@@ -22,7 +22,7 @@ describe(
 				it(
 					"allows an init impl which passes self",
 					function()
-						local MyClass = Classes.makeClass("Simple")
+						local MyClass = Classes.class("Simple")
 						function MyClass:getFive()
 							return 5
 						end
@@ -36,7 +36,7 @@ describe(
 				it(
 					"provides a default toString handler",
 					function()
-						local MyClass = Classes.makeClass("Simple")
+						local MyClass = Classes.class("Simple")
 						local myInstance = MyClass.new()
 						assert.equals("Simple", tostring(myInstance))
 					end
@@ -45,7 +45,7 @@ describe(
 					"makes a class with a constructor",
 					function()
 						local MyClass =
-							Classes.makeClass(
+							Classes.class(
 							"Simple",
 							function(amount)
 								return {
@@ -63,13 +63,13 @@ describe(
 			end
 		)
 		describe(
-			"makeSymbol",
+			"symbol",
 			function()
 				it(
 					"makes a symbol which doesn't alias",
 					function()
-						local symbol1 = Classes.makeSymbol("TEST")
-						local symbol2 = Classes.makeSymbol("TEST")
+						local symbol1 = Classes.symbol("TEST")
+						local symbol2 = Classes.symbol("TEST")
 						assert.equals(symbol1, symbol1)
 						assert.are_not.equal(symbol1, symbol2)
 						assert.equals("Symbol(TEST)", tostring(symbol1))
@@ -84,7 +84,7 @@ describe(
 					"makes a subclass with a constructor",
 					function()
 						local MyClass =
-							Classes.makeClass(
+							Classes.class(
 							"Simple",
 							function(amount)
 								return {
@@ -112,7 +112,7 @@ describe(
 				it(
 					"provides recursive table lookup",
 					function()
-						local MyClass = Classes.makeClass("Simple")
+						local MyClass = Classes.class("Simple")
 						function MyClass:getFive()
 							return 5
 						end
@@ -129,7 +129,7 @@ describe(
 					"override constructor and provide route to super",
 					function()
 						local MyClass =
-							Classes.makeClass(
+							Classes.class(
 							"Simple",
 							function(amount)
 								return {
@@ -157,7 +157,7 @@ describe(
 				it(
 					"provides virtual methods",
 					function()
-						local MyClass = Classes.makeClass("Simple")
+						local MyClass = Classes.class("Simple")
 						function MyClass:addFiveToMagicNumber()
 							return 5 + self.getMagicNumber()
 						end
@@ -183,8 +183,8 @@ describe(
 				it(
 					"returns true or false depending on inheritance tree",
 					function()
-						local MyClass = Classes.makeClass("Simple")
-						local MyOtherClass = Classes.makeClass("Simple2")
+						local MyClass = Classes.class("Simple")
+						local MyOtherClass = Classes.class("Simple2")
 						local MySubclass = MyClass:extend("SimpleSub")
 						local myInstance = MyClass.new()
 						local mySubInstance = MySubclass.new()
@@ -197,20 +197,20 @@ describe(
 			end
 		)
 		describe(
-			"makeClassWithInterface",
+			"classWithInterface",
 			function()
 				it(
 					"makes a class which constructs instances from data",
 					function()
 						local MyClass =
-							Classes.makeClassWithInterface(
+							Classes.classWithInterface(
 							"Simple",
 							{
 								amount = t.number
 							}
 						)
 						function MyClass:getAmount()
-							return self._amount
+							return self.amount
 						end
 						local myInstance = MyClass.new({amount = 10})
 						assert.equals(10, myInstance:getAmount())
@@ -220,20 +220,20 @@ describe(
 					"throws if the data doesn't match during construction",
 					function()
 						local MyClass =
-							Classes.makeClassWithInterface(
+							Classes.classWithInterface(
 							"Simple",
 							{
 								amount = t.string
 							}
 						)
 						function MyClass:getAmount()
-							return self._amount
+							return self.amount
 						end
 						assert.errors(
 							function()
 								MyClass.new({amount = 10})
 							end,
-							[[Class Simple cannot be instantiated
+							[[BadInput: Class Simple cannot be instantiated
 [interface] bad value for amount:
 	string expected, got number]]
 						)
@@ -244,14 +244,14 @@ describe(
 					function()
 						assert.errors(
 							function()
-								Classes.makeClassWithInterface(
+								Classes.classWithInterface(
 									"Simple",
 									{
 										amount = "lol"
 									}
 								)
 							end,
-							[[Class Simple does not have a valid interface
+							[[BadInput: Class Simple does not have a valid interface
 bad value for key amount:
 	function expected, got string]]
 						)
@@ -260,23 +260,23 @@ bad value for key amount:
 				it(
 					"allows an instance to be passed as child",
 					function()
-						local MyComposite = Classes.makeClass("Composite")
+						local MyComposite = Classes.class("Composite")
 						local MyClass =
-							Classes.makeClassWithInterface(
+							Classes.classWithInterface(
 							"Simple",
 							{
 								child = MyComposite.isInstance
 							}
 						)
 						local myInstance = MyClass.new({child = MyComposite.new()})
-						assert.is_true(MyComposite.isInstance(myInstance._child))
+						assert.is_true(MyComposite.isInstance(myInstance.child))
 					end
 				)
 				it(
 					"allows an instance of the same class to be passed as child using a dynamic interface",
 					function()
 						local MyClass =
-							Classes.makeClassWithInterface(
+							Classes.classWithInterface(
 							"Simple",
 							function(Class)
 								return {
@@ -286,16 +286,16 @@ bad value for key amount:
 						)
 						local myParent = MyClass.new()
 						local myChild = MyClass.new({parent = myParent})
-						assert.is_true(MyClass.isInstance(myChild._parent))
+						assert.is_true(MyClass.isInstance(myChild.parent))
 					end
 				)
 				it(
 					"throw if an instance passed as child is of incorrect type",
 					function()
-						local MyComposite = Classes.makeClass("Composite")
-						local MyBadComposite = Classes.makeClass("BadComposite")
+						local MyComposite = Classes.class("Composite")
+						local MyBadComposite = Classes.class("BadComposite")
 						local MyClass =
-							Classes.makeClassWithInterface(
+							Classes.classWithInterface(
 							"Simple",
 							{
 								child = MyComposite.isInstance
@@ -305,7 +305,7 @@ bad value for key amount:
 							function()
 								MyClass.new({child = MyBadComposite.new()})
 							end,
-							[[Class Simple cannot be instantiated
+							[[BadInput: Class Simple cannot be instantiated
 [interface] bad value for child:
 	Not a Composite instance]]
 						)
@@ -315,19 +315,19 @@ bad value for key amount:
 					"takes a shallow copy of the data",
 					function()
 						local MyClass =
-							Classes.makeClassWithInterface(
+							Classes.classWithInterface(
 							"Simple",
 							{
 								amount = t.number
 							}
 						)
 						function MyClass:setAmount(amount)
-							self._amount = amount
+							self.amount = amount
 						end
 						local data = {amount = 10}
 						local myInstance = MyClass.new(data)
 						myInstance:setAmount(6)
-						assert.equals(6, myInstance._amount)
+						assert.equals(6, myInstance.amount)
 						assert.equals(10, data.amount)
 					end
 				)
@@ -335,7 +335,7 @@ bad value for key amount:
 					"passes instance to init",
 					function()
 						local MyClass =
-							Classes.makeClassWithInterface(
+							Classes.classWithInterface(
 							"Simple",
 							{
 								amount = t.number
@@ -343,25 +343,25 @@ bad value for key amount:
 						)
 
 						function MyClass:_init()
-							self._nice = self:getDefaultAmount()
+							self.nice = self:getDefaultAmount()
 						end
 						function MyClass:getDefaultAmount()
 							return 5
 						end
 						function MyClass:setAmount(amount)
-							self._amount = amount
+							self.amount = amount
 						end
 						local data = {amount = 10}
 						local myInstance = MyClass.new(data)
-						assert.equals(10, myInstance._amount)
-						assert.equals(5, myInstance._nice)
+						assert.equals(10, myInstance.amount)
+						assert.equals(5, myInstance.nice)
 					end
 				)
 				it(
 					"extends produces correct, separate constructors",
 					function()
 						local MyClass =
-							Classes.makeClassWithInterface(
+							Classes.classWithInterface(
 							"Simple",
 							{
 								amount = t.number
@@ -369,7 +369,7 @@ bad value for key amount:
 						)
 
 						function MyClass:_init()
-							self._nice = self:getDefaultAmount()
+							self.nice = self:getDefaultAmount()
 						end
 
 						function MyClass:getDefaultAmount()
@@ -381,14 +381,14 @@ bad value for key amount:
 							"SubSimple",
 							function(...)
 								local self = MyClass.new(...)
-								self._nicer = self._nice + 5
+								self.nicer = self.nice + 5
 								return self
 							end
 						)
 						local data = {amount = 10}
 						local myInstance = MySubclass.new(data)
-						assert.equals(5, myInstance._nice)
-						assert.equals(10, myInstance._nicer)
+						assert.equals(5, myInstance.nice)
+						assert.equals(10, myInstance.nicer)
 					end
 				)
 			end
@@ -396,9 +396,9 @@ bad value for key amount:
 		describe(
 			"extendWithInterface",
 			function()
-				local function makeClass()
+				local function class()
 					local MyClass =
-						Classes.makeClassWithInterface(
+						Classes.classWithInterface(
 						"Simple",
 						{
 							amount = t.number
@@ -424,10 +424,10 @@ bad value for key amount:
 				it(
 					"makes a sub class which verifies types for all interfaces",
 					function()
-						local myInstance = makeClass().new({amount = 10, subAmount = 20, verySubAmount = 30})
-						assert.equals(10, myInstance._amount)
-						assert.equals(20, myInstance._subAmount)
-						assert.equals(30, myInstance._verySubAmount)
+						local myInstance = class().new({amount = 10, subAmount = 20, verySubAmount = 30})
+						assert.equals(10, myInstance.amount)
+						assert.equals(20, myInstance.subAmount)
+						assert.equals(30, myInstance.verySubAmount)
 					end
 				)
 
@@ -436,25 +436,25 @@ bad value for key amount:
 					function()
 						assert.errors(
 							function()
-								makeClass().new({amount = "nope", subAmount = 20, verySubAmount = 30})
+								class().new({amount = "nope", subAmount = 20, verySubAmount = 30})
 							end,
-							[[Class VerySubSimple cannot be instantiated
+							[[BadInput: Class VerySubSimple cannot be instantiated
 [interface] bad value for amount:
 	number expected, got string]]
 						)
 						assert.errors(
 							function()
-								makeClass().new({amount = 10, subAmount = "nope", verySubAmount = 30})
+								class().new({amount = 10, subAmount = "nope", verySubAmount = 30})
 							end,
-							[[Class VerySubSimple cannot be instantiated
+							[[BadInput: Class VerySubSimple cannot be instantiated
 [interface] bad value for subAmount:
 	number expected, got string]]
 						)
 						assert.errors(
 							function()
-								makeClass().new({amount = 10, subAmount = 20, verySubAmount = "nope"})
+								class().new({amount = 10, subAmount = 20, verySubAmount = "nope"})
 							end,
-							[[Class VerySubSimple cannot be instantiated
+							[[BadInput: Class VerySubSimple cannot be instantiated
 [interface] bad value for verySubAmount:
 	number expected, got string]]
 						)
@@ -465,9 +465,9 @@ bad value for key amount:
 					function()
 						assert.errors(
 							function()
-								makeClass().new({amount = 10, subAmount = 20, verySubAmount = 30, myBadAmount = 40})
+								class().new({amount = 10, subAmount = 20, verySubAmount = 30, myBadAmount = 40})
 							end,
-							[[Class VerySubSimple cannot be instantiated
+							[[BadInput: Class VerySubSimple cannot be instantiated
 [interface] unexpected field 'myBadAmount']]
 						)
 					end
@@ -479,7 +479,7 @@ bad value for key amount:
 					}
 
 					local MyClass =
-						Classes.makeClassWithInterface(
+						Classes.classWithInterface(
 						"Simple",
 						superInterfaceIsFunction and function(Class)
 								return superInterface
@@ -504,8 +504,8 @@ bad value for key amount:
 					"composes function verifiers",
 					function()
 						local myInstance = getClassWithComposedInterfaces(true, true).new({amount = 10, subAmount = 20})
-						assert.equals(10, myInstance._amount)
-						assert.equals(20, myInstance._subAmount)
+						assert.equals(10, myInstance.amount)
+						assert.equals(20, myInstance.subAmount)
 					end
 				)
 
@@ -513,8 +513,8 @@ bad value for key amount:
 					"composes data and function verifiers",
 					function()
 						local myInstance = getClassWithComposedInterfaces(true, false).new({amount = 10, subAmount = 20})
-						assert.equals(10, myInstance._amount)
-						assert.equals(20, myInstance._subAmount)
+						assert.equals(10, myInstance.amount)
+						assert.equals(20, myInstance.subAmount)
 					end
 				)
 
@@ -522,19 +522,19 @@ bad value for key amount:
 					"composes function with data verifiers",
 					function()
 						local myInstance = getClassWithComposedInterfaces(false, true).new({amount = 10, subAmount = 20})
-						assert.equals(10, myInstance._amount)
-						assert.equals(20, myInstance._subAmount)
+						assert.equals(10, myInstance.amount)
+						assert.equals(20, myInstance.subAmount)
 					end
 				)
 			end
 		)
 		describe(
-			"makeEnum",
+			"enum",
 			function()
 				it(
 					"makes an enum from an array",
 					function()
-						local ENUM = Classes.makeEnum({"ONE", "TWO", "THREE_YEAH"})
+						local ENUM = Classes.enum({"ONE", "TWO", "THREE_YEAH"})
 						assert.equals("ONE", ENUM.ONE)
 						assert.equals("TWO", ENUM.TWO)
 						assert.equals("THREE_YEAH", ENUM.THREE_YEAH)
@@ -543,22 +543,22 @@ bad value for key amount:
 				it(
 					"warns about bad casing",
 					function()
-						local errorMessage = "Enum keys must be defined as upper snake case"
+						local errorMessage = "BadInput: Enum keys must be defined as upper snake-case"
 						assert.has_error(
 							function()
-								Classes.makeEnum({"One"})
+								Classes.enum({"One"})
 							end,
 							errorMessage
 						)
 						assert.has_error(
 							function()
-								Classes.makeEnum({"ONOE_!"})
+								Classes.enum({"ONOE_!"})
 							end,
 							errorMessage
 						)
 						assert.has_error(
 							function()
-								Classes.makeEnum({""})
+								Classes.enum({""})
 							end,
 							errorMessage
 						)
@@ -572,7 +572,7 @@ bad value for key amount:
 
 						before_each(
 							function()
-								ENUM = Classes.makeEnum({"ONE", "TWO", "THREE_YEAH"})
+								ENUM = Classes.enum({"ONE", "TWO", "THREE_YEAH"})
 							end
 						)
 
@@ -607,7 +607,7 @@ bad value for key amount:
 				it(
 					"checks an element of an Enum",
 					function()
-						local ENUM = Classes.makeEnum({"ONE", "TWO", "THREE_YEAH"})
+						local ENUM = Classes.enum({"ONE", "TWO", "THREE_YEAH"})
 						assert.truthy(Classes.isA(ENUM.ONE, ENUM))
 					end
 				)
@@ -615,7 +615,7 @@ bad value for key amount:
 				it(
 					"checks an instance of a class",
 					function()
-						local MyClass = Classes.makeClass("Simple")
+						local MyClass = Classes.class("Simple")
 						local myInstance = MyClass.new()
 						assert.truthy(Classes.isA(myInstance, MyClass))
 						assert.not_truthy(Classes.isA({}, MyClass))
@@ -625,7 +625,7 @@ bad value for key amount:
 				it(
 					"checks an instance of a super class",
 					function()
-						local MyClass = Classes.makeClass("Simple")
+						local MyClass = Classes.class("Simple")
 						local MySubclass = MyClass:extend("SimpleSub")
 						local myInstance = MySubclass.new()
 						assert.truthy(Classes.isA(myInstance, MyClass))
@@ -640,13 +640,13 @@ bad value for key amount:
 		)
 
 		describe(
-			"makeFinal",
+			"freeze",
 			function()
 				it(
 					"warns about using a missing key",
 					function()
 						local myObject =
-							Classes.makeFinal(
+							Classes.freeze(
 							{
 								a = 2
 							}
@@ -656,7 +656,7 @@ bad value for key amount:
 							function()
 								return myObject.b
 							end,
-							"Attempt to access key b which is missing in final object"
+							"MissingKey: Attempt to access key b which is missing in final object"
 						)
 					end
 				)
@@ -664,7 +664,7 @@ bad value for key amount:
 					"warns about assignment to an unused variable",
 					function()
 						local myObject =
-							Classes.makeFinal(
+							Classes.freeze(
 							{
 								a = 2
 							}
@@ -673,7 +673,7 @@ bad value for key amount:
 							function()
 								myObject.b = 2
 							end,
-							"Attempt to set key b on final object"
+							"ReadonlyKey: Attempt to set key b on final object"
 						)
 					end
 				)
@@ -681,7 +681,7 @@ bad value for key amount:
 					"allows iteration over a table",
 					function()
 						local myObject =
-							Classes.makeFinal(
+							Classes.freeze(
 							{
 								a = 2,
 								b = 3
@@ -694,24 +694,23 @@ bad value for key amount:
 		)
 
 		describe(
-			"applySwitchStrategyForEnum",
+			"match",
 			function()
-				local ENUM = Classes.makeEnum({"ONE", "TWO"})
+				local ENUM = Classes.enum({"ONE", "TWO"})
 				local strategies = {
-					ONE = function(x)
-						return x + 1
+					ONE = function(suffix)
+						return 1 .. suffix
 					end,
-					TWO = function(x)
-						return x + 2
+					TWO = function(suffix)
+						return 2 .. suffix
 					end
 				}
 
 				it(
-					"applies",
+					"applies a strategy correctly",
 					function()
-						local result = Classes.applySwitchStrategyForEnum(ENUM, ENUM.ONE, strategies, 3)
-
-						assert(result == 4)
+						local result = Classes.match(ENUM, strategies)(ENUM.ONE, "f")
+						assert.equal("1f", result)
 					end
 				)
 
@@ -720,18 +719,18 @@ bad value for key amount:
 					function()
 						assert.has_errors(
 							function()
-								Classes.applySwitchStrategyForEnum(2, ENUM.ONE, strategies)
+								Classes.match(2, strategies)
 							end
 						)
 					end
 				)
 
 				it(
-					"throws if the value is missing",
+					"throws if the enum value is incorrect",
 					function()
 						assert.has_errors(
 							function()
-								Classes.applySwitchStrategyForEnum(ENUM, "1", strategies)
+								Classes.match(ENUM, strategies)("1")
 							end
 						)
 					end
@@ -742,13 +741,13 @@ bad value for key amount:
 					function()
 						assert.has_errors(
 							function()
-								Classes.applySwitchStrategyForEnum(ENUM, ENUM.ONE, {})
+								Classes.match(ENUM, {})
 							end
 						)
 
 						assert.has_errors(
 							function()
-								Classes.applySwitchStrategyForEnum(Classes.makeEnum({"FOUR"}), ENUM.ONE, strategies)
+								Classes.match(Classes.enum({"FOUR"}), strategies)
 							end
 						)
 					end
