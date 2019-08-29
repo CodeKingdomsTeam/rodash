@@ -1,9 +1,10 @@
 local Functions = require "Functions"
+local Clock = require "spec_source.Clock"
 
 describe(
 	"Functions",
 	function()
-		local callSpy
+		local callSpy, clock
 		before_each(
 			function()
 				callSpy =
@@ -12,6 +13,12 @@ describe(
 						return {..., n = select("#", ...)}
 					end
 				)
+				clock = Clock.setup()
+			end
+		)
+		after_each(
+			function()
+				clock:teardown()
 			end
 		)
 		describe(

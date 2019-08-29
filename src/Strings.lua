@@ -1,9 +1,9 @@
 --[[
 	Useful functions to manipulate strings, based on similar implementations in other standard libraries.
 ]]
-local t = require(script.Parent.t)
-local Functions = require(script.Functions)
-local Tables = require(script.Tables)
+local t = require(script.Parent.Parent.t)
+local Functions = require(script.Parent.Functions)
+local Tables = require(script.Parent.Tables)
 local Strings = {}
 local insert = table.insert
 local concat = table.concat
@@ -216,9 +216,9 @@ end
 
 --[[
 	Makes a string of `length` from `str` by repeating characters from `suffix` at the end of the string.
-	@example _.leftPad("toast", 6) --> "toast "
-	@example _.leftPad("2", 2, "!") --> "2!"
-	@example _.leftPad("toast", 10, ":)") --> "toast:):):"
+	@example _.rightPad("toast", 6) --> "toast "
+	@example _.rightPad("2", 2, "!") --> "2!"
+	@example _.rightPad("toast", 10, ":)") --> "toast:):):"
 	@param suffix (default = `" "`)
 	@trait Chainable
 ]]
@@ -317,7 +317,7 @@ function Strings.charToHex(char, format, useBytes)
 end
 
 --[[
-	Converts a _hex_ represntation of a character in the character.
+	Generates a character from its _hex_ representation.
 	@example _.hexToChar("1F60F") --> "😏"
 	@example _.hexToChar("%1F60F") --> "😏"
 	@example _.hexToChar("#1F60F") --> "😏"

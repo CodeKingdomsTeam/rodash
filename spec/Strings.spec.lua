@@ -37,7 +37,7 @@ describe(
 					end
 				)
 				it(
-					"from kebab-case",
+					"from camel-case",
 					function()
 						assert.are.same("strong-stilton", Strings.kebabCase("strongStilton"))
 					end
@@ -79,19 +79,19 @@ describe(
 			"titleCase",
 			function()
 				it(
-					"words",
+					"from plain words",
 					function()
 						assert.are.same("Jello World", Strings.titleCase("jello world"))
 					end
 				)
 				it(
-					"kebabs",
+					"from kebabs",
 					function()
 						assert.are.same("Yellow-jello With_sprinkles", Strings.titleCase("yellow-jello with_sprinkles"))
 					end
 				)
 				it(
-					"apostrophes",
+					"from phrases with apostrophes",
 					function()
 						assert.are.same("Yellow Jello's Don’t Mellow", Strings.titleCase("yellow jello's don’t mellow"))
 					end

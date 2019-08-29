@@ -7,7 +7,7 @@
 	These functions typically act on immutable tables and return new tables in functional style.
 	Note that mutable arguments in Rodash are explicitly typed as such.
 ]]
-local t = require(script.Parent.t)
+local t = require(script.Parent.Parent.t)
 
 local Tables = {}
 
@@ -21,7 +21,7 @@ local function getIterator(source)
 end
 
 local function assertHandlerIsFn(handler)
-	local Functions = require(script.Functions)
+	local Functions = require(script.parent.Functions)
 	assert(Functions.isCallable(handler), "BadInput: handler must be a function")
 end
 
@@ -913,7 +913,7 @@ end
 function Tables.serialize(source, valueSerializer, keySerializer)
 	valueSerializer = valueSerializer or Tables.defaultSerializer
 	keySerializer = keySerializer or Tables.defaultSerializer
-	local Functions = require(script.Functions)
+	local Functions = require(script.Parent.Functions)
 	assert(Functions.isCallable(valueSerializer), "BadInput: valueSerializer must be a function if defined")
 	assert(Functions.isCallable(keySerializer), "BadInput: keySerializer must be a function if defined")
 	-- Find tables which appear more than once, and assign each an index
@@ -955,7 +955,7 @@ end
 function Tables.serializeDeep(source, serializer, keySerializer)
 	serializer = serializer or Tables.defaultSerializer
 	keySerializer = keySerializer or Tables.defaultSerializer
-	local Functions = require(script.Functions)
+	local Functions = require(script.parent.Functions)
 	assert(Functions.isCallable(serializer), "BadInput: serializer must be a function if defined")
 	assert(Functions.isCallable(keySerializer), "BadInput: keySerializer must be a function if defined")
 	local function deepSerializer(value, cycles)

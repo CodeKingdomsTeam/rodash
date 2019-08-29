@@ -2,46 +2,53 @@ local Async = require "Async"
 local Functions = require "Functions"
 local Promise = require "roblox-lua-promise"
 local match = require "luassert.match"
-
-local function advanceAndAssertPromiseResolves(promise, assertion)
-	local andThen =
-		spy.new(
-		function(...)
-			local ok, error = pcall(assertion, ...)
-			if not ok then
-				print("[Assertion Error]", error)
-			end
-			return ok
-		end
-	)
-	local err = spy.new(warn)
-	promise:andThen(andThen):catch(err)
-	if tick() == 0 then
-		assert.spy(andThen).was_not_called()
-		wait(1)
-		clock:process()
-	end
-	assert.spy(andThen).was.returned_with(true)
-	assert.spy(err).was_not_called()
-end
-
-local function advanceAndAssertPromiseRejects(promise, message)
-	local err = spy.new(warn)
-	promise:catch(err)
-	if tick() == 0 then
-		assert.spy(err).was_not_called()
-		wait(1)
-		clock:process()
-	end
-	assert(err.calls[1].vals[1]:find(message))
-end
+local Clock = require "spec_source.Clock"
 
 describe(
 	"Async",
 	function()
+		local clock, advanceAndAssertPromiseResolves, advanceAndAssertPromiseRejects
+
 		before_each(
 			function()
-				clock:reset()
+				clock = Clock.setup()
+				advanceAndAssertPromiseResolves = function(promise, assertion)
+					local andThen =
+						spy.new(
+						function(...)
+							local ok, error = pcall(assertion, ...)
+							if not ok then
+								print("[Assertion Error]", error)
+							end
+							return ok
+						end
+					)
+					local err = spy.new(warn)
+					promise:andThen(andThen):catch(err)
+					if tick() == 0 then
+						assert.spy(andThen).was_not_called()
+						wait(1)
+						clock:process()
+					end
+					assert.spy(andThen).was.returned_with(true)
+					assert.spy(err).was_not_called()
+				end
+
+				advanceAndAssertPromiseRejects = function(promise, message)
+					local err = spy.new(warn)
+					promise:catch(err)
+					if tick() == 0 then
+						assert.spy(err).was_not_called()
+						wait(1)
+						clock:process()
+					end
+					assert(err.calls[1].vals[1]:find(message))
+				end
+			end
+		)
+		after_each(
+			function()
+				clock:teardown()
 			end
 		)
 		describe(
