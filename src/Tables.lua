@@ -234,7 +234,7 @@ function Tables.any(source, handler)
 end
 
 --[[
-	Returns a copy source, ensuring each key starts with an underscore `_`.
+	Returns a copy of _source_, ensuring each key starts with an underscore `_`.
 	Keys which are already prefixed with an underscore are left unchanged.
 ]]
 -- <T>(T{} -> T{})
