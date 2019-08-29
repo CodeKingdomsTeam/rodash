@@ -1,10 +1,10 @@
 --[[
 	These tools provide implementations of and functions for higher-order abstractions such as classes, enumerations and symbols.
 ]]
-local t = require(script.Parent.t)
-local Tables = require(script.Tables)
-local Arrays = require(script.Arrays)
-local Functions = require(script.Functions)
+local Functions = require(script.Parent.Functions)
+local t = require(script.Parent.Parent.t)
+local Tables = require(script.Parent.Tables)
+local Arrays = require(script.Parent.Arrays)
 local Classes = {}
 
 --[[
@@ -38,6 +38,7 @@ local Classes = {}
 		-- Drive the car
 		car:drive(10)
 		car.speed --> 10
+		
 	@usage When using Rodash classes, private fields should be prefixed with `_` to avoid accidental access.
 	@usage A private field should only be accessed by a method of the class itself, though Rodash
 		does not restrict this in code.
@@ -105,6 +106,7 @@ function Classes.class(name, constructor, decorators)
 	--: (mut T:) -> nil
 	function Class:_init()
 	end
+
 	--[[
 		Returns `true` if _value_ is an instance of _Class_ or any sub-class.
 		@example
@@ -127,6 +129,7 @@ function Classes.class(name, constructor, decorators)
 		local ok = Classes.isA(value, Class)
 		return ok, not ok and string.format("Not a %s instance", name) or nil
 	end
+
 	--[[
 		Create a subclass of _Class_ with a new _name_ that inherits the metatable of _Class_,
 		optionally overriding the _constructor_ and providing additional _decorators_.
@@ -174,6 +177,7 @@ function Classes.class(name, constructor, decorators)
 		setmetatable(SubClass, {__index = self})
 		return SubClass
 	end
+
 	--[[
 		Create a subclass of _Class_ with a new _name_ that inherits the metatable of _Class_,
 		optionally overriding the _constructor_ and providing additional _decorators_.
@@ -285,7 +289,7 @@ end
 	Create an enumeration from an array string _keys_, provided in upper snake-case.
 
 	An Enum is used when a value should only be one of a limited number of possible states.
-	`_.makeEnum` creates a string enum, which uses a name for each state so it is easy to refer to.
+	`_.enum` creates a string enum, which uses a name for each state so it is easy to refer to.
 	For ease of use values in the enum are identical to their key.
 
 	Enums are frozen and will throw if access to a missing key is attempted, helping to eliminate
@@ -294,6 +298,15 @@ end
 	Symbols are not used so that enum values are serializable.
 
 	@param keys provided in upper snake-case.
+	@example
+		local TOGGLE = _.enum("ON", "OFF")
+		local switch = TOGGLE.ON
+		if switch == TOGGLE.ON then
+			game.Workspace.RoomLight.Brightness = 1
+		else
+			game.Workspace.RoomLight.Brightness = 0
+		end
+	@see _.match
 ]]
 --: <T>(string -> Enum<T>)
 function Classes.enum(keys)
@@ -327,7 +340,23 @@ end
 	A strategy for every enum key must be implemented, and this helps prevent missing values
 	from causing problems later on down the line.
 
-	If the _enum_ is a symbol enum, the value tuple will be unpacked as arguments to the strategy.
+	@example
+		local TOGGLE = _.enum("ON", "OFF")
+		local setLightTo = _.match(TOGGLE, {
+			ON = function(light)
+				light.Brightness = 1
+			end,
+			OFF = function(light)
+				light.Brightness = 0
+			end
+		})
+
+		-- This can be used to turn any light on or off:
+		setLightTo(TOGGLE.ON, game.Workspace.RoomLight) -- Light turns on
+
+		-- But will catch an invalid enum value:
+		setLightTo("Dim", game.Workspace.RoomLight)
+		--!> BadInput: enumValue must be an instance of enum
 ]]
 --: <T: Iterable<K>, V>(Enum<T>, {[K]: () -> V}) -> K -> V
 function Classes.match(enum, strategies)
@@ -338,14 +367,10 @@ function Classes.match(enum, strategies)
 	)
 	assert(t.values(t.callback)(strategies), "BadInput: strategies values must be functions")
 
-	return function(enumValue)
+	return function(enumValue, ...)
 		assert(Classes.isA(enumValue, enum), "BadInput: enumValue must be an instance of enum")
 		local strategy = strategies[enumValue]
-		if type(enumValue) == "table" then
-			return strategy(unpack(enumValue))
-		else
-			return strategy()
-		end
+		return strategy(...)
 	end
 end
 
@@ -393,9 +418,9 @@ end
 		Vehicle.isA(5) --> false
 
 	@example
-		local toggle = _.enum("ON", "OFF")
-		toggle.isA("ON") --> true
-		toggle.isA(5) --> false
+		local TOGGLE = _.enum("ON", "OFF")
+		TOGGLE.isA("ON") --> true
+		TOGGLE.isA(5) --> false
 
 	@usage This is useful if you no nothing about _value_.
 ]]

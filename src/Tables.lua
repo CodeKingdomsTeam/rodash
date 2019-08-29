@@ -7,7 +7,7 @@
 	These functions typically act on immutable tables and return new tables in functional style.
 	Note that mutable arguments in Rodash are explicitly typed as such.
 ]]
-local t = require(script.Parent.t)
+local t = require(script.Parent.Parent.t)
 
 local Tables = {}
 
@@ -21,7 +21,7 @@ local function getIterator(source)
 end
 
 local function assertHandlerIsFn(handler)
-	local Functions = require(script.Functions)
+	local Functions = require(script.Parent.Functions)
 	assert(Functions.isCallable(handler), "BadInput: handler must be a function")
 end
 
@@ -154,7 +154,7 @@ end
 --: <T: Iterable<K,V>, U>((T, (element: V, key: K) -> U[]) -> U[])
 function Tables.flatMap(source, handler)
 	assertHandlerIsFn(handler)
-	local Arrays = require(script.Arrays)
+	local Arrays = require(script.Parent.Arrays)
 	local result = {}
 	for i, v in getIterator(source) do
 		local list = handler(v, i)
@@ -224,7 +224,7 @@ end
 ]]
 --: <T: Iterable<K,V>>(T -> V[])
 function Tables.compact(source)
-	local Arrays = require(script.Arrays)
+	local Arrays = require(script.Parent.Arrays)
 	local sortedKeys = Arrays.sort(Tables.keys(source))
 	return Tables.map(
 		sortedKeys,
@@ -313,7 +313,7 @@ end
 ]]
 -- <T>(T{} -> T{})
 function Tables.privatize(source)
-	local Strings = require(script.Strings)
+	local Strings = require(script.Parent.Strings)
 	return Tables.keyBy(
 		source,
 		function(_, key)
@@ -861,7 +861,7 @@ function Tables.isArray(source)
 end
 
 local function serializeVisit(source, options)
-	local Arrays = require(script.Arrays)
+	local Arrays = require(script.Parent.Arrays)
 	local isArray = Tables.isArray(source)
 	local ref = ""
 	local cycles = options.cycles
@@ -986,12 +986,13 @@ function Tables.serialize(source, options)
 	options = Tables.defaults({}, options, getDefaultSerializeOptions())
 	assert(t.string(options.valueDelimiter), "BadInput: valueDelimiter must be a string if defined")
 	assert(t.string(options.keyDelimiter), "BadInput: keyDelimiter must be a string if defined")
-	local Functions = require(script.Functions)
+	local Functions = require(script.Parent.Functions)
 	assert(Functions.isCallable(options.serializeValue), "BadInput: options.serializeValue must be a function if defined")
 	assert(Functions.isCallable(options.serializeKey), "BadInput: options.serializeKey must be a function if defined")
 	if type(source) ~= "table" then
 		return options.serializeValue(source, options)
 	end
+
 	-- Find tables which appear more than once, and assign each an index
 	if not options.cycles.refs then
 		options.cycles.refs =
@@ -1027,7 +1028,7 @@ end
 --: <T: Iterable<K,V>>(T, (V, Cycles<V> -> string), (K, Cycles<V> -> string) -> string)
 function Tables.serializeDeep(source, options)
 	options = Tables.defaults({}, options, getDefaultSerializeOptions())
-	local Functions = require(script.Functions)
+	local Functions = require(script.Parent.Functions)
 	assert(Functions.isCallable(options.serializeValue), "BadInput: options.serializeValue must be a function if defined")
 	assert(Functions.isCallable(options.serializeKey), "BadInput: options.serializeKey must be a function if defined")
 	local function deepSerializer(fn, value, internalOptions)
