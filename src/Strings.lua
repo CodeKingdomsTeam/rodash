@@ -8,6 +8,10 @@ local Strings = {}
 local insert = table.insert
 local concat = table.concat
 
+local function assertStrIsString(str)
+	assert(t.string(str), "BadInput: str must be a string")
+end
+
 --[[
 	Convert `str` to camel-case.
 	@example _.camelCase('Pepperoni Pizza') --> 'pepperoniPizza'
@@ -17,7 +21,7 @@ local concat = table.concat
 ]]
 --: string -> string
 function Strings.camelCase(str)
-	assert(t.string(str))
+	assertStrIsString(str)
 	return str:gsub(
 		"(%a)([%w]*)",
 		function(head, tail)
@@ -36,7 +40,7 @@ end
 ]]
 --: string -> string
 function Strings.kebabCase(str)
-	assert(t.string(str))
+	assertStrIsString(str)
 	return str:gsub(
 		"(%l)(%u)",
 		function(a, b)
@@ -54,7 +58,7 @@ end
 	@trait Chainable
 ]]
 function Strings.snakeCase(str)
-	assert(t.string(str))
+	assertStrIsString(str)
 	return str:gsub(
 		"(%l)(%u)",
 		function(a, b)
@@ -72,7 +76,7 @@ end
 	@trait Chainable
 ]]
 function Strings.titleCase(str)
-	assert(t.string(str))
+	assertStrIsString(str)
 	return str:gsub(
 		"(%a)([%w_%-'’]*)",
 		function(head, tail)
@@ -87,7 +91,7 @@ end
 	@trait Chainable
 ]]
 function Strings.capitalize(str)
-	assert(t.string(str))
+	assertStrIsString(str)
 	return str:gsub("^%l", string.upper)
 end
 
@@ -97,7 +101,7 @@ end
 	@trait Chainable
 ]==]
 function Strings.encodeHtml(str)
-	assert(t.string(str))
+	assertStrIsString(str)
 	local entities = {["<"] = "lt", [">"] = "gt", ["&"] = "amp", ['"'] = "quot", ["'"] = "apos"}
 	return str:gsub(
 		".",
@@ -114,7 +118,7 @@ end
 	@trait Chainable
 ]==]
 function Strings.decodeHtml(str)
-	assert(t.string(str))
+	assertStrIsString(str)
 	local entities = {lt = "<", gt = ">", amp = "&", quot = '"', apos = "'"}
 	return str:gsub(
 		"(&(#?x?)([%d%a]+);)",
@@ -139,8 +143,8 @@ end
 ]]
 --: string, pattern -> string[], string[]
 function Strings.splitOn(str, pattern)
-	assert(t.string(str))
-	assert(t.optional(t.string)(pattern))
+	assertStrIsString(str)
+	assert(t.optional(t.string)(pattern), "BadInput: pattern must be a string or nil")
 	local result = {}
 	local delimiters = {}
 	local from = 1
@@ -168,7 +172,7 @@ end
 ]]
 --: string -> string
 function Strings.trim(str)
-	assert(t.string(str))
+	assertStrIsString(str)
 	return str:match("^%s*(.-)%s*$")
 end
 
@@ -180,7 +184,8 @@ end
 ]]
 --: string, string -> bool
 function Strings.startsWith(str, prefix)
-	assert(t.string(str))
+	assertStrIsString(str)
+	assert(t.string(prefix), "BadInput: prefix must be a string")
 	return str:sub(1, prefix:len()) == prefix
 end
 
@@ -192,8 +197,8 @@ end
 ]]
 --: string, string -> bool
 function Strings.endsWith(str, suffix)
-	assert(t.string(str))
-	assert(t.string(suffix))
+	assertStrIsString(str)
+	assert(t.string(suffix), "BadInput: suffix must be a string")
 	return str:sub(-suffix:len()) == suffix
 end
 
@@ -207,9 +212,9 @@ end
 ]]
 --: string, number, string -> string
 function Strings.leftPad(str, length, prefix)
-	assert(t.string(str))
-	assert(t.number(length))
-	assert(t.optional(t.string)(prefix))
+	assertStrIsString(str)
+	assert(t.number(length), "BadInput: length must be a number")
+	assert(t.optional(t.string)(prefix), "BadInput: prefix must be a string or nil")
 	prefix = prefix or " "
 	local padLength = length - #str
 	local remainder = padLength % #prefix
@@ -227,9 +232,9 @@ end
 ]]
 --: string, number, string -> string
 function Strings.rightPad(str, length, suffix)
-	assert(t.string(str))
-	assert(t.number(length))
-	assert(t.optional(t.string)(suffix))
+	assertStrIsString(str)
+	assert(t.number(length), "BadInput: length must be a number")
+	assert(t.optional(t.string)(suffix), "BadInput: suffix must be a string or nil")
 	suffix = suffix or " "
 	local padLength = length - #str
 	local remainder = padLength % #suffix
@@ -275,8 +280,8 @@ end
 ]]
 --: char -> str, str?, boolean?
 function Strings.charToHex(char, format, useBytes)
-	assert(t.string(char))
-	assert(utf8.len(char) == 1)
+	assert(t.string(char), "BadInput: char must be a single utf8 character string")
+	assert(utf8.len(char) == 1, "BadInput: char must be a single utf8 character string")
 	local values = {}
 	if useBytes then
 		for position, codePoint in utf8.codes(char) do
@@ -308,7 +313,7 @@ end
 ]]
 --: str -> char
 function Strings.hexToChar(hex)
-	assert(t.string(hex))
+	assert(t.string(hex), "BadInput: hex must be a string")
 	if hex:sub(0, 1) == "%" or hex:sub(0, 1) == "#" then
 		hex = hex:sub(1)
 	elseif hex:sub(0, 2) == "0x" then
@@ -328,7 +333,7 @@ end
 ]]
 --: string -> string
 function Strings.encodeUrl(str)
-	assert(t.string(str))
+	assertStrIsString(str)
 	return str:gsub("[^%;%,%/%?%:%@%&%=%+%$%w%-%_%.%!%~%*%'%(%)%#]", Functions.bindTail(Strings.charToHex, "%{}", true))
 end
 
@@ -345,7 +350,7 @@ end
 ]]
 --: string -> string
 function Strings.encodeUrlComponent(str)
-	assert(t.string(str))
+	assertStrIsString(str)
 	return str:gsub("[^%w%-_%.%!%~%*%'%(%)]", Functions.bindTail(Strings.charToHex, "%{}", true))
 end
 
@@ -371,7 +376,7 @@ local calculateDecodeUrlExceptions =
 ]]
 --: string -> string
 function Strings.decodeUrl(str)
-	assert(t.string(str))
+	assertStrIsString(str)
 	local exceptions = calculateDecodeUrlExceptions()
 	return str:gsub(
 		"%%(%x%x)",
@@ -395,7 +400,7 @@ end
 ]]
 --: string -> string
 function Strings.decodeUrlComponent(str)
-	assert(t.string(str))
+	assertStrIsString(str)
 	return str:gsub("%%(%x%x)", Strings.hexToChar)
 end
 
@@ -414,7 +419,7 @@ end
 ]]
 --: <K,V>(Iterable<K,V> -> string)
 function Strings.encodeQueryString(query)
-	assert(t.table(query))
+	assert(t.table(query), "BadInput: query must be a table")
 	local fields =
 		Tables.mapValues(
 		query,

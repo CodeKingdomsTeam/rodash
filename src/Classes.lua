@@ -48,9 +48,9 @@ local Classes = {}
 ]]
 --: <T>(string, Constructor<T>?, Decorator<T>[]?) -> Class<T>
 function Classes.class(name, constructor, decorators)
-	assert(t.string(name), "Class name must be a string")
-	assert(t.optional(t.callback)(constructor), "Class constructor must be a function or nil")
-	assert(t.optional(t.table)(decorators), "Class decorators must be a table")
+	assert(t.string(name), "BadInput: name must be a string")
+	assert(t.optional(Functions.isCallable)(constructor), "BadInput: constructor must be callable or nil")
+	assert(t.optional(t.table)(decorators), "BadInput: decorators must be a table or nil")
 	local decorate = Functions.compose(unpack(decorators or {}))
 	constructor = constructor or function()
 			return {}

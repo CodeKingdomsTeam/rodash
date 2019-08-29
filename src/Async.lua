@@ -66,7 +66,7 @@ end
 ]]
 --: <T>((Promise<T> | T)[]) -> Promise<T[]>
 function Async.parallel(array)
-	assert(t.table(array))
+	assert(t.table(array), "BadInput: array must be an array")
 	local promises =
 		Tables.map(
 		array,
@@ -104,7 +104,7 @@ end
 ]]
 --: <T>((Promise<T> | T){}) -> Promise<T{}>
 function Async.parallelAll(dictionary)
-	assert(t.table(dictionary))
+	assert(t.table(dictionary), "BadInput: dictionary must be a table")
 	local keys = Tables.keys(dictionary)
 	local values =
 		Tables.map(
@@ -160,8 +160,8 @@ end
 --: <T>(Promise<T>[], uint?) -> Promise<T[]>
 function Async.race(array, n)
 	n = n or 1
-	assert(n >= 0)
-	assert(#array >= n, "OutOfBoundsError")
+	assert(n >= 0, "BadInput: n must be an integer >= 0")
+	assert(#array >= n, "OutOfBoundsError: n must be less than #array")
 	local function handler(resolve, reject)
 		local results = {}
 		local function finally(ok, result)
@@ -206,7 +206,7 @@ end
 ]]
 --: <T>(Promise<T>, (bool, T) -> nil) -> Promise<nil>
 function Async.finally(promise, fn)
-	assert(Async.isPromise(promise))
+	assert(Async.isPromise(promise), "BadInput: promise must be a promise")
 	return promise:andThen(
 		function(...)
 			fn(true, ...)
@@ -279,7 +279,7 @@ end
 ]]
 --: number -> Promise<nil>
 function Async.delay(delayInSeconds)
-	assert(t.number(delayInSeconds))
+	assert(t.number(delayInSeconds), "BadInput: delayInSeconds must be a number")
 	return Promise.new(
 		function(resolve)
 			delay(delayInSeconds, resolve)
@@ -308,7 +308,7 @@ end
 ]]
 --: <T, A>(Yieldable<T, A>) -> ...A -> Promise<T>
 function Async.async(fn)
-	assert(Functions.isCallable(fn))
+	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
 	return function(...)
 		local callArgs = {...}
 		return Promise.new(
@@ -344,7 +344,7 @@ end
 ]]
 --: <T, Args>(Yieldable<T, Args>{}) -> (...Args -> Promise<T>){}
 function Async.asyncAll(dictionary)
-	assert(t.table(dictionary))
+	assert(t.table(dictionary), "BadInput: dictionary must be a table")
 	local result =
 		Tables.map(
 		dictionary,
@@ -383,7 +383,7 @@ end
 ]]
 --: <T>(() -> Promise<T>, BackoffOptions) -> Promise<T>
 function Async.retryWithBackoff(getPromise, backoffOptions)
-	assert(Functions.isCallable(getPromise))
+	assert(Functions.isCallable(getPromise), "BadInput: getPromise must be callable")
 	local function backoffThenRetry(errorMessage)
 		local waitTime =
 			(backoffOptions.retryExponentInSeconds ^ backoffOptions.attemptNumber) * backoffOptions.randomStream:NextNumber() +
@@ -431,7 +431,7 @@ function Async.retryWithBackoff(getPromise, backoffOptions)
 		},
 		backoffOptions
 	)
-	assert(backoffOptions.maxTries > 0, "You must try a function at least once")
+	assert(backoffOptions.maxTries > 0, "BadInput: maxTries must be > 0")
 
 	local function shouldRetry(response)
 		return backoffOptions.maxTries > 1 and backoffOptions.shouldRetry(response)

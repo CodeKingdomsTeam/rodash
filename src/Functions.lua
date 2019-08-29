@@ -238,9 +238,9 @@ function Functions.chain(fns, actor)
 		{
 			__index = function(self, name)
 				local fn = fns[name]
-				assert(Functions.isCallable(fn), "Chain key " .. tostring(name) .. " is not callable")
+				assert(Functions.isCallable(fn), "BadKey: Chain key " .. tostring(name) .. " is not callable")
 				local feeder = function(parent, ...)
-					assert(type(parent) == "table", "Chain functions must be called with ':'")
+					assert(type(parent) == "table", "BadCall: Chain functions must be called with ':'")
 					local stage = {}
 					local op = Functions.bindTail(fn, ...)
 					setmetatable(
@@ -261,7 +261,7 @@ function Functions.chain(fns, actor)
 				return feeder
 			end,
 			__newindex = function()
-				error("Cannot assign to a chain, create one with _.chain instead.")
+				error("ReadonlyKey: Cannot assign to a chain, create one with _.chain instead.")
 			end,
 			__call = function(_, subject)
 				return subject
@@ -536,9 +536,9 @@ end
 ]]
 --: <...A, B>((...A -> B), ...A -> string?) -> Clearable<...A> & AllClearable & (...A) -> B
 function Functions.memoize(fn, serializeArgs)
-	assert(type(fn) == "function")
+	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
 	serializeArgs = serializeArgs or Functions.unary(Tables.serialize)
-	assert(type(serializeArgs) == "function")
+	assert(Functions.isCallable(serializeArgs), "BadInput: serializeArgs must be callable or nil")
 	local cache = {}
 	local clearable = {
 		clear = function(_, ...)
@@ -632,8 +632,8 @@ end
 ]]
 --: <A, B>((...A) -> B), number -> Clearable & (...A) -> B
 function Functions.debounce(fn, delayInSeconds)
-	assert(Functions.isCallable(fn))
-	assert(type(delayInSeconds) == "number")
+	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
+	assert(type(delayInSeconds) == "number", "BadInput: delayInSeconds must be a number")
 
 	local lastResult = nil
 	local timeout
@@ -675,9 +675,9 @@ end
 ]]
 --: <A, B>((...A) -> B), number -> ...A -> B
 function Functions.throttle(fn, cooldownInSeconds)
-	assert(Functions.isCallable(fn))
-	assert(type(cooldownInSeconds) == "number")
-	assert(cooldownInSeconds > 0)
+	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
+	assert(type(cooldownInSeconds) == "number", "BadInput: cooldownInSeconds must be a number > 0")
+	assert(cooldownInSeconds > 0, "BadInput: cooldownInSeconds must be a number > 0")
 
 	local cached = false
 	local lastResult = nil
