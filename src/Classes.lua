@@ -342,15 +342,20 @@ end
 	@example
 		local TOGGLE = _.enum("ON", "OFF")
 		local setLightTo = _.match(TOGGLE, {
-			ON = function()
-				game.Workspace.RoomLight.Brightness = 1
+			ON = function(light)
+				light.Brightness = 1
 			end,
-			OFF = function()
-				game.Workspace.RoomLight.Brightness = 0
+			OFF = function(light)
+				light.Brightness = 0
 			end
 		})
-		setLightTo(TOGGLE.ON) -- Light turns on
-		setLightTo("Dim") --!> BadInput: enumValue must be an instance of enum
+
+		-- This can be used to turn any light on or off:
+		setLightTo(TOGGLE.ON, game.Workspace.RoomLight) -- Light turns on
+
+		-- But will catch an invalid enum value:
+		setLightTo("Dim", game.Workspace.RoomLight)
+		--!> BadInput: enumValue must be an instance of enum
 ]]
 --: <T: Iterable<K>, V>(Enum<T>, {[K]: () -> V}) -> K -> V
 function Classes.match(enum, strategies)
@@ -364,7 +369,7 @@ function Classes.match(enum, strategies)
 	return function(enumValue, ...)
 		assert(Classes.isA(enumValue, enum), "BadInput: enumValue must be an instance of enum")
 		local strategy = strategies[enumValue]
-		return strategy()
+		return strategy(...)
 	end
 end
 
