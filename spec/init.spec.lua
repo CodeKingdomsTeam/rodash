@@ -1,14 +1,21 @@
 local _ = require "init"
+local Clock = require "spec_source.Clock"
 
 describe(
 	"macro-level functions",
 	function()
+		local clock
 		before_each(
 			function()
-				clock.reset()
+				clock = Clock.setup()
 				getmetatable(_.fn).__index = function(self, key)
 					return _.chain(_)[key]
 				end
+			end
+		)
+		after_each(
+			function()
+				clock:teardown()
 			end
 		)
 		describe(
@@ -227,11 +234,11 @@ describe(
 						)
 						filterHurtHobbitNames(crew):andThen(andThen)
 						assert.spy(andThen).not_called()
-						clock.process()
+						clock:process()
 						-- Ensure that delays are set for the lookup of the hurt names
 						assert.are.same({1, 1}, _.fn:map(_.fn:get("time"))(clock.events))
 						wait(1)
-						clock.process()
+						clock:process()
 						-- Ensure spy called
 						assert.spy(andThen).called()
 					end
@@ -281,11 +288,11 @@ describe(
 						filterHobbitNames(crew):andThen(andThen):catch(catch)
 						assert.spy(andThen).not_called()
 						assert.spy(catch).not_called()
-						clock.process()
+						clock:process()
 						-- Ensure that delays are set for the lookup of the hurt names
 						assert.are.same({1, 1, 1}, _.fn:map(_.fn:get("time"))(clock.events))
 						wait(1)
-						clock.process()
+						clock:process()
 
 						assert.spy(andThen).not_called()
 						assert.spy(catch).called()

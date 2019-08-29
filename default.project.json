@@ -1,6 +1,7 @@
 {
 	"name": "Rodash",
 	"tree": {
+<<<<<<< HEAD
 		"$className": "DataModel",
 		"HttpService": {
 			"$className": "HttpService",
@@ -52,5 +53,8 @@
 				}
 			}
 		}
+=======
+		"$path": "src"
+>>>>>>> docs-advanced-classes
 	}
 }
