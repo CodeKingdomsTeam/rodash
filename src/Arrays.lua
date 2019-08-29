@@ -16,8 +16,8 @@
 
 	Functions can also iterate over custom iterator functions which provide elements with natural keys _1..n_.
 ]]
-local t = require(script.Parent.t)
-local Tables = require(script.Tables)
+local t = require(script.Parent.Parent.t)
+local Tables = require(script.Parent.Tables)
 
 local Arrays = {}
 
@@ -31,11 +31,11 @@ local function getIterator(source)
 end
 
 local function assertHandlerIsFn(handler)
-	local Functions = require(script.Functions)
+	local Functions = require(script.Parent.Functions)
 	assert(Functions.isCallable(handler), "BadInput: handler must be a function")
 end
 local function assertPredicateIsFn(handler)
-	local Functions = require(script.Functions)
+	local Functions = require(script.Parent.Functions)
 	assert(Functions.isCallable(handler), "BadInput: handler must be a function")
 end
 
@@ -56,7 +56,7 @@ end
 function Arrays.sort(input, comparator)
 	assert(t.table(input), "BadInput: input must be an array")
 
-	local Functions = require(script.Functions)
+	local Functions = require(script.Parent.Functions)
 	assert(comparator == nil or Functions.isCallable(comparator), "BadInput: comparator must be callable or nil")
 
 	comparator = comparator or function(a, b)

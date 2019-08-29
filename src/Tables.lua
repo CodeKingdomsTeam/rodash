@@ -21,7 +21,7 @@ local function getIterator(source)
 end
 
 local function assertHandlerIsFn(handler)
-	local Functions = require(script.parent.Functions)
+	local Functions = require(script.Parent.Functions)
 	assert(Functions.isCallable(handler), "BadInput: handler must be a function")
 end
 
@@ -154,7 +154,7 @@ end
 --: <T: Iterable<K,V>, U>((T, (element: V, key: K) -> U[]) -> U[])
 function Tables.flatMap(source, handler)
 	assertHandlerIsFn(handler)
-	local Arrays = require(script.Arrays)
+	local Arrays = require(script.Parent.Arrays)
 	local result = {}
 	for i, v in getIterator(source) do
 		local list = handler(v, i)
@@ -224,7 +224,7 @@ end
 ]]
 --: <T: Iterable<K,V>>(T -> V[])
 function Tables.compact(source)
-	local Arrays = require(script.Arrays)
+	local Arrays = require(script.Parent.Arrays)
 	local sortedKeys = Arrays.sort(Tables.keys(source))
 	return Tables.map(
 		sortedKeys,
@@ -313,7 +313,7 @@ end
 ]]
 -- <T>(T{} -> T{})
 function Tables.privatize(source)
-	local Strings = require(script.Strings)
+	local Strings = require(script.Parent.Strings)
 	return Tables.keyBy(
 		source,
 		function(_, key)
@@ -861,7 +861,7 @@ function Tables.isArray(source)
 end
 
 local function serializeVisit(source, valueSerializer, keySerializer, cycles)
-	local Arrays = require(script.Arrays)
+	local Arrays = require(script.Parent.Arrays)
 	local isArray = Tables.isArray(source)
 	local ref = ""
 	if cycles.refs[source] then
@@ -955,7 +955,7 @@ end
 function Tables.serializeDeep(source, serializer, keySerializer)
 	serializer = serializer or Tables.defaultSerializer
 	keySerializer = keySerializer or Tables.defaultSerializer
-	local Functions = require(script.parent.Functions)
+	local Functions = require(script.Parent.Functions)
 	assert(Functions.isCallable(serializer), "BadInput: serializer must be a function if defined")
 	assert(Functions.isCallable(keySerializer), "BadInput: keySerializer must be a function if defined")
 	local function deepSerializer(value, cycles)
