@@ -16,7 +16,7 @@ pipeline {
 
 		stage('Luacheck') {
 			steps {
-				sh './luacheck.sh'
+				sh './tools/luacheck.sh'
 			}
 			post {
 				failure {
