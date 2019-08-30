@@ -532,7 +532,7 @@ bad value for key amount:
 			"mixin",
 			function()
 				it(
-					"mixes in methods to a class prototypes",
+					"mixes in methods to a class prototype",
 					function()
 						local mixin = {
 							getSix = function(self)
@@ -587,7 +587,7 @@ bad value for key amount:
 
 						assert.errors(
 							function()
-								car:brake() --!> ReadonlyKey: Attempt to set key speed on frozen object
+								car:brake()
 							end,
 							"FinalObject: Attempt to add key stopped to final object"
 						)
@@ -615,7 +615,7 @@ bad value for key amount:
 
 						assert.errors(
 							function()
-								car:brake() --!> ReadonlyKey: Attempt to set key speed on frozen object
+								car:brake()
 							end,
 							"ReadonlyKey: Attempt to write to a frozen key speed"
 						)
@@ -624,7 +624,7 @@ bad value for key amount:
 			end
 		)
 		describe(
-			"Clone",
+			"Cloneable",
 			function()
 				it(
 					"provides a clone for a class",
@@ -637,7 +637,7 @@ bad value for key amount:
 									speed = speed
 								}
 							end,
-							{Classes.Clone}
+							{Classes.Cloneable}
 						)
 						function Car:brake()
 							self.speed = 0
@@ -706,8 +706,10 @@ bad value for key amount:
 						assert.is_false(fastCar < fastCar)
 						assert.is_false(fastCar > fastCar)
 						assert.is_true(fastCar > slowCar)
+						assert.is_true(fastCar >= slowCar)
 						assert.is_false(fastCar < slowCar)
 						assert.is_true(fastCar == fastCar2)
+						assert.is_true(fastCar >= fastCar2)
 						assert.is_true(fastCar ~= slowCar)
 					end
 				)
@@ -726,7 +728,7 @@ bad value for key amount:
 					end
 				)
 				it(
-					"warns about bad casing",
+					"throws for bad casing",
 					function()
 						local errorMessage = "BadInput: Enum keys must be defined as upper snake-case"
 						assert.has_error(
@@ -828,7 +830,7 @@ bad value for key amount:
 			"finalize",
 			function()
 				it(
-					"warns about using a missing key",
+					"throws about using a missing key",
 					function()
 						local myObject =
 							Classes.finalize(
@@ -846,7 +848,7 @@ bad value for key amount:
 					end
 				)
 				it(
-					"warns about assignment to an unused variable",
+					"throws about assignment to an unused variable",
 					function()
 						local myObject =
 							Classes.finalize(
@@ -876,7 +878,7 @@ bad value for key amount:
 					end
 				)
 				it(
-					"warns about using a missing key on an instance",
+					"throws about using a missing key on an instance",
 					function()
 						local MyClass = Classes.class("Simple")
 						function MyClass:getFive()
