@@ -20,7 +20,7 @@ nav:
       - Functions: api/Functions.md
       - Strings: api/Strings.md
       - Tables: api/Tables.md
-      - init: api/init.md
+  - Glossary: glossary.md
 
 extra_css:
   - rodocs.css

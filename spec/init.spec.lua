@@ -1,4 +1,4 @@
-local _ = require "init"
+local dash = require "init"
 local Clock = require "spec_source.Clock"
 
 describe(
@@ -8,8 +8,8 @@ describe(
 		before_each(
 			function()
 				clock = Clock.setup()
-				getmetatable(_.fn).__index = function(self, key)
-					return _.chain(_)[key]
+				getmetatable(dash.fn).__index = function(self, key)
+					return dash.chain(dash)[key]
 				end
 			end
 		)
@@ -25,10 +25,10 @@ describe(
 					"works with vanilla functions",
 					function()
 						local numberChain =
-							_.chain(
+							dash.chain(
 							{
 								addN = function(list, n)
-									return _.map(
+									return dash.map(
 										list,
 										function(element)
 											return element + n
@@ -36,7 +36,7 @@ describe(
 									)
 								end,
 								sum = function(list)
-									return _.sum(list)
+									return dash.sum(list)
 								end
 							}
 						)
@@ -48,12 +48,12 @@ describe(
 					"works with functions using chainFn",
 					function()
 						local numberChain =
-							_.chain(
+							dash.chain(
 							{
-								addN = _.chainFn(
+								addN = dash.chainFn(
 									function(n)
 										return function(list)
-											return _.map(
+											return dash.map(
 												list,
 												function(element)
 													return element + n
@@ -62,10 +62,10 @@ describe(
 										end
 									end
 								),
-								sum = _.chainFn(
+								sum = dash.chainFn(
 									function()
 										return function(list)
-											return _.sum(list)
+											return dash.sum(list)
 										end
 									end
 								)
@@ -79,20 +79,20 @@ describe(
 					"works with functions using chainFn and rodash function",
 					function()
 						local numberChain =
-							_.chain(
+							dash.chain(
 							{
-								addN = _.chainFn(
+								addN = dash.chainFn(
 									function(n)
-										return _.fn:map(
+										return dash.fn:map(
 											function(element)
 												return element + n
 											end
 										)
 									end
 								),
-								sum = _.chainFn(
+								sum = dash.chainFn(
 									function()
-										return _.fn:sum()
+										return dash.fn:sum()
 									end
 								)
 							}
@@ -105,7 +105,7 @@ describe(
 					"works with rodash functions",
 					function()
 						local fn =
-							_.fn:map(
+							dash.fn:map(
 							function(value)
 								return value + 2
 							end
@@ -122,14 +122,14 @@ describe(
 					"works with custom functors built with .fn",
 					function()
 						local chain =
-							_.chain(
+							dash.chain(
 							{
-								addTwo = _.fn:map(
+								addTwo = dash.fn:map(
 									function(value)
 										return value + 2
 									end
 								),
-								sumGteFive = _.fn:filter(
+								sumGteFive = dash.fn:filter(
 									function(value)
 										return value >= 5
 									end
@@ -148,19 +148,19 @@ describe(
 							return player.Name
 						end
 						local players =
-							_.chain(
+							dash.chain(
 							{
-								filterHurt = _.fn:filter(
+								filterHurt = dash.fn:filter(
 									function(player)
 										return player.Health < 100
 									end
 								),
-								filterBaggins = _.fn:filter(_.fn:call(getName):endsWith("Baggins"))
+								filterBaggins = dash.fn:filter(dash.fn:call(getName):endsWith("Baggins"))
 							}
 						)
 						local hurtHobbits = players:filterHurt():filterBaggins()
-						local mapNames = _.fn:map(getName)
-						local filterHurtBagginsNames = _.compose(hurtHobbits, mapNames)
+						local mapNames = dash.fn:map(getName)
+						local filterHurtBagginsNames = dash.compose(hurtHobbits, mapNames)
 						local crew = {
 							{
 								Name = "Frodo Baggins",
@@ -187,29 +187,29 @@ describe(
 					"works with a mix of sync and async primitives",
 					function()
 						local getName = function(player)
-							return _.delay(1):andThen(_.returns(player.Name))
+							return dash.delay(1):andThen(dash.returns(player.Name))
 						end
 						local players
 						players =
-							_.chain(
+							dash.chain(
 							{
 								-- Any chainable function can be used
-								filter = _.filter,
+								filter = dash.filter,
 								-- A chain which evaluates a promise of the player names
-								mapNames = _.fn:map(getName):parallel(),
-								filterHurt = _.fn:filter(
+								mapNames = dash.fn:map(getName):parallel(),
+								filterHurt = dash.fn:filter(
 									function(player)
 										return player.Health < 100
 									end
 								),
-								mapNameIf = _.chainFn(
+								mapNameIf = dash.chainFn(
 									function(expectedName)
 										-- Methods on self work as expected
-										return players:mapNames():filter(_.fn:endsWith(expectedName))
+										return players:mapNames():filter(dash.fn:endsWith(expectedName))
 									end
 								)
 							},
-							_.continue()
+							dash.continue()
 						)
 						local filterHurtHobbitNames = players:filterHurt():mapNameIf("Baggins")
 						local crew = {
@@ -236,7 +236,7 @@ describe(
 						assert.spy(andThen).not_called()
 						clock:process()
 						-- Ensure that delays are set for the lookup of the hurt names
-						assert.are.same({1, 1}, _.fn:map(_.fn:get("time"))(clock.events))
+						assert.are.same({1, 1}, dash.fn:map(dash.fn:get("time"))(clock.events))
 						wait(1)
 						clock:process()
 						-- Ensure spy called
@@ -247,19 +247,19 @@ describe(
 					"rejections pass-through",
 					function()
 						local getName = function(player)
-							return _.delay(1):andThen(_.throws("NoNameError"))
+							return dash.delay(1):andThen(dash.throws("NoNameError"))
 						end
 						local players =
-							_.chain(
+							dash.chain(
 							{
 								-- Any chainable function can be used
-								filter = _.filter,
+								filter = dash.filter,
 								-- A chain which evaluates a promise of the player names
-								mapNames = _.fn:map(getName):parallel()
+								mapNames = dash.fn:map(getName):parallel()
 							},
-							_.continue()
+							dash.continue()
 						)
-						local filterHobbitNames = players:mapNames():filter(_.fn:endsWith("Baggins"))
+						local filterHobbitNames = players:mapNames():filter(dash.fn:endsWith("Baggins"))
 						local crew = {
 							{
 								Name = "Frodo Baggins",
@@ -290,7 +290,7 @@ describe(
 						assert.spy(catch).not_called()
 						clock:process()
 						-- Ensure that delays are set for the lookup of the hurt names
-						assert.are.same({1, 1, 1}, _.fn:map(_.fn:get("time"))(clock.events))
+						assert.are.same({1, 1, 1}, dash.fn:map(dash.fn:get("time"))(clock.events))
 						wait(1)
 						clock:process()
 
@@ -306,29 +306,29 @@ describe(
 				it(
 					"works with methods that return nil",
 					function()
-						local maybeFn = _.chain(_, _.maybe())
+						local maybeFn = dash.chain(dash, dash.maybe())
 						local getName = function(player)
 							return player.Name
 						end
 						local players =
-							_.chain(
+							dash.chain(
 							{
-								filterHurt = _.fn:filter(
+								filterHurt = dash.fn:filter(
 									function(player)
 										return player.Health < 100
 									end
 								),
-								filterBaggins = _.chainFn(
+								filterBaggins = dash.chainFn(
 									function()
 										-- Methods on self work as expected
-										return _.fn:filter(maybeFn:call(getName):endsWith("Baggins"))
+										return dash.fn:filter(maybeFn:call(getName):endsWith("Baggins"))
 									end
 								)
 							}
 						)
 						local hurtHobbits = players:filterHurt():filterBaggins()
-						local mapNames = _.fn:map(getName)
-						local filterHurtBagginsNames = _.compose(hurtHobbits, mapNames)
+						local mapNames = dash.fn:map(getName)
+						local filterHurtBagginsNames = dash.compose(hurtHobbits, mapNames)
 						local crew = {
 							{
 								Name = "Frodo Baggins",

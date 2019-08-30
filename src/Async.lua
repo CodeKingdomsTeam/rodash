@@ -16,11 +16,11 @@ local baseRandomStream = Random.new()
 	isn't a promise.
 	@example
 		local heat = function( item )
-			return _.delay(1).returns("hot " .. item)
+			return dash.delay(1).returns("hot " .. item)
 		end
 		local recipe = {"wrap", heat("steak"), heat("rice")}
-		local burrito = _.map(recipe, _.await)
-		_.debug("{:#?}", burrito)
+		local burrito = dash.map(recipe, dash.await)
+		dash.debug("{:#?}", burrito)
 		-->> {"wrap", "hot steak", "hot rice"} (2 seconds)
 ]]
 function Async.await(value)
@@ -52,12 +52,12 @@ end
 	@returns an array mapping the input to resolved elements.
 	@example
 		local heat = function( item )
-			local oven = _.parallel({item, _.delay(1)})
+			local oven = dash.parallel({item, dash.delay(1)})
 			return oven:andThen(function( result )
 				return "hot-" .. result[1] 
 			end)
 		end
-		local meal =_.parallel({heat("cheese"), "tomato"})
+		local meal =dash.parallel({heat("cheese"), "tomato"})
 		meal:await() --> {"hot-cheese", "tomato"} (1 second later)
 	@rejects passthrough
 	@usage This function is like `Promise.all` but allows objects in the array which aren't
@@ -90,12 +90,12 @@ end
 	@rejects passthrough
 	@example
 		local heat = function( item )
-			local oven = _.parallel({item, _.delay(1)})
+			local oven = dash.parallel({item, dash.delay(1)})
 			return oven:andThen(function( result )
 				return "hot-" .. result[1] 
 			end)
 		end
-		local toastie = _.parallelAll({
+		local toastie = dash.parallelAll({
 			bread = "brown",
 			filling = heat("cheese")
 		})
@@ -129,13 +129,13 @@ end
 	Like `Promise.resolve` but can take any number of arguments.
 	@example
 		local function mash( veg )
-			return _.resolve("mashed", veg)
+			return dash.resolve("mashed", veg)
 		end
 		mash("potato"):andThen(function(style, veg)
-			_.debug("{} was {}", veg, style)
+			dash.debug("{} was {}", veg, style)
 		end)
 		-- >> potato was mashed
-	@usage As `_.resolve(promise) --> promise`, this function can also be used to ensure a value is a promise.
+	@usage As `dash.resolve(promise) --> promise`, this function can also be used to ensure a value is a promise.
 ]]
 --: T -> Promise<T>
 function Async.resolve(...)
@@ -192,7 +192,7 @@ end
 	whether it has resolved or rejected.
 	@param fn _function(ok, result)_
 	@example
-		local getHunger = _.async(function( player )
+		local getHunger = dash.async(function( player )
 			if player.health == 0 then
 				error("Player is dead!")
 			else
@@ -220,7 +220,7 @@ end
 
 --[[
 	Returns a promise which never resolves or rejects.
-	@usage Useful in combination with `_.race` where a resolution or rejection should be ignored.
+	@usage Useful in combination with `dash.race` where a resolution or rejection should be ignored.
 ]]
 --: () -> never
 function Async.never()
@@ -233,8 +233,8 @@ end
 	@param timeoutMessage (default = "TimeoutError")
 	@rejects **TimeoutError** - or _timeoutMessage_
 	@example
-		let eatGreens = function() return _.never end
-		_.timeout(eatGreens(), 10, "TasteError"):await()
+		let eatGreens = function() return dash.never end
+		dash.timeout(eatGreens(), 10, "TasteError"):await()
 		--> throws "TasteError" (after 10s)
 ]]
 --: <T>(Promise<T>, number, string?) -> Promise<T>
@@ -248,13 +248,13 @@ function Async.timeout(promise, deadlineInSeconds, timeoutMessage)
 end
 
 --[[
-	Like `_.compose` but takes functions that can return a promise. Returns a promise that resolves
+	Like `dash.compose` but takes functions that can return a promise. Returns a promise that resolves
 	once all functions have resolved. Like compose, functions receive the resolution of the
 	previous promise as argument(s).
 	@example
-		local function fry(item) return _.delay(1):andThen(_.returns("fried " .. item)) end
-		local function cheesify(item) return _.delay(1):andThen(_.returns("cheesy " .. item)) end
-		local prepare = _.compose(fry, cheesify)
+		local function fry(item) return dash.delay(1):andThen(dash.returns("fried " .. item)) end
+		local function cheesify(item) return dash.delay(1):andThen(dash.returns("cheesy " .. item)) end
+		local prepare = dash.compose(fry, cheesify)
 		prepare("nachos"):await() --> "cheesy fried nachos" (after 2s)
 ]]
 --: <A>((...A -> Promise<A>)[]) -> ...A -> Promise<A>
@@ -274,7 +274,7 @@ end
 
 --[[
 	Returns a promise which resolves after the given delayInSeconds.
-	@example _.delay(1):andThen(function() print("Delivered") end)
+	@example dash.delay(1):andThen(function() print("Delivered") end)
 	-->> Delivered (1 second later)
 ]]
 --: number -> Promise<nil>
@@ -293,18 +293,18 @@ end
 	after any asynchronous actions, and rejects if the function throws an error.
 	@rejects passthrough
 	@example
-		local fetch = _.async(function( url )
+		local fetch = dash.async(function( url )
 			local HttpService = game:GetService("HttpService")
 			return HttpService:GetAsync(url)
 		end)
-		_.parallelAll({
+		dash.parallelAll({
 			main = fetch("http://example.com/burger"),
 			side = fetch("http://example.com/fries") 
 		}):andThen(function( meal )
-			print("Meal", _.pretty(meal))
+			print("Meal", dash.pretty(meal))
 		end)
 		-->> Meal {burger = "Cheeseburger", fries = "Curly fries"} (ideal response)
-	@usage With `promise:await` the `_.async` function can be used just like the async-await pattern in languages like JS.
+	@usage With `promise:await` the `dash.async` function can be used just like the async-await pattern in languages like JS.
 ]]
 --: <T, A>(Yieldable<T, A>) -> ...A -> Promise<T>
 function Async.async(fn)
@@ -329,12 +329,12 @@ function Async.async(fn)
 end
 
 --[[
-	Wraps any functions in _dictionary_ with `_.async`, returning a new dictionary containing
+	Wraps any functions in _dictionary_ with `dash.async`, returning a new dictionary containing
 	functions that return promises when called rather than yielding.
 	@example
-		local buyDinner = _.async(function()
-			local http = _.asyncAll(game:GetService("HttpService"))
-			local order = _.parallelAll({
+		local buyDinner = dash.async(function()
+			local http = dash.asyncAll(game:GetService("HttpService"))
+			local order = dash.parallelAll({
 				main = http:GetAsync("http://example.com/burger"),
 				side = http:GetAsync("http://example.com/fries")
 			})

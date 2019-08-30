@@ -41,12 +41,12 @@ local typeIndex = {
 }
 
 --[[
-	The default comparator is used by `_.sort` and can sort elements of different types, in the
+	The default comparator is used by `dash.sort` and can sort elements of different types, in the
 	order: boolean, number, string, function, CFunction, userdata, and table.
 		
 	Elements which cannot be sorted naturally will be sorted by their string value.
 
-	@see _.sort
+	@see dash.sort
 ]]
 function Arrays.defaultComparator(a, b)
 	if type(a) ~= type(b) then
@@ -68,15 +68,15 @@ end
 --[[
 	Returns a sorted array from the _input_ array, based on a _comparator_ function.
 
-	Unlike `table.sort`, the comparator to `_.sort` is optional, but it can also be defined to
+	Unlike `table.sort`, the comparator to `dash.sort` is optional, but it can also be defined to
 	a numeric weight or nil as well as a boolean.
 
 	@param comparator (optional) should return `true` or `n < 0` if the first element should be
 		before the second in the resulting array, or `0` or `nil` if the elements have the same
 		order.
 
-	@example _.sort({2, 5, 3}) --> {2, 3, 5}
-	@example _.sort({"use", "the", "force", "Luke"}) --> {"Luke", "force", "the", "use"}
+	@example dash.sort({2, 5, 3}) --> {2, 3, 5}
+	@example dash.sort({"use", "the", "force", "Luke"}) --> {"Luke", "force", "the", "use"}
 ]]
 --: <T>(T[], (T -> bool | number | nil) -> T[])
 function Arrays.sort(input, comparator)
@@ -108,10 +108,10 @@ end
 	@param first (default = 1) The index of the first element to include.
 	@param last (default = `#source`) The index of the last element to include.
 	@param step (default = 1) What amount to step the index by during iteration.
-	@example _.slice({10, 20, 30, 40}) --> {10, 20, 30, 40}
-	@example _.slice({10, 20, 30, 40}, 2) --> {20, 30, 40}
-	@example _.slice({10, 20, 30, 40}, 2, 3) --> {20, 30}
-	@example _.slice({10, 20, 30, 40}, 2, 4, 2) --> {20, 40}
+	@example dash.slice({10, 20, 30, 40}) --> {10, 20, 30, 40}
+	@example dash.slice({10, 20, 30, 40}, 2) --> {20, 30, 40}
+	@example dash.slice({10, 20, 30, 40}, 2, 3) --> {20, 30}
+	@example dash.slice({10, 20, 30, 40}, 2, 4, 2) --> {20, 40}
 ]]
 --: <T>(T[], int?, int?, int? -> T[])
 function Arrays.slice(source, first, last, step)
@@ -133,7 +133,7 @@ end
 	@example
 		local teamColors = {"red", "red", "red", "blue", "blue", "blue"}
 		-- (in some order)
-		_.shuffle(teamColors) --> {"blue", "blue", "red", "blue", "red", "red"}
+		dash.shuffle(teamColors) --> {"blue", "blue", "red", "blue", "red", "red"}
 ]]
 --: <T: Iterable>(T -> T)
 function Arrays.shuffle(source)
@@ -151,13 +151,13 @@ end
 	(or _initial_ for the first element) as the first argument, and the current element as a value
 	and key as subsequent arguments.
 	@example
-		local sum = _.reduce({1, 2, 3}, function(result, value)
+		local sum = dash.reduce({1, 2, 3}, function(result, value)
 			return result + value
 		end, 0)
 		sum --> 6
 	@example
 		local recipe = {first = "cheese", second = "nachos", third = "chillies"}
-		local unzipRecipe = _.reduce(recipe, function(result, value, key)
+		local unzipRecipe = dash.reduce(recipe, function(result, value, key)
 			table.insert(result[1], key)
 			table.insert(result[2], value)
 			return result
@@ -177,11 +177,11 @@ end
 --[[
 	Inserts into _target_ the elements from all subsequent arguments in order.
 	@param ... any number of other arrays
-	@example _.append({}, {1, 2, 3}, {4, 5, 6}) --> {1, 2, 3, 4, 5, 6}
-	@example _.append({1, 2, 3}) --> {1, 2, 3}
+	@example dash.append({}, {1, 2, 3}, {4, 5, 6}) --> {1, 2, 3, 4, 5, 6}
+	@example dash.append({1, 2, 3}) --> {1, 2, 3}
 	@example
 		local list = {"cheese"}
-		_.append(list, {"nachos"}, {}, {"chillies"})
+		dash.append(list, {"nachos"}, {}, {"chillies"})
 		list --> {"cheese", "nachos", "chillies"}
 ]]
 --: <T>(mut T[], ...T[] -> T[])
@@ -202,7 +202,7 @@ end
 
 --[[
 	Sums all the values in the _source_ array.
-	@example _.sum({1, 2, 3}) --> 6
+	@example dash.sum({1, 2, 3}) --> 6
 ]]
 function Arrays.sum(source)
 	return Arrays.reduce(
@@ -216,7 +216,7 @@ end
 
 --[[
 	Swaps the order of elements in _source_.
-	@example _.reverse({1, 2, 4, 3, 5}) --> {5, 3, 4, 2, 1}
+	@example dash.reverse({1, 2, 4, 3, 5}) --> {5, 3, 4, 2, 1}
 ]]
 --: <T>(T[] -> T[])
 function Arrays.reverse(source)
@@ -230,8 +230,8 @@ end
 --[[
 	Returns the earliest value from the array that _predicate_ returns `true` for.
 
-	If the _predicate_ is not specified, `_.first` simply returns the first element of the array.
-	@param predicate (default = `_.returns(true)`)
+	If the _predicate_ is not specified, `dash.first` simply returns the first element of the array.
+	@param predicate (default = `dash.returns(true)`)
 	@example
 		local names = {
 			"Boromir",
@@ -239,25 +239,25 @@ end
 			"Bilbo"
 		}
 
-		_.first(names) --> "Boromir", 1
+		dash.first(names) --> "Boromir", 1
 
 		-- Find a particular value:
-		local firstNameWithF = _.first(names, function(name)
-			return _.startsWith(name, "F")
+		local firstNameWithF = dash.first(names, function(name)
+			return dash.startsWith(name, "F")
 		end)
 		firstNameWithF --> "Frodo", 2
 
 		-- What about a value whcih doesn't exist?
-		local firstNameWithC = _.first(names, function(name)
-			return _.startsWith(name, "C")
+		local firstNameWithC = dash.first(names, function(name)
+			return dash.startsWith(name, "C")
 		end)
 		firstNameWithC --> nil
 
 		-- Find the index of a value:
-		local _, index = _.first(names, _.fn:matches("Bilbo"))
+		local _, index = dash.first(names, dash.fn:matches("Bilbo"))
 		index --> 2
-	@see _.find 
-	@usage If you need to find a value in a table which isn't an array, use `_.find`.
+	@see dash.find 
+	@usage If you need to find a value in a table which isn't an array, use `dash.find`.
 ]]
 --: <T: Iterable<K,V>>((T, (element: V, key: K) -> bool) -> V?)
 function Arrays.first(source, predicate)
@@ -275,8 +275,8 @@ end
 --[[
 	Returns the last value from the array that _predicate_ returns `true` for.
 
-	If the _predicate_ is not specified, `_.last` simply returns the last element of the array.
-	@param predicate (default = `_.returns(true)`)
+	If the _predicate_ is not specified, `dash.last` simply returns the last element of the array.
+	@param predicate (default = `dash.returns(true)`)
 	@example
 		local names = {
 			"Boromir",
@@ -284,15 +284,15 @@ end
 			"Bilbo"
 		}
 
-		_.last(names) --> "Bilbo", 3
+		dash.last(names) --> "Bilbo", 3
 
-		local lastNameWithB = _.last(names, _.fn:startsWith("B"))
+		local lastNameWithB = dash.last(names, dash.fn:startsWith("B"))
 		lastNameWithB --> "Bilbo", 3
 
-		local _, key = _.last(names, _.fn:matches("Frodo"))
+		local _, key = dash.last(names, dash.fn:matches("Frodo"))
 		key --> 2
-	@see _.find
-	@see _.first
+	@see dash.find
+	@see dash.first
 ]]
 --: <T: Iterable<K,V>>((T, (element: V, key: K) -> bool) -> V?)
 function Arrays.last(source, predicate)

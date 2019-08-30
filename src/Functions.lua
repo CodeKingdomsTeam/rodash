@@ -28,7 +28,7 @@ end
 	Returns a function that when called, returns the original input parameters.
 	@trait Chainable
 	@example
-		findPlayer("builderman"):andThen(_.returns("Found Dave!"))
+		findPlayer("builderman"):andThen(dash.returns("Found Dave!"))
 		--> "Found Dave!" (soon after)
 	@usage Useful for when you want a callback to discard the arguments passed in and instead use static ones.
 ]]
@@ -64,7 +64,7 @@ end
 --[[
 	Returns a function that when called, throws the original message.
 	@example
-		findPlayer("builderman"):andThen(_.throws("DaveNotFound"))
+		findPlayer("builderman"):andThen(dash.throws("DaveNotFound"))
 		--!> "DaveNotFound" (soon after)
 	@usage Useful for when you want a callback to discard the arguments passed in and instead use static ones.
 ]]
@@ -84,7 +84,7 @@ end
 		local function damagePlayer( player, amount )
 			player:Damage(amount)
 		end
-		local damageLocalPlayer = _.bind(damagePlayer, game.Players.LocalPlayer)
+		local damageLocalPlayer = dash.bind(damagePlayer, game.Players.LocalPlayer)
 		damageLocalPlayer(5)
 ]]
 --: <A, B, R>(((A..., B... -> R), ...A) -> ...B -> R)
@@ -100,15 +100,15 @@ end
 	Takes a chainable function _fn_ and binds _arguments_ to the tail of the _fn_ argument list.
 	Returns a function which executes _fn_, passing a subject ahead of the bound arguments supplied.
 	@example
-		local filterHurtPlayers = _.bindTail(_.filter, function(player)
+		local filterHurtPlayers = dash.bindTail(dash.filter, function(player)
 			return player.Health < player.MaxHealth
 		end)
-		local getName = _.bindTail(_.map, function(player)
+		local getName = dash.bindTail(dash.map, function(player)
 			return player.Name
 		end)
-		local filterHurtNames = _.compose(filterHurtPlayers, getName)
+		local filterHurtNames = dash.compose(filterHurtPlayers, getName)
 		filterHurtNames(game.Players) --> {"Frodo", "Boromir"}	
-	@usage Chainable rodash function feeds are mapped to `_.fn`, such as `_.fn.map(handler)`.
+	@usage Chainable rodash function feeds are mapped to `dash.fn`, such as `dash.fn.map(handler)`.
 ]]
 --: <T, A>(Chainable<T, A>, ...A) -> T -> T
 function Functions.bindTail(fn, ...)
@@ -125,7 +125,7 @@ end
 	@returns the function with method `:clear()` that resets the cached value.
 	@trait Chainable
 	@example
-		local fry = _.once(function(item)
+		local fry = dash.once(function(item)
 			return "fried " .. tiem
 		end)
 		fry("sardine") --> "fried sardine"
@@ -183,19 +183,19 @@ end
 	check the value of the data at each step and change how the chain proceeds.
 	
 	Calling a _Chain_ with a subject reduces the chained operations in order on the subject. 
-	@param actor called for each result in the chain to determine how the next operation should process it. (default = `_.invoke`)
+	@param actor called for each result in the chain to determine how the next operation should process it. (default = `dash.invoke`)
 	@example
 		-- Define a simple chain that can operate a list of numbers.
 		-- A chain function is called with the subject being processed as first argument,
 		-- and any arguments passed in the chain as subsequent arguments.
-		local numberChain = _.chain({
+		local numberChain = dash.chain({
 			addN = function(list, n)
-				return _.map(list, function(element)
+				return dash.map(list, function(element)
 					return element + n
 				end)
 			end,
 			sum = function(list)
-				return _.sum(list)
+				return dash.sum(list)
 			end
 		})
 		local op = numberChain:addN(2):sum()
@@ -207,7 +207,7 @@ end
 		end)
 
 		-- Create a chain that filters for hurt players and finds their name
-		local filterHurtNames = _.fn:filter(function(player)
+		local filterHurtNames = dash.fn:filter(function(player)
 			return player.Health < player.MaxHealth
 		end):map(getName)
 
@@ -216,34 +216,34 @@ end
 
 		-- For fun, let's encapsulate the functionality above by
 		-- defining a chain of operations on players...
-		local players = _.chain({
-			filterHurtPlayers = _.fn:filter(function(player)
+		local players = dash.chain({
+			filterHurtPlayers = dash.fn:filter(function(player)
 				return player.Health < player.MaxHealth
 			end),
 			-- Filter players by getting their name and checking it ends with 'Baggins'
-			filterBaggins = _.fn:filter(_.fn:call(getName):endsWith("Baggins"))
+			filterBaggins = dash.fn:filter(dash.fn:call(getName):endsWith("Baggins"))
 		})
 
 		local hurtHobbits = players:filterHurtPlayers():filterBaggins()
 		hurtHobbits(game.Players) --> {{Name = "Frodo Baggins", ...}}
 
-		local names = _.fn:map(getName)
+		local names = dash.fn:map(getName)
 
 		-- Chains are themselves chainable, so you can compose two chains together
-		local filterHurtHobbitNames = _.compose(hurtHobbits, names)
+		local filterHurtHobbitNames = dash.compose(hurtHobbits, names)
 
 		filterHurtHobbitNames(game.Players) --> {"Frodo Baggins"}
 	@trait Chainable
-	@usage The "Rodash" chain: `_.chain(_)` is aliased to `_.fn`, so instead of writing
-	`_.chain(_):filter` you can simply write `_.fn:filter`, or any other chainable method.
-	@usage A chained function can be made using `_.chain` or built inductively using other chained
-		methods of `_.fn`.
+	@usage The "Rodash" chain: `dash.chain(_)` is aliased to `dash.fn`, so instead of writing
+	`dash.chain(_):filter` you can simply write `dash.fn:filter`, or any other chainable method.
+	@usage A chained function can be made using `dash.chain` or built inductively using other chained
+		methods of `dash.fn`.
 	@usage A chainable method is one that has the subject which is passed through a chain as the
 		first argument, and subsequent arguments
-	@see _.chainFn - Makes a function chainable if it returns a chain.
-	@see _.invoke - the identity actor
-	@see _.continue - an actor for chains of asynchronous functions
-	@see _.maybe - an actor for chains of partial functions
+	@see dash.chainFn - Makes a function chainable if it returns a chain.
+	@see dash.invoke - the identity actor
+	@see dash.continue - an actor for chains of asynchronous functions
+	@see dash.maybe - an actor for chains of partial functions
 ]]
 --: <T>(T{}, Actor<T>) -> Chain<T>
 function Functions.chain(fns, actor)
@@ -280,7 +280,7 @@ function Functions.chain(fns, actor)
 				return feeder
 			end,
 			__newindex = function()
-				error("ReadonlyKey: Cannot assign to a chain, create one with _.chain instead.")
+				error("ReadonlyKey: Cannot assign to a chain, create one with dash.chain instead.")
 			end,
 			__call = function(_, subject)
 				return subject
@@ -302,11 +302,11 @@ end
 	@example
 		-- In the chain example addN was defined like so:
 		local function addN(list, n)
-			return _.map(list, function(element)
+			return dash.map(list, function(element)
 				return element + n
 			end)
 		end
-		numberChain = _.chain({
+		numberChain = dash.chain({
 			addN = addN
 		})
 		local op = numberChain:addN(2):sum()
@@ -315,19 +315,19 @@ end
 		-- It is more natural to define addN as a function taking one argument,
 		-- to match the way it is called in the chain:
 		local function addN(n)
-			-- Methods on _.fn are themselves chained, so "list" can be dropped.
-			return _.fn:map(function(element)
+			-- Methods on dash.fn are themselves chained, so "list" can be dropped.
+			return dash.fn:map(function(element)
 				return element + n
 			end)
 		end
-		-- The _.chainFn is used to wrap any functions which return chains.
-		numberChain = _.chain({
-			addN = _.chainFn(addN)
+		-- The dash.chainFn is used to wrap any functions which return chains.
+		numberChain = dash.chain({
+			addN = dash.chainFn(addN)
 		})
 		local op = numberChain:addN(2):sum()
 		op({1, 2, 3}) --> 12
 
-	@see _.chain
+	@see dash.chain
 ]]
 -- <T, A, R>((...A -> T -> R) -> T, ...A -> R)
 function Functions.chainFn(fn)
@@ -339,7 +339,7 @@ end
 
 --[[
 	An actor which calls the supplied _fn_ with the argument tail.
-	@usage This is the default _actor_ for `_.chain` and acts as an identity, meaning it has no effect on the result.
+	@usage This is the default _actor_ for `dash.chain` and acts as an identity, meaning it has no effect on the result.
 ]]
 --: <T>(Actor<T>)
 function Functions.invoke(fn, ...)
@@ -353,33 +353,33 @@ end
 	Can wrap any other actor which handles values that are non-nil.
 	@example 
 		-- We can define a chain of Rodash functions that will skip after a nil is returned.
-		local maybeFn = _.chain(_, _.maybe())
+		local maybeFn = dash.chain(_, dash.maybe())
 		local getName = function(player)
 			return player.Name
 		end
 		local players
 		players =
-			_.chain(
+			dash.chain(
 			{
 				-- Any chainable functions can be used
-				call = _.call,
-				endsWith = _.endsWith,
-				filterHurt = _.fn:filter(
+				call = dash.call,
+				endsWith = dash.endsWith,
+				filterHurt = dash.fn:filter(
 					function(player)
 						return player.Health < 100
 					end
 				),
-				filterBaggins = _.chainFn(
+				filterBaggins = dash.chainFn(
 					function()
 						-- If getName returns nil here, endsWith will be skipped
-						return _.fn:filter(maybeFn:call(getName):endsWith("Baggins"))
+						return dash.fn:filter(maybeFn:call(getName):endsWith("Baggins"))
 					end
 				)
 			}
 		)
 		local hurtHobbits = players:filterHurt():filterBaggins()
-		local mapNames = _.fn:map(getName)
-		local filterHurtBagginsNames = _.compose(hurtHobbits, mapNames)
+		local mapNames = dash.fn:map(getName)
+		local filterHurtBagginsNames = dash.compose(hurtHobbits, mapNames)
 		-- Here, one player record doesn't have a Name property, so it is skipped.
 		local crew = {
 			{
@@ -417,33 +417,33 @@ end
 	synchronous methods, removing any boilerplate needed to handle promises in the main code body.
 	
 	Can wrap any other actor which handles values after any promise resolution.
-	@param actor (default = `_.invoke`) The actor to wrap.
+	@param actor (default = `dash.invoke`) The actor to wrap.
 	@example
 		-- Let's define a function which returns an answer after a delay
 		local getName = function(player)
-			return _.delay(1):andThen(_.returns(player.Name))
+			return dash.delay(1):andThen(dash.returns(player.Name))
 		end
 		local players
 		players =
-			_.chain(
+			dash.chain(
 			{
 				-- Any chainable function can be used
-				filter = _.filter,
+				filter = dash.filter,
 				-- A chain which evaluates a promise of the player names
-				mapNames = _.fn:map(getName):parallel(),
-				filterHurt = _.fn:filter(
+				mapNames = dash.fn:map(getName):parallel(),
+				filterHurt = dash.fn:filter(
 					function(player)
 						return player.Health < 100
 					end
 				),
-				mapNameIf = _.chainFn(
+				mapNameIf = dash.chainFn(
 					function(expectedName)
 						-- Methods on self work as expected
-						return players:mapNames():filter(_.fn:endsWith(expectedName))
+						return players:mapNames():filter(dash.fn:endsWith(expectedName))
 					end
 				)
 			},
-			_.continue()
+			dash.continue()
 		)
 		local filterHurtHobbitNames = players:filterHurt():mapNameIf("Baggins")
 		local crew = {
@@ -462,7 +462,7 @@ end
 		}
 		filterHurtHobbitNames(crew):await() --> {"Frodo Baggins"} (some time later)
 	@rejects passthrough
-	@see _.chain
+	@see dash.chain
 ]]
 --: <T>(Actor<T>) -> Actor<T>
 function Functions.continue(actor)
@@ -507,7 +507,7 @@ setmetatable(
 	@example
 		local function fry(item) return "fried " .. item end
 		local function cheesify(item) return "cheesy " .. item end
-		local prepare = _.compose(fry, cheesify)
+		local prepare = dash.compose(fry, cheesify)
 		prepare("nachos") --> "cheesy fried nachos"
 	@usage Useful for when you want to lazily compute something expensive that doesn't change.
 	@trait Chainable
@@ -529,17 +529,17 @@ function Functions.compose(...)
 end
 
 --[[
-	Like `_.once`, but caches non-nil results of calls to _fn_ keyed by some serialization of the
+	Like `dash.once`, but caches non-nil results of calls to _fn_ keyed by some serialization of the
 	input arguments to _fn_. By default, all the args are serialized simply using `tostring`.
 
 	Optionally memoize takes `function serializeArgs(args, cache)`, a function that should return a string key which a
 	result should be cached at for a given signature. Return nil to avoid caching the result.
 
-	@param serializeArgs (default = `_.serialize`)
+	@param serializeArgs (default = `dash.serialize`)
 	@returns the function with method `:clear(...)` that resets the cache for the argument specified, or `:clearAll()` to clear the entire cache.
 	@example
 		local menu = {"soup", "bread", "butter"}
-		local heat = _.memoize(function(index)
+		local heat = dash.memoize(function(index)
 			return "hot " ... menu[index]
 		end)
 
@@ -555,8 +555,8 @@ end
 
 		heat:clear(1)
 		heat(1) --> "hot beef"
-	@see _.serialize
-	@see _.serializeDeep if you want to recursively serialize arguments.
+	@see dash.serialize
+	@see dash.serializeDeep if you want to recursively serialize arguments.
 ]]
 --: <...A, B>((...A -> B), ...A -> string?) -> Clearable<...A> & AllClearable & (...A) -> B
 function Functions.memoize(fn, serializeArgs)
@@ -621,7 +621,7 @@ function Functions.setTimeout(fn, delayInSeconds)
 end
 
 --[[
-	Like `_.setTimeout` but calls _fn_ after every interval of _intervalInSeconds_ time has passed.
+	Like `dash.setTimeout` but calls _fn_ after every interval of _intervalInSeconds_ time has passed.
 	@param delayInSeconds (default = _intervalInSeconds_) The delay before the initial call.
 	@returns an instance which `:clear()` can be called on to prevent _fn_ from firing.
 ]]

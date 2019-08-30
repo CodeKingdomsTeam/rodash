@@ -11,12 +11,12 @@ interface Doc {
 	comments: string[];
 	entries: DocEntry[];
 }
-interface FunctionDoc {
+export interface FunctionDoc {
 	name: string;
 	content: string;
 }
 
-interface Nodes {
+export interface Nodes {
 	[line: string]: Node;
 }
 

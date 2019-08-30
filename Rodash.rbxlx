@@ -489,16 +489,16 @@ gcLgc4RKxr21zq2UlJSM]]></BinaryString>
 				<string name="ScriptGuid">{c2891012-18d5-4b2b-baa7-11f8ecce21c3}</string>
 				<ProtectedString name="Source"><![CDATA[print("Examples of using Rodash in your project:")
 
-local rd = require(game.ReplicatedStorage.Rodash)
-local fn = rd.fn
+local dash = require(game.ReplicatedStorage.Rodash)
+local fn = dash.fn
 
-rd.setInterval(function()
+dash.setInterval(function()
 	local getNames = fn:map(fn:get("Name"))
 	local playerNames = getNames(game.Players:GetChildren())
-	print(rd.format("Players online ({#1}): {:#?}", playerNames))
+	print(dash.format("Players online ({#1}): {:#?}", playerNames))
 end, 1)
 
-print(rd.encodeUrlComponent("https://example.com/Egg+Fried Rice!?🤷🏼‍♀️"))]]></ProtectedString>
+print(dash.encodeUrlComponent("https://example.com/Egg+Fried Rice!?🤷🏼‍♀️"))]]></ProtectedString>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
 		</Item>

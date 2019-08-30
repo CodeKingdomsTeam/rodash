@@ -14,9 +14,9 @@ end
 
 --[[
 	Convert `str` to camel-case.
-	@example _.camelCase('Pepperoni Pizza') --> 'pepperoniPizza'
-	@example _.camelCase('--pepperoni-pizza--') --> 'pepperoniPizza'
-	@example _.camelCase('__PEPPERONI_PIZZA') --> 'pepperoniPizza'
+	@example dash.camelCase('Pepperoni Pizza') --> 'pepperoniPizza'
+	@example dash.camelCase('--pepperoni-pizza--') --> 'pepperoniPizza'
+	@example dash.camelCase('__PEPPERONI_PIZZA') --> 'pepperoniPizza'
 	@trait Chainable
 ]]
 --: string -> string
@@ -32,9 +32,9 @@ end
 
 --[[
 	Convert `str` to kebab-case, making all letters lowercase.
-	@example _.kebabCase('strongStilton') --> 'strong-stilton'
-	@example _.kebabCase(' Strong Stilton ') --> 'strong-stilton'
-	@example _.kebabCase('__STRONG_STILTON__') --> 'strong-stilton'
+	@example dash.kebabCase('strongStilton') --> 'strong-stilton'
+	@example dash.kebabCase(' Strong Stilton ') --> 'strong-stilton'
+	@example dash.kebabCase('__STRONG_STILTON__') --> 'strong-stilton'
 	@usage Chain with `:upper()` if you need an upper kebab-case string.
 	@trait Chainable
 ]]
@@ -51,9 +51,9 @@ end
 
 --[[
 	Convert `str` to snake-case, making all letters uppercase.
-	@example _.snakeCase('sweetChickenCurry') --> 'SWEET_CHICKEN_CURRY'
-	@example _.snakeCase(' Sweet Chicken  Curry ') --> 'SWEET_CHICKEN__CURRY'
-	@example _.snakeCase('--sweet-chicken--curry--') --> 'SWEET_CHICKEN__CURRY'
+	@example dash.snakeCase('sweetChickenCurry') --> 'SWEET_CHICKEN_CURRY'
+	@example dash.snakeCase(' Sweet Chicken  Curry ') --> 'SWEET_CHICKEN__CURRY'
+	@example dash.snakeCase('--sweet-chicken--curry--') --> 'SWEET_CHICKEN__CURRY'
 	@usage Chain with `:lower()` if you need a lower snake-case string.
 	@trait Chainable
 ]]
@@ -69,9 +69,9 @@ end
 
 --[[
 	Convert `str` to title-case, where the first letter of each word is capitalized.
-	@example _.titleCase("jello world") --> "Jello World"
-	@example _.titleCase("yellow-jello with_sprinkles") --> "Yellow-jello With_sprinkles"
-	@example _.titleCase("yellow jello's don’t mellow") --> "Yellow Jello's Dont’t Mellow"
+	@example dash.titleCase("jello world") --> "Jello World"
+	@example dash.titleCase("yellow-jello with_sprinkles") --> "Yellow-jello With_sprinkles"
+	@example dash.titleCase("yellow jello's don’t mellow") --> "Yellow Jello's Dont’t Mellow"
 	@usage Dashes, underscores and apostraphes don't break words.
 	@trait Chainable
 ]]
@@ -87,7 +87,7 @@ end
 
 --[[
 	Capitalize the first letter of `str`.
-	@example _.capitalize("hello mould") --> "Hello mould"
+	@example dash.capitalize("hello mould") --> "Hello mould"
 	@trait Chainable
 ]]
 function Strings.capitalize(str)
@@ -97,7 +97,7 @@ end
 
 --[==[
 	Converts the characters `&<>"'` in `str` to their corresponding HTML entities.
-	@example _.encodeHtml([[Pease < Bacon > "Fish" & 'Chips']]) --> "Peas &lt; Bacon &gt; &quot;Fish&quot; &amp; &apos;Chips&apos;"
+	@example dash.encodeHtml([[Pease < Bacon > "Fish" & 'Chips']]) --> "Peas &lt; Bacon &gt; &quot;Fish&quot; &amp; &apos;Chips&apos;"
 	@trait Chainable
 ]==]
 function Strings.encodeHtml(str)
@@ -114,9 +114,9 @@ function Strings.encodeHtml(str)
 end
 
 --[==[
-	The inverse of `_.encodeHtml`.
+	The inverse of `dash.encodeHtml`.
 	Converts any HTML entities in `str` to their corresponding characters.
-	@example _.decodeHtml("&lt;b&gt;&#34;Smashed&quot;&lt;/b&gt; &apos;Avocado&#39; &#x1F60F;") --> [[<b>"Smashed"</b> 'Avocado' 😏]]
+	@example dash.decodeHtml("&lt;b&gt;&#34;Smashed&quot;&lt;/b&gt; &apos;Avocado&#39; &#x1F60F;") --> [[<b>"Smashed"</b> 'Avocado' 😏]]
 	@trait Chainable
 ]==]
 function Strings.decodeHtml(str)
@@ -138,8 +138,8 @@ end
 --[[
 	Splits `str` into parts based on a pattern delimiter and returns a table of the parts, followed
 	by a table of the matched delimiters.
-	@example _.splitOn("rice") --> {"r", "i", "c", "e"}, {"", "", "", ""}
-	@example _.splitOn("one.two::flour", "[.:]") --> {"one", "two", "", "flour"}, {".", ":", ":"}
+	@example dash.splitOn("rice") --> {"r", "i", "c", "e"}, {"", "", "", ""}
+	@example dash.splitOn("one.two::flour", "[.:]") --> {"one", "two", "", "flour"}, {".", ":", ":"}
 	@usage This method is useful only when you need a _pattern_ as a delimiter.
 	@usage Use the Roblox native `string.split` if you are splitting on a simple string.
 	@param delimiter (default = "")
@@ -171,7 +171,7 @@ end
 
 --[[
 	Removes any spaces from the start and end of `str`.
-	@example _.trim("  roast veg  ") --> "roast veg"
+	@example dash.trim("  roast veg  ") --> "roast veg"
 	@trait Chainable
 ]]
 --: string -> string
@@ -182,8 +182,8 @@ end
 
 --[[
 	Checks if `str` starts with the string `start`.
-	@example _.startsWith("Fun Roblox Games", "Fun") --> true
-	@example _.startsWith("Chess", "Fun") --> false
+	@example dash.startsWith("Fun Roblox Games", "Fun") --> true
+	@example dash.startsWith("Chess", "Fun") --> false
 	@trait Chainable
 ]]
 --: string, string -> bool
@@ -195,8 +195,8 @@ end
 
 --[[
 	Checks if `str` ends with the string `suffix`.
-	@example _.endsWith("Fun Roblox Games", "Games") --> true
-	@example _.endsWith("Bad Roblox Memes", "Games") --> false
+	@example dash.endsWith("Fun Roblox Games", "Games") --> true
+	@example dash.endsWith("Bad Roblox Memes", "Games") --> false
 	@trait Chainable
 ]]
 --: string, string -> bool
@@ -208,9 +208,9 @@ end
 
 --[[
 	Makes a string of `length` from `str` by repeating characters from `prefix` at the start of the string.
-	@example _.leftPad("toast", 6) --> " toast"
-	@example _.leftPad("2", 2, "0") --> "02"
-	@example _.leftPad("toast", 10, ":)") --> ":):):toast"
+	@example dash.leftPad("toast", 6) --> " toast"
+	@example dash.leftPad("2", 2, "0") --> "02"
+	@example dash.leftPad("toast", 10, ":)") --> ":):):toast"
 	@param prefix (default = `" "`)
 	@trait Chainable
 ]]
@@ -228,9 +228,9 @@ end
 
 --[[
 	Makes a string of `length` from `str` by repeating characters from `suffix` at the end of the string.
-	@example _.rightPad("toast", 6) --> "toast "
-	@example _.rightPad("2", 2, "!") --> "2!"
-	@example _.rightPad("toast", 10, ":)") --> "toast:):):"
+	@example dash.rightPad("toast", 6) --> "toast "
+	@example dash.rightPad("2", 2, "!") --> "2!"
+	@example dash.rightPad("toast", 10, ":)") --> "toast:):):"
 	@param suffix (default = `" "`)
 	@trait Chainable
 ]]
@@ -247,12 +247,12 @@ function Strings.rightPad(str, length, suffix)
 end
 
 --[[
-	This function first calls `_.format` on the arguments provided and then outputs the response
-	to the debug target, set using `_.setDebug`. By default, this function does nothing, allowing
+	This function first calls `dash.format` on the arguments provided and then outputs the response
+	to the debug target, set using `dash.setDebug`. By default, this function does nothing, allowing
 	developers to leave the calls in the source code if that is beneficial.
 	@param subject the format match string
-	@usage A common pattern would be to `_.setDebug()` to alias to `print` during local development,
-		and call e.g. `_.setDebug(_.bind(HttpService.PostAsync, "https://example.com/log"))`
+	@usage A common pattern would be to `dash.setDebug()` to alias to `print` during local development,
+		and call e.g. `dash.setDebug(dash.bind(HttpService.PostAsync, "https://example.com/log"))`
 		on a production build to allow remote debugging.
 ]]
 function Strings.debug(subject, ...)
@@ -263,9 +263,9 @@ function Strings.debug(subject, ...)
 end
 
 --[[
-	Hooks up any debug methods to invoke _fn_. By default, `_.debug` does nothing.
+	Hooks up any debug methods to invoke _fn_. By default, `dash.debug` does nothing.
 	@param fn (default = `print`)
-	@usage Calling `_.setDebug()` will simply print all calls to `_.debug` with formatted arguments.
+	@usage Calling `dash.setDebug()` will simply print all calls to `dash.debug` with formatted arguments.
 ]]
 function Strings.setDebug(fn)
 	Strings.debugTarget = fn
@@ -273,14 +273,14 @@ end
 
 --[[
 	Converts _char_ into a hex representation
-	@param format (optional) a string passed to `_.format` which formats the hex value of each of the character's code points.
+	@param format (optional) a string passed to `dash.format` which formats the hex value of each of the character's code points.
 	@param useBytes (default = false) whether to use the character's bytes, rather than UTF-8 code points.
-	@example _.charToHex("<") --> "3C"
-	@example _.charToHex("<", "&#{};") --> "&#3C;"
-	@example _.charToHex("😏") --> "1F60F"
-	@example _.charToHex("😏", "0x{}") --> "0x1F60F"
-	@example _.charToHex("🤷🏼‍♀️", "&#x{};") --> "&#x1F937;&#x1F3FC;&#x200D;&#x2640;&#xFE0F;"
-	@example _.charToHex("🤷🏼‍♀️", "%{}", true) --> "%F0%9F%A4%B7%F0%9F%8F%BC%E2%80%8D%E2%99%80%EF%B8%8F"
+	@example dash.charToHex("<") --> "3C"
+	@example dash.charToHex("<", "&#{};") --> "&#3C;"
+	@example dash.charToHex("😏") --> "1F60F"
+	@example dash.charToHex("😏", "0x{}") --> "0x1F60F"
+	@example dash.charToHex("🤷🏼‍♀️", "&#x{};") --> "&#x1F937;&#x1F3FC;&#x200D;&#x2640;&#xFE0F;"
+	@example dash.charToHex("🤷🏼‍♀️", "%{}", true) --> "%F0%9F%A4%B7%F0%9F%8F%BC%E2%80%8D%E2%99%80%EF%B8%8F"
 ]]
 --: char -> str, str?, boolean?
 function Strings.charToHex(char, format, useBytes)
@@ -309,10 +309,10 @@ end
 
 --[[
 	Generates a character from its _hex_ representation.
-	@example _.hexToChar("1F60F") --> "😏"
-	@example _.hexToChar("%1F60F") --> "😏"
-	@example _.hexToChar("#1F60F") --> "😏"
-	@example _.hexToChar("0x1F60F") --> "😏"
+	@example dash.hexToChar("1F60F") --> "😏"
+	@example dash.hexToChar("%1F60F") --> "😏"
+	@example dash.hexToChar("#1F60F") --> "😏"
+	@example dash.hexToChar("0x1F60F") --> "😏"
 	@throws _MalformedInput_ if _char_ is not a valid encoding.
 ]]
 --: str -> char
@@ -330,7 +330,7 @@ end
 	Encodes _str_ for use as a URL, for example as an entire URL.
 	@trait Chainable
 	@example
-		_.encodeUrl("https://example.com/Egg+Fried Rice!?🤷🏼‍♀️")
+		dash.encodeUrl("https://example.com/Egg+Fried Rice!?🤷🏼‍♀️")
 		--> "https://example.com/Egg+Fried%20Rice!?%F0%9F%A4%B7%F0%9F%8F%BC%E2%80%8D%E2%99%80%EF%B8%8F"
 	@usage
 		This method is designed to act like `encodeURI` in JavaScript.
@@ -354,7 +354,7 @@ end
 	Encodes _str_ for use in a URL, for example as a query parameter of a URL.
 	@trait Chainable
 	@example
-		_.encodeUrlComponent("https://example.com/Egg+Fried Rice!?🤷🏼‍♀️")
+		dash.encodeUrlComponent("https://example.com/Egg+Fried Rice!?🤷🏼‍♀️")
 		--> "https%3A%2F%2Fexample.com%2FEgg%2BFried%20Rice!%3F%F0%9F%A4%B7%F0%9F%8F%BC%E2%80%8D%E2%99%80%EF%B8%8F"
 	@usage
 		This method is designed to act like `encodeURIComponent` in JavaScript.
@@ -388,10 +388,10 @@ local calculateDecodeUrlExceptions =
 )
 
 --[[
-	The inverse of `_.encodeUrl`.
+	The inverse of `dash.encodeUrl`.
 	@trait Chainable
 	@example
-		_.decodeUrl("https://Egg+Fried%20Rice!?")
+		dash.decodeUrl("https://Egg+Fried%20Rice!?")
 		--> "https://Egg+Fried Rice!?"
 	@usage
 		This method is designed to act like `decodeURI` in JavaScript.
@@ -412,10 +412,10 @@ function Strings.decodeUrl(str)
 end
 
 --[[
-	The inverse of `_.encodeUrlComponent`.
+	The inverse of `dash.encodeUrlComponent`.
 	@trait Chainable
 	@example
-		_.decodeUrlComponent("https%3A%2F%2FEgg%2BFried%20Rice!%3F")
+		dash.decodeUrlComponent("https%3A%2F%2FEgg%2BFried%20Rice!%3F")
 		--> "https://Egg+Fried Rice!?"
 	@usage This method is designed to act like `decodeURIComponent` in JavaScript.
 	@throws _MalformedInput_ if _str_ contains characters encoded incorrectly.
@@ -431,7 +431,7 @@ end
 	to the end of a url.
 	
 	@example
-		_.encodeQueryString({
+		dash.encodeQueryString({
 			time = 11,
 			biscuits = "hob nobs",
 			chocolatey = true
@@ -467,24 +467,24 @@ end
 	Display parameters can be combined after a `:` in the curly braces. Any format parameters used
 	in `string.format` can be used here, along with these extras:
 
-	* `{:?}` formats any value using `_.serializeDeep`.
-	* `{:#?}` formats any value using `_.pretty`.
+	* `{:?}` formats any value using `dash.serializeDeep`.
+	* `{:#?}` formats any value using `dash.pretty`.
 	* `{:b}` formats a number in its binary representation.
 	@example
 		local props = {"teeth", "claws", "whiskers", "tail"}
-		_.format("{:?} is in {:#?}", "whiskers", props)
+		dash.format("{:?} is in {:#?}", "whiskers", props)
 		-> '"whiskers" is in {"teeth", "claws", "whiskers", "tail"}'
 	@example
-		_.format("{} in binary is {1:b}", 125) -> "125 in binary is 110100"
+		dash.format("{} in binary is {1:b}", 125) -> "125 in binary is 110100"
 	@example
-		_.format("The time is {:02}:{:02}", 2, 4) -> "The time is 02:04"
+		dash.format("The time is {:02}:{:02}", 2, 4) -> "The time is 02:04"
 	@example
-		_.format("The color blue is #{:06X}", 255) -> "The color blue is #0000FF"
+		dash.format("The color blue is #{:06X}", 255) -> "The color blue is #0000FF"
 	@usage Escape `{` with `{{` and `}` similarly with `}}`.
 	@usage See [https://developer.roblox.com/articles/Format-String](https://developer.roblox.com/articles/Format-String)
 		for complete list of formating options and further use cases.
-	@see _.serializeDeep
-	@see _.pretty
+	@see dash.serializeDeep
+	@see dash.pretty
 ]]
 --: string, ...any -> string
 function Strings.format(format, ...)
@@ -581,9 +581,9 @@ end
 	will be formatted across multiple lines if a descendant element gets longer than `80`
 	characters.
 
-	@usage This format may be improved in the future, so use `_.serializeDeep` if need a format
+	@usage This format may be improved in the future, so use `dash.serializeDeep` if need a format
 		which won't change.
-	@see _.serializeDeep
+	@see dash.serializeDeep
 ]]
 --: any, bool -> string
 function Strings.pretty(value, serializeOptions)

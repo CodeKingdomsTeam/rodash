@@ -15,10 +15,10 @@ See the [Getting Started](getting-started) page for examples of how you can use 
 Then require Rodash in any of your scripts:
 
 ```
-local rd = require(game.ReplicatedStorage.Rodash)
+local dash = require(game.ReplicatedStorage.Rodash)
 
 local list = {"cheese"}
-rd.append(list, {"nachos"}, {}, {"chillies", "bbq sauce"})
+dash.append(list, {"nachos"}, {}, {"chillies", "bbq sauce"})
 list --> {"cheese", "nachos", "chillies", "bbq sauce"}
 ```
 
