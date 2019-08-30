@@ -38,26 +38,26 @@
 		<Item class="Camera" referent="RBXf9ad0589e20940158c0001145d47e1b2">
 			<Properties>
 				<CoordinateFrame name="CFrame">
-					<X>150.158936</X>
-					<Y>69.1109314</Y>
-					<Z>111.396156</Z>
-					<R00>0.783709109</R00>
-					<R01>-0.367723465</R01>
-					<R02>0.500579298</R02>
-					<R10>-1.4901163e-08</R10>
-					<R11>0.805919528</R11>
-					<R12>0.592025101</R12>
-					<R20>-0.621128142</R20>
-					<R21>-0.463975459</R21>
-					<R22>0.6316064</R22>
+					<X>148.381226</X>
+					<Y>66.7024155</Y>
+					<Z>109.153046</Z>
+					<R00>0.783721447</R00>
+					<R01>-0.434582144</R01>
+					<R02>0.443755686</R02>
+					<R10>-0</R10>
+					<R11>0.714453042</R11>
+					<R12>0.699683487</R12>
+					<R20>-0.621112466</R20>
+					<R21>-0.54835695</R21>
+					<R22>0.559932172</R22>
 				</CoordinateFrame>
 				<Ref name="CameraSubject">null</Ref>
 				<token name="CameraType">0</token>
 				<float name="FieldOfView">70</float>
 				<CoordinateFrame name="Focus">
-					<X>149.157776</X>
-					<Y>67.9268799</Y>
-					<Z>110.132942</Z>
+					<X>147.493713</X>
+					<Y>65.3030472</Y>
+					<Z>108.03318</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -481,24 +481,209 @@ gcLgc4RKxr21zq2UlJSM]]></BinaryString>
 			<string name="Name">ServerScriptService</string>
 			<BinaryString name="Tags"></BinaryString>
 		</Properties>
-		<Item class="Script" referent="RBX52147180fbdb4c528244e7fd95ba0a7a">
+		<Item class="ModuleScript" referent="RBX72bc8b63af8e4f5487efbc6ce99390ff">
+			<Properties>
+				<Content name="LinkedSource"><null></null></Content>
+				<string name="Name">Strings.spec</string>
+				<string name="ScriptGuid"></string>
+				<ProtectedString name="Source"><![CDATA[return function()
+	local Strings = require(script.Parent.Strings)
+	describe(
+		"Strings and UTF8",
+		function()
+			describe(
+				"charToHex",
+				function()
+					it(
+						"encodes correctly",
+						function()
+							assert.equal("3C", Strings.charToHex("<"))
+						end
+					)
+					it(
+						"encodes utf8 correctly",
+						function()
+							assert.equal("1F60F", Strings.charToHex("😏"))
+						end
+					)
+					it(
+						"encodes utf8 correctly with formatting",
+						function()
+							assert.equal("0x1F60F", Strings.charToHex("😏", "0x{}"))
+						end
+					)
+					it(
+						"encodes utf8 with multiple code points correctly",
+						function()
+							assert.equal("&#x1F937;&#x1F3FC;&#x200D;&#x2640;&#xFE0F;", Strings.charToHex("🤷🏼‍♀️", "&#x{};"))
+						end
+					)
+					it(
+						"encodes utf8 bytes correctly",
+						function()
+							assert.equal("%F0%9F%A4%B7%F0%9F%8F%BC%E2%80%8D%E2%99%80%EF%B8%8F", Strings.charToHex("🤷🏼‍♀️", "%{}", true))
+						end
+					)
+				end
+			)
+
+			describe(
+				"hexToChar",
+				function()
+					it(
+						"decodes correctly",
+						function()
+							assert.equal("_", Strings.hexToChar("%5F"))
+						end
+					)
+					it(
+						"throws for an invalid encoding",
+						function()
+							assert.errors(
+								function()
+									Strings.hexToChar("nope")
+								end
+							)
+						end
+					)
+				end
+			)
+
+			describe(
+				"encodeUrlComponent",
+				function()
+					it(
+						"encodes correctly",
+						function()
+							assert.equal(
+								"https%3A%2F%2Fexample.com%2FEgg%2BFried%20Rice!%3F",
+								Strings.encodeUrlComponent("https://example.com/Egg+Fried Rice!?")
+							)
+						end
+					)
+				end
+			)
+			describe(
+				"encodeUrl",
+				function()
+					it(
+						"encodes correctly",
+						function()
+							assert.equal("https://example.com/Egg+Fried%20Rice!?", Strings.encodeUrl("https://example.com/Egg+Fried Rice!?"))
+						end
+					)
+				end
+			)
+			describe(
+				"decodeUrlComponent",
+				function()
+					it(
+						"decodes correctly",
+						function()
+							assert.equal(
+								"https://example.com/Egg+Fried Rice!?",
+								Strings.decodeUrlComponent("https%3A%2F%2Fexample.com%2FEgg%2BFried%20Rice!%3F")
+							)
+						end
+					)
+				end
+			)
+			describe(
+				"decodeUrl",
+				function()
+					it(
+						"decodes correctly",
+						function()
+							assert.equal("https://example.com/Egg+Fried Rice!?", Strings.decodeUrl("https://example.com/Egg+Fried%20Rice!?"))
+						end
+					)
+				end
+			)
+			describe(
+				"makeQueryString",
+				function()
+					it(
+						"makes query",
+						function()
+							assert.equal(
+								"?biscuits=hob+nobs&time=11&chocolatey=true",
+								Strings.encodeQueryString(
+									{
+										time = 11,
+										biscuits = "hob nobs",
+										chocolatey = true
+									}
+								)
+							)
+						end
+					)
+				end
+			)
+
+			describe(
+				"encodeHtml",
+				function()
+					it(
+						"characters",
+						function()
+							assert.are.same(
+								"Peas &lt; Bacon &gt; &quot;Fish&quot; &amp; &apos;Chips&apos;",
+								Strings.encodeHtml([[Peas < Bacon > "Fish" & 'Chips']])
+							)
+						end
+					)
+				end
+			)
+
+			describe(
+				"decodeHtml",
+				function()
+					it(
+						"html entities",
+						function()
+							assert.are.same(
+								[[<b>"Smashed"</b> 'Avocado' 😏]],
+								Strings.decodeHtml("&lt;b&gt;&#34;Smashed&quot;&lt;/b&gt; &apos;Avocado&#39; &#x1F60F;")
+							)
+						end
+					)
+					it(
+						"conflated ampersand",
+						function()
+							assert.are.same("Ampersand is &amp;", Strings.decodeHtml("Ampersand is &#38;amp;"))
+						end
+					)
+				end
+			)
+		end
+	)
+end
+]]></ProtectedString>
+				<BinaryString name="Tags"></BinaryString>
+			</Properties>
+		</Item>
+		<Item class="Script" referent="RBX3181b3723194480ca1e3c9853d2f8747">
 			<Properties>
 				<bool name="Disabled">false</bool>
 				<Content name="LinkedSource"><null></null></Content>
 				<string name="Name">Example</string>
-				<string name="ScriptGuid">{c2891012-18d5-4b2b-baa7-11f8ecce21c3}</string>
+				<string name="ScriptGuid">{d7a39cf3-7ae1-47e0-be2e-e2cd40e20d75}</string>
 				<ProtectedString name="Source"><![CDATA[print("Examples of using Rodash in your project:")
 
 local dash = require(game.ReplicatedStorage.Rodash)
 local fn = dash.fn
 
-dash.setInterval(function()
-	local getNames = fn:map(fn:get("Name"))
-	local playerNames = getNames(game.Players:GetChildren())
-	print(dash.format("Players online ({#1}): {:#?}", playerNames))
-end, 1)
+dash.setInterval(
+	function()
+		local getNames = fn:map(fn:get("Name"))
+		local playerNames = getNames(game.Players:GetChildren())
+		print(dash.format("Players online ({#1}): {:#?}", playerNames))
+	end,
+	1
+)
 
-print(dash.encodeUrlComponent("https://example.com/Egg+Fried Rice!?🤷🏼‍♀️"))]]></ProtectedString>
+print(dash.encodeUrlComponent("https://example.com/Egg+Fried Rice!?🤷🏼‍♀️"))
+]]></ProtectedString>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
 		</Item>
@@ -2334,8 +2519,8 @@ local Strings = require(script.Strings)
 local Arrays = require(script.Arrays)
 local Tables = require(script.Tables)
 
-local rd = Tables.assign(Async, Classes, Functions, Strings, Arrays, Tables)
-return rd
+local dash = Tables.assign(Async, Classes, Functions, Strings, Arrays, Tables)
+return dash
 ]]></ProtectedString>
 				<BinaryString name="Tags"></BinaryString>
 			</Properties>
@@ -2387,12 +2572,12 @@ local typeIndex = {
 }
 
 --[[
-	The default comparator is used by `_.sort` and can sort elements of different types, in the
+	The default comparator is used by `dash.sort` and can sort elements of different types, in the
 	order: boolean, number, string, function, CFunction, userdata, and table.
 		
 	Elements which cannot be sorted naturally will be sorted by their string value.
 
-	@see _.sort
+	@see dash.sort
 ]]
 function Arrays.defaultComparator(a, b)
 	if type(a) ~= type(b) then
@@ -2414,15 +2599,15 @@ end
 --[[
 	Returns a sorted array from the _input_ array, based on a _comparator_ function.
 
-	Unlike `table.sort`, the comparator to `_.sort` is optional, but it can also be defined to
+	Unlike `table.sort`, the comparator to `dash.sort` is optional, but it can also be defined to
 	a numeric weight or nil as well as a boolean.
 
 	@param comparator (optional) should return `true` or `n < 0` if the first element should be
 		before the second in the resulting array, or `0` or `nil` if the elements have the same
 		order.
 
-	@example _.sort({2, 5, 3}) --> {2, 3, 5}
-	@example _.sort({"use", "the", "force", "Luke"}) --> {"Luke", "force", "the", "use"}
+	@example dash.sort({2, 5, 3}) --> {2, 3, 5}
+	@example dash.sort({"use", "the", "force", "Luke"}) --> {"Luke", "force", "the", "use"}
 ]]
 --: <T>(T[], (T -> bool | number | nil) -> T[])
 function Arrays.sort(input, comparator)
@@ -2454,10 +2639,10 @@ end
 	@param first (default = 1) The index of the first element to include.
 	@param last (default = `#source`) The index of the last element to include.
 	@param step (default = 1) What amount to step the index by during iteration.
-	@example _.slice({10, 20, 30, 40}) --> {10, 20, 30, 40}
-	@example _.slice({10, 20, 30, 40}, 2) --> {20, 30, 40}
-	@example _.slice({10, 20, 30, 40}, 2, 3) --> {20, 30}
-	@example _.slice({10, 20, 30, 40}, 2, 4, 2) --> {20, 40}
+	@example dash.slice({10, 20, 30, 40}) --> {10, 20, 30, 40}
+	@example dash.slice({10, 20, 30, 40}, 2) --> {20, 30, 40}
+	@example dash.slice({10, 20, 30, 40}, 2, 3) --> {20, 30}
+	@example dash.slice({10, 20, 30, 40}, 2, 4, 2) --> {20, 40}
 ]]
 --: <T>(T[], int?, int?, int? -> T[])
 function Arrays.slice(source, first, last, step)
@@ -2479,7 +2664,7 @@ end
 	@example
 		local teamColors = {"red", "red", "red", "blue", "blue", "blue"}
 		-- (in some order)
-		_.shuffle(teamColors) --> {"blue", "blue", "red", "blue", "red", "red"}
+		dash.shuffle(teamColors) --> {"blue", "blue", "red", "blue", "red", "red"}
 ]]
 --: <T: Iterable>(T -> T)
 function Arrays.shuffle(source)
@@ -2497,13 +2682,13 @@ end
 	(or _initial_ for the first element) as the first argument, and the current element as a value
 	and key as subsequent arguments.
 	@example
-		local sum = _.reduce({1, 2, 3}, function(result, value)
+		local sum = dash.reduce({1, 2, 3}, function(result, value)
 			return result + value
 		end, 0)
 		sum --> 6
 	@example
 		local recipe = {first = "cheese", second = "nachos", third = "chillies"}
-		local unzipRecipe = _.reduce(recipe, function(result, value, key)
+		local unzipRecipe = dash.reduce(recipe, function(result, value, key)
 			table.insert(result[1], key)
 			table.insert(result[2], value)
 			return result
@@ -2523,11 +2708,11 @@ end
 --[[
 	Inserts into _target_ the elements from all subsequent arguments in order.
 	@param ... any number of other arrays
-	@example _.append({}, {1, 2, 3}, {4, 5, 6}) --> {1, 2, 3, 4, 5, 6}
-	@example _.append({1, 2, 3}) --> {1, 2, 3}
+	@example dash.append({}, {1, 2, 3}, {4, 5, 6}) --> {1, 2, 3, 4, 5, 6}
+	@example dash.append({1, 2, 3}) --> {1, 2, 3}
 	@example
 		local list = {"cheese"}
-		_.append(list, {"nachos"}, {}, {"chillies"})
+		dash.append(list, {"nachos"}, {}, {"chillies"})
 		list --> {"cheese", "nachos", "chillies"}
 ]]
 --: <T>(mut T[], ...T[] -> T[])
@@ -2548,7 +2733,7 @@ end
 
 --[[
 	Sums all the values in the _source_ array.
-	@example _.sum({1, 2, 3}) --> 6
+	@example dash.sum({1, 2, 3}) --> 6
 ]]
 function Arrays.sum(source)
 	return Arrays.reduce(
@@ -2562,7 +2747,7 @@ end
 
 --[[
 	Swaps the order of elements in _source_.
-	@example _.reverse({1, 2, 4, 3, 5}) --> {5, 3, 4, 2, 1}
+	@example dash.reverse({1, 2, 4, 3, 5}) --> {5, 3, 4, 2, 1}
 ]]
 --: <T>(T[] -> T[])
 function Arrays.reverse(source)
@@ -2576,8 +2761,8 @@ end
 --[[
 	Returns the earliest value from the array that _predicate_ returns `true` for.
 
-	If the _predicate_ is not specified, `_.first` simply returns the first element of the array.
-	@param predicate (default = `_.returns(true)`)
+	If the _predicate_ is not specified, `dash.first` simply returns the first element of the array.
+	@param predicate (default = `dash.returns(true)`)
 	@example
 		local names = {
 			"Boromir",
@@ -2585,25 +2770,25 @@ end
 			"Bilbo"
 		}
 
-		_.first(names) --> "Boromir", 1
+		dash.first(names) --> "Boromir", 1
 
 		-- Find a particular value:
-		local firstNameWithF = _.first(names, function(name)
-			return _.startsWith(name, "F")
+		local firstNameWithF = dash.first(names, function(name)
+			return dash.startsWith(name, "F")
 		end)
 		firstNameWithF --> "Frodo", 2
 
 		-- What about a value whcih doesn't exist?
-		local firstNameWithC = _.first(names, function(name)
-			return _.startsWith(name, "C")
+		local firstNameWithC = dash.first(names, function(name)
+			return dash.startsWith(name, "C")
 		end)
 		firstNameWithC --> nil
 
 		-- Find the index of a value:
-		local _, index = _.first(names, _.fn:matches("Bilbo"))
+		local _, index = dash.first(names, dash.fn:matches("Bilbo"))
 		index --> 2
-	@see _.find 
-	@usage If you need to find a value in a table which isn't an array, use `_.find`.
+	@see dash.find 
+	@usage If you need to find a value in a table which isn't an array, use `dash.find`.
 ]]
 --: <T: Iterable<K,V>>((T, (element: V, key: K) -> bool) -> V?)
 function Arrays.first(source, predicate)
@@ -2621,8 +2806,8 @@ end
 --[[
 	Returns the last value from the array that _predicate_ returns `true` for.
 
-	If the _predicate_ is not specified, `_.last` simply returns the last element of the array.
-	@param predicate (default = `_.returns(true)`)
+	If the _predicate_ is not specified, `dash.last` simply returns the last element of the array.
+	@param predicate (default = `dash.returns(true)`)
 	@example
 		local names = {
 			"Boromir",
@@ -2630,15 +2815,15 @@ end
 			"Bilbo"
 		}
 
-		_.last(names) --> "Bilbo", 3
+		dash.last(names) --> "Bilbo", 3
 
-		local lastNameWithB = _.last(names, _.fn:startsWith("B"))
+		local lastNameWithB = dash.last(names, dash.fn:startsWith("B"))
 		lastNameWithB --> "Bilbo", 3
 
-		local _, key = _.last(names, _.fn:matches("Frodo"))
+		local _, key = dash.last(names, dash.fn:matches("Frodo"))
 		key --> 2
-	@see _.find
-	@see _.first
+	@see dash.find
+	@see dash.first
 ]]
 --: <T: Iterable<K,V>>((T, (element: V, key: K) -> bool) -> V?)
 function Arrays.last(source, predicate)
@@ -2682,11 +2867,11 @@ local baseRandomStream = Random.new()
 	isn't a promise.
 	@example
 		local heat = function( item )
-			return _.delay(1).returns("hot " .. item)
+			return dash.delay(1).returns("hot " .. item)
 		end
 		local recipe = {"wrap", heat("steak"), heat("rice")}
-		local burrito = _.map(recipe, _.await)
-		_.debug("{:#?}", burrito)
+		local burrito = dash.map(recipe, dash.await)
+		dash.debug("{:#?}", burrito)
 		-->> {"wrap", "hot steak", "hot rice"} (2 seconds)
 ]]
 function Async.await(value)
@@ -2718,12 +2903,12 @@ end
 	@returns an array mapping the input to resolved elements.
 	@example
 		local heat = function( item )
-			local oven = _.parallel({item, _.delay(1)})
+			local oven = dash.parallel({item, dash.delay(1)})
 			return oven:andThen(function( result )
 				return "hot-" .. result[1] 
 			end)
 		end
-		local meal =_.parallel({heat("cheese"), "tomato"})
+		local meal =dash.parallel({heat("cheese"), "tomato"})
 		meal:await() --> {"hot-cheese", "tomato"} (1 second later)
 	@rejects passthrough
 	@usage This function is like `Promise.all` but allows objects in the array which aren't
@@ -2756,12 +2941,12 @@ end
 	@rejects passthrough
 	@example
 		local heat = function( item )
-			local oven = _.parallel({item, _.delay(1)})
+			local oven = dash.parallel({item, dash.delay(1)})
 			return oven:andThen(function( result )
 				return "hot-" .. result[1] 
 			end)
 		end
-		local toastie = _.parallelAll({
+		local toastie = dash.parallelAll({
 			bread = "brown",
 			filling = heat("cheese")
 		})
@@ -2795,13 +2980,13 @@ end
 	Like `Promise.resolve` but can take any number of arguments.
 	@example
 		local function mash( veg )
-			return _.resolve("mashed", veg)
+			return dash.resolve("mashed", veg)
 		end
 		mash("potato"):andThen(function(style, veg)
-			_.debug("{} was {}", veg, style)
+			dash.debug("{} was {}", veg, style)
 		end)
 		-- >> potato was mashed
-	@usage As `_.resolve(promise) --> promise`, this function can also be used to ensure a value is a promise.
+	@usage As `dash.resolve(promise) --> promise`, this function can also be used to ensure a value is a promise.
 ]]
 --: T -> Promise<T>
 function Async.resolve(...)
@@ -2858,7 +3043,7 @@ end
 	whether it has resolved or rejected.
 	@param fn _function(ok, result)_
 	@example
-		local getHunger = _.async(function( player )
+		local getHunger = dash.async(function( player )
 			if player.health == 0 then
 				error("Player is dead!")
 			else
@@ -2886,7 +3071,7 @@ end
 
 --[[
 	Returns a promise which never resolves or rejects.
-	@usage Useful in combination with `_.race` where a resolution or rejection should be ignored.
+	@usage Useful in combination with `dash.race` where a resolution or rejection should be ignored.
 ]]
 --: () -> never
 function Async.never()
@@ -2899,8 +3084,8 @@ end
 	@param timeoutMessage (default = "TimeoutError")
 	@rejects **TimeoutError** - or _timeoutMessage_
 	@example
-		let eatGreens = function() return _.never end
-		_.timeout(eatGreens(), 10, "TasteError"):await()
+		let eatGreens = function() return dash.never end
+		dash.timeout(eatGreens(), 10, "TasteError"):await()
 		--> throws "TasteError" (after 10s)
 ]]
 --: <T>(Promise<T>, number, string?) -> Promise<T>
@@ -2914,13 +3099,13 @@ function Async.timeout(promise, deadlineInSeconds, timeoutMessage)
 end
 
 --[[
-	Like `_.compose` but takes functions that can return a promise. Returns a promise that resolves
+	Like `dash.compose` but takes functions that can return a promise. Returns a promise that resolves
 	once all functions have resolved. Like compose, functions receive the resolution of the
 	previous promise as argument(s).
 	@example
-		local function fry(item) return _.delay(1):andThen(_.returns("fried " .. item)) end
-		local function cheesify(item) return _.delay(1):andThen(_.returns("cheesy " .. item)) end
-		local prepare = _.compose(fry, cheesify)
+		local function fry(item) return dash.delay(1):andThen(dash.returns("fried " .. item)) end
+		local function cheesify(item) return dash.delay(1):andThen(dash.returns("cheesy " .. item)) end
+		local prepare = dash.compose(fry, cheesify)
 		prepare("nachos"):await() --> "cheesy fried nachos" (after 2s)
 ]]
 --: <A>((...A -> Promise<A>)[]) -> ...A -> Promise<A>
@@ -2940,7 +3125,7 @@ end
 
 --[[
 	Returns a promise which resolves after the given delayInSeconds.
-	@example _.delay(1):andThen(function() print("Delivered") end)
+	@example dash.delay(1):andThen(function() print("Delivered") end)
 	-->> Delivered (1 second later)
 ]]
 --: number -> Promise<nil>
@@ -2959,18 +3144,18 @@ end
 	after any asynchronous actions, and rejects if the function throws an error.
 	@rejects passthrough
 	@example
-		local fetch = _.async(function( url )
+		local fetch = dash.async(function( url )
 			local HttpService = game:GetService("HttpService")
 			return HttpService:GetAsync(url)
 		end)
-		_.parallelAll({
+		dash.parallelAll({
 			main = fetch("http://example.com/burger"),
 			side = fetch("http://example.com/fries") 
 		}):andThen(function( meal )
-			print("Meal", _.pretty(meal))
+			print("Meal", dash.pretty(meal))
 		end)
 		-->> Meal {burger = "Cheeseburger", fries = "Curly fries"} (ideal response)
-	@usage With `promise:await` the `_.async` function can be used just like the async-await pattern in languages like JS.
+	@usage With `promise:await` the `dash.async` function can be used just like the async-await pattern in languages like JS.
 ]]
 --: <T, A>(Yieldable<T, A>) -> ...A -> Promise<T>
 function Async.async(fn)
@@ -2995,12 +3180,12 @@ function Async.async(fn)
 end
 
 --[[
-	Wraps any functions in _dictionary_ with `_.async`, returning a new dictionary containing
+	Wraps any functions in _dictionary_ with `dash.async`, returning a new dictionary containing
 	functions that return promises when called rather than yielding.
 	@example
-		local buyDinner = _.async(function()
-			local http = _.asyncAll(game:GetService("HttpService"))
-			local order = _.parallelAll({
+		local buyDinner = dash.async(function()
+			local http = dash.asyncAll(game:GetService("HttpService"))
+			local order = dash.parallelAll({
 				main = http:GetAsync("http://example.com/burger"),
 				side = http:GetAsync("http://example.com/fries")
 			})
@@ -3165,15 +3350,15 @@ local Classes = {}
 	Optionally, you may provide an array of _decorators_ which compose and reduce the Class, adding
 	additional methods and functionality you may need. Specifically you can:
 	
-	1. Add standard functionality to the class e.g. `_.Clone`, `_.ShallowEq`
-	2. Mixin an implementation of an interface e.g. `_.mixin( fns )`
-	3. Decorate fields or functions e.g. `_.decorate(_.freeze)`
+	1. Add standard functionality to the class e.g. `dash.Cloneable`, `dash.ShallowEq`
+	2. Mixin an implementation of an interface e.g. `dash.mixin( fns )`
+	3. Decorate fields or functions e.g. `dash.decorate(dash.freeze)`
 
-	@param constructor (default = `_.returns({})`)
+	@param constructor (default = `dash.returns({})`)
 	@param decorators (default = `{}`)
 	@example
 		-- Create a simple Vehicle class
-		local Vehicle = _.class("Vehicle", function( wheelCount ) return 
+		local Vehicle = dash.class("Vehicle", function( wheelCount ) return 
 			{
 				speed = 0,
 				wheelCount = wheelCount
@@ -3194,9 +3379,9 @@ local Classes = {}
 	@usage A private field should only be accessed by a method of the class itself, though Rodash
 		does not restrict this in code.
 	@usage Public fields are recommended when there is no complex access logic e.g. `position.x`
-	@see _.classWithInterface - recommended for providing runtime type-checking.
-	@see _.mixin - extend the class with extra methods.
-	@see _.decorate - include methods that run when an instance of the class is constructed.
+	@see dash.classWithInterface - recommended for providing runtime type-checking.
+	@see dash.mixin - extend the class with extra methods.
+	@see dash.decorate - include methods that run when an instance of the class is constructed.
 ]]
 --: <T>(string, Constructor<T>?, Decorator<T>[]?) -> Class<T>
 function Classes.class(name, constructor, decorators)
@@ -3240,7 +3425,7 @@ function Classes.class(name, constructor, decorators)
 		Run after the instance has been properly initialized, allowing methods on the instance to
 		be used.
 		@example
-			local Vehicle = _.class("Vehicle", function( wheelCount ) return 
+			local Vehicle = dash.class("Vehicle", function( wheelCount ) return 
 				{
 					speed = 0,
 					wheelCount = wheelCount
@@ -3258,7 +3443,7 @@ function Classes.class(name, constructor, decorators)
 			end
 			-- Assign an id to the new instance
 			function Vehicle:_generateId()
-				return _.format("#{}: {} wheels", Vehicle._getNextId(), self.wheelCount)
+				return dash.format("#{}: {} wheels", Vehicle._getNextId(), self.wheelCount)
 			end
 			-- Return the id if the instance is represented as a string 
 			function Vehicle:toString()
@@ -3275,7 +3460,7 @@ function Classes.class(name, constructor, decorators)
 	--[[
 		Returns `true` if _value_ is an instance of _Class_ or any sub-class.
 		@example
-			local Vehicle = _.class("Vehicle", function( wheelCount ) return 
+			local Vehicle = dash.class("Vehicle", function( wheelCount ) return 
 				{
 					speed = 0,
 					wheelCount = wheelCount
@@ -3304,7 +3489,7 @@ function Classes.class(name, constructor, decorators)
 		Super methods can be accessed using `Class.methodName` and should be called with self.
 
 		@example
-			local Vehicle = _.class("Vehicle", function( wheelCount ) return 
+			local Vehicle = dash.class("Vehicle", function( wheelCount ) return 
 				{
 					speed = 0,
 					wheelCount = wheelCount
@@ -3322,7 +3507,7 @@ function Classes.class(name, constructor, decorators)
 			end
 			-- Assign an id to the new instance
 			function Vehicle:_generateId()
-				return _.format("#{}: {} wheels", Vehicle._getNextId(), self.wheelCount)
+				return dash.format("#{}: {} wheels", Vehicle._getNextId(), self.wheelCount)
 			end
 			-- Let's make a Car class which has a special way to generate ids
 			local Car = Vehicle:extend("Vehicle", function()
@@ -3330,7 +3515,7 @@ function Classes.class(name, constructor, decorators)
 			end)
 			-- Uses the super method to generate a car-specific id
 			function Car:_generateId()
-				self.id = _.format("Car {}", Vehicle._generateId(self))
+				self.id = dash.format("Car {}", Vehicle._generateId(self))
 			end
 
 			local car = Car.new()
@@ -3352,7 +3537,7 @@ function Classes.class(name, constructor, decorators)
 		do not unify in the future.
 
 		@example
-			local Vehicle = _.classWithInterface("Vehicle", {
+			local Vehicle = dash.classWithInterface("Vehicle", {
 				speed = t.number,
 				wheelCount = t.number,
 				color: t.string
@@ -3362,7 +3547,7 @@ function Classes.class(name, constructor, decorators)
 				wheelCount = 4,
 				color = "red"
 			})
-			_.pretty(vehicle) --> 'Vehicle {speed = 4, wheelCount = 4, color = "red"}'
+			dash.pretty(vehicle) --> 'Vehicle {speed = 4, wheelCount = 4, color = "red"}'
 	]]
 	--: <S: T>(T: string, S, Decorator[]?) -> Class<S>
 	function Class:extendWithInterface(name, interface, decorators)
@@ -3390,7 +3575,7 @@ function Classes.class(name, constructor, decorators)
 
 	--[[
 		Return a string representation of the instance. By default this is the _name_ field (or the
-		Class name if this is not defined), but the method can be overwridden.
+		Class name if this is not defined), but the method can be overridden.
 	]]
 	--: (T:) -> string
 	function Class:toString()
@@ -3399,7 +3584,7 @@ function Classes.class(name, constructor, decorators)
 
 	--[[
 		Returns `true` if `self` is considered equal to _other_. This replaces the `==` operator
-		on instances of this class, and can be overwridden to provide a custom implementation.
+		on instances of this class, and can be overridden to provide a custom implementation.
 	]]
 	--: (T:) -> string
 	function Class:equals(other)
@@ -3408,7 +3593,7 @@ function Classes.class(name, constructor, decorators)
 
 	--[[
 		Returns `true` if `self` is considered less than  _other_. This replaces the `<` operator
-		on instances of this class, and can be overwridden to provide a custom implementation.
+		on instances of this class, and can be overridden to provide a custom implementation.
 	]]
 	--: (T:) -> string
 	function Class:__lt(other)
@@ -3417,7 +3602,7 @@ function Classes.class(name, constructor, decorators)
 
 	--[[
 		Returns `true` if `self` is considered less than or equal to _other_. This replaces the
-		`<=` operator on instances of this class, and can be overwridden to provide a custom
+		`<=` operator on instances of this class, and can be overridden to provide a custom
 		implementation.
 	]]
 	--: (T:) -> string
@@ -3437,15 +3622,15 @@ end
 	the added benefit over a constructor that `self` and the instance are well-defined.
 
 	Optionally, you may provide an array of _decorators_ which compose and reduce the Class, adding
-	additional functionality in the same way `_.class` does.
+	additional functionality in the same way `dash.class` does.
 
 	@usage Rodash uses `t` by Osyris to perform runtime type assertions, which we recommend using during
 	development and production code to catch errors quickly and fail fast. For more information
 	about `t`, please visit [https://github.com/osyrisrblx/t](https://github.com/osyrisrblx/t).
 	@usage If you want to instantiate private fields, we recommend using a static factory with a
-		public interface, using `_.privatize` if appropriate.
-	@see _.class
-	@see _.privatize
+		public interface, using `dash.privatize` if appropriate.
+	@see dash.class
+	@see dash.privatize
 ]]
 --: <T>(string, T, Decorator<T>[]? -> Class<T>)
 function Classes.classWithInterface(name, interface, decorators)
@@ -3480,23 +3665,23 @@ function Classes.classWithInterface(name, interface, decorators)
 end
 
 --[[
-	A decorator which adds a dictionary of functions to to a Class table.
+	A decorator which adds a dictionary of functions to a Class table.
 	@example
 		local CanBrake = {
 			brake = function( self )
 				self.speed = 0
 			end
 		}
-		local Car = _.class("Car", function( speed )
+		local Car = dash.class("Car", function( speed )
 			return {
 				speed = speed
 			}
-		end, {_.mixin(CanBrake)})
+		end, {dash.mixin(CanBrake)})
 		local car = Car.new(5)
 		print(car.speed) --> 5
 		car:brake()
 		print(car.speed) --> 0
-	@usage Include the return of this function in the decorators argument when creating a class.
+	@usage Include the return value of this function in the decorators argument when creating a class.
 ]]
 function Classes.mixin(fns)
 	assert(t.table(fns), "BadInput: fns must be a table")
@@ -3507,11 +3692,11 @@ function Classes.mixin(fns)
 end
 
 --[[
-	A decorator which runs _fn_ on each instance that is created of the class, returning
+	A decorator which runs _fn_ on each instance of the class that is created, returning
 	the result of the function as the class instance.
 	@example
-		local Frozen = _.decorate(_.freeze)
-		local StaticCar = _.class("StaticCar", function( speed )
+		local Frozen = dash.decorate(dash.freeze)
+		local StaticCar = dash.class("StaticCar", function( speed )
 			return {
 				speed = speed
 			}
@@ -3522,7 +3707,7 @@ end
 		local car = Car.new(5)
 		print(car.speed) --> 5
 		car:brake() --!> ReadonlyKey: s
-	@usage Include the return of this function in the decorators argument when creating a class.
+	@usage Include the return value of this function in the decorators argument when creating a class.
 ]]
 function Classes.decorate(fn)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
@@ -3548,7 +3733,7 @@ end
 					speed = speed
 				}
 			end,
-			{_.Clone}
+			{dash.Cloneable}
 		)
 		function Car:brake()
 			self.speed = 0
@@ -3560,7 +3745,7 @@ end
 		print(carClone.speed) --> 0
 		print(car.speed) --> 5
 ]]
-function Classes.Clone(Class)
+function Classes.Cloneable(Class)
 	function Class:clone()
 		local newInstance = Tables.clone(self)
 		setmetatable(newInstance, getmetatable(self))
@@ -3571,7 +3756,7 @@ end
 
 --[[
 	A decorator which derives the equality operator for the _Class_ so that any instances of the
-	class which are shallow equal 
+	class which are shallow equal will be considered equal.
 	@example
 		local Car =
 			Classes.class(
@@ -3581,7 +3766,7 @@ end
 					speed = speed
 				}
 			end,
-			{_.ShallowEq}
+			{dash.ShallowEq}
 		)
 		function Car:brake()
 			self.speed = 0
@@ -3600,7 +3785,7 @@ function Classes.ShallowEq(Class)
 end
 
 --[[
-	A decorator which derives an order for the _Class_ so that any instances of the class which
+	A decorator which derives an order for the _Class_, meaning instances of the class
 	can be compared using `<`, `<=`, `>` and  `>=`. To do this, it compares values of the two
 	instances at the same keys, as defined by the order of the _keys_ passed in.
 	@param keys (default = a sorted array of all the instance's keys)
@@ -3613,7 +3798,7 @@ end
 					speed = speed
 				}
 			end,
-			{_.PartialOrd}
+			{dash.PartialOrd}
 		)
 		function Car:brake()
 			self.speed = 0
@@ -3628,9 +3813,26 @@ function Classes.PartialOrd(keys)
 	if keys then
 		assert(Tables.isArray(keys), "BadInput: keys must be an array if defined")
 	end
+	local function getInstancesKeys(self, instanceKeys)
+		return instanceKeys or Arrays.sort(Tables.keys(self))
+	end
+	local function compareInstances(self, other, allowEquality)
+		local instanceKeys = getInstancesKeys(self, keys)
+		for _, key in ipairs(instanceKeys) do
+			if Arrays.defaultComparator(self[key], other[key]) then
+				return true
+			elseif Arrays.defaultComparator(other[key], self[key]) then
+				return false
+			end
+			if self[key] ~= other[key] then
+				return not allowEquality
+			end
+		end
+		return allowEquality
+	end
 	return function(Class)
 		function Class:equals(other)
-			local instanceKeys = keys or Arrays.sort(Tables.keys(self))
+			local instanceKeys = getInstancesKeys(self, keys)
 			for _, key in ipairs(instanceKeys) do
 				if self[key] ~= other[key] then
 					return false
@@ -3639,32 +3841,10 @@ function Classes.PartialOrd(keys)
 			return true
 		end
 		function Class:__le(other)
-			local instanceKeys = keys or Arrays.sort(Tables.keys(self))
-			for _, key in ipairs(instanceKeys) do
-				if Arrays.defaultComparator(self[key], other[key]) then
-					return true
-				elseif Arrays.defaultComparator(other[key], self[key]) then
-					return false
-				end
-				if self[key] ~= other[key] then
-					return false
-				end
-			end
-			return true
+			return compareInstances(self, other, true)
 		end
 		function Class:__lt(other)
-			local instanceKeys = keys or Arrays.sort(Tables.keys(self))
-			for _, key in ipairs(instanceKeys) do
-				if Arrays.defaultComparator(self[key], other[key]) then
-					return true
-				elseif Arrays.defaultComparator(other[key], self[key]) then
-					return false
-				end
-				if self[key] ~= other[key] then
-					return true
-				end
-			end
-			return false
+			return compareInstances(self, other, false)
 		end
 		return Class
 	end
@@ -3694,7 +3874,7 @@ end
 	Create an enumeration from an array string _keys_, provided in upper snake-case.
 
 	An Enum is used when a value should only be one of a limited number of possible states.
-	`_.enum` creates a string enum, which uses a name for each state so it is easy to refer to.
+	`dash.enum` creates a string enum, which uses a name for each state so it is easy to refer to.
 	For ease of use values in the enum are identical to their key.
 
 	Enums are frozen and will throw if access to a missing key is attempted, helping to eliminate
@@ -3704,14 +3884,14 @@ end
 
 	@param keys provided in upper snake-case.
 	@example
-		local TOGGLE = _.enum("ON", "OFF")
+		local TOGGLE = dash.enum("ON", "OFF")
 		local switch = TOGGLE.ON
 		if switch == TOGGLE.ON then
 			game.Workspace.RoomLight.Brightness = 1
 		else
 			game.Workspace.RoomLight.Brightness = 0
 		end
-	@see _.match
+	@see dash.match
 ]]
 --: <T>(string -> Enum<T>)
 function Classes.enum(keys)
@@ -3728,15 +3908,15 @@ function Classes.enum(keys)
 end
 
 --[[
-	Given an _enum_ and _strategies_, a dictionary of functions keyed by enum values, `_.match`
+	Given an _enum_ and _strategies_, a dictionary of functions keyed by enum values, `dash.match`
 	returns a function that will execute the strategy for any value provided.
 
 	A strategy for every enum key must be implemented, and this helps prevent missing values
 	from causing problems later on down the line.
 
 	@example
-		local TOGGLE = _.enum("ON", "OFF")
-		local setLightTo = _.match(TOGGLE, {
+		local TOGGLE = dash.enum("ON", "OFF")
+		local setLightTo = dash.match(TOGGLE, {
 			ON = function(light)
 				light.Brightness = 1
 			end,
@@ -3769,13 +3949,13 @@ function Classes.match(enum, strategies)
 end
 
 --[[
-	`_.finalize` takes _object_ and makes updating or accessing missing keys throw `FinalObject`.
+	`dash.finalize` takes _object_ and makes updating or accessing missing keys throw `FinalObject`.
 	@example
 		local drink = {
 			mixer = "coke",
 			spirit = "rum"
 		}
-		_.finalize(drink)
+		dash.finalize(drink)
 		drink.mixer = "soda"
 		drink.mixer --> "soda"
 		print(drink.syrup)
@@ -3839,18 +4019,18 @@ function Classes.symbol(name)
 end
 
 --[[
-	`_.freeze` takes _object_ and returns a new read-only version which prevents any values from
+	`dash.freeze` takes _object_ and returns a new read-only version which prevents any values from
 	being changed.
 	
 	Unfortunately you cannot iterate using `pairs` or `ipairs` on frozen objects because Lua 5.1
-	does not support overwriting these in metatables. However, you can use `_.iterator` to get
+	does not support overwriting these in metatables. However, you can use `dash.iterator` to get
 	an iterator 
 
-	Iterating functions in Rodash such as `_.map`, `_.filter` etc. can iterate over frozen objects
-	without this. If you want to treat the objects as arrays use `_.iterator(frozenObjet, true)`
+	Iterating functions in Rodash such as `dash.map`, `dash.filter` etc. can iterate over frozen objects
+	without this. If you want to treat the objects as arrays use `dash.iterator(frozenObjet, true)`
 	explicitly.
 	@example
-		local drink = _.freeze({
+		local drink = dash.freeze({
 			mixer = "coke",
 			spirit = "rum"
 		})
@@ -3860,7 +4040,7 @@ end
 		print(drink.syrup) --> nil
 		drink.syrup = "peach"
 		--!> "ReadonlyKey: Attempt to write to a frozen key peach"
-	@see _.iterator
+	@see dash.iterator
 ]]
 --: <T: table>(T -> T)
 function Classes.freeze(object)
@@ -3893,12 +4073,12 @@ end
 	Returns `true` if _value_ is an instance of _type_.
 
 	Type can currently be either an _Enum_ or a _Class_ table. For instances of classes,
-	`_.isA` will also return true if the instance is an instance of any sub-class.
+	`dash.isA` will also return true if the instance is an instance of any sub-class.
 
 	The function will catch any errors thrown during this check, returning false if so.
 
 	@example
-		local Vehicle = _.class("Vehicle", function( wheelCount ) return 
+		local Vehicle = dash.class("Vehicle", function( wheelCount ) return 
 			{
 				speed = 0,
 				wheelCount = wheelCount
@@ -3909,7 +4089,7 @@ end
 		Vehicle.isA(5) --> false
 
 	@example
-		local TOGGLE = _.enum("ON", "OFF")
+		local TOGGLE = dash.enum("ON", "OFF")
 		TOGGLE.isA("ON") --> true
 		TOGGLE.isA(5) --> false
 
@@ -3982,7 +4162,7 @@ end
 	Returns a function that when called, returns the original input parameters.
 	@trait Chainable
 	@example
-		findPlayer("builderman"):andThen(_.returns("Found Dave!"))
+		findPlayer("builderman"):andThen(dash.returns("Found Dave!"))
 		--> "Found Dave!" (soon after)
 	@usage Useful for when you want a callback to discard the arguments passed in and instead use static ones.
 ]]
@@ -4018,7 +4198,7 @@ end
 --[[
 	Returns a function that when called, throws the original message.
 	@example
-		findPlayer("builderman"):andThen(_.throws("DaveNotFound"))
+		findPlayer("builderman"):andThen(dash.throws("DaveNotFound"))
 		--!> "DaveNotFound" (soon after)
 	@usage Useful for when you want a callback to discard the arguments passed in and instead use static ones.
 ]]
@@ -4038,7 +4218,7 @@ end
 		local function damagePlayer( player, amount )
 			player:Damage(amount)
 		end
-		local damageLocalPlayer = _.bind(damagePlayer, game.Players.LocalPlayer)
+		local damageLocalPlayer = dash.bind(damagePlayer, game.Players.LocalPlayer)
 		damageLocalPlayer(5)
 ]]
 --: <A, B, R>(((A..., B... -> R), ...A) -> ...B -> R)
@@ -4054,15 +4234,15 @@ end
 	Takes a chainable function _fn_ and binds _arguments_ to the tail of the _fn_ argument list.
 	Returns a function which executes _fn_, passing a subject ahead of the bound arguments supplied.
 	@example
-		local filterHurtPlayers = _.bindTail(_.filter, function(player)
+		local filterHurtPlayers = dash.bindTail(dash.filter, function(player)
 			return player.Health < player.MaxHealth
 		end)
-		local getName = _.bindTail(_.map, function(player)
+		local getName = dash.bindTail(dash.map, function(player)
 			return player.Name
 		end)
-		local filterHurtNames = _.compose(filterHurtPlayers, getName)
+		local filterHurtNames = dash.compose(filterHurtPlayers, getName)
 		filterHurtNames(game.Players) --> {"Frodo", "Boromir"}	
-	@usage Chainable rodash function feeds are mapped to `_.fn`, such as `_.fn.map(handler)`.
+	@usage Chainable rodash function feeds are mapped to `dash.fn`, such as `dash.fn.map(handler)`.
 ]]
 --: <T, A>(Chainable<T, A>, ...A) -> T -> T
 function Functions.bindTail(fn, ...)
@@ -4079,7 +4259,7 @@ end
 	@returns the function with method `:clear()` that resets the cached value.
 	@trait Chainable
 	@example
-		local fry = _.once(function(item)
+		local fry = dash.once(function(item)
 			return "fried " .. tiem
 		end)
 		fry("sardine") --> "fried sardine"
@@ -4137,19 +4317,19 @@ end
 	check the value of the data at each step and change how the chain proceeds.
 	
 	Calling a _Chain_ with a subject reduces the chained operations in order on the subject. 
-	@param actor called for each result in the chain to determine how the next operation should process it. (default = `_.invoke`)
+	@param actor called for each result in the chain to determine how the next operation should process it. (default = `dash.invoke`)
 	@example
 		-- Define a simple chain that can operate a list of numbers.
 		-- A chain function is called with the subject being processed as first argument,
 		-- and any arguments passed in the chain as subsequent arguments.
-		local numberChain = _.chain({
+		local numberChain = dash.chain({
 			addN = function(list, n)
-				return _.map(list, function(element)
+				return dash.map(list, function(element)
 					return element + n
 				end)
 			end,
 			sum = function(list)
-				return _.sum(list)
+				return dash.sum(list)
 			end
 		})
 		local op = numberChain:addN(2):sum()
@@ -4161,7 +4341,7 @@ end
 		end)
 
 		-- Create a chain that filters for hurt players and finds their name
-		local filterHurtNames = _.fn:filter(function(player)
+		local filterHurtNames = dash.fn:filter(function(player)
 			return player.Health < player.MaxHealth
 		end):map(getName)
 
@@ -4170,34 +4350,34 @@ end
 
 		-- For fun, let's encapsulate the functionality above by
 		-- defining a chain of operations on players...
-		local players = _.chain({
-			filterHurtPlayers = _.fn:filter(function(player)
+		local players = dash.chain({
+			filterHurtPlayers = dash.fn:filter(function(player)
 				return player.Health < player.MaxHealth
 			end),
 			-- Filter players by getting their name and checking it ends with 'Baggins'
-			filterBaggins = _.fn:filter(_.fn:call(getName):endsWith("Baggins"))
+			filterBaggins = dash.fn:filter(dash.fn:call(getName):endsWith("Baggins"))
 		})
 
 		local hurtHobbits = players:filterHurtPlayers():filterBaggins()
 		hurtHobbits(game.Players) --> {{Name = "Frodo Baggins", ...}}
 
-		local names = _.fn:map(getName)
+		local names = dash.fn:map(getName)
 
 		-- Chains are themselves chainable, so you can compose two chains together
-		local filterHurtHobbitNames = _.compose(hurtHobbits, names)
+		local filterHurtHobbitNames = dash.compose(hurtHobbits, names)
 
 		filterHurtHobbitNames(game.Players) --> {"Frodo Baggins"}
 	@trait Chainable
-	@usage The "Rodash" chain: `_.chain(_)` is aliased to `_.fn`, so instead of writing
-	`_.chain(_):filter` you can simply write `_.fn:filter`, or any other chainable method.
-	@usage A chained function can be made using `_.chain` or built inductively using other chained
-		methods of `_.fn`.
+	@usage The "Rodash" chain: `dash.chain(_)` is aliased to `dash.fn`, so instead of writing
+	`dash.chain(_):filter` you can simply write `dash.fn:filter`, or any other chainable method.
+	@usage A chained function can be made using `dash.chain` or built inductively using other chained
+		methods of `dash.fn`.
 	@usage A chainable method is one that has the subject which is passed through a chain as the
 		first argument, and subsequent arguments
-	@see _.chainFn - Makes a function chainable if it returns a chain.
-	@see _.invoke - the identity actor
-	@see _.continue - an actor for chains of asynchronous functions
-	@see _.maybe - an actor for chains of partial functions
+	@see dash.chainFn - Makes a function chainable if it returns a chain.
+	@see dash.invoke - the identity actor
+	@see dash.continue - an actor for chains of asynchronous functions
+	@see dash.maybe - an actor for chains of partial functions
 ]]
 --: <T>(T{}, Actor<T>) -> Chain<T>
 function Functions.chain(fns, actor)
@@ -4234,7 +4414,7 @@ function Functions.chain(fns, actor)
 				return feeder
 			end,
 			__newindex = function()
-				error("ReadonlyKey: Cannot assign to a chain, create one with _.chain instead.")
+				error("ReadonlyKey: Cannot assign to a chain, create one with dash.chain instead.")
 			end,
 			__call = function(_, subject)
 				return subject
@@ -4256,11 +4436,11 @@ end
 	@example
 		-- In the chain example addN was defined like so:
 		local function addN(list, n)
-			return _.map(list, function(element)
+			return dash.map(list, function(element)
 				return element + n
 			end)
 		end
-		numberChain = _.chain({
+		numberChain = dash.chain({
 			addN = addN
 		})
 		local op = numberChain:addN(2):sum()
@@ -4269,19 +4449,19 @@ end
 		-- It is more natural to define addN as a function taking one argument,
 		-- to match the way it is called in the chain:
 		local function addN(n)
-			-- Methods on _.fn are themselves chained, so "list" can be dropped.
-			return _.fn:map(function(element)
+			-- Methods on dash.fn are themselves chained, so "list" can be dropped.
+			return dash.fn:map(function(element)
 				return element + n
 			end)
 		end
-		-- The _.chainFn is used to wrap any functions which return chains.
-		numberChain = _.chain({
-			addN = _.chainFn(addN)
+		-- The dash.chainFn is used to wrap any functions which return chains.
+		numberChain = dash.chain({
+			addN = dash.chainFn(addN)
 		})
 		local op = numberChain:addN(2):sum()
 		op({1, 2, 3}) --> 12
 
-	@see _.chain
+	@see dash.chain
 ]]
 -- <T, A, R>((...A -> T -> R) -> T, ...A -> R)
 function Functions.chainFn(fn)
@@ -4293,7 +4473,7 @@ end
 
 --[[
 	An actor which calls the supplied _fn_ with the argument tail.
-	@usage This is the default _actor_ for `_.chain` and acts as an identity, meaning it has no effect on the result.
+	@usage This is the default _actor_ for `dash.chain` and acts as an identity, meaning it has no effect on the result.
 ]]
 --: <T>(Actor<T>)
 function Functions.invoke(fn, ...)
@@ -4307,33 +4487,33 @@ end
 	Can wrap any other actor which handles values that are non-nil.
 	@example 
 		-- We can define a chain of Rodash functions that will skip after a nil is returned.
-		local maybeFn = _.chain(_, _.maybe())
+		local maybeFn = dash.chain(_, dash.maybe())
 		local getName = function(player)
 			return player.Name
 		end
 		local players
 		players =
-			_.chain(
+			dash.chain(
 			{
 				-- Any chainable functions can be used
-				call = _.call,
-				endsWith = _.endsWith,
-				filterHurt = _.fn:filter(
+				call = dash.call,
+				endsWith = dash.endsWith,
+				filterHurt = dash.fn:filter(
 					function(player)
 						return player.Health < 100
 					end
 				),
-				filterBaggins = _.chainFn(
+				filterBaggins = dash.chainFn(
 					function()
 						-- If getName returns nil here, endsWith will be skipped
-						return _.fn:filter(maybeFn:call(getName):endsWith("Baggins"))
+						return dash.fn:filter(maybeFn:call(getName):endsWith("Baggins"))
 					end
 				)
 			}
 		)
 		local hurtHobbits = players:filterHurt():filterBaggins()
-		local mapNames = _.fn:map(getName)
-		local filterHurtBagginsNames = _.compose(hurtHobbits, mapNames)
+		local mapNames = dash.fn:map(getName)
+		local filterHurtBagginsNames = dash.compose(hurtHobbits, mapNames)
 		-- Here, one player record doesn't have a Name property, so it is skipped.
 		local crew = {
 			{
@@ -4371,33 +4551,33 @@ end
 	synchronous methods, removing any boilerplate needed to handle promises in the main code body.
 	
 	Can wrap any other actor which handles values after any promise resolution.
-	@param actor (default = `_.invoke`) The actor to wrap.
+	@param actor (default = `dash.invoke`) The actor to wrap.
 	@example
 		-- Let's define a function which returns an answer after a delay
 		local getName = function(player)
-			return _.delay(1):andThen(_.returns(player.Name))
+			return dash.delay(1):andThen(dash.returns(player.Name))
 		end
 		local players
 		players =
-			_.chain(
+			dash.chain(
 			{
 				-- Any chainable function can be used
-				filter = _.filter,
+				filter = dash.filter,
 				-- A chain which evaluates a promise of the player names
-				mapNames = _.fn:map(getName):parallel(),
-				filterHurt = _.fn:filter(
+				mapNames = dash.fn:map(getName):parallel(),
+				filterHurt = dash.fn:filter(
 					function(player)
 						return player.Health < 100
 					end
 				),
-				mapNameIf = _.chainFn(
+				mapNameIf = dash.chainFn(
 					function(expectedName)
 						-- Methods on self work as expected
-						return players:mapNames():filter(_.fn:endsWith(expectedName))
+						return players:mapNames():filter(dash.fn:endsWith(expectedName))
 					end
 				)
 			},
-			_.continue()
+			dash.continue()
 		)
 		local filterHurtHobbitNames = players:filterHurt():mapNameIf("Baggins")
 		local crew = {
@@ -4416,7 +4596,7 @@ end
 		}
 		filterHurtHobbitNames(crew):await() --> {"Frodo Baggins"} (some time later)
 	@rejects passthrough
-	@see _.chain
+	@see dash.chain
 ]]
 --: <T>(Actor<T>) -> Actor<T>
 function Functions.continue(actor)
@@ -4461,7 +4641,7 @@ setmetatable(
 	@example
 		local function fry(item) return "fried " .. item end
 		local function cheesify(item) return "cheesy " .. item end
-		local prepare = _.compose(fry, cheesify)
+		local prepare = dash.compose(fry, cheesify)
 		prepare("nachos") --> "cheesy fried nachos"
 	@usage Useful for when you want to lazily compute something expensive that doesn't change.
 	@trait Chainable
@@ -4483,17 +4663,17 @@ function Functions.compose(...)
 end
 
 --[[
-	Like `_.once`, but caches non-nil results of calls to _fn_ keyed by some serialization of the
+	Like `dash.once`, but caches non-nil results of calls to _fn_ keyed by some serialization of the
 	input arguments to _fn_. By default, all the args are serialized simply using `tostring`.
 
 	Optionally memoize takes `function serializeArgs(args, cache)`, a function that should return a string key which a
 	result should be cached at for a given signature. Return nil to avoid caching the result.
 
-	@param serializeArgs (default = `_.serialize`)
+	@param serializeArgs (default = `dash.serialize`)
 	@returns the function with method `:clear(...)` that resets the cache for the argument specified, or `:clearAll()` to clear the entire cache.
 	@example
 		local menu = {"soup", "bread", "butter"}
-		local heat = _.memoize(function(index)
+		local heat = dash.memoize(function(index)
 			return "hot " ... menu[index]
 		end)
 
@@ -4509,8 +4689,8 @@ end
 
 		heat:clear(1)
 		heat(1) --> "hot beef"
-	@see _.serialize
-	@see _.serializeDeep if you want to recursively serialize arguments.
+	@see dash.serialize
+	@see dash.serializeDeep if you want to recursively serialize arguments.
 ]]
 --: <...A, B>((...A -> B), ...A -> string?) -> Clearable<...A> & AllClearable & (...A) -> B
 function Functions.memoize(fn, serializeArgs)
@@ -4575,7 +4755,7 @@ function Functions.setTimeout(fn, delayInSeconds)
 end
 
 --[[
-	Like `_.setTimeout` but calls _fn_ after every interval of _intervalInSeconds_ time has passed.
+	Like `dash.setTimeout` but calls _fn_ after every interval of _intervalInSeconds_ time has passed.
 	@param delayInSeconds (default = _intervalInSeconds_) The delay before the initial call.
 	@returns an instance which `:clear()` can be called on to prevent _fn_ from firing.
 ]]
@@ -4705,9 +4885,9 @@ end
 
 --[[
 	Convert `str` to camel-case.
-	@example _.camelCase('Pepperoni Pizza') --> 'pepperoniPizza'
-	@example _.camelCase('--pepperoni-pizza--') --> 'pepperoniPizza'
-	@example _.camelCase('__PEPPERONI_PIZZA') --> 'pepperoniPizza'
+	@example dash.camelCase('Pepperoni Pizza') --> 'pepperoniPizza'
+	@example dash.camelCase('--pepperoni-pizza--') --> 'pepperoniPizza'
+	@example dash.camelCase('__PEPPERONI_PIZZA') --> 'pepperoniPizza'
 	@trait Chainable
 ]]
 --: string -> string
@@ -4723,9 +4903,9 @@ end
 
 --[[
 	Convert `str` to kebab-case, making all letters lowercase.
-	@example _.kebabCase('strongStilton') --> 'strong-stilton'
-	@example _.kebabCase(' Strong Stilton ') --> 'strong-stilton'
-	@example _.kebabCase('__STRONG_STILTON__') --> 'strong-stilton'
+	@example dash.kebabCase('strongStilton') --> 'strong-stilton'
+	@example dash.kebabCase(' Strong Stilton ') --> 'strong-stilton'
+	@example dash.kebabCase('__STRONG_STILTON__') --> 'strong-stilton'
 	@usage Chain with `:upper()` if you need an upper kebab-case string.
 	@trait Chainable
 ]]
@@ -4742,9 +4922,9 @@ end
 
 --[[
 	Convert `str` to snake-case, making all letters uppercase.
-	@example _.snakeCase('sweetChickenCurry') --> 'SWEET_CHICKEN_CURRY'
-	@example _.snakeCase(' Sweet Chicken  Curry ') --> 'SWEET_CHICKEN__CURRY'
-	@example _.snakeCase('--sweet-chicken--curry--') --> 'SWEET_CHICKEN__CURRY'
+	@example dash.snakeCase('sweetChickenCurry') --> 'SWEET_CHICKEN_CURRY'
+	@example dash.snakeCase(' Sweet Chicken  Curry ') --> 'SWEET_CHICKEN__CURRY'
+	@example dash.snakeCase('--sweet-chicken--curry--') --> 'SWEET_CHICKEN__CURRY'
 	@usage Chain with `:lower()` if you need a lower snake-case string.
 	@trait Chainable
 ]]
@@ -4760,9 +4940,9 @@ end
 
 --[[
 	Convert `str` to title-case, where the first letter of each word is capitalized.
-	@example _.titleCase("jello world") --> "Jello World"
-	@example _.titleCase("yellow-jello with_sprinkles") --> "Yellow-jello With_sprinkles"
-	@example _.titleCase("yellow jello's don’t mellow") --> "Yellow Jello's Dont’t Mellow"
+	@example dash.titleCase("jello world") --> "Jello World"
+	@example dash.titleCase("yellow-jello with_sprinkles") --> "Yellow-jello With_sprinkles"
+	@example dash.titleCase("yellow jello's don’t mellow") --> "Yellow Jello's Dont’t Mellow"
 	@usage Dashes, underscores and apostraphes don't break words.
 	@trait Chainable
 ]]
@@ -4778,7 +4958,7 @@ end
 
 --[[
 	Capitalize the first letter of `str`.
-	@example _.capitalize("hello mould") --> "Hello mould"
+	@example dash.capitalize("hello mould") --> "Hello mould"
 	@trait Chainable
 ]]
 function Strings.capitalize(str)
@@ -4788,13 +4968,14 @@ end
 
 --[==[
 	Converts the characters `&<>"'` in `str` to their corresponding HTML entities.
-	@example _.encodeHtml([[Pease < Bacon > "Fish" & 'Chips']]) --> "Peas &lt; Bacon &gt; &quot;Fish&quot; &amp; &apos;Chips&apos;"
+	@example dash.encodeHtml([[Pease < Bacon > "Fish" & 'Chips']]) --> "Peas &lt; Bacon &gt; &quot;Fish&quot; &amp; &apos;Chips&apos;"
 	@trait Chainable
 ]==]
 function Strings.encodeHtml(str)
 	assertStrIsString(str)
 	local entities = {["<"] = "lt", [">"] = "gt", ["&"] = "amp", ['"'] = "quot", ["'"] = "apos"}
-	local result = str:gsub(
+	local result =
+		str:gsub(
 		".",
 		function(char)
 			return entities[char] and ("&" .. entities[char] .. ";") or char
@@ -4804,15 +4985,16 @@ function Strings.encodeHtml(str)
 end
 
 --[==[
-	The inverse of `_.encodeHtml`.
+	The inverse of `dash.encodeHtml`.
 	Converts any HTML entities in `str` to their corresponding characters.
-	@example _.decodeHtml("&lt;b&gt;&#34;Smashed&quot;&lt;/b&gt; &apos;Avocado&#39; &#x1F60F;") --> [[<b>"Smashed"</b> 'Avocado' 😏]]
+	@example dash.decodeHtml("&lt;b&gt;&#34;Smashed&quot;&lt;/b&gt; &apos;Avocado&#39; &#x1F60F;") --> [[<b>"Smashed"</b> 'Avocado' 😏]]
 	@trait Chainable
 ]==]
 function Strings.decodeHtml(str)
 	assertStrIsString(str)
 	local entities = {lt = "<", gt = ">", amp = "&", quot = '"', apos = "'"}
-	local result = str:gsub(
+	local result =
+		str:gsub(
 		"(&(#?x?)([%d%a]+);)",
 		function(original, hashPrefix, code)
 			return (hashPrefix == "" and entities[code]) or
@@ -4827,8 +5009,8 @@ end
 --[[
 	Splits `str` into parts based on a pattern delimiter and returns a table of the parts, followed
 	by a table of the matched delimiters.
-	@example _.splitOn("rice") --> {"r", "i", "c", "e"}, {"", "", "", ""}
-	@example _.splitOn("one.two::flour", "[.:]") --> {"one", "two", "", "flour"}, {".", ":", ":"}
+	@example dash.splitOn("rice") --> {"r", "i", "c", "e"}, {"", "", "", ""}
+	@example dash.splitOn("one.two::flour", "[.:]") --> {"one", "two", "", "flour"}, {".", ":", ":"}
 	@usage This method is useful only when you need a _pattern_ as a delimiter.
 	@usage Use the Roblox native `string.split` if you are splitting on a simple string.
 	@param delimiter (default = "")
@@ -4860,7 +5042,7 @@ end
 
 --[[
 	Removes any spaces from the start and end of `str`.
-	@example _.trim("  roast veg  ") --> "roast veg"
+	@example dash.trim("  roast veg  ") --> "roast veg"
 	@trait Chainable
 ]]
 --: string -> string
@@ -4871,8 +5053,8 @@ end
 
 --[[
 	Checks if `str` starts with the string `start`.
-	@example _.startsWith("Fun Roblox Games", "Fun") --> true
-	@example _.startsWith("Chess", "Fun") --> false
+	@example dash.startsWith("Fun Roblox Games", "Fun") --> true
+	@example dash.startsWith("Chess", "Fun") --> false
 	@trait Chainable
 ]]
 --: string, string -> bool
@@ -4884,8 +5066,8 @@ end
 
 --[[
 	Checks if `str` ends with the string `suffix`.
-	@example _.endsWith("Fun Roblox Games", "Games") --> true
-	@example _.endsWith("Bad Roblox Memes", "Games") --> false
+	@example dash.endsWith("Fun Roblox Games", "Games") --> true
+	@example dash.endsWith("Bad Roblox Memes", "Games") --> false
 	@trait Chainable
 ]]
 --: string, string -> bool
@@ -4897,9 +5079,9 @@ end
 
 --[[
 	Makes a string of `length` from `str` by repeating characters from `prefix` at the start of the string.
-	@example _.leftPad("toast", 6) --> " toast"
-	@example _.leftPad("2", 2, "0") --> "02"
-	@example _.leftPad("toast", 10, ":)") --> ":):):toast"
+	@example dash.leftPad("toast", 6) --> " toast"
+	@example dash.leftPad("2", 2, "0") --> "02"
+	@example dash.leftPad("toast", 10, ":)") --> ":):):toast"
 	@param prefix (default = `" "`)
 	@trait Chainable
 ]]
@@ -4917,9 +5099,9 @@ end
 
 --[[
 	Makes a string of `length` from `str` by repeating characters from `suffix` at the end of the string.
-	@example _.rightPad("toast", 6) --> "toast "
-	@example _.rightPad("2", 2, "!") --> "2!"
-	@example _.rightPad("toast", 10, ":)") --> "toast:):):"
+	@example dash.rightPad("toast", 6) --> "toast "
+	@example dash.rightPad("2", 2, "!") --> "2!"
+	@example dash.rightPad("toast", 10, ":)") --> "toast:):):"
 	@param suffix (default = `" "`)
 	@trait Chainable
 ]]
@@ -4936,12 +5118,12 @@ function Strings.rightPad(str, length, suffix)
 end
 
 --[[
-	This function first calls `_.format` on the arguments provided and then outputs the response
-	to the debug target, set using `_.setDebug`. By default, this function does nothing, allowing
+	This function first calls `dash.format` on the arguments provided and then outputs the response
+	to the debug target, set using `dash.setDebug`. By default, this function does nothing, allowing
 	developers to leave the calls in the source code if that is beneficial.
 	@param subject the format match string
-	@usage A common pattern would be to `_.setDebug()` to alias to `print` during local development,
-		and call e.g. `_.setDebug(_.bind(HttpService.PostAsync, "https://example.com/log"))`
+	@usage A common pattern would be to `dash.setDebug()` to alias to `print` during local development,
+		and call e.g. `dash.setDebug(dash.bind(HttpService.PostAsync, "https://example.com/log"))`
 		on a production build to allow remote debugging.
 ]]
 function Strings.debug(subject, ...)
@@ -4952,9 +5134,9 @@ function Strings.debug(subject, ...)
 end
 
 --[[
-	Hooks up any debug methods to invoke _fn_. By default, `_.debug` does nothing.
+	Hooks up any debug methods to invoke _fn_. By default, `dash.debug` does nothing.
 	@param fn (default = `print`)
-	@usage Calling `_.setDebug()` will simply print all calls to `_.debug` with formatted arguments.
+	@usage Calling `dash.setDebug()` will simply print all calls to `dash.debug` with formatted arguments.
 ]]
 function Strings.setDebug(fn)
 	Strings.debugTarget = fn
@@ -4962,14 +5144,14 @@ end
 
 --[[
 	Converts _char_ into a hex representation
-	@param format (optional) a string passed to `_.format` which formats the hex value of each of the character's code points.
+	@param format (optional) a string passed to `dash.format` which formats the hex value of each of the character's code points.
 	@param useBytes (default = false) whether to use the character's bytes, rather than UTF-8 code points.
-	@example _.charToHex("<") --> "3C"
-	@example _.charToHex("<", "&#{};") --> "&#3C;"
-	@example _.charToHex("😏") --> "1F60F"
-	@example _.charToHex("😏", "0x{}") --> "0x1F60F"
-	@example _.charToHex("🤷🏼‍♀️", "&#x{};") --> "&#x1F937;&#x1F3FC;&#x200D;&#x2640;&#xFE0F;"
-	@example _.charToHex("🤷🏼‍♀️", "%{}", true) --> "%F0%9F%A4%B7%F0%9F%8F%BC%E2%80%8D%E2%99%80%EF%B8%8F"
+	@example dash.charToHex("<") --> "3C"
+	@example dash.charToHex("<", "&#{};") --> "&#3C;"
+	@example dash.charToHex("😏") --> "1F60F"
+	@example dash.charToHex("😏", "0x{}") --> "0x1F60F"
+	@example dash.charToHex("🤷🏼‍♀️", "&#x{};") --> "&#x1F937;&#x1F3FC;&#x200D;&#x2640;&#xFE0F;"
+	@example dash.charToHex("🤷🏼‍♀️", "%{}", true) --> "%F0%9F%A4%B7%F0%9F%8F%BC%E2%80%8D%E2%99%80%EF%B8%8F"
 ]]
 --: char -> str, str?, boolean?
 function Strings.charToHex(char, format, useBytes)
@@ -4998,10 +5180,10 @@ end
 
 --[[
 	Generates a character from its _hex_ representation.
-	@example _.hexToChar("1F60F") --> "😏"
-	@example _.hexToChar("%1F60F") --> "😏"
-	@example _.hexToChar("#1F60F") --> "😏"
-	@example _.hexToChar("0x1F60F") --> "😏"
+	@example dash.hexToChar("1F60F") --> "😏"
+	@example dash.hexToChar("%1F60F") --> "😏"
+	@example dash.hexToChar("#1F60F") --> "😏"
+	@example dash.hexToChar("0x1F60F") --> "😏"
 	@throws _MalformedInput_ if _char_ is not a valid encoding.
 ]]
 --: str -> char
@@ -5019,7 +5201,7 @@ end
 	Encodes _str_ for use as a URL, for example as an entire URL.
 	@trait Chainable
 	@example
-		_.encodeUrl("https://example.com/Egg+Fried Rice!?🤷🏼‍♀️")
+		dash.encodeUrl("https://example.com/Egg+Fried Rice!?🤷🏼‍♀️")
 		--> "https://example.com/Egg+Fried%20Rice!?%F0%9F%A4%B7%F0%9F%8F%BC%E2%80%8D%E2%99%80%EF%B8%8F"
 	@usage
 		This method is designed to act like `encodeURI` in JavaScript.
@@ -5043,7 +5225,7 @@ end
 	Encodes _str_ for use in a URL, for example as a query parameter of a URL.
 	@trait Chainable
 	@example
-		_.encodeUrlComponent("https://example.com/Egg+Fried Rice!?🤷🏼‍♀️")
+		dash.encodeUrlComponent("https://example.com/Egg+Fried Rice!?🤷🏼‍♀️")
 		--> "https%3A%2F%2Fexample.com%2FEgg%2BFried%20Rice!%3F%F0%9F%A4%B7%F0%9F%8F%BC%E2%80%8D%E2%99%80%EF%B8%8F"
 	@usage
 		This method is designed to act like `encodeURIComponent` in JavaScript.
@@ -5077,10 +5259,10 @@ local calculateDecodeUrlExceptions =
 )
 
 --[[
-	The inverse of `_.encodeUrl`.
+	The inverse of `dash.encodeUrl`.
 	@trait Chainable
 	@example
-		_.decodeUrl("https://Egg+Fried%20Rice!?")
+		dash.decodeUrl("https://Egg+Fried%20Rice!?")
 		--> "https://Egg+Fried Rice!?"
 	@usage
 		This method is designed to act like `decodeURI` in JavaScript.
@@ -5101,10 +5283,10 @@ function Strings.decodeUrl(str)
 end
 
 --[[
-	The inverse of `_.encodeUrlComponent`.
+	The inverse of `dash.encodeUrlComponent`.
 	@trait Chainable
 	@example
-		_.decodeUrlComponent("https%3A%2F%2FEgg%2BFried%20Rice!%3F")
+		dash.decodeUrlComponent("https%3A%2F%2FEgg%2BFried%20Rice!%3F")
 		--> "https://Egg+Fried Rice!?"
 	@usage This method is designed to act like `decodeURIComponent` in JavaScript.
 	@throws _MalformedInput_ if _str_ contains characters encoded incorrectly.
@@ -5120,7 +5302,7 @@ end
 	to the end of a url.
 	
 	@example
-		_.encodeQueryString({
+		dash.encodeQueryString({
 			time = 11,
 			biscuits = "hob nobs",
 			chocolatey = true
@@ -5156,24 +5338,24 @@ end
 	Display parameters can be combined after a `:` in the curly braces. Any format parameters used
 	in `string.format` can be used here, along with these extras:
 
-	* `{:?}` formats any value using `_.serializeDeep`.
-	* `{:#?}` formats any value using `_.pretty`.
+	* `{:?}` formats any value using `dash.serializeDeep`.
+	* `{:#?}` formats any value using `dash.pretty`.
 	* `{:b}` formats a number in its binary representation.
 	@example
 		local props = {"teeth", "claws", "whiskers", "tail"}
-		_.format("{:?} is in {:#?}", "whiskers", props)
+		dash.format("{:?} is in {:#?}", "whiskers", props)
 		-> '"whiskers" is in {"teeth", "claws", "whiskers", "tail"}'
 	@example
-		_.format("{} in binary is {1:b}", 125) -> "125 in binary is 110100"
+		dash.format("{} in binary is {1:b}", 125) -> "125 in binary is 110100"
 	@example
-		_.format("The time is {:02}:{:02}", 2, 4) -> "The time is 02:04"
+		dash.format("The time is {:02}:{:02}", 2, 4) -> "The time is 02:04"
 	@example
-		_.format("The color blue is #{:06X}", 255) -> "The color blue is #0000FF"
+		dash.format("The color blue is #{:06X}", 255) -> "The color blue is #0000FF"
 	@usage Escape `{` with `{{` and `}` similarly with `}}`.
 	@usage See [https://developer.roblox.com/articles/Format-String](https://developer.roblox.com/articles/Format-String)
 		for complete list of formating options and further use cases.
-	@see _.serializeDeep
-	@see _.pretty
+	@see dash.serializeDeep
+	@see dash.pretty
 ]]
 --: string, ...any -> string
 function Strings.format(format, ...)
@@ -5270,9 +5452,9 @@ end
 	will be formatted across multiple lines if a descendant element gets longer than `80`
 	characters.
 
-	@usage This format may be improved in the future, so use `_.serializeDeep` if need a format
+	@usage This format may be improved in the future, so use `dash.serializeDeep` if need a format
 		which won't change.
-	@see _.serializeDeep
+	@see dash.serializeDeep
 ]]
 --: any, bool -> string
 function Strings.pretty(value, serializeOptions)
@@ -5389,11 +5571,11 @@ end
 	@param key The key of the child.
 	@param ... Further keys to address any descendent.
 	@example
-		local upperTorso = _.get(game.Players, "LocalPlayer", "Character", "UpperTorso")
+		local upperTorso = dash.get(game.Players, "LocalPlayer", "Character", "UpperTorso")
 		upperTorso --> Part (if player's character and its UpperTorso are defined)
 	@example
 		-- You can also bind a lookup to get later on:
-		local getUpperTorso = _.bindTail(_.get, "Character", "UpperTorso")
+		local getUpperTorso = dash.bindTail(dash.get, "Character", "UpperTorso")
 		getUpperTorso(players.LocalPlayer) --> Part
 	@trait Chainable
 ]]
@@ -5418,9 +5600,9 @@ end
 --[[
 	Set a child or descendant of a table. Returns `true` if the operation completed without error.
 
-	If any values along the path are not tables, `_.set` will do nothing and return `false`.
+	If any values along the path are not tables, `dash.set` will do nothing and return `false`.
 	@example
-		_.set(game.Players, {"LocalPlayer", "Character", "UpperTorso", "Color"}, Color3.new(255, 255, 255))
+		dash.set(game.Players, {"LocalPlayer", "Character", "UpperTorso", "Color"}, Color3.new(255, 255, 255))
 		--> true (if the set worked)
 	@trait Chainable
 ]]
@@ -5444,14 +5626,14 @@ end
 	the _handler_ function called for each value and key in the table.
 	@example
 		-- Use map to get the same property of each value:
-		local playerNames = _.map(game.Players:GetChildren(), function(player)
+		local playerNames = dash.map(game.Players:GetChildren(), function(player)
 			return player.Name
 		end)
 		playerNames --> {"Frodo Baggins", "Bilbo Baggins", "Boromir"}
 	@example
 		-- Use map to remove elements while preserving keys:
 		local ingredients = {veg = "carrot", sauce = "tomato", herb = "basil"}
-		local carrotsAndHerbs = _.map(ingredients, function( value, key )
+		local carrotsAndHerbs = dash.map(ingredients, function( value, key )
 			if value == "carrot" or key == "herb" then
 				return value
 			end
@@ -5460,7 +5642,7 @@ end
 	@example
 		-- Use map with multiple values of a table at once:
 		local numbers = {1, 1, 2, 3, 5} 
-		local nextNumbers = _.map(numbers, function( value, key )
+		local nextNumbers = dash.map(numbers, function( value, key )
 			return value + (numbers[key - 1] or 0)
 		end)
 		nextNumbers --> {1, 2, 3, 5, 8}
@@ -5477,12 +5659,12 @@ function Tables.map(source, handler)
 end
 
 --[[
-	Like `_.map`, but returns an array of the transformed values in the order that they are
+	Like `dash.map`, but returns an array of the transformed values in the order that they are
 	iterated over, dropping the original keys.
 	@example
 		local ingredients = {veg = "carrot", sauce = "tomato", herb = "basil"}
-		local list = _.mapValues(function(value)
-			return _.format("{} x2", value)
+		local list = dash.mapValues(function(value)
+			return dash.format("{} x2", value)
 		end)
 		list --> {"carrot x2", "tomato x2", "basil x2"} (in some order)
 ]]
@@ -5497,14 +5679,14 @@ function Tables.mapValues(source, handler)
 end
 
 --[[
-	Like `_.map`, but the return of the _handler_ is used to transform the key of each element,
+	Like `dash.map`, but the return of the _handler_ is used to transform the key of each element,
 	while the value is preserved.
 
 	If the _handler_ returns nil, the element is dropped from the result.
 	@example
 		local playerSet = {Frodo = true, Bilbo = true, Boromir = true}
-		local healthSet = _.keyBy(playerSet, function(name)
-			return _.get(game.Players, name, "Health")
+		local healthSet = dash.keyBy(playerSet, function(name)
+			return dash.get(game.Players, name, "Health")
 		end)
 		healthSet --> {100 = true, 50 = true, 0 = true}
 ]]
@@ -5522,14 +5704,14 @@ function Tables.keyBy(source, handler)
 end
 
 --[[
-	Like `_.mapValues` but _handler_ must return an array. These elements are then insterted into
+	Like `dash.mapValues` but _handler_ must return an array. These elements are then insterted into
 	the the resulting array returned.
 
 	You can return an empty array `{}` from handler to avoid inserting anything for a particular
 	element.
 
 	@example
-		local tools = _.flatMap(game.Players:GetChildren(), function(player)
+		local tools = dash.flatMap(game.Players:GetChildren(), function(player)
 			return player.Backpack:GetChildren()
 		end)
 		tools --> {Spoon, Ring, Sting, Book}
@@ -5553,11 +5735,11 @@ end
 
 	@example
 		local myTools = game.Players.LocalPlayer.Backpack:GetChildren()
-		local mySpoons = _.filter(myTools, function(tool)
-			return _.endsWith(tool.Name, "Spoon")
+		local mySpoons = dash.filter(myTools, function(tool)
+			return dash.endsWith(tool.Name, "Spoon")
 		end)
 		mySpoons --> {SilverSpoon, TableSpoon}
-	@see _.map if you would like to remove elements but preserve table keys
+	@see dash.map if you would like to remove elements but preserve table keys
 ]]
 --: <T: Iterable<K,V>>(T, (element: V, key: K -> bool) -> V[])
 function Tables.filter(source, handler)
@@ -5575,11 +5757,11 @@ end
 	Returns an array of elements in _source_ with any elements of _value_ removed.
 	@example
 		local points = {0, 10, 3, 0, 5}
-		local nonZero = _.without(points, 0)
+		local nonZero = dash.without(points, 0)
 		nonZero --> {10, 3, 5}
 	@example
 		local ingredients = {veg = "carrot", sauce = "tomato", herb = "basil"}
-		local withoutCarrots = _.without(ingredients, "carrot")
+		local withoutCarrots = dash.without(ingredients, "carrot")
 		withoutCarrots --> {"tomato", "basil"} (in some order)
 ]]
 --: <T: Iterable<K,V>>(T, V -> V[])
@@ -5602,7 +5784,7 @@ end
 			[1] = "Frodo",
 			[8] = "Bilbo"
 		}
-		local inOrderNames = _.compact(names)
+		local inOrderNames = dash.compact(names)
 		inOrderNames --> {"Frodo", "Boromir", "Bilbo"}
 ]]
 --: <T: Iterable<K,V>>(T -> V[])
@@ -5620,16 +5802,16 @@ end
 --[[
 	Return `true` if _handler_ returns true for every element in _source_ it is called with.
 
-	If no handler is provided, `_.all` returns true if every element is non-nil.
-	@param handler (default = `_.id`)
+	If no handler is provided, `dash.all` returns true if every element is non-nil.
+	@param handler (default = `dash.id`)
 	@example
 		local names = {
 			[3] = "Boromir",
 			[1] = "Frodo",
 			[8] = "Bilbo"
 		}
-		local allNamesStartWithB = _.all(names, function(name)
-			return _.startsWith(name, "B")
+		local allNamesStartWithB = dash.all(names, function(name)
+			return dash.startsWith(name, "B")
 		end)
 		allNamesStartWithB --> false
 ]]
@@ -5652,16 +5834,16 @@ end
 --[[
 	Return `true` if _handler_ returns true for at least one element in _source_ it is called with.
 
-	If no handler is provided, `_.any` returns true if some element is non-nil.
-	@param handler (default = `_.id`)
+	If no handler is provided, `dash.any` returns true if some element is non-nil.
+	@param handler (default = `dash.id`)
 	@example
 		local names = {
 			[3] = "Boromir",
 			[1] = "Frodo",
 			[8] = "Bilbo"
 		}
-		local anyNameStartsWithB = _.any(names, function(name)
-			return _.startsWith(name, "B")
+		local anyNameStartsWithB = dash.any(names, function(name)
+			return dash.startsWith(name, "B")
 		end)
 		anyNameStartsWithB --> true
 ]]
@@ -5687,7 +5869,7 @@ end
 	Returns a copy of _source_, ensuring each key starts with an underscore `_`.
 	Keys which are already prefixed with an underscore are left unchanged.
 	@example
-		local privates = _.privatize({
+		local privates = dash.privatize({
 			[1] = 1,
 			public = 2,
 			_private = 3
@@ -5710,7 +5892,7 @@ end
 	Returns a table with elements from _source_ with their keys and values flipped.
 	@example
 		local teams = {red = "Frodo", blue = "Bilbo", yellow = "Boromir"}
-		local players = _.invert(teams)
+		local players = dash.invert(teams)
 		players --> {Frodo = "red", Bilbo = "blue", Boromir = "yellow"}
 ]]
 --: <K: Key, V>(Iterable<K,V> -> Iterable<V,K>)
@@ -5723,14 +5905,14 @@ function Tables.invert(source)
 end
 
 --[[
-	Like `_.map`, but the return of the _handler_ is used to transform the key of each element,
+	Like `dash.map`, but the return of the _handler_ is used to transform the key of each element,
 	while the value is preserved.
 
 	If the _handler_ returns nil, the element is dropped from the result.
 	@example
 		local playerSet = {Frodo = true, Bilbo = true, Boromir = true}
-		local healthSet = _.mapKeys(playerSet, function(name)
-			return _.get(game.Players, name, "Health")
+		local healthSet = dash.mapKeys(playerSet, function(name)
+			return dash.get(game.Players, name, "Health")
 		end)
 		healthSet --> {100 = true, 50 = true, 0 = true}
 ]]
@@ -5755,7 +5937,7 @@ end
 	arguments in order and inserting or replacing the values in target with each
 	element preserving keys.
 
-	If any values are both tables, these are merged recursively using `_.merge`.
+	If any values are both tables, these are merged recursively using `dash.merge`.
 	@example
 		local someInfo = {
 			Frodo = {
@@ -5779,7 +5961,7 @@ end
 				score = {1, 2, 3}
 			}
 		}
-		local mergedInfo = _.merge(someInfo, someOtherInfo)
+		local mergedInfo = dash.merge(someInfo, someOtherInfo)
 		--[[
 			--> {
 				Frodo = {
@@ -5795,8 +5977,8 @@ end
 				}
 			}
 		]]
-	@see _.assign
-	@see _.defaults
+	@see dash.assign
+	@see dash.defaults
 ]=]
 --: <T: Iterable<K,V>>(mut T, ...T) -> T
 function Tables.merge(target, ...)
@@ -5820,7 +6002,7 @@ end
 
 --[[
 	Returns an array of all the values of the elements in _source_.
-	@example _.values({
+	@example dash.values({
 		Frodo = 1,
 		Boromir = 2,
 		Bilbo = 3
@@ -5837,7 +6019,7 @@ end
 
 --[[
 	Returns an array of all the keys of the elements in _source_.
-	@example _.values({
+	@example dash.values({
 		Frodo = 1,
 		Boromir = 2,
 		Bilbo = 3
@@ -5857,7 +6039,7 @@ end
 
 	Each entry is a tuple `(key, value)`.
 
-	@example _.values({
+	@example dash.values({
 		Frodo = 1,
 		Boromir = 2,
 		Bilbo = 3
@@ -5882,20 +6064,20 @@ end
 			[1] = "Frodo",
 			[8] = "Bilbo"
 		}
-		local nameWithB = _.find(names, function(name)
-			return _.startsWith(name, "B")
+		local nameWithB = dash.find(names, function(name)
+			return dash.startsWith(name, "B")
 		end)
 		nameWithB --> "Bilbo", 8 (or "Boromir", 3)
 
 		-- Or use a chain:
-		local nameWithF = _.find(names, _.fn:startsWith(name, "B"))
+		local nameWithF = dash.find(names, dash.fn:startsWith(name, "B"))
 		nameWithF --> "Frodo", 1
 
 		-- Or find the key of a specific value:
-		local _, key = _.find(names, _.fn:matches("Bilbo"))
+		local _, key = dash.find(names, dash.fn:matches("Bilbo"))
 		key --> 8
-	@see _.first
-	@usage If you need to find the first value of an array that matches, use `_.first`.
+	@see dash.first
+	@usage If you need to find the first value of an array that matches, use `dash.first`.
 ]]
 --: <T: Iterable<K,V>>((T, (element: V, key: K) -> bool) -> V?)
 function Tables.find(source, handler)
@@ -5915,8 +6097,8 @@ end
 			[1] = "Frodo",
 			[8] = "Bilbo"
 		}
-		_.includes(names, "Boromir") --> true
-		_.includes(names, 1) --> false
+		dash.includes(names, "Boromir") --> true
+		dash.includes(names, 1) --> false
 ]]
 --: <T: Iterable<K,V>>(T, V -> bool)
 function Tables.includes(source, item)
@@ -5936,7 +6118,7 @@ end
 			[1] = "Frodo",
 			[8] = "Bilbo"
 		}
-		_.len(names) --> 3
+		dash.len(names) --> 3
 ]]
 --: <T: Iterable<K,V>>(T -> int)
 function Tables.len(source)
@@ -5991,7 +6173,7 @@ end
 				score = {1, 2, 3}
 			}
 		}
-		local assignedInfo = _.assign(someInfo, someOtherInfo)
+		local assignedInfo = dash.assign(someInfo, someOtherInfo)
 		--[[
 			--> {
 				Frodo = {
@@ -6006,8 +6188,8 @@ end
 				}
 			}
 		]]
-	@see _.defaults
-	@see _.merge
+	@see dash.defaults
+	@see dash.merge
 ]=]
 --: <T: Iterable<K,V>>(mut T, ...T) -> T
 function Tables.assign(target, ...)
@@ -6041,7 +6223,7 @@ end
 				score = {1, 2, 3}
 			}
 		}
-		local assignedInfo = _.assign(someInfo, someOtherInfo)
+		local assignedInfo = dash.assign(someInfo, someOtherInfo)
 		--[[
 			--> {
 				Frodo = {
@@ -6056,8 +6238,8 @@ end
 				}
 			}
 		]]
-	@see _.assign
-	@see _.merge
+	@see dash.assign
+	@see dash.merge
 ]=]
 --: <T: Iterable<K,V>>(mut T, ...T) -> T
 function Tables.defaults(target, ...)
@@ -6071,12 +6253,12 @@ end
 			name = "Hermione Granger",
 			time = 12
 		}
-		local PastHermione = _.clone(Hermione)
+		local PastHermione = dash.clone(Hermione)
 		PastHermione.time = 9
 		Hermione.time --> 12
-	@see _.cloneDeep - if you also want to clone descendants of the table, though this can be costly.
-	@see `_.map` - if you want to return different values for each key.
-	@see _.Clone - use this to derive a default `:clone()` method for class instances.
+	@see dash.cloneDeep - if you also want to clone descendants of the table, though this can be costly.
+	@see `dash.map` - if you want to return different values for each key.
+	@see dash.Cloneable - use this to derive a default `:clone()` method for class instances.
 ]]
 --: <T: Iterable<K,V>>(T -> T)
 function Tables.clone(source)
@@ -6085,7 +6267,7 @@ end
 
 --[[
 	Recursively clones descendants of _source_, returning the cloned object. If references to the
-	same table are found, the same clone is used in the result. This means that `_.cloneDeep` is
+	same table are found, the same clone is used in the result. This means that `dash.cloneDeep` is
 	cycle-safe.
 
 	Elements which are not tables are not modified.
@@ -6094,17 +6276,16 @@ end
 			patronus = "stag",
 			age = 12
 		}
-		local Headwig = {
+		local Hedwig = {
 			animal = "owl",
 			owner = Harry
 		}
-		Harry.pet = Headwig
-		local clonedHarry = _.cloneDeep(Harry)
+		Harry.pet = Hedwig
+		local clonedHarry = dash.cloneDeep(Harry)
 		Harry.age = 13
 		-- The object clonedHarry is completely independent of any changes to Harry:
-		_.pretty(clonedHarry) --> '<1>{age = 12, patronus = "stag", pet = {animal = "owl", owner = &1}}'
-	@see _.clone - if you simply want to perform a shallow clone.
-	@see _.CloneDeep - use this to derive a default `:clone()` method for class instances that clones children recursively.
+		dash.pretty(clonedHarry) --> '<1>{age = 12, patronus = "stag", pet = {animal = "owl", owner = &1}}'
+	@see dash.clone - if you simply want to perform a shallow clone.
 ]]
 --: <T: Iterable<K,V>>(T -> T)
 function Tables.cloneDeep(source)
@@ -6138,11 +6319,11 @@ end
 				headlights = false
 			}
 		}
-		_.isSubset(car, {}) --> true
-		_.isSubset(car, car) --> true
-		_.isSubset(car, {speed = 10, lightsOn = {indicators = true}}) --> true
-		_.isSubset(car, {speed = 12}) --> false
-		_.isSubset({}, car) --> false
+		dash.isSubset(car, {}) --> true
+		dash.isSubset(car, car) --> true
+		dash.isSubset(car, {speed = 10, lightsOn = {indicators = true}}) --> true
+		dash.isSubset(car, {speed = 12}) --> false
+		dash.isSubset({}, car) --> false
 ]]
 -- <T>(T{}, T{}) -> bool
 function Tables.isSubset(a, b)
@@ -6171,9 +6352,9 @@ end
 --[[
 	Returns `true` if _source_ has no keys.
 	@example
-		_.isEmpty({}) --> true
-		_.isEmpty({false}) --> false
-		_.isEmpty({a = 1}) --> false
+		dash.isEmpty({}) --> true
+		dash.isEmpty({false}) --> false
+		dash.isEmpty({a = 1}) --> false
 ]]
 --: <T: Iterable<K,V>>(T -> bool)
 function Tables.isEmpty(source)
@@ -6183,8 +6364,8 @@ end
 --[[
 	Returns an element from _source_, if it has one.
 	@example
-		_.one({}) --> nil
-		_.one({a = 1, b = 2, c = 3}) --> b, 2 (or any another element)
+		dash.one({}) --> nil
+		dash.one({a = 1, b = 2, c = 3}) --> b, 2 (or any another element)
 ]]
 --: <T: Iterable<K,V>>(T -> (V, K)?)
 function Tables.one(source)
@@ -6215,13 +6396,13 @@ end
 				headlights = false
 			}
 		}
-		_.deepEqual(car, {}) --> false
-		_.deepEqual(car, car) --> true
-		_.deepEqual(car, _.clone(car)) --> true
-		_.deepEqual(car, _.cloneDeep(car)) --> true
-		_.deepEqual(car, car2) --> false
-	@see _.isSubset
-	@see _.shallowEqual
+		dash.deepEqual(car, {}) --> false
+		dash.deepEqual(car, car) --> true
+		dash.deepEqual(car, dash.clone(car)) --> true
+		dash.deepEqual(car, dash.cloneDeep(car)) --> true
+		dash.deepEqual(car, car2) --> false
+	@see dash.isSubset
+	@see dash.shallowEqual
 ]]
 function Tables.deepEqual(a, b)
 	return Tables.isSubset(a, b) and Tables.isSubset(b, a)
@@ -6239,13 +6420,13 @@ end
 				headlights = false
 			}
 		}
-		_.shallowEqual(car, {}) --> false
-		_.shallowEqual(car, car) --> true
-		_.shallowEqual(car, _.clone(car)) --> true
-		_.shallowEqual(car, _.cloneDeep(car)) --> false
+		dash.shallowEqual(car, {}) --> false
+		dash.shallowEqual(car, car) --> true
+		dash.shallowEqual(car, dash.clone(car)) --> true
+		dash.shallowEqual(car, dash.cloneDeep(car)) --> false
 
 	Based on https://developmentarc.gitbooks.io/react-indepth/content/life_cycle/update/using_should_component_update.html
-	@see _.deepEqual
+	@see dash.deepEqual
 ]]
 function Tables.shallowEqual(left, right)
 	if type(left) ~= "table" or type(right) ~= "table" then
@@ -6267,11 +6448,11 @@ end
 --[[
 	Returns `true` is _source_ is made up only of natural keys `1..n`.
 	@example
-		_.isArray({1, 2, 3}) --> true
-		_.isArray({a = 1, b = 2, c = 3}) --> false
+		dash.isArray({1, 2, 3}) --> true
+		dash.isArray({a = 1, b = 2, c = 3}) --> false
 		-- Treating sparse arrays as natural arrays will only complicate things:
-		_.isArray({1, 2, nil, nil, 3}) --> false
-		_.isArray(_.compact({1, 2, nil, nil, 3})) --> true
+		dash.isArray({1, 2, nil, nil, 3}) --> false
+		dash.isArray(dash.compact({1, 2, nil, nil, 3})) --> true
 ]]
 --: <T: Iterable<K,V>>(T -> bool)
 function Tables.isArray(source)
@@ -6381,23 +6562,23 @@ end
 --[[
 	Returns a string representation of _source_ including all elements with sorted keys.
 	
-	`_.serialize` preserves the properties of being unique, stable and cycle-safe if the serializer
+	`dash.serialize` preserves the properties of being unique, stable and cycle-safe if the serializer
 	functions provided also obey these properties.
 
-	@param serializeValue (default = `_.defaultSerializer`) return a string representation of a value
-	@param serializeKey (default = `_.defaultSerializer`) return a string representation of a value
+	@param serializeValue (default = `dash.defaultSerializer`) return a string representation of a value
+	@param serializeKey (default = `dash.defaultSerializer`) return a string representation of a value
 
-	@example _.serialize({1, 2, 3}) --> "{1,2,3}"
-	@example _.serialize({a = 1, b = true, [3] = "hello"}) --> '{"a":1,"b":true,3:"hello"}'
+	@example dash.serialize({1, 2, 3}) --> "{1,2,3}"
+	@example dash.serialize({a = 1, b = true, [3] = "hello"}) --> '{"a":1,"b":true,3:"hello"}'
 	@example 
-		_.serialize({a = function() end, b = {a = "table"})
+		dash.serialize({a = function() end, b = {a = "table"})
 		--> '{"a":<function: 0x...>,"b"=<table: 0x...>}'
-	@usage Use `_.serialize` when you need a representation of a table which doesn't need to be
-		human-readable, or you need to customize the way serialization works. `_.pretty` is more
+	@usage Use `dash.serialize` when you need a representation of a table which doesn't need to be
+		human-readable, or you need to customize the way serialization works. `dash.pretty` is more
 		appropriate when you need a human-readable string.
-	@see _.serializeDeep
-	@see _.defaultSerializer
-	@see _.pretty
+	@see dash.serializeDeep
+	@see dash.defaultSerializer
+	@see dash.pretty
 ]]
 --: <T: Iterable<K,V>>(T, (V, Cycles<V> -> string), (K, Cycles<V> -> string) -> string)
 function Tables.serialize(source, options)
@@ -6425,23 +6606,23 @@ function Tables.serialize(source, options)
 end
 
 --[[
-	Like `_.serialize`, but if a child element is a table it is serialized recursively.
+	Like `dash.serialize`, but if a child element is a table it is serialized recursively.
 
 	Returns a string representation of _source_ including all elements with sorted keys.
 	
 	This function preserves uniqueness, stability and cycle-safety.
 
-	@param serializeValue (default = `_.defaultSerializer`) return a string representation of a value
-	@param serializeKey (default = `_.defaultSerializer`) return a string representation of a value
+	@param serializeValue (default = `dash.defaultSerializer`) return a string representation of a value
+	@param serializeKey (default = `dash.defaultSerializer`) return a string representation of a value
 
 	@example 
-		_.serializeDeep({a = {b = "table"}) --> '{"a":{"b":"table"}}'
+		dash.serializeDeep({a = {b = "table"}) --> '{"a":{"b":"table"}}'
 	@example 
 		local kyle = {name = "Kyle"}
 		kyle.child = kyle
-		_.serializeDeep(kyle) --> '<0>{"child":<&0>,"name":"Kyle"}'
-	@see _.serialize
-	@see _.defaultSerializer
+		dash.serializeDeep(kyle) --> '<0>{"child":<&0>,"name":"Kyle"}'
+	@see dash.serialize
+	@see dash.defaultSerializer
 ]]
 --: <T: Iterable<K,V>>(T, (V, Cycles<V> -> string), (K, Cycles<V> -> string) -> string)
 function Tables.serializeDeep(source, options)
@@ -6475,14 +6656,14 @@ end
 	result have a count of two or more, they may form cycles in the _source_.
 	@example
 		local plate = {veg = "potato", pie = {"stilton", "beef"}}
-		_.occurences(plate) --> {
+		dash.occurences(plate) --> {
 			[{veg = "potato", pie = {"stilton", "beef"}}] = 1
 			[{"stilton", "beef"}] = 1
 		}
 	@example
 		local kyle = {name = "Kyle"}
 		kyle.child = kyle
-		_.occurences(kyle) --> {
+		dash.occurences(kyle) --> {
 			[{name = "Kyle", child = kyle}] = 2
 		}
 ]]
@@ -6501,7 +6682,7 @@ end
 
 	@example
 		local list = {1, 2, 2, 3, 5, 1}
-		_.unique(list) --> {1, 2, 3, 5} (or another order)
+		dash.unique(list) --> {1, 2, 3, 5} (or another order)
 ]]
 function Tables.unique(source)
 	return Tables.keys(Tables.invert(source))

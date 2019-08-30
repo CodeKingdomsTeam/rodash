@@ -730,7 +730,7 @@ end
 		Hermione.time --> 12
 	@see dash.cloneDeep - if you also want to clone descendants of the table, though this can be costly.
 	@see `dash.map` - if you want to return different values for each key.
-	@see dash.Clone - use this to derive a default `:clone()` method for class instances.
+	@see dash.Cloneable - use this to derive a default `:clone()` method for class instances.
 ]]
 --: <T: Iterable<K,V>>(T -> T)
 function Tables.clone(source)
@@ -748,17 +748,16 @@ end
 			patronus = "stag",
 			age = 12
 		}
-		local Headwig = {
+		local Hedwig = {
 			animal = "owl",
 			owner = Harry
 		}
-		Harry.pet = Headwig
+		Harry.pet = Hedwig
 		local clonedHarry = dash.cloneDeep(Harry)
 		Harry.age = 13
 		-- The object clonedHarry is completely independent of any changes to Harry:
 		dash.pretty(clonedHarry) --> '<1>{age = 12, patronus = "stag", pet = {animal = "owl", owner = &1}}'
 	@see dash.clone - if you simply want to perform a shallow clone.
-	@see dash.CloneDeep - use this to derive a default `:clone()` method for class instances that clones children recursively.
 ]]
 --: <T: Iterable<K,V>>(T -> T)
 function Tables.cloneDeep(source)

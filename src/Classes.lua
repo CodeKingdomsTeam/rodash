@@ -14,7 +14,7 @@ local Classes = {}
 	Optionally, you may provide an array of _decorators_ which compose and reduce the Class, adding
 	additional methods and functionality you may need. Specifically you can:
 	
-	1. Add standard functionality to the class e.g. `dash.Clone`, `dash.ShallowEq`
+	1. Add standard functionality to the class e.g. `dash.Cloneable`, `dash.ShallowEq`
 	2. Mixin an implementation of an interface e.g. `dash.mixin( fns )`
 	3. Decorate fields or functions e.g. `dash.decorate(dash.freeze)`
 
@@ -239,7 +239,7 @@ function Classes.class(name, constructor, decorators)
 
 	--[[
 		Return a string representation of the instance. By default this is the _name_ field (or the
-		Class name if this is not defined), but the method can be overwridden.
+		Class name if this is not defined), but the method can be overridden.
 	]]
 	--: (T:) -> string
 	function Class:toString()
@@ -248,7 +248,7 @@ function Classes.class(name, constructor, decorators)
 
 	--[[
 		Returns `true` if `self` is considered equal to _other_. This replaces the `==` operator
-		on instances of this class, and can be overwridden to provide a custom implementation.
+		on instances of this class, and can be overridden to provide a custom implementation.
 	]]
 	--: (T:) -> string
 	function Class:equals(other)
@@ -257,7 +257,7 @@ function Classes.class(name, constructor, decorators)
 
 	--[[
 		Returns `true` if `self` is considered less than  _other_. This replaces the `<` operator
-		on instances of this class, and can be overwridden to provide a custom implementation.
+		on instances of this class, and can be overridden to provide a custom implementation.
 	]]
 	--: (T:) -> string
 	function Class:__lt(other)
@@ -266,7 +266,7 @@ function Classes.class(name, constructor, decorators)
 
 	--[[
 		Returns `true` if `self` is considered less than or equal to _other_. This replaces the
-		`<=` operator on instances of this class, and can be overwridden to provide a custom
+		`<=` operator on instances of this class, and can be overridden to provide a custom
 		implementation.
 	]]
 	--: (T:) -> string
@@ -329,7 +329,7 @@ function Classes.classWithInterface(name, interface, decorators)
 end
 
 --[[
-	A decorator which adds a dictionary of functions to to a Class table.
+	A decorator which adds a dictionary of functions to a Class table.
 	@example
 		local CanBrake = {
 			brake = function( self )
@@ -345,7 +345,7 @@ end
 		print(car.speed) --> 5
 		car:brake()
 		print(car.speed) --> 0
-	@usage Include the return of this function in the decorators argument when creating a class.
+	@usage Include the return value of this function in the decorators argument when creating a class.
 ]]
 function Classes.mixin(fns)
 	assert(t.table(fns), "BadInput: fns must be a table")
@@ -356,7 +356,7 @@ function Classes.mixin(fns)
 end
 
 --[[
-	A decorator which runs _fn_ on each instance that is created of the class, returning
+	A decorator which runs _fn_ on each instance of the class that is created, returning
 	the result of the function as the class instance.
 	@example
 		local Frozen = dash.decorate(dash.freeze)
@@ -371,7 +371,7 @@ end
 		local car = Car.new(5)
 		print(car.speed) --> 5
 		car:brake() --!> ReadonlyKey: s
-	@usage Include the return of this function in the decorators argument when creating a class.
+	@usage Include the return value of this function in the decorators argument when creating a class.
 ]]
 function Classes.decorate(fn)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
@@ -397,7 +397,7 @@ end
 					speed = speed
 				}
 			end,
-			{dash.Clone}
+			{dash.Cloneable}
 		)
 		function Car:brake()
 			self.speed = 0
@@ -409,7 +409,7 @@ end
 		print(carClone.speed) --> 0
 		print(car.speed) --> 5
 ]]
-function Classes.Clone(Class)
+function Classes.Cloneable(Class)
 	function Class:clone()
 		local newInstance = Tables.clone(self)
 		setmetatable(newInstance, getmetatable(self))
@@ -420,7 +420,7 @@ end
 
 --[[
 	A decorator which derives the equality operator for the _Class_ so that any instances of the
-	class which are shallow equal 
+	class which are shallow equal will be considered equal.
 	@example
 		local Car =
 			Classes.class(
@@ -449,7 +449,7 @@ function Classes.ShallowEq(Class)
 end
 
 --[[
-	A decorator which derives an order for the _Class_ so that any instances of the class which
+	A decorator which derives an order for the _Class_, meaning instances of the class
 	can be compared using `<`, `<=`, `>` and  `>=`. To do this, it compares values of the two
 	instances at the same keys, as defined by the order of the _keys_ passed in.
 	@param keys (default = a sorted array of all the instance's keys)
@@ -477,9 +477,26 @@ function Classes.PartialOrd(keys)
 	if keys then
 		assert(Tables.isArray(keys), "BadInput: keys must be an array if defined")
 	end
+	local function getInstancesKeys(self, instanceKeys)
+		return instanceKeys or Arrays.sort(Tables.keys(self))
+	end
+	local function compareInstances(self, other, allowEquality)
+		local instanceKeys = getInstancesKeys(self, keys)
+		for _, key in ipairs(instanceKeys) do
+			if Arrays.defaultComparator(self[key], other[key]) then
+				return true
+			elseif Arrays.defaultComparator(other[key], self[key]) then
+				return false
+			end
+			if self[key] ~= other[key] then
+				return not allowEquality
+			end
+		end
+		return allowEquality
+	end
 	return function(Class)
 		function Class:equals(other)
-			local instanceKeys = keys or Arrays.sort(Tables.keys(self))
+			local instanceKeys = getInstancesKeys(self, keys)
 			for _, key in ipairs(instanceKeys) do
 				if self[key] ~= other[key] then
 					return false
@@ -488,32 +505,10 @@ function Classes.PartialOrd(keys)
 			return true
 		end
 		function Class:__le(other)
-			local instanceKeys = keys or Arrays.sort(Tables.keys(self))
-			for _, key in ipairs(instanceKeys) do
-				if Arrays.defaultComparator(self[key], other[key]) then
-					return true
-				elseif Arrays.defaultComparator(other[key], self[key]) then
-					return false
-				end
-				if self[key] ~= other[key] then
-					return false
-				end
-			end
-			return true
+			return compareInstances(self, other, true)
 		end
 		function Class:__lt(other)
-			local instanceKeys = keys or Arrays.sort(Tables.keys(self))
-			for _, key in ipairs(instanceKeys) do
-				if Arrays.defaultComparator(self[key], other[key]) then
-					return true
-				elseif Arrays.defaultComparator(other[key], self[key]) then
-					return false
-				end
-				if self[key] ~= other[key] then
-					return true
-				end
-			end
-			return false
+			return compareInstances(self, other, false)
 		end
 		return Class
 	end

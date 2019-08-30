@@ -30,6 +30,10 @@
 				"$path": "modules/t/lib/t.lua"
 			}
 		},
+		"ServerScriptService": {
+			"$className": "ServerScriptService",
+			"$path": "spec_studio"
+		},
 		"SoundService": {
 			"$className": "SoundService",
 			"$properties": {

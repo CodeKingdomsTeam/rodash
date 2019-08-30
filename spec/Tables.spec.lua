@@ -776,11 +776,11 @@ describe(
 							patronus = "stag",
 							age = 12
 						}
-						local Headwig = {
+						local Hedwig = {
 							animal = "owl",
 							owner = Harry
 						}
-						Harry.pet = Headwig
+						Harry.pet = Hedwig
 						local clonedHarry = Tables.cloneDeep(Harry)
 						Harry.age = 13
 						assert.equal('<1>{age = 12, patronus = "stag", pet = {animal = "owl", owner = &1}}', Strings.pretty(clonedHarry))
