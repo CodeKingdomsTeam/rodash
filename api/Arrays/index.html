@@ -237,34 +237,10 @@
       
 
 
-  <li class="md-nav__item md-nav__item--nested">
-    
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2">
-    
-    <label class="md-nav__link" for="nav-2">
-      Guide
-    </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
-      <label class="md-nav__title" for="nav-2">
-        Guide
-      </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
-          
-          
-          
-
-
   <li class="md-nav__item">
-    <a href="../../guide/arrays/" title="Arrays" class="md-nav__link">
-      Arrays
+    <a href="../../getting-started/" title="Getting Started" class="md-nav__link">
+      Getting Started
     </a>
-  </li>
-
-        
-      </ul>
-    </nav>
   </li>
 
     
@@ -337,6 +313,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#defaultcomparator" title="defaultComparator" class="md-nav__link">
+    defaultComparator
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#first" title="first" class="md-nav__link">
     first
   </a>
@@ -388,13 +371,6 @@
           <li class="md-nav__item">
   <a href="#sum" title="sum" class="md-nav__link">
     sum
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#unique" title="unique" class="md-nav__link">
-    unique
   </a>
   
 </li>
@@ -480,6 +456,18 @@
   </li>
 
     
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../glossary/" title="Glossary" class="md-nav__link">
+      Glossary
+    </a>
+  </li>
+
+    
   </ul>
 </nav>
                   </div>
@@ -511,6 +499,13 @@
           <li class="md-nav__item">
   <a href="#append" title="append" class="md-nav__link">
     append
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defaultcomparator" title="defaultComparator" class="md-nav__link">
+    defaultComparator
   </a>
   
 </li>
@@ -571,13 +566,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#unique" title="unique" class="md-nav__link">
-    unique
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -603,7 +591,7 @@
                 
                 
                 <h1 id="arrays">Arrays<a class="headerlink" href="#arrays" title="Permanent link">&para;</a></h1>
-<p>A collection of functions that operate specifically arrays, defined as tables with just keys <em>1..n</em>.</p>
+<p>A collection of functions that operate specifically on arrays, defined as tables with just keys <em>1..n</em>.</p>
 <div class="codehilite"><pre><span></span><span class="c1">-- Examples of valid arrays:</span>
 <span class="p">{}</span>
 <span class="p">{</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">}</span>
@@ -616,12 +604,10 @@
 <span class="mi">42</span>
 </pre></div>
 
-<p>Because the operations are immutable it is unlikely that any additional elements in the
-table will be preserved in most operations.</p>
 <p>Functions can also iterate over custom iterator functions which provide elements with natural keys <em>1..n</em>.</p>
 <h2 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h2>
 <h3 id="append">append<a class="headerlink" href="#append" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 Inserts into <em>target</em> the elements from all subsequent arguments in order.</p>
 <p><strong>Parameters</strong></p>
@@ -635,27 +621,48 @@ Inserts into <em>target</em> the elements from all subsequent arguments in order
 <p><em>string</em></p>
 </blockquote>
 <p><strong>Examples</strong></p>
-<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">append</span><span class="p">({},</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span> <span class="p">{</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">})</span> <span class="c1">--&gt; {1, 2, 3, 4, 5, 6}</span>
+<div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">append</span><span class="p">({},</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span> <span class="p">{</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">})</span> <span class="c1">--&gt; {1, 2, 3, 4, 5, 6}</span>
 </pre></div>
 
-<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">append</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">})</span> <span class="c1">--&gt; {1, 2, 3}</span>
+<div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">append</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">})</span> <span class="c1">--&gt; {1, 2, 3}</span>
 </pre></div>
 
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">list</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cheese&quot;</span><span class="p">}</span>
-<span class="n">_</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">list</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;nachos&quot;</span><span class="p">},</span> <span class="p">{},</span> <span class="p">{</span><span class="s2">&quot;chillies&quot;</span><span class="p">})</span>
+<span class="n">dash</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">list</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;nachos&quot;</span><span class="p">},</span> <span class="p">{},</span> <span class="p">{</span><span class="s2">&quot;chillies&quot;</span><span class="p">})</span>
 <span class="n">list</span> <span class="c1">--&gt; {&quot;cheese&quot;, &quot;nachos&quot;, &quot;chillies&quot;}</span>
 </pre></div>
 
 <hr />
-<h3 id="first">first<a class="headerlink" href="#first" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">first</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<h3 id="defaultcomparator">defaultComparator<a class="headerlink" href="#defaultcomparator" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">defaultComparator</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-Returns the earliest value from the array that <em>handler</em> returns <code>true</code> for.</p>
-<p>If the <em>handler</em> is not specified, <code>_.first</code> simply returns the first element of the array.</p>
+The default comparator is used by <code>dash.sort</code> and can sort elements of different types, in the
+order: boolean, number, string, function, CFunction, userdata, and table.</p>
+<p>Elements which cannot be sorted naturally will be sorted by their string value.</p>
+<p><strong>Parameters</strong></p>
+<blockquote>
+<p><strong>a</strong> - <em>string</em> </p>
+<p><strong>b</strong> - <em>string</em> 
+</p>
+</blockquote>
+<p><strong>Returns</strong></p>
+<blockquote>
+<p><em>string</em></p>
+</blockquote>
+<p><strong>See</strong></p>
+<ul>
+<li><a href="#sort">dash.sort</a> </li>
+</ul>
+<hr />
+<h3 id="first">first<a class="headerlink" href="#first" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">first</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">predicate</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+</pre></div>
+Returns the earliest value from the array that <em>predicate</em> returns <code>true</code> for.</p>
+<p>If the <em>predicate</em> is not specified, <code>dash.first</code> simply returns the first element of the array.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>source</strong> - <em>string</em> </p>
-<p><strong>handler</strong> - <em>string</em>  - (default = <code>_.returns(true)</code>)
+<p><strong>predicate</strong> - <em>string</em>  - (default = <code>dash.returns(true)</code>)
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
@@ -669,43 +676,43 @@ Returns the earliest value from the array that <em>handler</em> returns <code>tr
     <span class="s2">&quot;Bilbo&quot;</span>
 <span class="p">}</span>
 
-<span class="n">_</span><span class="p">.</span><span class="n">first</span><span class="p">(</span><span class="n">names</span><span class="p">)</span> <span class="c1">--&gt; &quot;Boromir&quot;, 1</span>
+<span class="n">dash</span><span class="p">.</span><span class="n">first</span><span class="p">(</span><span class="n">names</span><span class="p">)</span> <span class="c1">--&gt; &quot;Boromir&quot;, 1</span>
 
 <span class="c1">-- Find a particular value:</span>
-<span class="kd">local</span> <span class="n">firstNameWithF</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">first</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-    <span class="kr">return</span> <span class="n">_</span><span class="p">.</span><span class="n">startsWith</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;F&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">firstNameWithF</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">first</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="kr">return</span> <span class="n">dash</span><span class="p">.</span><span class="n">startsWith</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;F&quot;</span><span class="p">)</span>
 <span class="kr">end</span><span class="p">)</span>
 <span class="n">firstNameWithF</span> <span class="c1">--&gt; &quot;Frodo&quot;, 2</span>
 
 <span class="c1">-- What about a value whcih doesn&#39;t exist?</span>
-<span class="kd">local</span> <span class="n">firstNameWithC</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">first</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-    <span class="kr">return</span> <span class="n">_</span><span class="p">.</span><span class="n">startsWith</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">firstNameWithC</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">first</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="kr">return</span> <span class="n">dash</span><span class="p">.</span><span class="n">startsWith</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">)</span>
 <span class="kr">end</span><span class="p">)</span>
 <span class="n">firstNameWithC</span> <span class="c1">--&gt; nil</span>
 
 <span class="c1">-- Find the index of a value:</span>
-<span class="kd">local</span> <span class="n">_</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">first</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">_</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">matches</span><span class="p">(</span><span class="s2">&quot;Bilbo&quot;</span><span class="p">))</span>
+<span class="kd">local</span> <span class="n">_</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">first</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">dash</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">matches</span><span class="p">(</span><span class="s2">&quot;Bilbo&quot;</span><span class="p">))</span>
 <span class="n">index</span> <span class="c1">--&gt; 2</span>
 </pre></div>
 
 <p><strong>Usage</strong></p>
 <ul>
-<li>If you need to find a value in a table which isn't an array, use <code>_.find</code>.</li>
+<li>If you need to find a value in a table which isn't an array, use <code>dash.find</code>.</li>
 </ul>
 <p><strong>See</strong></p>
 <ul>
-<li><a href="#find">_.find</a> </li>
+<li><a href="#find">dash.find</a> </li>
 </ul>
 <hr />
 <h3 id="last">last<a class="headerlink" href="#last" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">last</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">last</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">predicate</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-Returns the last value from the array that <em>handler</em> returns <code>true</code> for.</p>
-<p>If the <em>handler</em> is not specified, <code>_.last</code> simply returns the last element of the array.</p>
+Returns the last value from the array that <em>predicate</em> returns <code>true</code> for.</p>
+<p>If the <em>predicate</em> is not specified, <code>dash.last</code> simply returns the last element of the array.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>source</strong> - <em>string</em> </p>
-<p><strong>handler</strong> - <em>string</em>  - (default = <code>_.returns(true)</code>)
+<p><strong>predicate</strong> - <em>string</em>  - (default = <code>dash.returns(true)</code>)
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
@@ -719,27 +726,27 @@ Returns the last value from the array that <em>handler</em> returns <code>true</
     <span class="s2">&quot;Bilbo&quot;</span>
 <span class="p">}</span>
 
-<span class="n">_</span><span class="p">.</span><span class="n">last</span><span class="p">(</span><span class="n">names</span><span class="p">)</span> <span class="c1">--&gt; &quot;Bilbo&quot;, 3</span>
+<span class="n">dash</span><span class="p">.</span><span class="n">last</span><span class="p">(</span><span class="n">names</span><span class="p">)</span> <span class="c1">--&gt; &quot;Bilbo&quot;, 3</span>
 
-<span class="kd">local</span> <span class="n">lastNameWithB</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">last</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">_</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">startsWith</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">))</span>
+<span class="kd">local</span> <span class="n">lastNameWithB</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">last</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">dash</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">startsWith</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">))</span>
 <span class="n">lastNameWithB</span> <span class="c1">--&gt; &quot;Bilbo&quot;, 3</span>
 
-<span class="kd">local</span> <span class="n">_</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">last</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">_</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">matches</span><span class="p">(</span><span class="s2">&quot;Frodo&quot;</span><span class="p">))</span>
+<span class="kd">local</span> <span class="n">_</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">last</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">dash</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">matches</span><span class="p">(</span><span class="s2">&quot;Frodo&quot;</span><span class="p">))</span>
 <span class="n">key</span> <span class="c1">--&gt; 2</span>
 </pre></div>
 
 <p><strong>See</strong></p>
 <ul>
 <li>
-<p><a href="#find">_.find</a> </p>
+<p><a href="#find">dash.find</a> </p>
 </li>
 <li>
-<p><a href="#first">_.first</a> </p>
+<p><a href="#first">dash.first</a> </p>
 </li>
 </ul>
 <hr />
 <h3 id="reduce">reduce<a class="headerlink" href="#reduce" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">reduce</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="n">initial</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">reduce</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="n">initial</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 Runs the <em>handler</em> on each element of <em>source</em> in turn, passing the result of the previous call
 (or <em>initial</em> for the first element) as the first argument, and the current element as a value
@@ -756,14 +763,14 @@ and key as subsequent arguments.</p>
 <p><em>string</em></p>
 </blockquote>
 <p><strong>Examples</strong></p>
-<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">sum</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">reduce</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span> <span class="kr">function</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">sum</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">reduce</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span> <span class="kr">function</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
     <span class="kr">return</span> <span class="n">result</span> <span class="o">+</span> <span class="n">value</span>
 <span class="kr">end</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 <span class="n">sum</span> <span class="c1">--&gt; 6</span>
 </pre></div>
 
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">recipe</span> <span class="o">=</span> <span class="p">{</span><span class="n">first</span> <span class="o">=</span> <span class="s2">&quot;cheese&quot;</span><span class="p">,</span> <span class="n">second</span> <span class="o">=</span> <span class="s2">&quot;nachos&quot;</span><span class="p">,</span> <span class="n">third</span> <span class="o">=</span> <span class="s2">&quot;chillies&quot;</span><span class="p">}</span>
-<span class="kd">local</span> <span class="n">unzipRecipe</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">reduce</span><span class="p">(</span><span class="n">recipe</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">unzipRecipe</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">reduce</span><span class="p">(</span><span class="n">recipe</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
     <span class="nb">table.insert</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">key</span><span class="p">)</span>
     <span class="nb">table.insert</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">value</span><span class="p">)</span>
     <span class="kr">return</span> <span class="n">result</span>
@@ -774,7 +781,7 @@ and key as subsequent arguments.</p>
 
 <hr />
 <h3 id="reverse">reverse<a class="headerlink" href="#reverse" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">reverse</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">reverse</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 Swaps the order of elements in <em>source</em>.</p>
 <p><strong>Parameters</strong></p>
@@ -787,12 +794,12 @@ Swaps the order of elements in <em>source</em>.</p>
 <p><em>string</em></p>
 </blockquote>
 <p><strong>Examples</strong></p>
-<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">reverse</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">})</span> <span class="c1">--&gt; {5, 3, 4, 2, 1}</span>
+<div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">reverse</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">})</span> <span class="c1">--&gt; {5, 3, 4, 2, 1}</span>
 </pre></div>
 
 <hr />
 <h3 id="shuffle">shuffle<a class="headerlink" href="#shuffle" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">shuffle</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">shuffle</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 Returns a new array with the order of the values from <em>source</em> randomized.</p>
 <p><strong>Parameters</strong></p>
@@ -807,12 +814,12 @@ Returns a new array with the order of the values from <em>source</em> randomized
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">teamColors</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">}</span>
 <span class="c1">-- (in some order)</span>
-<span class="n">_</span><span class="p">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">teamColors</span><span class="p">)</span> <span class="c1">--&gt; {&quot;blue&quot;, &quot;blue&quot;, &quot;red&quot;, &quot;blue&quot;, &quot;red&quot;, &quot;red&quot;}</span>
+<span class="n">dash</span><span class="p">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">teamColors</span><span class="p">)</span> <span class="c1">--&gt; {&quot;blue&quot;, &quot;blue&quot;, &quot;red&quot;, &quot;blue&quot;, &quot;red&quot;, &quot;red&quot;}</span>
 </pre></div>
 
 <hr />
 <h3 id="slice">slice<a class="headerlink" href="#slice" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">slice</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">slice</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 Returns a copied portion of the <em>source</em>.</p>
 <p><strong>Parameters</strong></p>
@@ -828,24 +835,24 @@ Returns a copied portion of the <em>source</em>.</p>
 <p><em>string</em></p>
 </blockquote>
 <p><strong>Examples</strong></p>
-<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">slice</span><span class="p">({</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">})</span> <span class="c1">--&gt; {10, 20, 30, 40}</span>
+<div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">slice</span><span class="p">({</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">})</span> <span class="c1">--&gt; {10, 20, 30, 40}</span>
 </pre></div>
 
-<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">slice</span><span class="p">({</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">},</span> <span class="mi">2</span><span class="p">)</span> <span class="c1">--&gt; {20, 30, 40}</span>
+<div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">slice</span><span class="p">({</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">},</span> <span class="mi">2</span><span class="p">)</span> <span class="c1">--&gt; {20, 30, 40}</span>
 </pre></div>
 
-<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">slice</span><span class="p">({</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">},</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="c1">--&gt; {20, 30}</span>
+<div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">slice</span><span class="p">({</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">},</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="c1">--&gt; {20, 30}</span>
 </pre></div>
 
-<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">slice</span><span class="p">({</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">},</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c1">--&gt; {20, 40}</span>
+<div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">slice</span><span class="p">({</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">},</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c1">--&gt; {20, 40}</span>
 </pre></div>
 
 <hr />
 <h3 id="sort">sort<a class="headerlink" href="#sort" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">sort</span><span class="p">(</span><span class="n">input</span><span class="p">,</span> <span class="n">comparator</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">sort</span><span class="p">(</span><span class="n">input</span><span class="p">,</span> <span class="n">comparator</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 Returns a sorted array from the <em>input</em> array, based on a <em>comparator</em> function.</p>
-<p>Unlike <code>table.sort</code>, the comparator to <code>_.sort</code> is optional, but it can also be defined to
+<p>Unlike <code>table.sort</code>, the comparator to <code>dash.sort</code> is optional, but it can also be defined to
 a numeric weight or nil as well as a boolean.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
@@ -858,15 +865,15 @@ a numeric weight or nil as well as a boolean.</p>
 <p><em>string</em></p>
 </blockquote>
 <p><strong>Examples</strong></p>
-<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">sort</span><span class="p">({</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">})</span> <span class="c1">--&gt; {2, 3, 5}</span>
+<div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">sort</span><span class="p">({</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">})</span> <span class="c1">--&gt; {2, 3, 5}</span>
 </pre></div>
 
-<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">sort</span><span class="p">({</span><span class="s2">&quot;use&quot;</span><span class="p">,</span> <span class="s2">&quot;the&quot;</span><span class="p">,</span> <span class="s2">&quot;force&quot;</span><span class="p">,</span> <span class="s2">&quot;Luke&quot;</span><span class="p">})</span> <span class="c1">--&gt; {&quot;Luke&quot;, &quot;force&quot;, &quot;the&quot;, &quot;use&quot;}</span>
+<div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">sort</span><span class="p">({</span><span class="s2">&quot;use&quot;</span><span class="p">,</span> <span class="s2">&quot;the&quot;</span><span class="p">,</span> <span class="s2">&quot;force&quot;</span><span class="p">,</span> <span class="s2">&quot;Luke&quot;</span><span class="p">})</span> <span class="c1">--&gt; {&quot;Luke&quot;, &quot;force&quot;, &quot;the&quot;, &quot;use&quot;}</span>
 </pre></div>
 
 <hr />
 <h3 id="sum">sum<a class="headerlink" href="#sum" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">sum</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">sum</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 Sums all the values in the <em>source</em> array.</p>
 <p><strong>Parameters</strong></p>
@@ -879,23 +886,8 @@ Sums all the values in the <em>source</em> array.</p>
 <p><em>string</em></p>
 </blockquote>
 <p><strong>Examples</strong></p>
-<div class="codehilite"><pre><span></span><span class="n">_</span><span class="p">.</span><span class="n">sum</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">})</span> <span class="c1">--&gt; 6</span>
+<div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">sum</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">})</span> <span class="c1">--&gt; 6</span>
 </pre></div>
-
-<hr />
-<h3 id="unique">unique<a class="headerlink" href="#unique" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">unique</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; string</span>
-</pre></div>
-
-<p><strong>Parameters</strong></p>
-<blockquote>
-<p><strong>source</strong> - <em>string</em> 
-</p>
-</blockquote>
-<p><strong>Returns</strong></p>
-<blockquote>
-<p><em>string</em></p>
-</blockquote>
                 
                   
                 
@@ -916,7 +908,7 @@ Sums all the values in the <em>source</em> array.</p>
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href="../../guide/arrays/" title="Arrays" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../../getting-started/" title="Getting Started" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -925,7 +917,7 @@ Sums all the values in the <em>source</em> array.</p>
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                Arrays
+                Getting Started
               </span>
             </div>
           </a>

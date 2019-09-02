@@ -237,34 +237,10 @@
       
 
 
-  <li class="md-nav__item md-nav__item--nested">
-    
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2">
-    
-    <label class="md-nav__link" for="nav-2">
-      Guide
-    </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
-      <label class="md-nav__title" for="nav-2">
-        Guide
-      </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
-          
-          
-          
-
-
   <li class="md-nav__item">
-    <a href="../../guide/arrays/" title="Arrays" class="md-nav__link">
-      Arrays
+    <a href="../../getting-started/" title="Getting Started" class="md-nav__link">
+      Getting Started
     </a>
-  </li>
-
-        
-      </ul>
-    </nav>
   </li>
 
     
@@ -557,6 +533,18 @@
   </li>
 
     
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../glossary/" title="Glossary" class="md-nav__link">
+      Glossary
+    </a>
+  </li>
+
+    
   </ul>
 </nav>
                   </div>
@@ -758,12 +746,9 @@
                 
                 <h1 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h1>
 <p>Utility functions and building blocks for functional programming styles.</p>
-<p>In general, there is more tooling for functions with multiple arguments and return values than
-unary ones, as this is more lua-flavoured, the curried style feeling more useful in pure
-languages which provide better support and/or syntactic sugar.</p>
 <h2 id="functions_1">Functions<a class="headerlink" href="#functions_1" title="Permanent link">&para;</a></h2>
 <h3 id="bind">bind<a class="headerlink" href="#bind" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">bind</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">bind</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 Takes a function <em>fn</em> and binds <em>arguments</em> to the head of the <em>fn</em> argument list.
 Returns a function which executes <em>fn</em>, passing the bound arguments supplied, followed by any
@@ -782,13 +767,13 @@ dynamic arguments.</p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="kr">function</span> <span class="nf">damagePlayer</span><span class="p">(</span> <span class="n">player</span><span class="p">,</span> <span class="n">amount</span> <span class="p">)</span>
     <span class="n">player</span><span class="p">:</span><span class="n">Damage</span><span class="p">(</span><span class="n">amount</span><span class="p">)</span>
 <span class="kr">end</span>
-<span class="kd">local</span> <span class="n">damageLocalPlayer</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">bind</span><span class="p">(</span><span class="n">damagePlayer</span><span class="p">,</span> <span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">.</span><span class="n">LocalPlayer</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">damageLocalPlayer</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">bind</span><span class="p">(</span><span class="n">damagePlayer</span><span class="p">,</span> <span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">.</span><span class="n">LocalPlayer</span><span class="p">)</span>
 <span class="n">damageLocalPlayer</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
 
 <hr />
 <h3 id="bindtail">bindTail<a class="headerlink" href="#bindtail" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">bindTail</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">bindTail</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 Takes a chainable function <em>fn</em> and binds <em>arguments</em> to the tail of the <em>fn</em> argument list.
 Returns a function which executes <em>fn</em>, passing a subject ahead of the bound arguments supplied.</p>
@@ -803,28 +788,28 @@ Returns a function which executes <em>fn</em>, passing a subject ahead of the bo
 <p><em>string</em></p>
 </blockquote>
 <p><strong>Examples</strong></p>
-<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">filterHurtPlayers</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">bindTail</span><span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="n">filter</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">filterHurtPlayers</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">bindTail</span><span class="p">(</span><span class="n">dash</span><span class="p">.</span><span class="n">filter</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
     <span class="kr">return</span> <span class="n">player</span><span class="p">.</span><span class="n">Health</span> <span class="o">&lt;</span> <span class="n">player</span><span class="p">.</span><span class="n">MaxHealth</span>
 <span class="kr">end</span><span class="p">)</span>
-<span class="kd">local</span> <span class="n">getName</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">bindTail</span><span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="n">map</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">getName</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">bindTail</span><span class="p">(</span><span class="n">dash</span><span class="p">.</span><span class="n">map</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
     <span class="kr">return</span> <span class="n">player</span><span class="p">.</span><span class="n">Name</span>
 <span class="kr">end</span><span class="p">)</span>
-<span class="kd">local</span> <span class="n">filterHurtNames</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">compose</span><span class="p">(</span><span class="n">filterHurtPlayers</span><span class="p">,</span> <span class="n">getName</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">filterHurtNames</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">compose</span><span class="p">(</span><span class="n">filterHurtPlayers</span><span class="p">,</span> <span class="n">getName</span><span class="p">)</span>
 <span class="n">filterHurtNames</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">)</span> <span class="c1">--&gt; {&quot;Frodo&quot;, &quot;Boromir&quot;}  </span>
 </pre></div>
 
 <p><strong>Usage</strong></p>
 <ul>
-<li>Chainable rodash function feeds are mapped to <code>_.fn</code>, such as <code>_.fn.map(handler)</code>.</li>
+<li>Chainable rodash function feeds are mapped to <code>dash.fn</code>, such as <code>dash.fn.map(handler)</code>.</li>
 </ul>
 <hr />
 <div class="rodocs-trait">Chainable
 </div>
 
 <h3 id="call">call<a class="headerlink" href="#call" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-Calls the supplied <em>fn</em> on the subject and any additional arguments, returing the result.</p>
+Calls the supplied <em>fn</em> on the subject and any additional arguments, returing the result.,<T, A, R>(T, (T, ...A -&gt; R), ...A -&gt; R)</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>subject</strong> - <em>string</em> </p>
@@ -840,7 +825,7 @@ Calls the supplied <em>fn</em> on the subject and any additional arguments, retu
 <div class="rodocs-trait">Chainable</div>
 
 <h3 id="chain">chain<a class="headerlink" href="#chain" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">chain</span><span class="p">(</span><span class="n">fns</span><span class="p">,</span> <span class="n">actor</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">chain</span><span class="p">(</span><span class="n">fns</span><span class="p">,</span> <span class="n">actor</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 Chain takes a dictionary of chainable functions and returns a Chain instance with
 methods mapped to the input functions.</p>
@@ -851,7 +836,7 @@ check the value of the data at each step and change how the chain proceeds.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>fns</strong> - <em>string</em> </p>
-<p><strong>actor</strong> - <em>string</em>  - called for each result in the chain to determine how the next operation should process it. (default = <code>_.invoke</code>)
+<p><strong>actor</strong> - <em>string</em>  - called for each result in the chain to determine how the next operation should process it. (default = <code>dash.invoke</code>)
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
@@ -862,14 +847,14 @@ check the value of the data at each step and change how the chain proceeds.</p>
 <div class="codehilite"><pre><span></span><span class="c1">-- Define a simple chain that can operate a list of numbers.</span>
 <span class="c1">-- A chain function is called with the subject being processed as first argument,</span>
 <span class="c1">-- and any arguments passed in the chain as subsequent arguments.</span>
-<span class="kd">local</span> <span class="n">numberChain</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">chain</span><span class="p">({</span>
+<span class="kd">local</span> <span class="n">numberChain</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">chain</span><span class="p">({</span>
     <span class="n">addN</span> <span class="o">=</span> <span class="kr">function</span><span class="p">(</span><span class="n">list</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
-        <span class="kr">return</span> <span class="n">_</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">list</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+        <span class="kr">return</span> <span class="n">dash</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">list</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
             <span class="kr">return</span> <span class="n">element</span> <span class="o">+</span> <span class="n">n</span>
         <span class="kr">end</span><span class="p">)</span>
     <span class="kr">end</span><span class="p">,</span>
     <span class="n">sum</span> <span class="o">=</span> <span class="kr">function</span><span class="p">(</span><span class="n">list</span><span class="p">)</span>
-        <span class="kr">return</span> <span class="n">_</span><span class="p">.</span><span class="n">sum</span><span class="p">(</span><span class="n">list</span><span class="p">)</span>
+        <span class="kr">return</span> <span class="n">dash</span><span class="p">.</span><span class="n">sum</span><span class="p">(</span><span class="n">list</span><span class="p">)</span>
     <span class="kr">end</span>
 <span class="p">})</span>
 <span class="kd">local</span> <span class="n">op</span> <span class="o">=</span> <span class="n">numberChain</span><span class="p">:</span><span class="n">addN</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span><span class="n">sum</span><span class="p">()</span>
@@ -882,7 +867,7 @@ check the value of the data at each step and change how the chain proceeds.</p>
 <span class="kr">end</span><span class="p">)</span>
 
 <span class="c1">-- Create a chain that filters for hurt players and finds their name</span>
-<span class="kd">local</span> <span class="n">filterHurtNames</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">filter</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">filterHurtNames</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">filter</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
     <span class="kr">return</span> <span class="n">player</span><span class="p">.</span><span class="n">Health</span> <span class="o">&lt;</span> <span class="n">player</span><span class="p">.</span><span class="n">MaxHealth</span>
 <span class="kr">end</span><span class="p">):</span><span class="n">map</span><span class="p">(</span><span class="n">getName</span><span class="p">)</span>
 
@@ -891,21 +876,21 @@ check the value of the data at each step and change how the chain proceeds.</p>
 
 <span class="c1">-- For fun, let&#39;s encapsulate the functionality above by</span>
 <span class="c1">-- defining a chain of operations on players...</span>
-<span class="kd">local</span> <span class="n">players</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">chain</span><span class="p">({</span>
-    <span class="n">filterHurtPlayers</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">filter</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">players</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">chain</span><span class="p">({</span>
+    <span class="n">filterHurtPlayers</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">filter</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
         <span class="kr">return</span> <span class="n">player</span><span class="p">.</span><span class="n">Health</span> <span class="o">&lt;</span> <span class="n">player</span><span class="p">.</span><span class="n">MaxHealth</span>
     <span class="kr">end</span><span class="p">),</span>
     <span class="c1">-- Filter players by getting their name and checking it ends with &#39;Baggins&#39;</span>
-    <span class="n">filterBaggins</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">filter</span><span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">call</span><span class="p">(</span><span class="n">getName</span><span class="p">):</span><span class="n">endsWith</span><span class="p">(</span><span class="s2">&quot;Baggins&quot;</span><span class="p">))</span>
+    <span class="n">filterBaggins</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">filter</span><span class="p">(</span><span class="n">dash</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">call</span><span class="p">(</span><span class="n">getName</span><span class="p">):</span><span class="n">endsWith</span><span class="p">(</span><span class="s2">&quot;Baggins&quot;</span><span class="p">))</span>
 <span class="p">})</span>
 
 <span class="kd">local</span> <span class="n">hurtHobbits</span> <span class="o">=</span> <span class="n">players</span><span class="p">:</span><span class="n">filterHurtPlayers</span><span class="p">():</span><span class="n">filterBaggins</span><span class="p">()</span>
 <span class="n">hurtHobbits</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">)</span> <span class="c1">--&gt; {{Name = &quot;Frodo Baggins&quot;, ...}}</span>
 
-<span class="kd">local</span> <span class="n">names</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">map</span><span class="p">(</span><span class="n">getName</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">names</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">map</span><span class="p">(</span><span class="n">getName</span><span class="p">)</span>
 
 <span class="c1">-- Chains are themselves chainable, so you can compose two chains together</span>
-<span class="kd">local</span> <span class="n">filterHurtHobbitNames</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">compose</span><span class="p">(</span><span class="n">hurtHobbits</span><span class="p">,</span> <span class="n">names</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">filterHurtHobbitNames</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">compose</span><span class="p">(</span><span class="n">hurtHobbits</span><span class="p">,</span> <span class="n">names</span><span class="p">)</span>
 
 <span class="n">filterHurtHobbitNames</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">)</span> <span class="c1">--&gt; {&quot;Frodo Baggins&quot;}</span>
 </pre></div>
@@ -913,12 +898,12 @@ check the value of the data at each step and change how the chain proceeds.</p>
 <p><strong>Usage</strong></p>
 <ul>
 <li>
-<p>The "Rodash" chain: <code>_.chain(_)</code> is aliased to <code>_.fn</code>, so instead of writing
-<code>_.chain(_):filter</code> you can simply write <code>_.fn:filter</code>, or any other chainable method.</p>
+<p>The "Rodash" chain: <code>dash.chain(_)</code> is aliased to <code>dash.fn</code>, so instead of writing
+<code>dash.chain(_):filter</code> you can simply write <code>dash.fn:filter</code>, or any other chainable method.</p>
 </li>
 <li>
-<p>A chained function can be made using <code>_.chain</code> or built inductively using other chained
-methods of <code>_.fn</code>.</p>
+<p>A chained function can be made using <code>dash.chain</code> or built inductively using other chained
+methods of <code>dash.fn</code>.</p>
 </li>
 <li>
 <p>A chainable method is one that has the subject which is passed through a chain as the
@@ -928,26 +913,26 @@ first argument, and subsequent arguments</p>
 <p><strong>See</strong></p>
 <ul>
 <li>
-<p><a href="#chainFn">_.chainFn</a> - Makes a function chainable if it returns a chain.</p>
+<p><a href="#chainFn">dash.chainFn</a> - Makes a function chainable if it returns a chain.</p>
 </li>
 <li>
-<p><a href="#invoke">_.invoke</a> - the identity actor</p>
+<p><a href="#invoke">dash.invoke</a> - the identity actor</p>
 </li>
 <li>
-<p><a href="#continue">_.continue</a> - an actor for chains of asynchronous functions</p>
+<p><a href="#continue">dash.continue</a> - an actor for chains of asynchronous functions</p>
 </li>
 <li>
-<p><a href="#maybe">_.maybe</a> - an actor for chains of partial functions</p>
+<p><a href="#maybe">dash.maybe</a> - an actor for chains of partial functions</p>
 </li>
 </ul>
 <hr />
 <h3 id="chainfn">chainFn<a class="headerlink" href="#chainfn" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">chainFn</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">chainFn</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 Wraps a function, making it chainable if it returns a chain itself.</p>
 <p>This allows you to define custom functions in terms of the arguments they will take when called
 in a chain, and return a chained function which performs the operation, rather than explicitly
-taking the subject as first argument.</p>
+taking the subject as first argument.,<T, A, R>((...A -&gt; T -&gt; R) -&gt; T, ...A -&gt; R)</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>fn</strong> - <em>string</em> 
@@ -960,11 +945,11 @@ taking the subject as first argument.</p>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="c1">-- In the chain example addN was defined like so:</span>
 <span class="kd">local</span> <span class="kr">function</span> <span class="nf">addN</span><span class="p">(</span><span class="n">list</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
-    <span class="kr">return</span> <span class="n">_</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">list</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+    <span class="kr">return</span> <span class="n">dash</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">list</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
         <span class="kr">return</span> <span class="n">element</span> <span class="o">+</span> <span class="n">n</span>
     <span class="kr">end</span><span class="p">)</span>
 <span class="kr">end</span>
-<span class="n">numberChain</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">chain</span><span class="p">({</span>
+<span class="n">numberChain</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">chain</span><span class="p">({</span>
     <span class="n">addN</span> <span class="o">=</span> <span class="n">addN</span>
 <span class="p">})</span>
 <span class="kd">local</span> <span class="n">op</span> <span class="o">=</span> <span class="n">numberChain</span><span class="p">:</span><span class="n">addN</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span><span class="n">sum</span><span class="p">()</span>
@@ -973,14 +958,14 @@ taking the subject as first argument.</p>
 <span class="c1">-- It is more natural to define addN as a function taking one argument,</span>
 <span class="c1">-- to match the way it is called in the chain:</span>
 <span class="kd">local</span> <span class="kr">function</span> <span class="nf">addN</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-    <span class="c1">-- Methods on _.fn are themselves chained, so &quot;list&quot; can be dropped.</span>
-    <span class="kr">return</span> <span class="n">_</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">map</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
+    <span class="c1">-- Methods on dash.fn are themselves chained, so &quot;list&quot; can be dropped.</span>
+    <span class="kr">return</span> <span class="n">dash</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">map</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
         <span class="kr">return</span> <span class="n">element</span> <span class="o">+</span> <span class="n">n</span>
     <span class="kr">end</span><span class="p">)</span>
 <span class="kr">end</span>
-<span class="c1">-- The _.chainFn is used to wrap any functions which return chains.</span>
-<span class="n">numberChain</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">chain</span><span class="p">({</span>
-    <span class="n">addN</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">chainFn</span><span class="p">(</span><span class="n">addN</span><span class="p">)</span>
+<span class="c1">-- The dash.chainFn is used to wrap any functions which return chains.</span>
+<span class="n">numberChain</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">chain</span><span class="p">({</span>
+    <span class="n">addN</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">chainFn</span><span class="p">(</span><span class="n">addN</span><span class="p">)</span>
 <span class="p">})</span>
 <span class="kd">local</span> <span class="n">op</span> <span class="o">=</span> <span class="n">numberChain</span><span class="p">:</span><span class="n">addN</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span><span class="n">sum</span><span class="p">()</span>
 <span class="n">op</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">})</span> <span class="c1">--&gt; 12</span>
@@ -988,14 +973,14 @@ taking the subject as first argument.</p>
 
 <p><strong>See</strong></p>
 <ul>
-<li><a href="#chain">_.chain</a> </li>
+<li><a href="#chain">dash.chain</a> </li>
 </ul>
 <hr />
 <div class="rodocs-trait">Chainable
 </div>
 
 <h3 id="compose">compose<a class="headerlink" href="#compose" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">compose</span><span class="p">()</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">compose</span><span class="p">()</span> <span class="c1">--&gt; string</span>
 </pre></div>
 Returns a function that calls the argument functions in left-right order on an input, passing
 the return of the previous function as argument(s) to the next.</p>
@@ -1011,7 +996,7 @@ the return of the previous function as argument(s) to the next.</p>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="kr">function</span> <span class="nf">fry</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="kr">return</span> <span class="s2">&quot;fried &quot;</span> <span class="o">..</span> <span class="n">item</span> <span class="kr">end</span>
 <span class="kd">local</span> <span class="kr">function</span> <span class="nf">cheesify</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="kr">return</span> <span class="s2">&quot;cheesy &quot;</span> <span class="o">..</span> <span class="n">item</span> <span class="kr">end</span>
-<span class="kd">local</span> <span class="n">prepare</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">compose</span><span class="p">(</span><span class="n">fry</span><span class="p">,</span> <span class="n">cheesify</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">prepare</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">compose</span><span class="p">(</span><span class="n">fry</span><span class="p">,</span> <span class="n">cheesify</span><span class="p">)</span>
 <span class="n">prepare</span><span class="p">(</span><span class="s2">&quot;nachos&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;cheesy fried nachos&quot;</span>
 </pre></div>
 
@@ -1021,7 +1006,7 @@ the return of the previous function as argument(s) to the next.</p>
 </ul>
 <hr />
 <h3 id="continue">continue<a class="headerlink" href="#continue" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">continue</span><span class="p">(</span><span class="n">actor</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">continue</span><span class="p">(</span><span class="n">actor</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 An actor getter which awaits on any promises returned by chain methods, and continues execution
 when the promise completes.</p>
@@ -1030,7 +1015,7 @@ synchronous methods, removing any boilerplate needed to handle promises in the m
 <p>Can wrap any other actor which handles values after any promise resolution.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>actor</strong> - <em>string</em>  - (default = <code>_.invoke</code>) The actor to wrap.
+<p><strong>actor</strong> - <em>string</em>  - (default = <code>dash.invoke</code>) The actor to wrap.
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
@@ -1044,29 +1029,29 @@ synchronous methods, removing any boilerplate needed to handle promises in the m
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="c1">-- Let&#39;s define a function which returns an answer after a delay</span>
 <span class="kd">local</span> <span class="n">getName</span> <span class="o">=</span> <span class="kr">function</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
-    <span class="kr">return</span> <span class="n">_</span><span class="p">.</span><span class="n">delay</span><span class="p">(</span><span class="mi">1</span><span class="p">):</span><span class="n">andThen</span><span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="n">returns</span><span class="p">(</span><span class="n">player</span><span class="p">.</span><span class="n">Name</span><span class="p">))</span>
+    <span class="kr">return</span> <span class="n">dash</span><span class="p">.</span><span class="n">delay</span><span class="p">(</span><span class="mi">1</span><span class="p">):</span><span class="n">andThen</span><span class="p">(</span><span class="n">dash</span><span class="p">.</span><span class="n">returns</span><span class="p">(</span><span class="n">player</span><span class="p">.</span><span class="n">Name</span><span class="p">))</span>
 <span class="kr">end</span>
 <span class="kd">local</span> <span class="n">players</span>
 <span class="n">players</span> <span class="o">=</span>
-    <span class="n">_</span><span class="p">.</span><span class="n">chain</span><span class="p">(</span>
+    <span class="n">dash</span><span class="p">.</span><span class="n">chain</span><span class="p">(</span>
     <span class="p">{</span>
         <span class="c1">-- Any chainable function can be used</span>
-        <span class="n">filter</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">filter</span><span class="p">,</span>
+        <span class="n">filter</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">filter</span><span class="p">,</span>
         <span class="c1">-- A chain which evaluates a promise of the player names</span>
-        <span class="n">mapNames</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">map</span><span class="p">(</span><span class="n">getName</span><span class="p">):</span><span class="n">parallel</span><span class="p">(),</span>
-        <span class="n">filterHurt</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">filter</span><span class="p">(</span>
+        <span class="n">mapNames</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">map</span><span class="p">(</span><span class="n">getName</span><span class="p">):</span><span class="n">parallel</span><span class="p">(),</span>
+        <span class="n">filterHurt</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">filter</span><span class="p">(</span>
             <span class="kr">function</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
                 <span class="kr">return</span> <span class="n">player</span><span class="p">.</span><span class="n">Health</span> <span class="o">&lt;</span> <span class="mi">100</span>
             <span class="kr">end</span>
         <span class="p">),</span>
-        <span class="n">mapNameIf</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">chainFn</span><span class="p">(</span>
+        <span class="n">mapNameIf</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">chainFn</span><span class="p">(</span>
             <span class="kr">function</span><span class="p">(</span><span class="n">expectedName</span><span class="p">)</span>
                 <span class="c1">-- Methods on self work as expected</span>
-                <span class="kr">return</span> <span class="n">players</span><span class="p">:</span><span class="n">mapNames</span><span class="p">():</span><span class="n">filter</span><span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">endsWith</span><span class="p">(</span><span class="n">expectedName</span><span class="p">))</span>
+                <span class="kr">return</span> <span class="n">players</span><span class="p">:</span><span class="n">mapNames</span><span class="p">():</span><span class="n">filter</span><span class="p">(</span><span class="n">dash</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">endsWith</span><span class="p">(</span><span class="n">expectedName</span><span class="p">))</span>
             <span class="kr">end</span>
         <span class="p">)</span>
     <span class="p">},</span>
-    <span class="n">_</span><span class="p">.</span><span class="n">continue</span><span class="p">()</span>
+    <span class="n">dash</span><span class="p">.</span><span class="n">continue</span><span class="p">()</span>
 <span class="p">)</span>
 <span class="kd">local</span> <span class="n">filterHurtHobbitNames</span> <span class="o">=</span> <span class="n">players</span><span class="p">:</span><span class="n">filterHurt</span><span class="p">():</span><span class="n">mapNameIf</span><span class="p">(</span><span class="s2">&quot;Baggins&quot;</span><span class="p">)</span>
 <span class="kd">local</span> <span class="n">crew</span> <span class="o">=</span> <span class="p">{</span>
@@ -1088,11 +1073,11 @@ synchronous methods, removing any boilerplate needed to handle promises in the m
 
 <p><strong>See</strong></p>
 <ul>
-<li><a href="#chain">_.chain</a> </li>
+<li><a href="#chain">dash.chain</a> </li>
 </ul>
 <hr />
 <h3 id="debounce">debounce<a class="headerlink" href="#debounce" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">debounce</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">delayInSeconds</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">debounce</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">delayInSeconds</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 Creates a debounced function that delays calling <em>fn</em> until after <em>delayInSeconds</em> seconds have
 elapsed since the last time the debounced function was attempted to be called.</p>
@@ -1115,7 +1100,7 @@ the illustrated point being debounce will only call <em>fn</em> at the end of a 
 <div class="rodocs-trait">Chainable</div>
 
 <h3 id="id">id<a class="headerlink" href="#id" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">id</span><span class="p">()</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">id</span><span class="p">()</span> <span class="c1">--&gt; string</span>
 </pre></div>
 A simple function that does nothing, but returns its input parameters.</p>
 <p><strong>Parameters</strong></p>
@@ -1133,7 +1118,7 @@ A simple function that does nothing, but returns its input parameters.</p>
 </ul>
 <hr />
 <h3 id="invoke">invoke<a class="headerlink" href="#invoke" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">invoke</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">invoke</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 An actor which calls the supplied <em>fn</em> with the argument tail.</p>
 <p><strong>Parameters</strong></p>
@@ -1148,13 +1133,13 @@ An actor which calls the supplied <em>fn</em> with the argument tail.</p>
 </blockquote>
 <p><strong>Usage</strong></p>
 <ul>
-<li>This is the default <em>actor</em> for <code>_.chain</code> and acts as an identity, meaning it has no effect on the result.</li>
+<li>This is the default <em>actor</em> for <code>dash.chain</code> and acts as an identity, meaning it has no effect on the result.</li>
 </ul>
 <hr />
 <h3 id="iscallable">isCallable<a class="headerlink" href="#iscallable" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">isCallable</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">isCallable</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-Return <code>true</code> if the <em>value</em> can be called ie. it is function or a table with a <code>__call</code> entry in its metatable.</p>
+Return <code>true</code> if the <em>value</em> is a function or a table with a <code>__call</code> entry in its metatable.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>value</strong> - <em>string</em> 
@@ -1166,11 +1151,11 @@ Return <code>true</code> if the <em>value</em> can be called ie. it is function 
 </blockquote>
 <p><strong>Usage</strong></p>
 <ul>
-<li>In general this is a much more suitable test than checking purely for a function type.</li>
+<li>This is a more general test than checking purely for a function type.</li>
 </ul>
 <hr />
 <h3 id="maybe">maybe<a class="headerlink" href="#maybe" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">maybe</span><span class="p">(</span><span class="n">actor</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">maybe</span><span class="p">(</span><span class="n">actor</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 An actor which cancels execution of a chain if a method returns nil, evaluating the chain as nil.</p>
 <p>Can wrap any other actor which handles values that are non-nil.</p>
@@ -1185,33 +1170,33 @@ An actor which cancels execution of a chain if a method returns nil, evaluating 
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="c1">-- We can define a chain of Rodash functions that will skip after a nil is returned.</span>
-<span class="kd">local</span> <span class="n">maybeFn</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">chain</span><span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">.</span><span class="n">maybe</span><span class="p">())</span>
+<span class="kd">local</span> <span class="n">maybeFn</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">chain</span><span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">dash</span><span class="p">.</span><span class="n">maybe</span><span class="p">())</span>
 <span class="kd">local</span> <span class="n">getName</span> <span class="o">=</span> <span class="kr">function</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
     <span class="kr">return</span> <span class="n">player</span><span class="p">.</span><span class="n">Name</span>
 <span class="kr">end</span>
 <span class="kd">local</span> <span class="n">players</span>
 <span class="n">players</span> <span class="o">=</span>
-    <span class="n">_</span><span class="p">.</span><span class="n">chain</span><span class="p">(</span>
+    <span class="n">dash</span><span class="p">.</span><span class="n">chain</span><span class="p">(</span>
     <span class="p">{</span>
         <span class="c1">-- Any chainable functions can be used</span>
-        <span class="n">call</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">call</span><span class="p">,</span>
-        <span class="n">endsWith</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">endsWith</span><span class="p">,</span>
-        <span class="n">filterHurt</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">filter</span><span class="p">(</span>
+        <span class="n">call</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">call</span><span class="p">,</span>
+        <span class="n">endsWith</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">endsWith</span><span class="p">,</span>
+        <span class="n">filterHurt</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">filter</span><span class="p">(</span>
             <span class="kr">function</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
                 <span class="kr">return</span> <span class="n">player</span><span class="p">.</span><span class="n">Health</span> <span class="o">&lt;</span> <span class="mi">100</span>
             <span class="kr">end</span>
         <span class="p">),</span>
-        <span class="n">filterBaggins</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">chainFn</span><span class="p">(</span>
+        <span class="n">filterBaggins</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">chainFn</span><span class="p">(</span>
             <span class="kr">function</span><span class="p">()</span>
                 <span class="c1">-- If getName returns nil here, endsWith will be skipped</span>
-                <span class="kr">return</span> <span class="n">_</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">filter</span><span class="p">(</span><span class="n">maybeFn</span><span class="p">:</span><span class="n">call</span><span class="p">(</span><span class="n">getName</span><span class="p">):</span><span class="n">endsWith</span><span class="p">(</span><span class="s2">&quot;Baggins&quot;</span><span class="p">))</span>
+                <span class="kr">return</span> <span class="n">dash</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">filter</span><span class="p">(</span><span class="n">maybeFn</span><span class="p">:</span><span class="n">call</span><span class="p">(</span><span class="n">getName</span><span class="p">):</span><span class="n">endsWith</span><span class="p">(</span><span class="s2">&quot;Baggins&quot;</span><span class="p">))</span>
             <span class="kr">end</span>
         <span class="p">)</span>
     <span class="p">}</span>
 <span class="p">)</span>
 <span class="kd">local</span> <span class="n">hurtHobbits</span> <span class="o">=</span> <span class="n">players</span><span class="p">:</span><span class="n">filterHurt</span><span class="p">():</span><span class="n">filterBaggins</span><span class="p">()</span>
-<span class="kd">local</span> <span class="n">mapNames</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">map</span><span class="p">(</span><span class="n">getName</span><span class="p">)</span>
-<span class="kd">local</span> <span class="n">filterHurtBagginsNames</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">compose</span><span class="p">(</span><span class="n">hurtHobbits</span><span class="p">,</span> <span class="n">mapNames</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">mapNames</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">map</span><span class="p">(</span><span class="n">getName</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">filterHurtBagginsNames</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">compose</span><span class="p">(</span><span class="n">hurtHobbits</span><span class="p">,</span> <span class="n">mapNames</span><span class="p">)</span>
 <span class="c1">-- Here, one player record doesn&#39;t have a Name property, so it is skipped.</span>
 <span class="kd">local</span> <span class="n">crew</span> <span class="o">=</span> <span class="p">{</span>
     <span class="p">{</span>
@@ -1230,16 +1215,16 @@ An actor which cancels execution of a chain if a method returns nil, evaluating 
 
 <hr />
 <h3 id="memoize">memoize<a class="headerlink" href="#memoize" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">memoize</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">serializeArgs</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">memoize</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">serializeArgs</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-Like <code>_.once</code>, but caches non-nil results of calls to <em>fn</em> keyed by some serialization of the
+Like <code>dash.once</code>, but caches non-nil results of calls to <em>fn</em> keyed by some serialization of the
 input arguments to <em>fn</em>. By default, all the args are serialized simply using <code>tostring</code>.</p>
 <p>Optionally memoize takes <code>function serializeArgs(args, cache)</code>, a function that should return a string key which a
 result should be cached at for a given signature. Return nil to avoid caching the result.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>fn</strong> - <em>string</em> </p>
-<p><strong>serializeArgs</strong> - <em>string</em>  - (default = <code>_.serialize</code>)
+<p><strong>serializeArgs</strong> - <em>string</em>  - (default = <code>dash.serialize</code>)
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
@@ -1248,7 +1233,7 @@ result should be cached at for a given signature. Return nil to avoid caching th
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">menu</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;soup&quot;</span><span class="p">,</span> <span class="s2">&quot;bread&quot;</span><span class="p">,</span> <span class="s2">&quot;butter&quot;</span><span class="p">}</span>
-<span class="kd">local</span> <span class="n">heat</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">memoize</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">heat</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">memoize</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
     <span class="kr">return</span> <span class="s2">&quot;hot &quot;</span> <span class="p">...</span> <span class="n">menu</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
 <span class="kr">end</span><span class="p">)</span>
 
@@ -1269,15 +1254,15 @@ result should be cached at for a given signature. Return nil to avoid caching th
 <p><strong>See</strong></p>
 <ul>
 <li>
-<p><a href="#serialize">_.serialize</a> </p>
+<p><a href="#serialize">dash.serialize</a> </p>
 </li>
 <li>
-<p><a href="#serializeDeep">_.serializeDeep</a> if you want to recursively serialize arguments.</p>
+<p><a href="#serializeDeep">dash.serializeDeep</a> if you want to recursively serialize arguments.</p>
 </li>
 </ul>
 <hr />
 <h3 id="noop">noop<a class="headerlink" href="#noop" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">noop</span><span class="p">()</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">noop</span><span class="p">()</span> <span class="c1">--&gt; string</span>
 </pre></div>
 A simple function that does nothing, and returns nil.</p>
 <p><strong>Returns</strong></p>
@@ -1292,7 +1277,7 @@ A simple function that does nothing, and returns nil.</p>
 <div class="rodocs-trait">Chainable</div>
 
 <h3 id="once">once<a class="headerlink" href="#once" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">once</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">once</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 Returns a function that when called, only calls <em>fn</em> the first time the function is called.
 For subsequent calls, the initial return of <em>fn</em> is returned, even if it is <code>nil</code>.</p>
@@ -1310,7 +1295,7 @@ For subsequent calls, the initial return of <em>fn</em> is returned, even if it 
 <li><em>passthrough</em> - any error thrown when called will cause <code>nil</code> to cache and pass through the error.</li>
 </ul>
 <p><strong>Examples</strong></p>
-<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">fry</span> <span class="o">=</span> <span class="n">_</span><span class="p">.</span><span class="n">once</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">fry</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">once</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
     <span class="kr">return</span> <span class="s2">&quot;fried &quot;</span> <span class="o">..</span> <span class="n">tiem</span>
 <span class="kr">end</span><span class="p">)</span>
 <span class="n">fry</span><span class="p">(</span><span class="s2">&quot;sardine&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;fried sardine&quot;</span>
@@ -1328,7 +1313,7 @@ For subsequent calls, the initial return of <em>fn</em> is returned, even if it 
 <div class="rodocs-trait">Chainable</div>
 
 <h3 id="returns">returns<a class="headerlink" href="#returns" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">returns</span><span class="p">()</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">returns</span><span class="p">()</span> <span class="c1">--&gt; string</span>
 </pre></div>
 Returns a function that when called, returns the original input parameters.</p>
 <p><strong>Parameters</strong></p>
@@ -1341,7 +1326,7 @@ Returns a function that when called, returns the original input parameters.</p>
 <p><em>string</em></p>
 </blockquote>
 <p><strong>Examples</strong></p>
-<div class="codehilite"><pre><span></span><span class="n">findPlayer</span><span class="p">(</span><span class="s2">&quot;builderman&quot;</span><span class="p">):</span><span class="n">andThen</span><span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="n">returns</span><span class="p">(</span><span class="s2">&quot;Found Dave!&quot;</span><span class="p">))</span>
+<div class="codehilite"><pre><span></span><span class="n">findPlayer</span><span class="p">(</span><span class="s2">&quot;builderman&quot;</span><span class="p">):</span><span class="n">andThen</span><span class="p">(</span><span class="n">dash</span><span class="p">.</span><span class="n">returns</span><span class="p">(</span><span class="s2">&quot;Found Dave!&quot;</span><span class="p">))</span>
 <span class="c1">--&gt; &quot;Found Dave!&quot; (soon after)</span>
 </pre></div>
 
@@ -1351,9 +1336,9 @@ Returns a function that when called, returns the original input parameters.</p>
 </ul>
 <hr />
 <h3 id="setinterval">setInterval<a class="headerlink" href="#setinterval" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">setInterval</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">intervalInSeconds</span><span class="p">,</span> <span class="n">delayInSeconds</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">setInterval</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">intervalInSeconds</span><span class="p">,</span> <span class="n">delayInSeconds</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-Like <code>_.setTimeout</code> but calls <em>fn</em> after every interval of <em>intervalInSeconds</em> time has passed.</p>
+Like <code>dash.setTimeout</code> but calls <em>fn</em> after every interval of <em>intervalInSeconds</em> time has passed.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>fn</strong> - <em>string</em> </p>
@@ -1367,7 +1352,7 @@ Like <code>_.setTimeout</code> but calls <em>fn</em> after every interval of <em
 </blockquote>
 <hr />
 <h3 id="settimeout">setTimeout<a class="headerlink" href="#settimeout" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">setTimeout</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">delayInSeconds</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">setTimeout</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">delayInSeconds</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 Like <code>delay</code>, this calls <em>fn</em> after <em>delayInSeconds</em> time has passed, with the added benefit of being cancelable.</p>
 <p><strong>Parameters</strong></p>
@@ -1382,7 +1367,7 @@ Like <code>delay</code>, this calls <em>fn</em> after <em>delayInSeconds</em> ti
 </blockquote>
 <hr />
 <h3 id="throttle">throttle<a class="headerlink" href="#throttle" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">throttle</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">cooldownInSeconds</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">throttle</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">cooldownInSeconds</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 Creates a throttle function that drops any repeat calls within a cooldown period and instead
 returns the result of the last call.</p>
@@ -1403,7 +1388,7 @@ the illustrated point being throttle will call <em>fn</em> every period during a
 </ul>
 <hr />
 <h3 id="throws">throws<a class="headerlink" href="#throws" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">throws</span><span class="p">(</span><span class="n">errorMessage</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">throws</span><span class="p">(</span><span class="n">errorMessage</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 Returns a function that when called, throws the original message.</p>
 <p><strong>Parameters</strong></p>
@@ -1416,7 +1401,7 @@ Returns a function that when called, throws the original message.</p>
 <p><em>string</em></p>
 </blockquote>
 <p><strong>Examples</strong></p>
-<div class="codehilite"><pre><span></span><span class="n">findPlayer</span><span class="p">(</span><span class="s2">&quot;builderman&quot;</span><span class="p">):</span><span class="n">andThen</span><span class="p">(</span><span class="n">_</span><span class="p">.</span><span class="n">throws</span><span class="p">(</span><span class="s2">&quot;DaveNotFound&quot;</span><span class="p">))</span>
+<div class="codehilite"><pre><span></span><span class="n">findPlayer</span><span class="p">(</span><span class="s2">&quot;builderman&quot;</span><span class="p">):</span><span class="n">andThen</span><span class="p">(</span><span class="n">dash</span><span class="p">.</span><span class="n">throws</span><span class="p">(</span><span class="s2">&quot;DaveNotFound&quot;</span><span class="p">))</span>
 <span class="c1">--!&gt; &quot;DaveNotFound&quot; (soon after)</span>
 </pre></div>
 
@@ -1426,7 +1411,7 @@ Returns a function that when called, throws the original message.</p>
 </ul>
 <hr />
 <h3 id="unary">unary<a class="headerlink" href="#unary" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">_</span><span class="p">.</span><span class="nf">unary</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">unary</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 Returns a function that wraps the input <em>fn</em> but only passes the first argument to it.</p>
 <p><strong>Parameters</strong></p>
