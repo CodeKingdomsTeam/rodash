@@ -462,7 +462,7 @@ end
 					speed = speed
 				}
 			end,
-			{dash.PartialOrd}
+			{dash.PartialOrd()}
 		)
 		function Car:brake()
 			self.speed = 0
@@ -514,7 +514,26 @@ function Classes.PartialOrd(keys)
 	end
 end
 
-function Classes.ToString(keys)
+--[[
+	A decorator which derives a `:toString()` method for the _Class_ that displays a serialized
+	string of the class name and values of any _keys_ provided.
+
+	@param keys (default = _all the keys of the instance except `"Class"`_)
+
+	@example
+		local Car =
+			Classes.class(
+			"Car",
+			function(speed)
+				return {
+					speed = speed
+				}
+			end,
+			{dash.Formatable()}
+		)
+		print(Car.new(5)) --> "Car({speed:5})"
+]]
+function Classes.Formatable(keys)
 	return function(Class)
 		function Class:toString()
 			local Strings = require(script.Parent.Strings)

@@ -51,7 +51,7 @@ export function generateMd(
 				functions.push(fn);
 			}
 		}
-		functions.sort((a, b) => (a.name < b.name ? -1 : 1));
+		functions.sort((a, b) => (a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1));
 	}
 
 	return `

@@ -55,6 +55,7 @@ luac.out
 /site
 .mkdocs.yml
 /docs/api
+/docs/glossary.md
 
 node_modules
 
