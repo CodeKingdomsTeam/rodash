@@ -386,10 +386,10 @@
 <span class="kr">end</span><span class="p">)</span>
 </pre></div>
 
-<p>Running a piece of code periodically is simplest with <code>rd.setInterval</code>:</p>
-<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">rd</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">ReplicatedStorage</span><span class="p">.</span><span class="n">Rodash</span><span class="p">)</span>
+<p>Running a piece of code periodically is simplest with <code>dash.setInterval</code>:</p>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">dash</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">ReplicatedStorage</span><span class="p">.</span><span class="n">Rodash</span><span class="p">)</span>
 
-<span class="n">rd</span><span class="p">.</span><span class="n">setInterval</span><span class="p">(</span><span class="kr">function</span><span class="p">()</span>
+<span class="n">dash</span><span class="p">.</span><span class="n">setInterval</span><span class="p">(</span><span class="kr">function</span><span class="p">()</span>
     <span class="kd">local</span> <span class="n">playerNames</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="kr">for</span> <span class="n">player</span> <span class="kr">in</span> <span class="nb">pairs</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">:</span><span class="n">GetChildren</span><span class="p">())</span> <span class="kr">do</span>
         <span class="nb">table.insert</span><span class="p">(</span><span class="n">playerNames</span><span class="p">,</span> <span class="n">player</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span>
@@ -399,12 +399,12 @@
 <span class="kr">end</span><span class="p">)</span>
 </pre></div>
 
-<p>You can also cancel an interval when you need to, or use rd.setTimeout if you want to run a function after a delay that you can cancel.</p>
+<p>You can also cancel an interval when you need to, or use dash.setTimeout if you want to run a function after a delay that you can cancel.</p>
 <p>A cleaner way to get the player names from the list of players is using <code>map</code>:</p>
-<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">rd</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">ReplicatedStorage</span><span class="p">.</span><span class="n">Rodash</span><span class="p">)</span>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">dash</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">ReplicatedStorage</span><span class="p">.</span><span class="n">Rodash</span><span class="p">)</span>
 
-<span class="n">rd</span><span class="p">.</span><span class="n">setInterval</span><span class="p">(</span><span class="kr">function</span><span class="p">()</span>
-    <span class="kd">local</span> <span class="n">playerNames</span> <span class="o">=</span> <span class="n">rd</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">:</span><span class="n">GetChildren</span><span class="p">(),</span> <span class="kr">function</span><span class="p">(</span> <span class="n">name</span> <span class="p">)</span>
+<span class="n">dash</span><span class="p">.</span><span class="n">setInterval</span><span class="p">(</span><span class="kr">function</span><span class="p">()</span>
+    <span class="kd">local</span> <span class="n">playerNames</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">:</span><span class="n">GetChildren</span><span class="p">(),</span> <span class="kr">function</span><span class="p">(</span> <span class="n">name</span> <span class="p">)</span>
         <span class="kr">return</span> <span class="n">player</span><span class="p">.</span><span class="n">Name</span>
     <span class="kr">end</span><span class="p">)</span>
     <span class="kd">local</span> <span class="n">nameList</span> <span class="o">=</span> <span class="nb">table.concat</span><span class="p">(</span><span class="n">playerNames</span><span class="p">,</span> <span class="s2">&quot;,&quot;</span><span class="p">)</span>
@@ -412,23 +412,23 @@
 <span class="kr">end</span><span class="p">)</span>
 </pre></div>
 
-<p>Rodash has lots of different methods to operate on tables and arrays. Some other examples are rd.filter, rd.find, rd.groupBy and rd.slice.</p>
-<p>You can use common functions which act on a subject by using rd.fn, or you can make your own using rd.chain:</p>
-<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">rd</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">ReplicatedStorage</span><span class="p">.</span><span class="n">Rodash</span><span class="p">)</span>
-<span class="kd">local</span> <span class="n">fn</span> <span class="o">=</span> <span class="n">rd</span><span class="p">.</span><span class="n">fn</span>
+<p>Rodash has lots of different methods to operate on tables and arrays. Some other examples are dash.filter, dash.find, dash.groupBy and dash.slice.</p>
+<p>You can use common functions which act on a subject by using dash.fn, or you can make your own using dash.chain:</p>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">dash</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">ReplicatedStorage</span><span class="p">.</span><span class="n">Rodash</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">fn</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">fn</span>
 
-<span class="n">rd</span><span class="p">.</span><span class="n">setInterval</span><span class="p">(</span><span class="kr">function</span><span class="p">()</span>
-    <span class="kd">local</span> <span class="n">playerNames</span> <span class="o">=</span> <span class="n">rd</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">:</span><span class="n">GetChildren</span><span class="p">(),</span> <span class="n">fn</span><span class="p">:</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Name&quot;</span><span class="p">))</span>
+<span class="n">dash</span><span class="p">.</span><span class="n">setInterval</span><span class="p">(</span><span class="kr">function</span><span class="p">()</span>
+    <span class="kd">local</span> <span class="n">playerNames</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">:</span><span class="n">GetChildren</span><span class="p">(),</span> <span class="n">fn</span><span class="p">:</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Name&quot;</span><span class="p">))</span>
     <span class="kd">local</span> <span class="n">nameList</span> <span class="o">=</span> <span class="nb">table.concat</span><span class="p">(</span><span class="n">playerNames</span><span class="p">,</span> <span class="s2">&quot;,&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="nb">string.format</span><span class="p">(</span><span class="s2">&quot;Players online = %s: %s&quot;</span><span class="p">),</span> <span class="o">#</span><span class="n">playerNames</span><span class="p">,</span> <span class="n">nameList</span><span class="p">)</span>
 <span class="kr">end</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 </pre></div>
 
 <p>It's often useful to separate functions from the data they act on as these can be used in multiple ways. We can make getting the names of some objects a more general function and then call it on the players:</p>
-<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">rd</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">ReplicatedStorage</span><span class="p">.</span><span class="n">Rodash</span><span class="p">)</span>
-<span class="kd">local</span> <span class="n">fn</span> <span class="o">=</span> <span class="n">rd</span><span class="p">.</span><span class="n">fn</span>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">dash</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">ReplicatedStorage</span><span class="p">.</span><span class="n">Rodash</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">fn</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">fn</span>
 
-<span class="n">rd</span><span class="p">.</span><span class="n">setInterval</span><span class="p">(</span><span class="kr">function</span><span class="p">()</span>
+<span class="n">dash</span><span class="p">.</span><span class="n">setInterval</span><span class="p">(</span><span class="kr">function</span><span class="p">()</span>
     <span class="kd">local</span> <span class="n">getNames</span> <span class="o">=</span> <span class="n">fn</span><span class="p">:</span><span class="n">map</span><span class="p">(</span><span class="n">fn</span><span class="p">:</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Name&quot;</span><span class="p">))</span>
     <span class="kd">local</span> <span class="n">playerNames</span> <span class="o">=</span> <span class="n">getNames</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">:</span><span class="n">GetChildren</span><span class="p">())</span>
     <span class="kd">local</span> <span class="n">nameList</span> <span class="o">=</span> <span class="nb">table.concat</span><span class="p">(</span><span class="n">playerNames</span><span class="p">,</span> <span class="s2">&quot;,&quot;</span><span class="p">)</span>
@@ -436,14 +436,14 @@
 <span class="kr">end</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 </pre></div>
 
-<p>Rodash rd.format and rd.pretty can be used to quickly print values that you need from Lua. Here, we can quickly get the length of the playerNames array, and then print the array:</p>
-<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">rd</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">ReplicatedStorage</span><span class="p">.</span><span class="n">Rodash</span><span class="p">)</span>
-<span class="kd">local</span> <span class="n">fn</span> <span class="o">=</span> <span class="n">rd</span><span class="p">.</span><span class="n">fn</span>
+<p>Rodash dash.format and dash.pretty can be used to quickly print values that you need from Lua. Here, we can quickly get the length of the playerNames array, and then print the array:</p>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">dash</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">ReplicatedStorage</span><span class="p">.</span><span class="n">Rodash</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">fn</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">fn</span>
 
-<span class="n">rd</span><span class="p">.</span><span class="n">setInterval</span><span class="p">(</span><span class="kr">function</span><span class="p">()</span>
+<span class="n">dash</span><span class="p">.</span><span class="n">setInterval</span><span class="p">(</span><span class="kr">function</span><span class="p">()</span>
     <span class="kd">local</span> <span class="n">getNames</span> <span class="o">=</span> <span class="n">fn</span><span class="p">:</span><span class="n">map</span><span class="p">(</span><span class="n">fn</span><span class="p">:</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Name&quot;</span><span class="p">))</span>
     <span class="kd">local</span> <span class="n">playerNames</span> <span class="o">=</span> <span class="n">getNames</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">:</span><span class="n">GetChildren</span><span class="p">())</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">rd</span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;Players online = {#}: {1:#?}&quot;</span><span class="p">,</span> <span class="n">playerNames</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">dash</span><span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;Players online = {#}: {1:#?}&quot;</span><span class="p">,</span> <span class="n">playerNames</span><span class="p">))</span>
 <span class="kr">end</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 </pre></div>
 

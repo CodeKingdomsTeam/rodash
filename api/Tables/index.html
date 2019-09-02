@@ -1128,7 +1128,7 @@ Returns a shallow copy of <em>source</em>.</p>
 <p><a href="#dash.map"><code>dash.map</code></a> - if you want to return different values for each key.</p>
 </li>
 <li>
-<p><a href="#Clone">dash.Clone</a> - use this to derive a default <code>:clone()</code> method for class instances.</p>
+<p><a href="#Cloneable">dash.Cloneable</a> - use this to derive a default <code>:clone()</code> method for class instances.</p>
 </li>
 </ul>
 <hr />
@@ -1153,11 +1153,11 @@ cycle-safe.</p>
     <span class="n">patronus</span> <span class="o">=</span> <span class="s2">&quot;stag&quot;</span><span class="p">,</span>
     <span class="n">age</span> <span class="o">=</span> <span class="mi">12</span>
 <span class="p">}</span>
-<span class="kd">local</span> <span class="n">Headwig</span> <span class="o">=</span> <span class="p">{</span>
+<span class="kd">local</span> <span class="n">Hedwig</span> <span class="o">=</span> <span class="p">{</span>
     <span class="n">animal</span> <span class="o">=</span> <span class="s2">&quot;owl&quot;</span><span class="p">,</span>
     <span class="n">owner</span> <span class="o">=</span> <span class="n">Harry</span>
 <span class="p">}</span>
-<span class="n">Harry</span><span class="p">.</span><span class="n">pet</span> <span class="o">=</span> <span class="n">Headwig</span>
+<span class="n">Harry</span><span class="p">.</span><span class="n">pet</span> <span class="o">=</span> <span class="n">Hedwig</span>
 <span class="kd">local</span> <span class="n">clonedHarry</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">cloneDeep</span><span class="p">(</span><span class="n">Harry</span><span class="p">)</span>
 <span class="n">Harry</span><span class="p">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">13</span>
 <span class="c1">-- The object clonedHarry is completely independent of any changes to Harry:</span>
@@ -1166,12 +1166,7 @@ cycle-safe.</p>
 
 <p><strong>See</strong></p>
 <ul>
-<li>
-<p><a href="#clone">dash.clone</a> - if you simply want to perform a shallow clone.</p>
-</li>
-<li>
-<p><a href="#CloneDeep">dash.CloneDeep</a> - use this to derive a default <code>:clone()</code> method for class instances that clones children recursively.</p>
-</li>
+<li><a href="#clone">dash.clone</a> - if you simply want to perform a shallow clone.</li>
 </ul>
 <hr />
 <h3 id="compact">compact<a class="headerlink" href="#compact" title="Permanent link">&para;</a></h3>

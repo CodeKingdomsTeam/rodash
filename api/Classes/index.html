@@ -330,8 +330,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#clone" title="Clone" class="md-nav__link">
-    Clone
+  <a href="#cloneable" title="Cloneable" class="md-nav__link">
+    Cloneable
   </a>
   
 </li>
@@ -365,7 +365,21 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#__le_1" title="__le" class="md-nav__link">
+    __le
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#__lt" title="__lt" class="md-nav__link">
+    __lt
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#__lt_1" title="__lt" class="md-nav__link">
     __lt
   </a>
   
@@ -393,7 +407,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#clone_1" title="clone" class="md-nav__link">
+  <a href="#clone" title="clone" class="md-nav__link">
     clone
   </a>
   
@@ -623,8 +637,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#clone" title="Clone" class="md-nav__link">
-    Clone
+  <a href="#cloneable" title="Cloneable" class="md-nav__link">
+    Cloneable
   </a>
   
 </li>
@@ -658,7 +672,21 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#__le_1" title="__le" class="md-nav__link">
+    __le
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#__lt" title="__lt" class="md-nav__link">
+    __lt
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#__lt_1" title="__lt" class="md-nav__link">
     __lt
   </a>
   
@@ -686,7 +714,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#clone_1" title="clone" class="md-nav__link">
+  <a href="#clone" title="clone" class="md-nav__link">
     clone
   </a>
   
@@ -845,8 +873,8 @@
                 <h1 id="classes">Classes<a class="headerlink" href="#classes" title="Permanent link">&para;</a></h1>
 <p>These tools provide implementations of and functions for higher-order abstractions such as classes, enumerations and symbols.</p>
 <h2 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h2>
-<h3 id="clone">Clone<a class="headerlink" href="#clone" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">Clone</span><span class="p">(</span><span class="n">Class</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<h3 id="cloneable">Cloneable<a class="headerlink" href="#cloneable" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">Cloneable</span><span class="p">(</span><span class="n">Class</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 A decorator which derives a <code>:clone()</code> method for the <em>Class</em> that returns a shallow clone of
 the instance when called that has the same metatable as the instance it is called on.</p>
@@ -868,7 +896,7 @@ the instance when called that has the same metatable as the instance it is calle
             <span class="n">speed</span> <span class="o">=</span> <span class="n">speed</span>
         <span class="p">}</span>
     <span class="kr">end</span><span class="p">,</span>
-    <span class="p">{</span><span class="n">dash</span><span class="p">.</span><span class="n">Clone</span><span class="p">}</span>
+    <span class="p">{</span><span class="n">dash</span><span class="p">.</span><span class="n">Cloneable</span><span class="p">}</span>
 <span class="p">)</span>
 <span class="kr">function</span> <span class="nc">Car</span><span class="p">:</span><span class="nf">brake</span><span class="p">()</span>
     <span class="n">self</span><span class="p">.</span><span class="n">speed</span> <span class="o">=</span> <span class="mi">0</span>
@@ -885,7 +913,7 @@ the instance when called that has the same metatable as the instance it is calle
 <h3 id="partialord">PartialOrd<a class="headerlink" href="#partialord" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">PartialOrd</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-A decorator which derives an order for the <em>Class</em> so that any instances of the class which
+A decorator which derives an order for the <em>Class</em>, meaning instances of the class
 can be compared using <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code> and  <code>&gt;=</code>. To do this, it compares values of the two
 instances at the same keys, as defined by the order of the <em>keys</em> passed in.</p>
 <p><strong>Parameters</strong></p>
@@ -923,7 +951,7 @@ instances at the same keys, as defined by the order of the <em>keys</em> passed 
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">ShallowEq</span><span class="p">(</span><span class="n">Class</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 A decorator which derives the equality operator for the <em>Class</em> so that any instances of the
-class which are shallow equal </p>
+class which are shallow equal will be considered equal.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>Class</strong> - <em>string</em> 
@@ -983,10 +1011,41 @@ class which are shallow equal </p>
 <p><em>string</em></p>
 </blockquote>
 <hr />
+<h3 id="__le_1">__le<a class="headerlink" href="#__le_1" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">__le</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+</pre></div>
+Returns <code>true</code> if <code>self</code> is considered less than or equal to <em>other</em>. This replaces the
+<code>&lt;=</code> operator on instances of this class, and can be overridden to provide a custom
+implementation.</p>
+<p><strong>Parameters</strong></p>
+<blockquote>
+<p><strong>other</strong> - <em>string</em> 
+</p>
+</blockquote>
+<p><strong>Returns</strong></p>
+<blockquote>
+<p><em>string</em></p>
+</blockquote>
+<hr />
 <h3 id="__lt">__lt<a class="headerlink" href="#__lt" title="Permanent link">&para;</a></h3>
 <div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">__lt</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 
+<p><strong>Parameters</strong></p>
+<blockquote>
+<p><strong>other</strong> - <em>string</em> 
+</p>
+</blockquote>
+<p><strong>Returns</strong></p>
+<blockquote>
+<p><em>string</em></p>
+</blockquote>
+<hr />
+<h3 id="__lt_1">__lt<a class="headerlink" href="#__lt_1" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">__lt</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+</pre></div>
+Returns <code>true</code> if <code>self</code> is considered less than  <em>other</em>. This replaces the <code>&lt;</code> operator
+on instances of this class, and can be overridden to provide a custom implementation.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>other</strong> - <em>string</em> 
@@ -1045,7 +1104,7 @@ plain table which will be turned into an instance of <em>Class</em> from a call 
 <p>Optionally, you may provide an array of <em>decorators</em> which compose and reduce the Class, adding
 additional methods and functionality you may need. Specifically you can:</p>
 <ol>
-<li>Add standard functionality to the class e.g. <code>dash.Clone</code>, <code>dash.ShallowEq</code></li>
+<li>Add standard functionality to the class e.g. <code>dash.Cloneable</code>, <code>dash.ShallowEq</code></li>
 <li>Mixin an implementation of an interface e.g. <code>dash.mixin( fns )</code></li>
 <li>Decorate fields or functions e.g. <code>dash.decorate(dash.freeze)</code></li>
 </ol>
@@ -1149,7 +1208,7 @@ public interface, using <code>dash.privatize</code> if appropriate.</p>
 </li>
 </ul>
 <hr />
-<h3 id="clone_1">clone<a class="headerlink" href="#clone_1" title="Permanent link">&para;</a></h3>
+<h3 id="clone">clone<a class="headerlink" href="#clone" title="Permanent link">&para;</a></h3>
 <div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">clone</span><span class="p">()</span> <span class="c1">--&gt; string</span>
 </pre></div>
 
@@ -1161,7 +1220,7 @@ public interface, using <code>dash.privatize</code> if appropriate.</p>
 <h3 id="decorate">decorate<a class="headerlink" href="#decorate" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">decorate</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-A decorator which runs <em>fn</em> on each instance that is created of the class, returning
+A decorator which runs <em>fn</em> on each instance of the class that is created, returning
 the result of the function as the class instance.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
@@ -1189,7 +1248,7 @@ the result of the function as the class instance.</p>
 
 <p><strong>Usage</strong></p>
 <ul>
-<li>Include the return of this function in the decorators argument when creating a class.</li>
+<li>Include the return value of this function in the decorators argument when creating a class.</li>
 </ul>
 <hr />
 <h3 id="enum">enum<a class="headerlink" href="#enum" title="Permanent link">&para;</a></h3>
@@ -1227,10 +1286,9 @@ typos.</p>
 </ul>
 <hr />
 <h3 id="equals">equals<a class="headerlink" href="#equals" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">equals</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">equals</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-Returns <code>true</code> if <code>self</code> is considered equal to <em>other</em>. This replaces the <code>==</code> operator
-on instances of this class, and can be overwridden to provide a custom implementation.</p>
+
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>other</strong> - <em>string</em> 
@@ -1256,9 +1314,10 @@ on instances of this class, and can be overwridden to provide a custom implement
 </blockquote>
 <hr />
 <h3 id="equals_2">equals<a class="headerlink" href="#equals_2" title="Permanent link">&para;</a></h3>
-<div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">equals</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">equals</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-
+Returns <code>true</code> if <code>self</code> is considered equal to <em>other</em>. This replaces the <code>==</code> operator
+on instances of this class, and can be overridden to provide a custom implementation.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>other</strong> - <em>string</em> 
@@ -1534,7 +1593,7 @@ from causing problems later on down the line.</p>
 <h3 id="mixin">mixin<a class="headerlink" href="#mixin" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">mixin</span><span class="p">(</span><span class="n">fns</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-A decorator which adds a dictionary of functions to to a Class table.</p>
+A decorator which adds a dictionary of functions to a Class table.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>fns</strong> - <em>string</em> 
@@ -1563,7 +1622,7 @@ A decorator which adds a dictionary of functions to to a Class table.</p>
 
 <p><strong>Usage</strong></p>
 <ul>
-<li>Include the return of this function in the decorators argument when creating a class.</li>
+<li>Include the return value of this function in the decorators argument when creating a class.</li>
 </ul>
 <hr />
 <h3 id="new">new<a class="headerlink" href="#new" title="Permanent link">&para;</a></h3>
@@ -1615,7 +1674,7 @@ string lookup.</p>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">toString</span><span class="p">()</span> <span class="c1">--&gt; string</span>
 </pre></div>
 Return a string representation of the instance. By default this is the <em>name</em> field (or the
-Class name if this is not defined), but the method can be overwridden.</p>
+Class name if this is not defined), but the method can be overridden.</p>
 <p><strong>Returns</strong></p>
 <blockquote>
 <p><em>string</em></p>
