@@ -14,12 +14,12 @@ spawn(function()
 end)
 ```
 
-Running a piece of code periodically is simplest with `rd.setInterval`:
+Running a piece of code periodically is simplest with `dash.setInterval`:
 
 ```lua
-local rd = require(game.ReplicatedStorage.Rodash)
+local dash = require(game.ReplicatedStorage.Rodash)
 
-rd.setInterval(function()
+dash.setInterval(function()
 	local playerNames = {}
 	for player in pairs(game.Players:GetChildren()) do
 		table.insert(playerNames, player.Name)
@@ -29,15 +29,15 @@ rd.setInterval(function()
 end)
 ```
 
-You can also cancel an interval when you need to, or use rd.setTimeout if you want to run a function after a delay that you can cancel.
+You can also cancel an interval when you need to, or use dash.setTimeout if you want to run a function after a delay that you can cancel.
 
 A cleaner way to get the player names from the list of players is using `map`:
 
 ```lua
-local rd = require(game.ReplicatedStorage.Rodash)
+local dash = require(game.ReplicatedStorage.Rodash)
 
-rd.setInterval(function()
-	local playerNames = rd.map(game.Players:GetChildren(), function( name )
+dash.setInterval(function()
+	local playerNames = dash.map(game.Players:GetChildren(), function( name )
 		return player.Name
 	end)
 	local nameList = table.concat(playerNames, ",")
@@ -45,16 +45,16 @@ rd.setInterval(function()
 end)
 ```
 
-Rodash has lots of different methods to operate on tables and arrays. Some other examples are rd.filter, rd.find, rd.groupBy and rd.slice.
+Rodash has lots of different methods to operate on tables and arrays. Some other examples are dash.filter, dash.find, dash.groupBy and dash.slice.
 
-You can use common functions which act on a subject by using rd.fn, or you can make your own using rd.chain:
+You can use common functions which act on a subject by using dash.fn, or you can make your own using dash.chain:
 
 ```lua
-local rd = require(game.ReplicatedStorage.Rodash)
-local fn = rd.fn
+local dash = require(game.ReplicatedStorage.Rodash)
+local fn = dash.fn
 
-rd.setInterval(function()
-	local playerNames = rd.map(game.Players:GetChildren(), fn:get("Name"))
+dash.setInterval(function()
+	local playerNames = dash.map(game.Players:GetChildren(), fn:get("Name"))
 	local nameList = table.concat(playerNames, ",")
 	print(string.format("Players online = %s: %s"), #playerNames, nameList)
 end, 1)
@@ -63,10 +63,10 @@ end, 1)
 It's often useful to separate functions from the data they act on as these can be used in multiple ways. We can make getting the names of some objects a more general function and then call it on the players:
 
 ```lua
-local rd = require(game.ReplicatedStorage.Rodash)
-local fn = rd.fn
+local dash = require(game.ReplicatedStorage.Rodash)
+local fn = dash.fn
 
-rd.setInterval(function()
+dash.setInterval(function()
 	local getNames = fn:map(fn:get("Name"))
 	local playerNames = getNames(game.Players:GetChildren())
 	local nameList = table.concat(playerNames, ",")
@@ -74,16 +74,16 @@ rd.setInterval(function()
 end, 1)
 ```
 
-Rodash rd.format and rd.pretty can be used to quickly print values that you need from Lua. Here, we can quickly get the length of the playerNames array, and then print the array:
+Rodash dash.format and dash.pretty can be used to quickly print values that you need from Lua. Here, we can quickly get the length of the playerNames array, and then print the array:
 
 ```lua
-local rd = require(game.ReplicatedStorage.Rodash)
-local fn = rd.fn
+local dash = require(game.ReplicatedStorage.Rodash)
+local fn = dash.fn
 
-rd.setInterval(function()
+dash.setInterval(function()
 	local getNames = fn:map(fn:get("Name"))
 	local playerNames = getNames(game.Players:GetChildren())
-	print(rd.format("Players online = {#}: {1:#?}", playerNames))
+	print(dash.format("Players online = {#}: {1:#?}", playerNames))
 end, 1)
 ```
 

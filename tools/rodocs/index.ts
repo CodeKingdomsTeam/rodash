@@ -26,7 +26,7 @@ interface FileParse {
 	nodesByLine: Nodes;
 	fnNames: string[];
 }
-interface Glossary {
+export interface Glossary {
 	[module: string]: string[];
 }
 
@@ -61,12 +61,14 @@ async function processFiles(source: string, output: string) {
 		glossary[fileParse.name] = fileParse.fnNames;
 	}
 
-	await writeFile(join(output, 'glossary.md'), getGlossary(glossary));
+	const glossaryLinks = getGlossaryLinks(glossary);
+
+	await writeFile(join(output, 'glossary.md'), getGlossary(glossaryLinks));
 
 	const mdFiles = await Promise.all(
 		fileParses.map(async ({ name, nodesByLine, maxLines }) => {
 			const outputName = name + '.md';
-			const md = generateMd(name, nodesByLine, maxLines, 'dash');
+			const md = generateMd(name, nodesByLine, maxLines, 'dash', glossaryLinks);
 			await writeFile(join(output, 'api', outputName), md);
 			console.log('Built md:', outputName);
 			return outputName;
@@ -94,23 +96,32 @@ export function getFnNames(nodes: Nodes, maxLine: number): string[] {
 interface GlossaryLink {
 	name: string;
 	text: string;
+	link: string;
 }
 
-function getGlossary(glossary: Glossary) {
-	const fnLinks: GlossaryLink[] = [];
+export interface GlossaryMap {
+	[name: string]: GlossaryLink;
+}
+
+function getGlossaryLinks(glossary: Glossary) {
+	const glossaryMap: GlossaryMap = {};
 	for (const fileName in glossary) {
-		fnLinks.push(
-			...glossary[fileName].map(fnName => {
-				const [memberName, idName] = fnName.split('.');
-				const shortName = memberName === fileName ? idName : fnName;
-				return {
-					name: shortName,
-					text: `[${shortName}](/api/${fileName}/#${shortName})`,
-				};
-			}),
-		);
+		for (const fnName of glossary[fileName]) {
+			const [memberName, idName] = fnName.split('.');
+			const shortName = memberName === fileName ? idName : fnName;
+			const link = `/api/${fileName}/#${shortName}`;
+			glossaryMap[shortName] = {
+				name: shortName,
+				link,
+				text: `[${shortName}](${link})`,
+			};
+		}
 	}
-	const textLinks = fnLinks.sort((a: GlossaryLink, b: GlossaryLink) =>
+	return glossaryMap;
+}
+
+function getGlossary(glossaryMap: GlossaryMap) {
+	const textLinks = Object.values(glossaryMap).sort((a: GlossaryLink, b: GlossaryLink) =>
 		a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1,
 	);
 	const list = uniq(textLinks.map(link => '* ' + link.text)).join('\n');

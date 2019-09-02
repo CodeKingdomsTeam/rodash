@@ -1,5 +1,6 @@
 import { Node, Comment, MemberExpression, FunctionDeclaration, Identifier } from './astTypings';
 import { keyBy } from 'lodash';
+import { GlossaryMap } from './index';
 
 interface DocEntry {
 	tag: string;
@@ -20,7 +21,13 @@ export interface Nodes {
 	[line: string]: Node;
 }
 
-export function generateMd(name: string, nodes: Nodes, maxLine: number, libName?: string) {
+export function generateMd(
+	name: string,
+	nodes: Nodes,
+	maxLine: number,
+	libName: string,
+	glossaryMap: GlossaryMap,
+) {
 	let topComment = '';
 	let inHeader = true;
 	const functions: FunctionDoc[] = [];
@@ -39,7 +46,7 @@ export function generateMd(name: string, nodes: Nodes, maxLine: number, libName?
 		}
 		if (node.type === 'FunctionDeclaration') {
 			const doc = getDocAtLocation(node.loc.start.line, nodes);
-			const fn = getFnDoc(libName || name, node as FunctionDeclaration, doc);
+			const fn = getFnDoc(libName || name, node as FunctionDeclaration, doc, glossaryMap);
 			if (fn) {
 				functions.push(fn);
 			}
@@ -116,7 +123,12 @@ function getCommentTextAndEntries(commentNode: Comment) {
 	};
 }
 
-function getFnDoc(libName: string, node: FunctionDeclaration, doc: Doc): FunctionDoc | undefined {
+function getFnDoc(
+	libName: string,
+	node: FunctionDeclaration,
+	doc: Doc,
+	glossaryMap: GlossaryMap,
+): FunctionDoc | undefined {
 	const lines = [];
 	if (node.identifier && node.identifier.type === 'MemberExpression') {
 		const member = node.identifier as MemberExpression;
@@ -196,8 +208,10 @@ function ${libName}.${name}(${params.join(', ')}) --> string
 				...see.map(({ content }) => {
 					const [, linkName, suffix] = content.match(/^\s*([^\s]+)\s*(.*)/);
 					const prefix = libName + '.';
-					const link = linkName.startsWith(prefix) ? linkName.substring(prefix.length) : linkName;
-					return `\n* [${linkName}](#${link}) ${suffix}`;
+					const link = linkName.startsWith(prefix)
+						? glossaryMap[linkName.substring(prefix.length)].link
+						: linkName;
+					return `\n* [${linkName}](${link}) ${suffix}`;
 				}),
 			);
 		}

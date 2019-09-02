@@ -729,7 +729,7 @@ end
 		PastHermione.time = 9
 		Hermione.time --> 12
 	@see dash.cloneDeep - if you also want to clone descendants of the table, though this can be costly.
-	@see `dash.map` - if you want to return different values for each key.
+	@see dash.map - if you want to return different values for each key.
 	@see dash.Cloneable - use this to derive a default `:clone()` method for class instances.
 ]]
 --: <T: Iterable<K,V>>(T -> T)
