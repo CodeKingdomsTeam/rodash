@@ -15,6 +15,8 @@ interface Doc {
 export interface FunctionDoc {
 	name: string;
 	content: string;
+	sortName: string;
+	comments: string[];
 }
 
 export interface Nodes {
@@ -22,7 +24,7 @@ export interface Nodes {
 }
 
 export function generateMd(
-	name: string,
+	fileName: string,
 	nodes: Nodes,
 	maxLine: number,
 	libName: string,
@@ -46,16 +48,20 @@ export function generateMd(
 		}
 		if (node.type === 'FunctionDeclaration') {
 			const doc = getDocAtLocation(node.loc.start.line, nodes);
-			const fn = getFnDoc(libName || name, node as FunctionDeclaration, doc, glossaryMap);
+			const fn = getFnDoc(fileName, libName, node as FunctionDeclaration, doc, glossaryMap);
 			if (fn) {
-				functions.push(fn);
+				if (fn.comments.length) {
+					functions.push(fn);
+				} else {
+					console.log('Skipping undocumented method:', fn.sortName);
+				}
 			}
 		}
-		functions.sort((a, b) => (a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1));
+		functions.sort((a, b) => (a.sortName.toLowerCase() < b.sortName.toLowerCase() ? -1 : 1));
 	}
 
 	return `
-# ${name}
+# ${fileName}
 
 ${topComment}
 
@@ -124,6 +130,7 @@ function getCommentTextAndEntries(commentNode: Comment) {
 }
 
 function getFnDoc(
+	fileName: string,
 	libName: string,
 	node: FunctionDeclaration,
 	doc: Doc,
@@ -133,17 +140,21 @@ function getFnDoc(
 	if (node.identifier && node.identifier.type === 'MemberExpression') {
 		const member = node.identifier as MemberExpression;
 		const name = (member.identifier as Identifier).name;
+		const baseName = member.base.name;
 		const params = node.parameters.map(id => id.name);
+
+		const prefixName = baseName === fileName ? libName : baseName;
+		const sortName = baseName === fileName ? name : baseName + '.' + name;
 
 		const traits = filterEntries(doc.entries, 'trait');
 		if (traits.length) {
 			lines.push(`<div class="rodocs-trait">${traits.map(entry => entry.content).join(' ')}</div>`);
 		}
 		lines.push(
-			`### ${name} \n`,
+			`### ${sortName} \n`,
 			'```lua' +
 				`
-function ${libName}.${name}(${params.join(', ')}) --> string
+function ${prefixName}.${name}(${params.join(', ')}) --> string
 ` +
 				'```',
 		);
@@ -217,7 +228,9 @@ function ${libName}.${name}(${params.join(', ')}) --> string
 		}
 		return {
 			name,
+			sortName,
 			content: lines.join('\n'),
+			comments: doc.comments,
 		};
 	}
 }

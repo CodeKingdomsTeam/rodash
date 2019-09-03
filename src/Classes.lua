@@ -185,7 +185,7 @@ function Classes.class(name, constructor, decorators)
 			local car = Car.new()
 			car.id --> "Car #1: 4 wheels"
 	]]
-	--: <S: T>(T: string, Constructor<T>? Decorator[]?) -> Class<S>
+	--: <S: T>(T: string, Constructor<T>?, Decorator[]?) -> Class<S>
 	function Class:extend(name, constructor, decorators)
 		local SubClass = Classes.class(name, constructor or Class.new, decorators)
 		setmetatable(SubClass, {__index = self})
