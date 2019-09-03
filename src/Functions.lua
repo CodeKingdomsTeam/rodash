@@ -168,7 +168,7 @@ end
 	Calls the supplied _fn_ on the subject and any additional arguments, returing the result.
 	@trait Chainable
 ]]
--- <T, A, R>(T, (T, ...A -> R), ...A -> R)
+--: <T, A, R>(T, (T, ...A -> R), ...A -> R)
 function Functions.call(subject, fn, ...)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
 	return fn(subject, ...)
@@ -329,7 +329,7 @@ end
 
 	@see dash.chain
 ]]
--- <T, A, R>((...A -> T -> R) -> T, ...A -> R)
+--: <T, A, R>((...A -> T -> R) -> T, ...A -> R)
 function Functions.chainFn(fn)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
 	return function(source, ...)

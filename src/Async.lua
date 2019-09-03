@@ -14,6 +14,7 @@ local baseRandomStream = Random.new()
 --[[
 	Yields completion of a promise `promise:await()`, but returns immediately with the value if it
 	isn't a promise.
+	@trait Yieldable
 	@example
 		local heat = function( item )
 			return dash.delay(1).returns("hot " .. item)
@@ -23,6 +24,7 @@ local baseRandomStream = Random.new()
 		dash.debug("{:#?}", burrito)
 		-->> {"wrap", "hot steak", "hot rice"} (2 seconds)
 ]]
+--: <T>(Promise<T> | T -> yield T)
 function Async.await(value)
 	if Async.isPromise(value) then
 		return value:await()
@@ -34,6 +36,7 @@ end
 	Wraps `Promise.is` but catches any errors thrown in attempting to ascertain if _value_ is a
 	promise, which will occur if the value throws when trying to access missing keys.
 ]]
+--: <T>(T -> bool)
 function Async.isPromise(value)
 	local ok, isPromise =
 		pcall(

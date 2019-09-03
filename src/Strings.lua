@@ -57,6 +57,7 @@ end
 	@usage Chain with `:lower()` if you need a lower snake-case string.
 	@trait Chainable
 ]]
+--: string -> string
 function Strings.snakeCase(str)
 	assertStrIsString(str)
 	return str:gsub(
@@ -75,6 +76,7 @@ end
 	@usage Dashes, underscores and apostraphes don't break words.
 	@trait Chainable
 ]]
+--: string -> string
 function Strings.titleCase(str)
 	assertStrIsString(str)
 	return str:gsub(
@@ -90,6 +92,7 @@ end
 	@example dash.capitalize("hello mould") --> "Hello mould"
 	@trait Chainable
 ]]
+--: string -> string
 function Strings.capitalize(str)
 	assertStrIsString(str)
 	return str:gsub("^%l", string.upper)
@@ -100,6 +103,7 @@ end
 	@example dash.encodeHtml([[Pease < Bacon > "Fish" & 'Chips']]) --> "Peas &lt; Bacon &gt; &quot;Fish&quot; &amp; &apos;Chips&apos;"
 	@trait Chainable
 ]==]
+--: string -> string
 function Strings.encodeHtml(str)
 	assertStrIsString(str)
 	local entities = {["<"] = "lt", [">"] = "gt", ["&"] = "amp", ['"'] = "quot", ["'"] = "apos"}
@@ -119,6 +123,7 @@ end
 	@example dash.decodeHtml("&lt;b&gt;&#34;Smashed&quot;&lt;/b&gt; &apos;Avocado&#39; &#x1F60F;") --> [[<b>"Smashed"</b> 'Avocado' 😏]]
 	@trait Chainable
 ]==]
+--: string -> string
 function Strings.decodeHtml(str)
 	assertStrIsString(str)
 	local entities = {lt = "<", gt = ">", amp = "&", quot = '"', apos = "'"}
@@ -255,6 +260,7 @@ end
 		and call e.g. `dash.setDebug(dash.bind(HttpService.PostAsync, "https://example.com/log"))`
 		on a production build to allow remote debugging.
 ]]
+--: (...any) -> string
 function Strings.debug(subject, ...)
 	if Strings.debugTarget == nil then
 		return
@@ -267,6 +273,7 @@ end
 	@param fn (default = `print`)
 	@usage Calling `dash.setDebug()` will simply print all calls to `dash.debug` with formatted arguments.
 ]]
+--: <T>(Function<T> -> ())
 function Strings.setDebug(fn)
 	Strings.debugTarget = fn
 end

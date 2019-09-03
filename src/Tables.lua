@@ -23,6 +23,7 @@ end
 	By default, the iterator is unordered, but passing _asArray_ as true uses `ipairs` to iterate
 	through natural keys _1..n_ in order.
 ]]
+--: <T: Iterable>(T, bool -> Iterator<T>)
 function Tables.iterator(source, asArray)
 	local metatable = getmetatable(source)
 	local iterable = metatable and metatable.iterable or source
@@ -348,7 +349,7 @@ end
 		})
 		privates --> {_1 = 1, _public = 2, _private = 3}
 ]]
--- <T>(T{} -> T{})
+--: <T>(T{} -> T{})
 function Tables.privatize(source)
 	local Strings = require(script.Parent.Strings)
 	return Tables.keyBy(
@@ -797,7 +798,7 @@ end
 		dash.isSubset(car, {speed = 12}) --> false
 		dash.isSubset({}, car) --> false
 ]]
--- <T>(T{}, T{}) -> bool
+--: <T>(T{}, T{}) -> bool
 function Tables.isSubset(a, b)
 	if type(a) ~= "table" or type(b) ~= "table" then
 		return false
@@ -876,6 +877,7 @@ end
 	@see dash.isSubset
 	@see dash.shallowEqual
 ]]
+--: any, any -> bool
 function Tables.deepEqual(a, b)
 	return Tables.isSubset(a, b) and Tables.isSubset(b, a)
 end
@@ -900,6 +902,7 @@ end
 	Based on https://developmentarc.gitbooks.io/react-indepth/content/life_cycle/update/using_should_component_update.html
 	@see dash.deepEqual
 ]]
+--: any, any -> bool
 function Tables.shallowEqual(left, right)
 	if type(left) ~= "table" or type(right) ~= "table" then
 		return left == right
@@ -986,6 +989,7 @@ end
 --[[
 	A function which provides a simple, shallow string representation of a value.
 ]]
+--: any -> string
 function Tables.defaultSerializer(input)
 	if input == nil then
 		return "nil"
@@ -1139,7 +1143,7 @@ end
 			[{name = "Kyle", child = kyle}] = 2
 		}
 ]]
--- <T: Iterable<K,V>>(T -> Iterable<T,int>)
+--: <T: Iterable<K,V>>(T -> Iterable<T,int>)
 function Tables.occurences(source)
 	assert(t.table(source), "BadInput: source must be a table")
 	local counts = {[source] = 1}
@@ -1156,6 +1160,7 @@ end
 		local list = {1, 2, 2, 3, 5, 1}
 		dash.unique(list) --> {1, 2, 3, 5} (or another order)
 ]]
+--: <T>(T[] -> T[])
 function Tables.unique(source)
 	return Tables.keys(Tables.invert(source))
 end

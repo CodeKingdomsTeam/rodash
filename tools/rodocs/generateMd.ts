@@ -50,10 +50,12 @@ export function generateMd(
 			const doc = getDocAtLocation(node.loc.start.line, nodes);
 			const fn = getFnDoc(fileName, libName, node as FunctionDeclaration, doc, glossaryMap);
 			if (fn) {
-				if (fn.comments.length) {
-					functions.push(fn);
-				} else {
+				if (!fn.comments.length) {
 					console.log('Skipping undocumented method:', fn.sortName);
+				} else if (!doc.typing) {
+					console.log('Skipping untyped method:', fn.sortName);
+				} else {
+					functions.push(fn);
 				}
 			}
 		}

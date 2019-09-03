@@ -48,6 +48,7 @@ local typeIndex = {
 
 	@see dash.sort
 ]]
+--: <T>((T, T) -> bool)
 function Arrays.defaultComparator(a, b)
 	if type(a) ~= type(b) then
 		return typeIndex[type(a)] - typeIndex[type(b)]
@@ -204,6 +205,7 @@ end
 	Sums all the values in the _source_ array.
 	@example dash.sum({1, 2, 3}) --> 6
 ]]
+--: number[] -> number
 function Arrays.sum(source)
 	return Arrays.reduce(
 		source,

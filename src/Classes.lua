@@ -347,6 +347,7 @@ end
 		print(car.speed) --> 0
 	@usage Include the return value of this function in the decorators argument when creating a class.
 ]]
+--: <T>(Function<self T>[] -> Class<T> -> Class<T>)
 function Classes.mixin(fns)
 	assert(t.table(fns), "BadInput: fns must be a table")
 	return function(Class)
@@ -373,6 +374,7 @@ end
 		car:brake() --!> ReadonlyKey: s
 	@usage Include the return value of this function in the decorators argument when creating a class.
 ]]
+--: <T>(Function<self T> -> Class<T> -> Class<T>)
 function Classes.decorate(fn)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
 	return function(Class)
@@ -409,6 +411,7 @@ end
 		print(carClone.speed) --> 0
 		print(car.speed) --> 5
 ]]
+--: <T>(Class<T> -> Cloneable<T>)
 function Classes.Cloneable(Class)
 	function Class:clone()
 		local newInstance = Tables.clone(self)
@@ -441,6 +444,7 @@ end
 		print(fastCar == fastCar2) --> true
 		print(fastCar == slowCar) --> false
 ]]
+--: <T>(Class<T> -> ShallowEq<T>)
 function Classes.ShallowEq(Class)
 	function Class:equals(other)
 		return Tables.shallowEqual(self, other)
@@ -473,6 +477,7 @@ end
 		print(fastCar == fastCar2) --> true
 		print(fastCar == slowCar) --> false
 ]]
+--: <T>(string[]? -> Class<T> -> PartialOrd<T>)
 function Classes.PartialOrd(keys)
 	if keys then
 		assert(Tables.isArray(keys), "BadInput: keys must be an array if defined")
@@ -533,6 +538,7 @@ end
 		)
 		print(Car.new(5)) --> "Car({speed:5})"
 ]]
+--: <T>(string[]? -> Class<T> -> Formatable<T>)
 function Classes.Formatable(keys)
 	return function(Class)
 		function Class:toString()
