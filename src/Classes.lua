@@ -4,6 +4,7 @@
 local Functions = require(script.Parent.Functions)
 local t = require(script.Parent.Parent.t)
 local Tables = require(script.Parent.Tables)
+local Arrays = require(script.Parent.Arrays)
 local Classes = {}
 
 --[[
@@ -269,7 +270,7 @@ function Classes.classWithInterface(name, interface, decorators)
 			local ok, problem = implementsInterface(data)
 			assert(ok, string.format([[BadInput: Class %s cannot be instantiated
 %s]], name, tostring(problem)))
-			return Tables.mapKeys(
+			return Tables.keyBy(
 				data,
 				function(_, key)
 					return key
@@ -361,7 +362,7 @@ end
 function Classes.match(enum, strategies)
 	assert(t.table(enum), "BadInput: enum should be a table")
 	assert(
-		Tables.deepEquals(Tables.sort(Tables.values(enum)), Tables.sort(Tables.keys(strategies))),
+		Tables.deepEqual(Arrays.sort(Tables.values(enum)), Arrays.sort(Tables.keys(strategies))),
 		"BadInput: keys for strategies must match values for enum"
 	)
 	assert(t.values(t.callback)(strategies), "BadInput: strategies values must be functions")

@@ -10,18 +10,20 @@ script = {
 	Tables = "Tables",
 	Classes = "Classes",
 	Functions = "Functions",
+	Arrays = "Arrays",
 	Strings = "Strings",
 	Parent = {
-		Parent = {
-			t = "t",
-			Promise = "roblox-lua-promise",
-			luassert = "luassert"
-		},
 		Async = "Async",
 		Tables = "Tables",
 		Classes = "Classes",
 		Functions = "Functions",
-		Strings = "Strings"
+		Arrays = "Arrays",
+		Strings = "Strings",
+		Parent = {
+			t = "t",
+			Promise = "roblox-lua-promise",
+			luassert = "luassert"
+		}
 	}
 }
 Random = {
