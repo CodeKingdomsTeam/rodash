@@ -529,6 +529,193 @@ bad value for key amount:
 			end
 		)
 		describe(
+			"mixin",
+			function()
+				it(
+					"mixes in methods to a class prototype",
+					function()
+						local mixin = {
+							getSix = function(self)
+								return self:getFive() + 1
+							end,
+							getSeven = function(self)
+								return self:getSix() + 1
+							end
+						}
+
+						local MyClass =
+							Classes.class(
+							"Simple",
+							function(number)
+								return {
+									number = number
+								}
+							end,
+							{Classes.mixin(mixin)}
+						)
+						function MyClass:getFive()
+							return self.number
+						end
+						local myInstance = MyClass.new(5)
+						assert.equals(7, myInstance:getSeven())
+					end
+				)
+			end
+		)
+		describe(
+			"decorate",
+			function()
+				it(
+					"to make final class instances",
+					function()
+						local Final = Classes.decorate(Classes.finalize)
+						local StaticCar =
+							Classes.class(
+							"StaticCar",
+							function(speed)
+								return {
+									speed = speed
+								}
+							end,
+							{Final}
+						)
+						function StaticCar:brake()
+							self.speed = 0
+							self.stopped = true
+						end
+						local car = StaticCar.new(5)
+
+						assert.errors(
+							function()
+								car:brake()
+							end,
+							"FinalObject: Attempt to add key stopped to final object"
+						)
+					end
+				)
+				it(
+					"to make frozen class instances",
+					function()
+						local Final = Classes.decorate(Classes.freeze)
+						local StaticCar =
+							Classes.class(
+							"StaticCar",
+							function(speed)
+								return {
+									speed = speed
+								}
+							end,
+							{Final}
+						)
+						function StaticCar:brake()
+							self.speed = 0
+							self.stopped = true
+						end
+						local car = StaticCar.new(5)
+
+						assert.errors(
+							function()
+								car:brake()
+							end,
+							"ReadonlyKey: Attempt to write to a frozen key speed"
+						)
+					end
+				)
+			end
+		)
+		describe(
+			"Cloneable",
+			function()
+				it(
+					"provides a clone for a class",
+					function()
+						local Car =
+							Classes.class(
+							"Car",
+							function(speed)
+								return {
+									speed = speed
+								}
+							end,
+							{Classes.Cloneable}
+						)
+						function Car:brake()
+							self.speed = 0
+						end
+						local car = Car.new(5)
+						local carClone = car:clone()
+						assert.equal(carClone.speed, 5)
+						carClone:brake()
+						assert.equal(carClone.speed, 0)
+						assert.equal(car.speed, 5)
+					end
+				)
+			end
+		)
+		describe(
+			"ShallowEq",
+			function()
+				it(
+					"provides an equal opperator for a class",
+					function()
+						local Car =
+							Classes.class(
+							"Car",
+							function(speed)
+								return {
+									speed = speed
+								}
+							end,
+							{Classes.ShallowEq}
+						)
+						function Car:brake()
+							self.speed = 0
+						end
+						local fastCar = Car.new(500)
+						local fastCar2 = Car.new(500)
+						local slowCar = Car.new(5)
+						assert.equal(fastCar, fastCar2)
+						assert.not_equal(fastCar, slowCar)
+					end
+				)
+			end
+		)
+		describe(
+			"PartialOrd",
+			function()
+				it(
+					"provides a default ordering for one field",
+					function()
+						local Car =
+							Classes.class(
+							"Car",
+							function(speed)
+								return {
+									speed = speed
+								}
+							end,
+							{Classes.PartialOrd()}
+						)
+						function Car:brake()
+							self.speed = 0
+						end
+						local fastCar = Car.new(500)
+						local fastCar2 = Car.new(500)
+						local slowCar = Car.new(5)
+						assert.is_false(fastCar > fastCar2)
+						assert.is_false(fastCar < fastCar)
+						assert.is_false(fastCar > fastCar)
+						assert.is_true(fastCar > slowCar)
+						assert.is_true(fastCar >= slowCar)
+						assert.is_false(fastCar < slowCar)
+						assert.is_true(fastCar == fastCar2)
+						assert.is_true(fastCar >= fastCar2)
+						assert.is_true(fastCar ~= slowCar)
+					end
+				)
+			end
+		)
+		describe(
 			"enum",
 			function()
 				it(
@@ -541,7 +728,7 @@ bad value for key amount:
 					end
 				)
 				it(
-					"warns about bad casing",
+					"throws for bad casing",
 					function()
 						local errorMessage = "BadInput: Enum keys must be defined as upper snake-case"
 						assert.has_error(
@@ -640,13 +827,13 @@ bad value for key amount:
 		)
 
 		describe(
-			"freeze",
+			"finalize",
 			function()
 				it(
-					"warns about using a missing key",
+					"throws about using a missing key",
 					function()
 						local myObject =
-							Classes.freeze(
+							Classes.finalize(
 							{
 								a = 2
 							}
@@ -656,15 +843,15 @@ bad value for key amount:
 							function()
 								return myObject.b
 							end,
-							"MissingKey: Attempt to access key b which is missing in final object"
+							"FinalObject: Attempt to read missing key b in final object"
 						)
 					end
 				)
 				it(
-					"warns about assignment to an unused variable",
+					"throws about assignment to an unused variable",
 					function()
 						local myObject =
-							Classes.freeze(
+							Classes.finalize(
 							{
 								a = 2
 							}
@@ -673,7 +860,7 @@ bad value for key amount:
 							function()
 								myObject.b = 2
 							end,
-							"ReadonlyKey: Attempt to set key b on final object"
+							"FinalObject: Attempt to add key b to final object"
 						)
 					end
 				)
@@ -681,13 +868,31 @@ bad value for key amount:
 					"allows iteration over a table",
 					function()
 						local myObject =
-							Classes.freeze(
+							Classes.finalize(
 							{
 								a = 2,
 								b = 3
 							}
 						)
 						assert.are.same({2, 3}, Tables.values(myObject))
+					end
+				)
+				it(
+					"throws about using a missing key on an instance",
+					function()
+						local MyClass = Classes.class("Simple")
+						function MyClass:getFive()
+							return 5
+						end
+						local myInstance = MyClass.new()
+						Classes.finalize(myInstance)
+						assert.errors(
+							function()
+								return myInstance.b
+							end,
+							"FinalObject: Attempt to read missing key b in final object"
+						)
+						assert.equals(5, myInstance:getFive())
 					end
 				)
 			end

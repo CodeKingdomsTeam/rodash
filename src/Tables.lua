@@ -11,18 +11,31 @@ local t = require(script.Parent.Parent.t)
 
 local Tables = {}
 
-local function getIterator(source)
+local function assertHandlerIsFn(handler)
+	local Functions = require(script.Parent.Functions)
+	assert(Functions.isCallable(handler), "BadInput: handler must be a function")
+end
+
+--[[
+	Determines a suitable iterator to use for _source_, allowing _source_ to be either a plain
+	table, a table that has a metatable with an `iterable` key, or a function.
+
+	By default, the iterator is unordered, but passing _asArray_ as true uses `ipairs` to iterate
+	through natural keys _1..n_ in order.
+]]
+function Tables.iterator(source, asArray)
+	local metatable = getmetatable(source)
+	local iterable = metatable and metatable.iterable or source
 	if type(source) == "function" then
 		return source
 	else
 		assert(type(source) == "table", "BadInput: Can only iterate over a table or an iterator function")
-		return pairs(source)
+		if asArray then
+			return ipairs(iterable)
+		else
+			return pairs(iterable)
+		end
 	end
-end
-
-local function assertHandlerIsFn(handler)
-	local Functions = require(script.Parent.Functions)
-	assert(Functions.isCallable(handler), "BadInput: handler must be a function")
 end
 
 --[[
@@ -39,21 +52,45 @@ end
 	@trait Chainable
 ]]
 --: <T: {[K]: V}>(T, ...K) -> V
-function Tables.get(source, key, ...)
-	local tailKeys = {...}
+function Tables.get(source, ...)
+	local path = {...}
 	local ok, value =
 		pcall(
 		function()
-			return source[key]
+			local result = source
+			for _, key in ipairs(path) do
+				result = result[key]
+			end
+			return result
 		end
 	)
 	if ok then
-		if #tailKeys > 0 then
-			return Tables.get(value, unpack(tailKeys))
-		else
-			return value
-		end
+		return value
 	end
+end
+
+--[[
+	Set a child or descendant of a table. Returns `true` if the operation completed without error.
+
+	If any values along the path are not tables, `_.set` will do nothing and return `false`.
+	@example
+		_.set(game.Players, {"LocalPlayer", "Character", "UpperTorso", "Color"}, Color3.new(255, 255, 255))
+		--> true (if the set worked)
+	@trait Chainable
+]]
+--: <T: Iterable<K, V>>(T, K[], V) -> ()
+function Tables.set(source, path, value)
+	local ok =
+		pcall(
+		function()
+			local result = source
+			for i = 1, #path - 1 do
+				result = result[path[i]]
+			end
+			result[path[#path]] = value
+		end
+	)
+	return ok
 end
 
 --[[
@@ -87,7 +124,7 @@ end
 function Tables.map(source, handler)
 	assertHandlerIsFn(handler)
 	local result = {}
-	for i, v in getIterator(source) do
+	for i, v in Tables.iterator(source) do
 		result[i] = handler(v, i)
 	end
 	return result
@@ -107,7 +144,7 @@ end
 function Tables.mapValues(source, handler)
 	assertHandlerIsFn(handler)
 	local result = {}
-	for i, v in getIterator(source) do
+	for i, v in Tables.iterator(source) do
 		table.insert(result, handler(v, i))
 	end
 	return result
@@ -129,7 +166,7 @@ end
 function Tables.keyBy(source, handler)
 	assertHandlerIsFn(handler)
 	local result = {}
-	for i, v in getIterator(source) do
+	for i, v in Tables.iterator(source) do
 		local key = handler(v, i)
 		if key ~= nil then
 			result[key] = v
@@ -156,7 +193,7 @@ function Tables.flatMap(source, handler)
 	assertHandlerIsFn(handler)
 	local Arrays = require(script.Parent.Arrays)
 	local result = {}
-	for i, v in getIterator(source) do
+	for i, v in Tables.iterator(source) do
 		local list = handler(v, i)
 		assert(t.table(list), "BadResult: Handler must return an array")
 		Arrays.append(result, list)
@@ -180,7 +217,7 @@ end
 function Tables.filter(source, handler)
 	assertHandlerIsFn(handler)
 	local result = {}
-	for i, v in getIterator(source) do
+	for i, v in Tables.iterator(source) do
 		if handler(v, i) then
 			table.insert(result, v)
 		end
@@ -258,7 +295,7 @@ function Tables.all(source, handler)
 		end
 	end
 	assertHandlerIsFn(handler)
-	for key, value in getIterator(source) do
+	for key, value in Tables.iterator(source) do
 		if not handler(value, key) then
 			return false
 		end
@@ -292,7 +329,7 @@ function Tables.any(source, handler)
 	assertHandlerIsFn(handler)
 	-- Use double negation to coerce the type to a boolean, as there is
 	-- no toboolean() or equivalent in Lua.
-	for key, value in getIterator(source) do
+	for key, value in Tables.iterator(source) do
 		if handler(value, key) then
 			return true
 		end
@@ -333,7 +370,7 @@ end
 --: <K: Key, V>(Iterable<K,V> -> Iterable<V,K>)
 function Tables.invert(source)
 	local result = {}
-	for i, v in getIterator(source) do
+	for i, v in Tables.iterator(source) do
 		result[v] = i
 	end
 	return result
@@ -355,7 +392,7 @@ end
 function Tables.groupBy(source, handler)
 	assertHandlerIsFn(handler)
 	local result = {}
-	for i, v in getIterator(source) do
+	for i, v in Tables.iterator(source) do
 		local key = handler(v, i)
 		if key ~= nil then
 			if not result[key] then
@@ -423,7 +460,7 @@ function Tables.merge(target, ...)
 	for i = 1, select("#", ...) do
 		local source = select(i, ...)
 		if source ~= nil then
-			for key, value in getIterator(source) do
+			for key, value in Tables.iterator(source) do
 				if type(target[key]) == "table" and type(value) == "table" then
 					target[key] = Tables.merge(target[key] or {}, value)
 				else
@@ -446,7 +483,7 @@ end
 --: <T: Iterable<K,V>>(T -> V[])
 function Tables.values(source)
 	local result = {}
-	for i, v in getIterator(source) do
+	for i, v in Tables.iterator(source) do
 		table.insert(result, v)
 	end
 	return result
@@ -463,7 +500,7 @@ end
 --: <T: Iterable<K,V>>(T -> K[])
 function Tables.keys(source)
 	local result = {}
-	for i, v in getIterator(source) do
+	for i, v in Tables.iterator(source) do
 		table.insert(result, i)
 	end
 	return result
@@ -483,7 +520,7 @@ end
 --: <T: Iterable<K,V>>(T -> {K, V}[])
 function Tables.entries(source)
 	local result = {}
-	for i, v in getIterator(source) do
+	for i, v in Tables.iterator(source) do
 		table.insert(result, {i, v})
 	end
 	return result
@@ -517,7 +554,7 @@ end
 --: <T: Iterable<K,V>>((T, (element: V, key: K) -> bool) -> V?)
 function Tables.find(source, handler)
 	assertHandlerIsFn(handler)
-	for i, v in getIterator(source) do
+	for i, v in Tables.iterator(source) do
 		if (handler(v, i)) then
 			return v, i
 		end
@@ -558,7 +595,7 @@ end
 --: <T: Iterable<K,V>>(T -> int)
 function Tables.len(source)
 	local count = 0
-	for _ in getIterator(source) do
+	for _ in Tables.iterator(source) do
 		count = count + 1
 	end
 	return count
@@ -571,7 +608,7 @@ local function assign(shouldOverwriteTarget, target, ...)
 	for i = 1, select("#", ...) do
 		local source = select(i, ...)
 		if source ~= nil then
-			for key, value in getIterator(source) do
+			for key, value in Tables.iterator(source) do
 				if shouldOverwriteTarget or target[key] == nil then
 					target[key] = value
 				end
@@ -691,15 +728,52 @@ end
 		local PastHermione = _.clone(Hermione)
 		PastHermione.time = 9
 		Hermione.time --> 12
-	@see _.cloneDeep
-	@see _.Clone
-	@usage If you also want to clone children of the table you may want to use or `_.cloneDeep` but this can be costly.
-	@usage To change behaviour for particular values use `_.map` with a handler.
-	@usage Alternatively, if working with class instances see `_.Clone`.
+	@see _.cloneDeep - if you also want to clone descendants of the table, though this can be costly.
+	@see _.map - if you want to return different values for each key.
+	@see _.Cloneable - use this to derive a default `:clone()` method for class instances.
 ]]
 --: <T: Iterable<K,V>>(T -> T)
 function Tables.clone(source)
 	return Tables.assign({}, source)
+end
+
+--[[
+	Recursively clones descendants of _source_, returning the cloned object. If references to the
+	same table are found, the same clone is used in the result. This means that `_.cloneDeep` is
+	cycle-safe.
+
+	Elements which are not tables are not modified.
+	@example
+		local Harry = {
+			patronus = "stag",
+			age = 12
+		}
+		local Hedwig = {
+			animal = "owl",
+			owner = Harry
+		}
+		Harry.pet = Hedwig
+		local clonedHarry = _.cloneDeep(Harry)
+		Harry.age = 13
+		-- The object clonedHarry is completely independent of any changes to Harry:
+		_.pretty(clonedHarry) --> '<1>{age = 12, patronus = "stag", pet = {animal = "owl", owner = &1}}'
+	@see _.clone - if you simply want to perform a shallow clone.
+]]
+--: <T: Iterable<K,V>>(T -> T)
+function Tables.cloneDeep(source)
+	local visited = {}
+	local function cloneVisit(input)
+		if type(input) == "table" then
+			if visited[input] == nil then
+				visited[input] = {}
+				Tables.assign(visited[input], Tables.map(input, cloneVisit))
+			end
+			return visited[input]
+		else
+			return input
+		end
+	end
+	return cloneVisit(source)
 end
 
 --[[
@@ -756,7 +830,7 @@ end
 ]]
 --: <T: Iterable<K,V>>(T -> bool)
 function Tables.isEmpty(source)
-	return getIterator(source)(source) == nil
+	return Tables.iterator(source)(source) == nil
 end
 
 --[[
@@ -767,7 +841,7 @@ end
 ]]
 --: <T: Iterable<K,V>>(T -> (V, K)?)
 function Tables.one(source)
-	local key, value = getIterator(source)(source)
+	local key, value = Tables.iterator(source)(source)
 	return value, key
 end
 
@@ -827,11 +901,8 @@ end
 	@see _.deepEqual
 ]]
 function Tables.shallowEqual(left, right)
-	if left == right then
-		return true
-	end
 	if type(left) ~= "table" or type(right) ~= "table" then
-		return false
+		return left == right
 	end
 	local leftKeys = Tables.keys(left)
 	local rightKeys = Tables.keys(right)
@@ -878,7 +949,7 @@ local function serializeVisit(source, options)
 		Tables.map(
 		Tables.filter(
 			-- Sort optimistically so references are more likely to be generated in print order
-			Arrays.sort(Tables.keys(source)),
+			options.keys or Arrays.sort(Tables.keys(source)),
 			function(key)
 				return not Tables.includes(options.omitKeys, key)
 			end
@@ -928,7 +999,7 @@ function Tables.defaultSerializer(input)
 end
 
 local function countOccurences(source, counts)
-	for key, value in getIterator(source) do
+	for key, value in Tables.iterator(source) do
 		if type(value) == "table" then
 			if counts[value] then
 				counts[value] = counts[value] + 1
