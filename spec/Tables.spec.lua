@@ -1,4 +1,5 @@
 local Tables = require "Tables"
+local Strings = require "Strings"
 local Arrays = require "Arrays"
 
 local function getIteratorForRange(firstNumber, lastNumber)
@@ -766,6 +767,28 @@ describe(
 			end
 		)
 		describe(
+			"cloneDeep",
+			function()
+				it(
+					"works for a cycle object",
+					function()
+						local Harry = {
+							patronus = "stag",
+							age = 12
+						}
+						local Hedwig = {
+							animal = "owl",
+							owner = Harry
+						}
+						Harry.pet = Hedwig
+						local clonedHarry = Tables.cloneDeep(Harry)
+						Harry.age = 13
+						assert.equal('<1>{age = 12, patronus = "stag", pet = {animal = "owl", owner = &1}}', Strings.pretty(clonedHarry))
+					end
+				)
+			end
+		)
+		describe(
 			"isEmpty",
 			function()
 				it(
@@ -827,6 +850,102 @@ describe(
 							end
 						)
 						assert.are.same({{"one", "a"}, {"two", "b"}, {"three", "c"}, {"four", "d"}, {"five", "e"}}, output)
+					end
+				)
+			end
+		)
+		describe(
+			"get",
+			function()
+				it(
+					"finds a child of a table",
+					function()
+						local input = {a = "hello"}
+						assert.equal("hello", Tables.get(input, "a"))
+					end
+				)
+				it(
+					"finds a descendant of a table",
+					function()
+						local tableKey = {}
+						local input = {a = {[tableKey] = "hello"}}
+						assert.equal("hello", Tables.get(input, "a", tableKey))
+					end
+				)
+				it(
+					"returns nil for a missing path",
+					function()
+						local input = {}
+						assert.is_nil(Tables.get(input, "a", "b"))
+					end
+				)
+				it(
+					"returns nil for a path that throws",
+					function()
+						local input = {}
+						setmetatable(
+							input,
+							{
+								__index = function()
+									error("MissingKey")
+								end
+							}
+						)
+						assert.errors(
+							function()
+								return input.a
+							end
+						)
+						assert.is_nil(Tables.get(input, "a", "b"))
+					end
+				)
+			end
+		)
+		describe(
+			"set",
+			function()
+				it(
+					"sets a child of a table",
+					function()
+						local input = {a = "hello"}
+						assert.is_true(Tables.set(input, {"a"}, "updated"))
+						assert.equal("updated", input.a)
+					end
+				)
+				it(
+					"sets a descendant of a table",
+					function()
+						local tableKey = {}
+						local input = {a = {[tableKey] = "hello"}}
+						assert.is_true(Tables.set(input, {"a", tableKey}, "updated"))
+						assert.equal("updated", input.a[tableKey])
+					end
+				)
+				it(
+					"returns false for a missing descendant",
+					function()
+						local input = {}
+						assert.is_false(Tables.set(input, {"a", "b"}, "something"))
+					end
+				)
+				it(
+					"returns false for a path that throws",
+					function()
+						local input = {}
+						setmetatable(
+							input,
+							{
+								__index = function()
+									error("MissingKey")
+								end
+							}
+						)
+						assert.errors(
+							function()
+								return input.a
+							end
+						)
+						assert.is_false(Tables.set(input, {"a", "b"}, "updated"))
 					end
 				)
 			end

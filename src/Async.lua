@@ -4,9 +4,9 @@
 	these functions improve the experience of working with asynchronous code in Roblox.
 ]]
 local t = require(script.Parent.Parent.t)
-local Promise = require(script.Parent.Parent.Promise)
 local Tables = require(script.Parent.Tables)
 local Functions = require(script.Parent.Functions)
+local Promise = require(script.Parent.Parent.Promise)
 local Async = {}
 
 local baseRandomStream = Random.new()
