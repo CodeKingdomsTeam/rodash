@@ -111,14 +111,14 @@ describe(
 					function()
 						wait(1)
 						local one = Async.resolve(1)
-						local two = Promise.reject("Expected error")
+						local two = Promise.reject("ExpectedError")
 						local three =
 							Async.delay(1):andThen(
 							function()
 								return 3
 							end
 						)
-						advanceAndAssertPromiseRejects(Async.parallel({one, two, three}), "Expected error")
+						advanceAndAssertPromiseRejects(Async.parallel({one, two, three}), "ExpectedError")
 					end
 				)
 			end
@@ -200,14 +200,14 @@ describe(
 					function()
 						wait(1)
 						local one = Async.resolve(1)
-						local two = Promise.reject("Expected error")
+						local two = Promise.reject("ExpectedError")
 						local three =
 							Async.delay(1):andThen(
 							function()
 								return 3
 							end
 						)
-						advanceAndAssertPromiseRejects(Async.parallelAll({one = one, two = two, three = three}), "Expected error")
+						advanceAndAssertPromiseRejects(Async.parallelAll({one = one, two = two, three = three}), "ExpectedError")
 					end
 				)
 			end
@@ -326,7 +326,7 @@ describe(
 							Async.race(
 								{
 									Async.delay(0.6):andThen(Functions.returns("One")),
-									Async.delay(3):andThen(Functions.throws("Unexpected Error")),
+									Async.delay(3):andThen(Functions.throws("UnexpectedError")),
 									Async.delay(0.5):andThen(Functions.returns("Three"))
 								},
 								2
@@ -344,12 +344,12 @@ describe(
 							Async.race(
 								{
 									Async.delay(0.8):andThen(Functions.returns("One")),
-									Async.delay(0.6):andThen(Functions.throws("Expected Error")),
+									Async.delay(0.6):andThen(Functions.throws("ExpectedError")),
 									Async.delay(0.5):andThen(Functions.returns("Three"))
 								},
 								2
 							),
-							"Expected Error"
+							"ExpectedError"
 						)
 					end
 				)
@@ -362,8 +362,8 @@ describe(
 					"can timeout after a delay",
 					function()
 						local promise = Async.delay(2)
-						local timeout = Async.timeout(promise, 1, "Expected Error")
-						advanceAndAssertPromiseRejects(timeout, "Expected Error")
+						local timeout = Async.timeout(promise, 1, "ExpectedError")
+						advanceAndAssertPromiseRejects(timeout, "ExpectedError")
 					end
 				)
 				it(
@@ -377,9 +377,9 @@ describe(
 				it(
 					"can reject",
 					function()
-						local promise = Async.delay(1):andThen(Functions.throws("Expected Error"))
+						local promise = Async.delay(1):andThen(Functions.throws("ExpectedError"))
 						local timeout = Async.timeout(promise, 10)
-						advanceAndAssertPromiseRejects(timeout, "Expected Error")
+						advanceAndAssertPromiseRejects(timeout, "ExpectedError")
 					end
 				)
 			end

@@ -8,6 +8,9 @@ describe(
 		before_each(
 			function()
 				clock = Clock.setup()
+				getmetatable(_.fn).__index = function(self, key)
+					return _.chain(_)[key]
+				end
 			end
 		)
 		after_each(
@@ -111,7 +114,7 @@ describe(
 								return value >= 5
 							end
 						):sum()
-						assert.equals("_.fn::map::filter::sum", tostring(fn))
+						assert.equals("fn::map::filter::sum", tostring(fn))
 						assert.are.same(12, fn({1, 3, 5}))
 					end
 				)
@@ -246,8 +249,7 @@ describe(
 						local getName = function(player)
 							return _.delay(1):andThen(_.throws("NoNameError"))
 						end
-						local players
-						players =
+						local players =
 							_.chain(
 							{
 								-- Any chainable function can be used
@@ -308,8 +310,7 @@ describe(
 						local getName = function(player)
 							return player.Name
 						end
-						local players
-						players =
+						local players =
 							_.chain(
 							{
 								filterHurt = _.fn:filter(

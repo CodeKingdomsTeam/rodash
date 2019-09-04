@@ -41,8 +41,8 @@ function Functions.returns(...)
 end
 
 --[[
-	Return true if the _value_ can be called ie. it is function or a table with a `__call` entry in its metatable.
-	@usage In general this is a much more suitable test than checking purely for a function type.
+	Return `true` if the _value_ is a function or a table with a `__call` entry in its metatable.
+	@usage This is a more general test than checking purely for a function type.
 ]]
 --: any -> bool
 function Functions.isCallable(value)
@@ -478,6 +478,29 @@ function Functions.continue(actor)
 	end
 end
 
+local getRodashChain =
+	Functions.once(
+	function(rd)
+		return Functions.chain(rd)
+	end
+)
+Functions.fn = {}
+setmetatable(
+	Functions.fn,
+	{
+		__index = function(self, key)
+			local rd = require(script.Parent)
+			return getRodashChain(rd)[key]
+		end,
+		__call = function(self, subject)
+			return subject
+		end,
+		__tostring = function()
+			return "fn"
+		end
+	}
+)
+
 --[[
 	Returns a function that calls the argument functions in left-right order on an input, passing
 	the return of the previous function as argument(s) to the next.
@@ -532,6 +555,8 @@ end
 
 		heat:clear(1)
 		heat(1) --> "hot beef"
+	@see _.serialize
+	@see _.serializeDeep if you want to recursively serialize arguments.
 ]]
 --: <...A, B>((...A -> B), ...A -> string?) -> Clearable<...A> & AllClearable & (...A) -> B
 function Functions.memoize(fn, serializeArgs)

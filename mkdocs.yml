@@ -15,6 +15,7 @@ nav:
   - Guide:
       - Arrays: guide/arrays.md
   - API Reference:
+      - Arrays: api/Arrays.md
       - Async: api/Async.md
       - Classes: api/Classes.md
       - Functions: api/Functions.md

@@ -5,7 +5,7 @@ local t = require(script.Parent.Parent.t)
 local Functions = require(script.Parent.Functions)
 local Tables = require(script.Parent.Tables)
 local Strings = {}
-local append = table.insert
+local insert = table.insert
 local concat = table.concat
 
 --[[
@@ -128,34 +128,37 @@ function Strings.decodeHtml(str)
 end
 
 --[[
-	Splits `str` into parts based on a pattern delimiter and returns a table of the parts.
-	@example _.splitByPattern("rice") --> {"r", "i", "c", "e"}
-	@example _.splitByPattern("one.two::flour", "[.:]") --> {"one", "two", "", "flour"}
+	Splits `str` into parts based on a pattern delimiter and returns a table of the parts, followed
+	by a table of the matched delimiters.
+	@example _.splitOn("rice") --> {"r", "i", "c", "e"}, {"", "", "", ""}
+	@example _.splitOn("one.two::flour", "[.:]") --> {"one", "two", "", "flour"}, {".", ":", ":"}
 	@usage This method is useful only when you need a _pattern_ as a delimiter.
 	@usage Use the Roblox native `string.split` if you are splitting on a simple string.
 	@param delimiter (default = "")
 	@trait Chainable
 ]]
---: string, pattern -> string[]
-function Strings.splitByPattern(str, delimiter)
-	assert(t.string(str))
-	assert(t.optional(t.string)(delimiter))
-	local result = {}
+--: string, pattern -> string[], string[]
+function Strings.splitOn(str, pattern)
+	assert(t.string(str), "BadInput: str must be a string")
+	assert(t.optional(t.string)(pattern), "BadInput: pattern must be a string or nil")
+	local parts = {}
+	local delimiters = {}
 	local from = 1
-	if (not delimiter) then
+	if not pattern then
 		for i = 1, #str do
-			append(result, str:sub(i, i))
+			insert(parts, str:sub(i, i))
 		end
-		return result
+		return parts
 	end
-	local delim_from, delim_to = str:find(delimiter, from)
-	while delim_from do
-		append(result, str:sub(from, delim_from - 1))
-		from = delim_to + 1
-		delim_from, delim_to = str:find(delimiter, from)
+	local delimiterStart, delimiterEnd = str:find(pattern, from)
+	while delimiterStart do
+		insert(delimiters, str:sub(delimiterStart, delimiterEnd))
+		insert(parts, str:sub(from, delimiterStart - 1))
+		from = delimiterEnd + 1
+		delimiterStart, delimiterEnd = str:find(pattern, from)
 	end
-	append(result, str:sub(from))
-	return result
+	insert(parts, str:sub(from))
+	return parts, delimiters
 end
 
 --[[
@@ -235,27 +238,6 @@ function Strings.rightPad(str, length, suffix)
 end
 
 --[[
-This function is a simpler & more powerful version of `string.format`, inspired by `format!` in Rust.
-	If an instance has a `:format()` method, this is used instead, passing the format arguments.
-	
-		* `{}` prints the next variable using or `tostring`.
-		* `{:?}` prints using `_.pretty`.
-		* `{:#?}` prints using multiline `_.pretty`.
-
-	@param subject the format match string
-]]
-function Strings.format(subject, ...)
-end
-
---[[
-	Pretty-prints the _subject_ and its associated metatable if _withMetatable_ is true
-	@param withMetatable (default = false)
-]]
---: any, bool? -> string
-function Strings.pretty(subject, withMetatable)
-end
-
---[[
 	This function first calls `_.format` on the arguments provided and then outputs the response
 	to the debug target, set using `_.setDebug`. By default, this function does nothing, allowing
 	developers to leave the calls in the source code if that is beneficial.
@@ -298,11 +280,11 @@ function Strings.charToHex(char, format, useBytes)
 	local values = {}
 	if useBytes then
 		for position, codePoint in utf8.codes(char) do
-			append(values, codePoint)
+			insert(values, codePoint)
 		end
 	else
 		for i = 1, char:len() do
-			append(values, char:byte(i))
+			insert(values, char:byte(i))
 		end
 	end
 	return concat(
@@ -441,6 +423,194 @@ function Strings.encodeQueryString(query)
 		end
 	)
 	return ("?" .. concat(fields, "&"))
+end
+
+--[[
+	Returns the _format_ string with placeholders `{...}` substituted with readable representations
+	of the subsequent arguments.
+
+	This function is a simpler & more powerful version of `string.format`, inspired by `format!`
+	in Rust.
+	
+	* `{}` formats and prints the next argument using `:format()` if available, or a suitable
+		default representation depending on its type.
+	* `{2}` formats and prints the 2nd value argument
+
+	Display parameters can be combined after a `:` in the curly braces. Any format parameters used
+	in `string.format` can be used here, along with these extras:
+
+	* `{:?}` formats any value using `_.serializeDeep`.
+	* `{:#?}` formats any value using `_.pretty`.
+	* `{:b}` formats a number in its binary representation.
+	@example
+		local props = {"teeth", "claws", "whiskers", "tail"}
+		_.format("{:?} is in {:#?}", "whiskers", props)
+		-> '"whiskers" is in {"teeth", "claws", "whiskers", "tail"}'
+	@example
+		_.format("{} in binary is {1:b}", 125) -> "125 in binary is 110100"
+	@example
+		_.format("The time is {:02}:{:02}", 2, 4) -> "The time is 02:04"
+	@example
+		_.format("The color blue is #{:06X}", 255) -> "The color blue is #0000FF"
+	@usage Escape `{` with `{{` and `}` similarly with `}}`.
+	@usage See [https://developer.roblox.com/articles/Format-String](https://developer.roblox.com/articles/Format-String)
+		for complete list of formating options and further use cases.
+	@see _.serializeDeep
+	@see _.pretty
+]]
+--: string, ...any -> string
+function Strings.format(format, ...)
+	local args = {...}
+	local argIndex = 1
+	local texts, subs = Strings.splitOn(format, "{[^{}]*}")
+	local result = {}
+	for i, text in pairs(texts) do
+		local unescaped = text:gsub("{{", "{"):gsub("}}", "}")
+		insert(result, unescaped)
+		local placeholder = subs[i] and subs[i]:sub(2, -2)
+		if placeholder then
+			local escapeMatch = text:gmatch("{+$")()
+			local isEscaped = escapeMatch and #escapeMatch % 2 == 1
+			if not isEscaped then
+				local placeholderSplit = Strings.splitOn(placeholder, ":")
+				local nextIndex = tonumber(placeholderSplit[1])
+				local displayString = placeholderSplit[2]
+				local arg
+				if nextIndex then
+					arg = args[nextIndex]
+				else
+					arg = args[argIndex]
+					argIndex = argIndex + 1
+				end
+				insert(result, Strings.formatValue(arg, displayString or ""))
+			else
+				local unescapedSub = placeholder
+				insert(result, unescapedSub)
+			end
+		end
+	end
+	return table.concat(result, "")
+end
+
+local function decimalToBinary(number)
+	local binaryEight = {
+		["1"] = "000",
+		["2"] = "001",
+		["3"] = "010",
+		["4"] = "011",
+		["5"] = "100",
+		["6"] = "101",
+		["7"] = "110",
+		["8"] = "111"
+	}
+	return string.format("%o", number):gsub(
+		".",
+		function(char)
+			return binaryEight[char]
+		end
+	):gsub("^0+", "")
+end
+
+--[[
+	Format a specific _value_ using the specified _displayString_.
+]]
+--: any, DisplayString -> string
+function Strings.formatValue(value, displayString)
+	local displayTypeStart, displayTypeEnd = displayString:find("[A-Za-z#?]+")
+	if displayTypeStart then
+		local displayType = displayString:sub(displayTypeStart, displayTypeEnd)
+		local formatAsString =
+			"%" .. displayString:sub(1, displayTypeStart - 1) .. displayString:sub(displayTypeEnd + 1) .. "s"
+		if displayType == "#?" then
+			return string.format(formatAsString, Strings.pretty(value))
+		elseif displayType == "?" then
+			return string.format(formatAsString, Tables.serializeDeep(value))
+		elseif displayType == "#b" then
+			local result = decimalToBinary(value)
+			return string.format(formatAsString, "0b" .. result)
+		elseif displayType == "b" then
+			local result = decimalToBinary(value)
+			return string.format(formatAsString, result)
+		end
+		return string.format("%" .. displayString, value)
+	else
+		local displayType = "s"
+		if type(value) == "number" then
+			local _, fraction = math.modf(value)
+			displayType = fraction == 0 and "d" or "f"
+		end
+		return string.format("%" .. displayString .. displayType, tostring(value))
+	end
+end
+
+--[[
+	Returns a human-readable string for the given _value_. The string will be formatted across
+	multiple lines if a descendant element gets longer than `80` characters.
+
+	@usage This format may be improved in the future, so use `_.serializeDeep` if you need a format
+		which won't change.
+	@see _.serializeDeep
+]]
+--: any, bool -> string
+function Strings.pretty(value, serializeOptions)
+	local function serializeValue(value, options)
+		if type(value) == "table" then
+			local className = ""
+			if value.Class then
+				className = value.Class.name .. " "
+			end
+			return className .. Tables.serialize(value, options)
+		else
+			return Tables.defaultSerializer(value, options)
+		end
+	end
+
+	local MAX_LINE = 80
+
+	return Tables.serialize(
+		value,
+		Tables.assign(
+			{
+				serializeValue = serializeValue,
+				serializeKey = function(key, options)
+					if type(key) == "string" then
+						return key
+					else
+						return "[" .. serializeValue(key, options) .. "]"
+					end
+				end,
+				serializeElement = function(key, value)
+					local shortString = key .. " = " .. value
+					if #shortString < MAX_LINE or shortString:match("\n") then
+						return shortString
+					end
+					return key .. " =\n\t" .. value
+				end or nil,
+				serializeTable = function(contents, ref, options)
+					local shortString = ref .. "{" .. table.concat(contents, ", ") .. "}"
+					if #shortString < MAX_LINE then
+						return shortString
+					end
+					return ref ..
+						"{\n" ..
+							table.concat(
+								Tables.map(
+									contents,
+									function(element)
+										return "\t" .. element:gsub("\n", "\n\t")
+									end
+								),
+								",\n"
+							) ..
+								"\n}"
+				end or nil,
+				keyDelimiter = " = ",
+				valueDelimiter = ", ",
+				omitKeys = {"Class"}
+			},
+			serializeOptions or {}
+		)
+	)
 end
 
 return Strings
