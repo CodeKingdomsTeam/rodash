@@ -154,24 +154,24 @@ end
 function Strings.splitOn(str, pattern)
 	assertStrIsString(str)
 	assert(t.optional(t.string)(pattern), "BadInput: pattern must be a string or nil")
-	local result = {}
+	local parts = {}
 	local delimiters = {}
 	local from = 1
 	if not pattern then
 		for i = 1, #str do
-			insert(result, str:sub(i, i))
+			insert(parts, str:sub(i, i))
 		end
-		return result
+		return parts
 	end
 	local delimiterStart, delimiterEnd = str:find(pattern, from)
 	while delimiterStart do
 		insert(delimiters, str:sub(delimiterStart, delimiterEnd))
-		insert(result, str:sub(from, delimiterStart - 1))
+		insert(parts, str:sub(from, delimiterStart - 1))
 		from = delimiterEnd + 1
 		delimiterStart, delimiterEnd = str:find(pattern, from)
 	end
-	insert(result, str:sub(from))
-	return result, delimiters
+	insert(parts, str:sub(from))
+	return parts, delimiters
 end
 
 --[[
@@ -532,7 +532,7 @@ function Strings.format(format, ...)
 	return table.concat(result, "")
 end
 
-local function octalToBinary(number)
+local function decimalToBinary(number)
 	local binaryEight = {
 		["1"] = "000",
 		["2"] = "001",
@@ -566,10 +566,10 @@ function Strings.formatValue(value, displayString)
 		elseif displayType == "?" then
 			return string.format(formatAsString, Tables.serializeDeep(value))
 		elseif displayType == "#b" then
-			local result = octalToBinary(value)
+			local result = decimalToBinary(value)
 			return string.format(formatAsString, "0b" .. result)
 		elseif displayType == "b" then
-			local result = octalToBinary(value)
+			local result = decimalToBinary(value)
 			return string.format(formatAsString, result)
 		end
 		return string.format("%" .. displayString, value)
@@ -584,11 +584,14 @@ function Strings.formatValue(value, displayString)
 end
 
 --[[
-	Returns a human-readable string for the given _value_. If _multiline_ is `true`, the string
-	will be formatted across multiple lines if a descendant element gets longer than `80`
-	characters.
+	Returns a human-readable string for the given _value_. The string will be formatted across
+	multiple lines if a descendant element gets longer than `80` characters.
 
+<<<<<<< HEAD
 	@usage This format may be improved in the future, so use `dash.serializeDeep` if need a format
+=======
+	@usage This format may be improved in the future, so use `_.serializeDeep` if you need a format
+>>>>>>> master
 		which won't change.
 	@see dash.serializeDeep
 ]]
@@ -606,6 +609,8 @@ function Strings.pretty(value, serializeOptions)
 		end
 	end
 
+	local MAX_LINE = 80
+
 	return Tables.serialize(
 		value,
 		Tables.assign(
@@ -620,14 +625,14 @@ function Strings.pretty(value, serializeOptions)
 				end,
 				serializeElement = function(key, value)
 					local shortString = key .. " = " .. value
-					if #shortString < 80 or shortString:match("\n") then
+					if #shortString < MAX_LINE or shortString:match("\n") then
 						return shortString
 					end
 					return key .. " =\n\t" .. value
 				end or nil,
 				serializeTable = function(contents, ref, options)
 					local shortString = ref .. "{" .. table.concat(contents, ", ") .. "}"
-					if #shortString < 80 then
+					if #shortString < MAX_LINE then
 						return shortString
 					end
 					return ref ..

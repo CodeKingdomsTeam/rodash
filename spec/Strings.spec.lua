@@ -161,6 +161,13 @@ describe(
 					end
 				)
 				it(
+					"with serialized sparse array",
+					function()
+						local item = {"a", "b", [4] = "c"}
+						assert.are.same('A formatted object: {1:"a",2:"b",4:"c"}', Strings.format("A formatted object: {:?}", item))
+					end
+				)
+				it(
 					"with serialized args",
 					function()
 						local item = {one = 1, two = 2}
