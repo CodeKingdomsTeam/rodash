@@ -376,6 +376,16 @@ describe(
 						assert.equal('<1>{"a":<2>{"f":4},"b":<3>{"d":&1,"id":1},"c":&2,"d":&3}', Tables.serializeDeep(result))
 					end
 				)
+				it(
+					"works for object keys",
+					function()
+						local result = {a = {f = 4}, b = {id = 1}, c = 3}
+						result.b.d = result
+						result[{d = 5}] = result.b
+						result[result] = result.a
+						assert.equal('<1>{"a":<2>{"f":4},"b":<3>{"d":&1,"id":1},"c":3,&1:&2,{"d":5}:&3}', Tables.serializeDeep(result))
+					end
+				)
 			end
 		)
 		describe(

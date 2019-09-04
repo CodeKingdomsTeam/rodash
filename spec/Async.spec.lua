@@ -111,14 +111,14 @@ describe(
 					function()
 						wait(1)
 						local one = Async.resolve(1)
-						local two = Promise.reject("Expected error")
+						local two = Promise.reject("ExpectedError")
 						local three =
 							Async.delay(1):andThen(
 							function()
 								return 3
 							end
 						)
-						advanceAndAssertPromiseRejects(Async.parallel({one, two, three}), "Expected error")
+						advanceAndAssertPromiseRejects(Async.parallel({one, two, three}), "ExpectedError")
 					end
 				)
 			end
@@ -200,14 +200,14 @@ describe(
 					function()
 						wait(1)
 						local one = Async.resolve(1)
-						local two = Promise.reject("Expected error")
+						local two = Promise.reject("ExpectedError")
 						local three =
 							Async.delay(1):andThen(
 							function()
 								return 3
 							end
 						)
-						advanceAndAssertPromiseRejects(Async.parallelAll({one = one, two = two, three = three}), "Expected error")
+						advanceAndAssertPromiseRejects(Async.parallelAll({one = one, two = two, three = three}), "ExpectedError")
 					end
 				)
 			end

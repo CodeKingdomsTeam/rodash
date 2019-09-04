@@ -206,6 +206,11 @@ describe(
 						name = "with no comparator"
 					},
 					{
+						input = {1, "mission", 3, "impossible", 2, true},
+						expected = {true, 1, 2, 3, "impossible", "mission"},
+						name = "elements of different types"
+					},
+					{
 						input = {"use", "the", "force", "Luke"},
 						expected = {"Luke", "force", "the", "use"},
 						name = "with strings"
