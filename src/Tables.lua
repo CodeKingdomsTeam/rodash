@@ -52,7 +52,7 @@ end
 		getUpperTorso(players.LocalPlayer) --> Part
 	@trait Chainable
 ]]
---: <T: {[K]: V}>(T, ...K) -> V
+--: <T: {[K]: V}>(T, ...K) -> V?
 function Tables.get(source, ...)
 	local path = {...}
 	local ok, value =
@@ -74,12 +74,13 @@ end
 	Set a child or descendant of a table. Returns `true` if the operation completed without error.
 
 	If any values along the path are not tables, `dash.set` will do nothing and return `false`.
+	@returns `true` if the set worked
 	@example
 		dash.set(game.Players, {"LocalPlayer", "Character", "UpperTorso", "Color"}, Color3.new(255, 255, 255))
 		--> true (if the set worked)
 	@trait Chainable
 ]]
---: <T: Iterable<K, V>>(T, K[], V) -> ()
+--: <T: Iterable<K, V>>(T, K[], V) -> bool
 function Tables.set(source, path, value)
 	local ok =
 		pcall(
@@ -121,7 +122,7 @@ end
 		nextNumbers --> {1, 2, 3, 5, 8}
 	@see filter if you want to 
 ]]
---: <T: Iterable<K,V>, R: Iterable<K,V2>((T, (element: V, key: K) -> V2) -> R)
+--: <T: Iterable<K,V>, V2>((T, (element: V, key: K) -> V2) -> Iterable<K,V2>)
 function Tables.map(source, handler)
 	assertHandlerIsFn(handler)
 	local result = {}
@@ -163,7 +164,7 @@ end
 		end)
 		healthSet --> {100 = true, 50 = true, 0 = true}
 ]]
---: <T: Iterable<K,V>, R: Iterable<K,V2>((T, (element: V, key: K) -> V2) -> R)
+--: <T: Iterable<K,V>, K2>((T, (element: V, key: K) -> K2) -> Iterable<K2,V>)
 function Tables.keyBy(source, handler)
 	assertHandlerIsFn(handler)
 	local result = {}
@@ -368,7 +369,7 @@ end
 		local players = dash.invert(teams)
 		players --> {Frodo = "red", Bilbo = "blue", Boromir = "yellow"}
 ]]
---: <K: Key, V>(Iterable<K,V> -> Iterable<V,K>)
+--: <K, V>(Iterable<K,V> -> Iterable<V,K>)
 function Tables.invert(source)
 	local result = {}
 	for i, v in Tables.iterator(source) do
@@ -389,7 +390,7 @@ end
 		end)
 		healthSet --> {100 = true, 50 = true, 0 = true}
 ]]
---: <T: Iterable<K,V>, I: Key>((value: T, key: K) -> I) -> Iterable<I, Iterable<K,V>>)
+--: <T: Iterable<K,V>, K2>(((value: T, key: K) -> K2) -> Iterable<K2, Iterable<K,V>>)
 function Tables.groupBy(source, handler)
 	assertHandlerIsFn(handler)
 	local result = {}
@@ -1056,7 +1057,7 @@ end
 	@see dash.defaultSerializer
 	@see dash.pretty
 ]]
---: <T: Iterable<K,V>>(T, (V, Cycles<V> -> string), (K, Cycles<V> -> string) -> string)
+--: <T: Iterable<K,V>>((T, SerializeOptions<T>) -> string)
 function Tables.serialize(source, options)
 	options = Tables.defaults({}, options, getDefaultSerializeOptions())
 	assert(t.string(options.valueDelimiter), "BadInput: options.valueDelimiter must be a string if defined")
@@ -1100,7 +1101,7 @@ end
 	@see dash.serialize
 	@see dash.defaultSerializer
 ]]
---: <T: Iterable<K,V>>(T, (V, Cycles<V> -> string), (K, Cycles<V> -> string) -> string)
+--: <T: Iterable<K,V>>((T, SerializeOptions<T>) -> string)
 function Tables.serializeDeep(source, options)
 	options = Tables.defaults({}, options, getDefaultSerializeOptions())
 	local Functions = require(script.Parent.Functions)
@@ -1143,7 +1144,7 @@ end
 			[{name = "Kyle", child = kyle}] = 2
 		}
 ]]
---: <T: Iterable<K,V>>(T -> Iterable<T,int>)
+--: <T: Iterable<K,V>>(T -> {[T]:int})
 function Tables.occurences(source)
 	assert(t.table(source), "BadInput: source must be a table")
 	local counts = {[source] = 1}

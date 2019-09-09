@@ -260,7 +260,7 @@ end
 		and call e.g. `dash.setDebug(dash.bind(HttpService.PostAsync, "https://example.com/log"))`
 		on a production build to allow remote debugging.
 ]]
---: (...any) -> string
+--: any, ... -> string
 function Strings.debug(subject, ...)
 	if Strings.debugTarget == nil then
 		return
@@ -289,7 +289,7 @@ end
 	@example dash.charToHex("🤷🏼‍♀️", "&#x{};") --> "&#x1F937;&#x1F3FC;&#x200D;&#x2640;&#xFE0F;"
 	@example dash.charToHex("🤷🏼‍♀️", "%{}", true) --> "%F0%9F%A4%B7%F0%9F%8F%BC%E2%80%8D%E2%99%80%EF%B8%8F"
 ]]
---: char -> str, str?, boolean?
+--: char, string?, boolean? -> string
 function Strings.charToHex(char, format, useBytes)
 	assert(t.string(char), "BadInput: char must be a single utf8 character string")
 	local values = {}
@@ -493,7 +493,7 @@ end
 	@see dash.serializeDeep
 	@see dash.pretty
 ]]
---: string, ...any -> string
+--: string, ... -> string
 function Strings.format(format, ...)
 	local args = {...}
 	local argIndex = 1
@@ -587,13 +587,7 @@ end
 	Returns a human-readable string for the given _value_. The string will be formatted across
 	multiple lines if a descendant element gets longer than `80` characters.
 
-<<<<<<< HEAD
-	@usage This format may be improved in the future, so use `dash.serializeDeep` if need a format
-=======
-	@usage This format may be improved in the future, so use `_.serializeDeep` if you need a format
->>>>>>> master
-		which won't change.
-	@see dash.serializeDeep
+	@see dash.serializeDeep for a compact alternative.
 ]]
 --: any, bool -> string
 function Strings.pretty(value, serializeOptions)

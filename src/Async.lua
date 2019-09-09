@@ -67,7 +67,7 @@ end
 		promises. These are considered resolved immediately.
 	@usage Promises that return nil values will cause the return array to be sparse.
 ]]
---: <T>((Promise<T> | T)[]) -> Promise<T[]>
+--: <T>((Promise<T> | T)[] -> Promise<T[]>)
 function Async.parallel(array)
 	assert(t.table(array), "BadInput: array must be an array")
 	local promises =

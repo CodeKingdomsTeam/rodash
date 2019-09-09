@@ -1,6 +1,8 @@
 import { Node, Comment, MemberExpression, FunctionDeclaration, Identifier } from './astTypings';
 import { keyBy } from 'lodash';
 import { GlossaryMap } from './index';
+import * as parser from './typeParser';
+import { stringifyType, FunctionType, TypeKind } from './LuaTypes';
 
 interface DocEntry {
 	tag: string;
@@ -8,7 +10,7 @@ interface DocEntry {
 }
 
 interface Doc {
-	typing: string;
+	typing: FunctionType;
 	comments: string[];
 	entries: DocEntry[];
 }
@@ -48,14 +50,16 @@ export function generateMd(
 		}
 		if (node.type === 'FunctionDeclaration') {
 			const doc = getDocAtLocation(node.loc.start.line, nodes);
-			const fn = getFnDoc(fileName, libName, node as FunctionDeclaration, doc, glossaryMap);
-			if (fn) {
-				if (!fn.comments.length) {
-					console.log('Skipping undocumented method:', fn.sortName);
-				} else if (!doc.typing) {
-					console.log('Skipping untyped method:', fn.sortName);
-				} else {
-					functions.push(fn);
+			if (!doc.typing) {
+				console.log('Skipping untyped method:', doc.comments);
+			} else {
+				const fn = getFnDoc(fileName, libName, node as FunctionDeclaration, doc, glossaryMap);
+				if (fn) {
+					if (!fn.comments.length) {
+						console.log('Skipping undocumented method:', fn.sortName);
+					} else {
+						functions.push(fn);
+					}
 				}
 			}
 		}
@@ -75,7 +79,7 @@ ${functions.map(fn => fn.content).join('\n\n---\n\n')}
 }
 
 function getDocAtLocation(loc: number, nodes: Nodes): Doc {
-	let typing;
+	let typing: FunctionType;
 	const comments = [];
 	const entries = [];
 	// Work backwards from the location to find comments above the specified point, which will form
@@ -88,7 +92,12 @@ function getDocAtLocation(loc: number, nodes: Nodes): Doc {
 		if (node.type === 'Comment') {
 			const comment = node as Comment;
 			if (comment.raw.match(/^\-\-\:/)) {
-				typing = escapeHtml(comment.value.substring(1));
+				const type = comment.value.substring(1);
+				try {
+					typing = parser.parse(type.trim()) as FunctionType;
+				} catch (e) {
+					console.warn('BadType:', type, e);
+				}
 			} else {
 				const { nodeText, nodeEntries } = getCommentTextAndEntries(comment);
 				comments.push(nodeText);
@@ -143,10 +152,13 @@ function getFnDoc(
 		const member = node.identifier as MemberExpression;
 		const name = (member.identifier as Identifier).name;
 		const baseName = member.base.name;
-		const params = node.parameters.map(id => id.name);
-
+		const params = node.parameters.map(id => (id.type === 'VarargLiteral' ? '...' : id.name));
 		const prefixName = baseName === fileName ? libName : baseName;
 		const sortName = baseName === fileName ? name : baseName + '.' + name;
+
+		const returnType = stringifyType(
+			doc.typing.returnType || { typeKind: TypeKind.ANY, isRestParameter: true },
+		);
 
 		const traits = filterEntries(doc.entries, 'trait');
 		if (traits.length) {
@@ -156,31 +168,44 @@ function getFnDoc(
 			`### ${sortName} \n`,
 			'```lua' +
 				`
-function ${prefixName}.${name}(${params.join(', ')}) --> string
+function ${prefixName}.${name}(${params.join(', ')}) --> ${returnType}
 ` +
 				'```',
 		);
 		lines.push(doc.comments);
 		const paramEntries = filterEntries(doc.entries, 'param');
 		const paramMap = keyBy(
-			paramEntries.map(entry => entry.content.match(/^\s*([A-Za-z]+)\s(.*)/)),
+			paramEntries.map(entry => entry.content.match(/^\s*([A-Za-z.]+)\s(.*)/)),
 			entry => entry && entry[1],
 		);
+		if (doc.typing.genericTypes) {
+			lines.push(
+				'\n**Types**\n',
+				...doc.typing.genericTypes.map(
+					generic => `\n> __${generic.tag}__ - \`${stringifyType(generic.extendingType)}\``,
+				),
+			);
+		}
+		const parameterTypes = doc.typing.parameterTypes || [];
 		if (params.length) {
 			lines.push(
 				'\n**Parameters**\n',
-				...params.map(
-					param =>
-						`> __${param}__ - _string_ ${paramMap[param] ? ' - ' + paramMap[param][2] : ''}\n>`,
-				),
+				...params.map((param, i) => {
+					const parameterType = parameterTypes[i] || {
+						typeKind: TypeKind.ANY,
+					};
+					return `> __${param}__ - \`${stringifyType(parameterType)}\` ${
+						paramMap[param] ? ' - ' + paramMap[param][2] : ''
+					}\n>`;
+				}),
 			);
 		}
 		const returns = filterEntries(doc.entries, 'returns');
 		lines.push('\n**Returns**\n');
 		if (returns.length) {
-			lines.push(...returns.map(({ content }) => `\n> _string_ - ${content}`));
+			lines.push(...returns.map(({ content }) => `\n> \`${returnType}\` - ${content}`));
 		} else {
-			lines.push('\n> _string_');
+			lines.push(`\n> \`${returnType}\``);
 		}
 		const throws = filterEntries(doc.entries, 'throws');
 		if (throws.length) {

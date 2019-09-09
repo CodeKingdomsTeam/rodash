@@ -7,6 +7,8 @@ local Arrays = require(script.Parent.Arrays)
 local Functions = require(script.Parent.Functions)
 local Classes = {}
 
+--: type Constructor<T> = ... -> T
+
 --[[
 	Create a class called _name_ with the specified _constructor_. The constructor should return a
 	plain table which will be turned into an instance of _Class_ from a call to `Class.new(...)`.
@@ -117,7 +119,7 @@ function Classes.class(name, constructor, decorators)
 			local car = Vehicle.new(4)
 			tostring(car) --> "#1: 4 wheels"
 	]]
-	--: (mut T:) -> nil
+	--: (mut self) -> ()
 	function Class:_init()
 	end
 
@@ -241,7 +243,7 @@ function Classes.class(name, constructor, decorators)
 		Return a string representation of the instance. By default this is the _name_ field (or the
 		Class name if this is not defined), but the method can be overridden.
 	]]
-	--: (T:) -> string
+	--: () -> string
 	function Class:toString()
 		return self.name
 	end
@@ -250,7 +252,7 @@ function Classes.class(name, constructor, decorators)
 		Returns `true` if `self` is considered equal to _other_. This replaces the `==` operator
 		on instances of this class, and can be overridden to provide a custom implementation.
 	]]
-	--: (T:) -> string
+	--: T -> bool
 	function Class:equals(other)
 		return rawequal(self, other)
 	end
@@ -259,7 +261,7 @@ function Classes.class(name, constructor, decorators)
 		Returns `true` if `self` is considered less than  _other_. This replaces the `<` operator
 		on instances of this class, and can be overridden to provide a custom implementation.
 	]]
-	--: (T:) -> string
+	--: T -> string
 	function Class:__lt(other)
 		return false
 	end
@@ -269,7 +271,7 @@ function Classes.class(name, constructor, decorators)
 		`<=` operator on instances of this class, and can be overridden to provide a custom
 		implementation.
 	]]
-	--: (T:) -> string
+	--: T -> string
 	function Class:__le(other)
 		return false
 	end
@@ -347,7 +349,7 @@ end
 		print(car.speed) --> 0
 	@usage Include the return value of this function in the decorators argument when creating a class.
 ]]
---: <T>(Function<self T>[] -> Class<T> -> Class<T>)
+--: <T>((T, ... -> ...)[] -> Class<T> -> Class<T>)
 function Classes.mixin(fns)
 	assert(t.table(fns), "BadInput: fns must be a table")
 	return function(Class)
@@ -374,7 +376,7 @@ end
 		car:brake() --!> ReadonlyKey: s
 	@usage Include the return value of this function in the decorators argument when creating a class.
 ]]
---: <T>(Function<self T> -> Class<T> -> Class<T>)
+--: <T>((self:T, ... -> ...) -> Class<T> -> Class<T>)
 function Classes.decorate(fn)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
 	return function(Class)
@@ -621,7 +623,7 @@ end
 		setLightTo("Dim", game.Workspace.RoomLight)
 		--!> BadInput: enumValue must be an instance of enum
 ]]
---: <T: Iterable<K>, V>(Enum<T>, {[K]: () -> V}) -> K -> V
+--: <T, Strategy:((...A) -> V)>(Enum<T>, {[enumValue: T]: Strategy}) -> (enumValue: T, ...A) -> V
 function Classes.match(enum, strategies)
 	assert(t.table(enum), "BadInput: enum should be a table")
 	assert(
@@ -652,7 +654,7 @@ end
 		drink.syrup = "peach"
 		--!> "FinalObject: Attempt to add key mixer on final object"
 ]]
---: <T: table>(mut T -> T)
+--: <T:{}>(mut T -> T)
 function Classes.finalize(object)
 	local backend = getmetatable(object)
 	local proxy = {
@@ -716,7 +718,7 @@ end
 	an iterator 
 
 	Iterating functions in Rodash such as `dash.map`, `dash.filter` etc. can iterate over frozen objects
-	without this. If you want to treat the objects as arrays use `dash.iterator(frozenObjet, true)`
+	without this. If you want to treat the objects as arrays use `dash.iterator(frozenObject, true)`
 	explicitly.
 	@example
 		local drink = dash.freeze({
@@ -782,7 +784,7 @@ end
 		TOGGLE.isA("ON") --> true
 		TOGGLE.isA(5) --> false
 
-	@usage This is useful if you no nothing about _value_.
+	@usage This is useful if you know nothing about _value_.
 ]]
 --: <T>(any, Type<T> -> bool)
 function Classes.isA(value, Type)

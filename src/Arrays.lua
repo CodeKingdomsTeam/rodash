@@ -249,7 +249,7 @@ end
 		end)
 		firstNameWithF --> "Frodo", 2
 
-		-- What about a value whcih doesn't exist?
+		-- What about a value which doesn't exist?
 		local firstNameWithC = dash.first(names, function(name)
 			return dash.startsWith(name, "C")
 		end)
@@ -261,7 +261,7 @@ end
 	@see dash.find 
 	@usage If you need to find a value in a table which isn't an array, use `dash.find`.
 ]]
---: <T: Iterable<K,V>>((T, (element: V, key: K) -> bool) -> V?)
+--: <T: Iterable<K,V>>(T, (element: V, key: K -> bool) -> V?)
 function Arrays.first(source, predicate)
 	predicate = predicate or function()
 			return true
@@ -296,7 +296,7 @@ end
 	@see dash.find
 	@see dash.first
 ]]
---: <T: Iterable<K,V>>((T, (element: V, key: K) -> bool) -> V?)
+--: <T: Iterable<K,V>>(T, (element: V, key: K -> bool) -> V?)
 function Arrays.last(source, predicate)
 	predicate = predicate or function()
 			return true

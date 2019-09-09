@@ -10,7 +10,7 @@ local Functions = {}
 	A simple function that does nothing, and returns nil.
 	@usage Shorthand for `function() end`.
 ]]
---: () -> nil
+--: () -> ()
 function Functions.noop()
 end
 
@@ -87,7 +87,7 @@ end
 		local damageLocalPlayer = dash.bind(damagePlayer, game.Players.LocalPlayer)
 		damageLocalPlayer(5)
 ]]
---: <A, B, R>(((A..., B... -> R), ...A) -> ...B -> R)
+--: <A, B, R>(((...A, ...B -> R), ...A) -> ...B -> R)
 function Functions.bind(fn, ...)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
 	local args = {...}
@@ -110,7 +110,7 @@ end
 		filterHurtNames(game.Players) --> {"Frodo", "Boromir"}	
 	@usage Chainable rodash function feeds are mapped to `dash.fn`, such as `dash.fn.map(handler)`.
 ]]
---: <T, A>(Chainable<T, A>, ...A) -> T -> T
+--: <S>(Chainable<S>, ...) -> S -> S
 function Functions.bindTail(fn, ...)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
 	local args = {...}
@@ -168,7 +168,7 @@ end
 	Calls the supplied _fn_ on the subject and any additional arguments, returing the result.
 	@trait Chainable
 ]]
---: <T, A, R>(T, (T, ...A -> R), ...A -> R)
+--: <S: Subject, A, R>(S, (S, ...A -> R), ...A -> R)
 function Functions.call(subject, fn, ...)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
 	return fn(subject, ...)
@@ -245,7 +245,9 @@ end
 	@see dash.continue - an actor for chains of asynchronous functions
 	@see dash.maybe - an actor for chains of partial functions
 ]]
---: <T>(T{}, Actor<T>) -> Chain<T>
+--: type Chainable<S: Subject> = S, ... -> S
+--: type Actor<S: Subject> = (... -> S) -> ... -> S
+--: <S: Subject>(Chainable<S>{}, Actor<S>) -> Chain<S>
 function Functions.chain(fns, actor)
 	if actor == nil then
 		actor = Functions.invoke
@@ -341,7 +343,7 @@ end
 	An actor which calls the supplied _fn_ with the argument tail.
 	@usage This is the default _actor_ for `dash.chain` and acts as an identity, meaning it has no effect on the result.
 ]]
---: <T>(Actor<T>)
+--: <S>(Actor<S>)
 function Functions.invoke(fn, ...)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
 	return fn(...)
@@ -395,7 +397,7 @@ end
 			}
 		}
 ]]
---: <T>(Actor<T>) -> Actor<T>
+--: <S>(Actor<S> -> Actor<S>)
 function Functions.maybe(actor)
 	actor = actor or Functions.invoke
 	assert(Functions.isCallable(actor), "BadInput: actor must be callable")
@@ -464,7 +466,7 @@ end
 	@rejects passthrough
 	@see dash.chain
 ]]
---: <T>(Actor<T>) -> Actor<T>
+--: <S>(Actor<S> -> Actor<S>)
 function Functions.continue(actor)
 	actor = actor or Functions.invoke
 	assert(Functions.isCallable(actor), "BadInput: actor must be callable")
@@ -598,7 +600,7 @@ end
 	Like `delay`, this calls _fn_ after _delayInSeconds_ time has passed, with the added benefit of being cancelable.
 	@returns an instance which `:clear()` can be called on to prevent _fn_ from firing.
 ]]
---: (() -> nil), number -> Clearable
+--: (Clearable -> ()), number -> Clearable
 function Functions.setTimeout(fn, delayInSeconds)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
 	assert(t.number(delayInSeconds), "BadInput: delayInSeconds must be a number")
@@ -625,7 +627,7 @@ end
 	@param delayInSeconds (default = _intervalInSeconds_) The delay before the initial call.
 	@returns an instance which `:clear()` can be called on to prevent _fn_ from firing.
 ]]
---: (() -> nil), number, number? -> Clearable
+--: (Clearable -> ()), number, number? -> Clearable
 function Functions.setInterval(fn, intervalInSeconds, delayInSeconds)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
 	assert(t.number(intervalInSeconds), "BadInput: intervalInSeconds must be a number")
@@ -659,7 +661,7 @@ end
 	@usage A nice [visualisation of debounce vs. throttle](http://demo.nimius.net/debounce_throttle/), 
 		the illustrated point being debounce will only call _fn_ at the end of a spurt of events.
 ]]
---: <A, B>((...A) -> B), number -> Clearable & (...A) -> B
+--: <A, B>(...A -> B), number -> Clearable & (...A -> B)
 function Functions.debounce(fn, delayInSeconds)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
 	assert(type(delayInSeconds) == "number", "BadInput: delayInSeconds must be a number")
