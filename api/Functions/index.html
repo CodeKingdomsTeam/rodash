@@ -748,20 +748,26 @@
 <p>Utility functions and building blocks for functional programming styles.</p>
 <h2 id="functions_1">Functions<a class="headerlink" href="#functions_1" title="Permanent link">&para;</a></h2>
 <h3 id="bind">bind<a class="headerlink" href="#bind" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">bind</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">bind</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="p">...)</span> <span class="c1">--&gt; (...B) -&gt; R</span>
 </pre></div>
 Takes a function <em>fn</em> and binds <em>arguments</em> to the head of the <em>fn</em> argument list.
 Returns a function which executes <em>fn</em>, passing the bound arguments supplied, followed by any
 dynamic arguments.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>A</strong> - <code>any</code></p>
+<p><strong>B</strong> - <code>any</code></p>
+<p><strong>R</strong> - <code>any</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>fn</strong> - <em>string</em> </p>
-<p><strong>undefined</strong> - <em>string</em> 
+<p><strong>fn</strong> - <code>(...A, ...B) -&gt; R</code> </p>
+<p><strong>...</strong> - <code>...A</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>(...B) -&gt; R</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="kr">function</span> <span class="nf">damagePlayer</span><span class="p">(</span> <span class="n">player</span><span class="p">,</span> <span class="n">amount</span> <span class="p">)</span>
@@ -773,19 +779,23 @@ dynamic arguments.</p>
 
 <hr />
 <h3 id="bindtail">bindTail<a class="headerlink" href="#bindtail" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">bindTail</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">bindTail</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="p">...)</span> <span class="c1">--&gt; (S) -&gt; S</span>
 </pre></div>
 Takes a chainable function <em>fn</em> and binds <em>arguments</em> to the tail of the <em>fn</em> argument list.
 Returns a function which executes <em>fn</em>, passing a subject ahead of the bound arguments supplied.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>S</strong> - <code>any</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>fn</strong> - <em>string</em> </p>
-<p><strong>undefined</strong> - <em>string</em> 
+<p><strong>fn</strong> - <code>Chainable&lt;S&gt;</code> </p>
+<p><strong>...</strong> - <code>...any</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>(S) -&gt; S</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">filterHurtPlayers</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">bindTail</span><span class="p">(</span><span class="n">dash</span><span class="p">.</span><span class="n">filter</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
@@ -807,25 +817,31 @@ Returns a function which executes <em>fn</em>, passing a subject ahead of the bo
 </div>
 
 <h3 id="call">call<a class="headerlink" href="#call" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="p">...)</span> <span class="c1">--&gt; R</span>
 </pre></div>
-Calls the supplied <em>fn</em> on the subject and any additional arguments, returing the result.,<T, A, R>(T, (T, ...A -&gt; R), ...A -&gt; R)</p>
+Calls the supplied <em>fn</em> on the subject and any additional arguments, returing the result.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>S</strong> - <code>Subject</code></p>
+<p><strong>A</strong> - <code>any</code></p>
+<p><strong>R</strong> - <code>any</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>subject</strong> - <em>string</em> </p>
-<p><strong>fn</strong> - <em>string</em> </p>
-<p><strong>undefined</strong> - <em>string</em> 
+<p><strong>subject</strong> - <code>S</code> </p>
+<p><strong>fn</strong> - <code>(S, ...A) -&gt; R</code> </p>
+<p><strong>...</strong> - <code>...A</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>R</code></p>
 </blockquote>
 <hr />
 <div class="rodocs-trait">Chainable</div>
 
 <h3 id="chain">chain<a class="headerlink" href="#chain" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">chain</span><span class="p">(</span><span class="n">fns</span><span class="p">,</span> <span class="n">actor</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">chain</span><span class="p">(</span><span class="n">fns</span><span class="p">,</span> <span class="n">actor</span><span class="p">)</span> <span class="c1">--&gt; ...any</span>
 </pre></div>
 Chain takes a dictionary of chainable functions and returns a Chain instance with
 methods mapped to the input functions.</p>
@@ -835,13 +851,13 @@ check the value of the data at each step and change how the chain proceeds.</p>
 <p>Calling a <em>Chain</em> with a subject reduces the chained operations in order on the subject. </p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>fns</strong> - <em>string</em> </p>
-<p><strong>actor</strong> - <em>string</em>  - called for each result in the chain to determine how the next operation should process it. (default = <code>dash.invoke</code>)
+<p><strong>fns</strong> - <code>any</code> </p>
+<p><strong>actor</strong> - <code>any</code>  - called for each result in the chain to determine how the next operation should process it. (default = <code>dash.invoke</code>)
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>...any</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="c1">-- Define a simple chain that can operate a list of numbers.</span>
@@ -913,34 +929,40 @@ first argument, and subsequent arguments</p>
 <p><strong>See</strong></p>
 <ul>
 <li>
-<p><a href="#chainFn">dash.chainFn</a> - Makes a function chainable if it returns a chain.</p>
+<p><a href="/api/Functions/#chainFn">dash.chainFn</a> - Makes a function chainable if it returns a chain.</p>
 </li>
 <li>
-<p><a href="#invoke">dash.invoke</a> - the identity actor</p>
+<p><a href="/api/Functions/#invoke">dash.invoke</a> - the identity actor</p>
 </li>
 <li>
-<p><a href="#continue">dash.continue</a> - an actor for chains of asynchronous functions</p>
+<p><a href="/api/Functions/#continue">dash.continue</a> - an actor for chains of asynchronous functions</p>
 </li>
 <li>
-<p><a href="#maybe">dash.maybe</a> - an actor for chains of partial functions</p>
+<p><a href="/api/Functions/#maybe">dash.maybe</a> - an actor for chains of partial functions</p>
 </li>
 </ul>
 <hr />
 <h3 id="chainfn">chainFn<a class="headerlink" href="#chainfn" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">chainFn</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">chainFn</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span> <span class="c1">--&gt; (T, ...A) -&gt; R</span>
 </pre></div>
 Wraps a function, making it chainable if it returns a chain itself.</p>
 <p>This allows you to define custom functions in terms of the arguments they will take when called
 in a chain, and return a chained function which performs the operation, rather than explicitly
-taking the subject as first argument.,<T, A, R>((...A -&gt; T -&gt; R) -&gt; T, ...A -&gt; R)</p>
+taking the subject as first argument.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>any</code></p>
+<p><strong>A</strong> - <code>any</code></p>
+<p><strong>R</strong> - <code>any</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>fn</strong> - <em>string</em> 
+<p><strong>fn</strong> - <code>(...A) -&gt; (T) -&gt; R</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>(T, ...A) -&gt; R</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="c1">-- In the chain example addN was defined like so:</span>
@@ -973,25 +995,29 @@ taking the subject as first argument.,<T, A, R>((...A -&gt; T -&gt; R) -&gt; T, 
 
 <p><strong>See</strong></p>
 <ul>
-<li><a href="#chain">dash.chain</a> </li>
+<li><a href="/api/Functions/#chain">dash.chain</a> </li>
 </ul>
 <hr />
 <div class="rodocs-trait">Chainable
 </div>
 
 <h3 id="compose">compose<a class="headerlink" href="#compose" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">compose</span><span class="p">()</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">compose</span><span class="p">(...)</span> <span class="c1">--&gt; (...A) -&gt; A</span>
 </pre></div>
 Returns a function that calls the argument functions in left-right order on an input, passing
 the return of the previous function as argument(s) to the next.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>A</strong> - <code>any</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>undefined</strong> - <em>string</em> 
+<p><strong>...</strong> - <code>(...A) -&gt; ...A[]</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>(...A) -&gt; A</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="kr">function</span> <span class="nf">fry</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="kr">return</span> <span class="s2">&quot;fried &quot;</span> <span class="o">..</span> <span class="n">item</span> <span class="kr">end</span>
@@ -1006,21 +1032,25 @@ the return of the previous function as argument(s) to the next.</p>
 </ul>
 <hr />
 <h3 id="continue">continue<a class="headerlink" href="#continue" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">continue</span><span class="p">(</span><span class="n">actor</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">continue</span><span class="p">(</span><span class="n">actor</span><span class="p">)</span> <span class="c1">--&gt; Actor&lt;S&gt;</span>
 </pre></div>
 An actor getter which awaits on any promises returned by chain methods, and continues execution
 when the promise completes.</p>
 <p>This allows any asynchronous methods to be used in chains without modifying any of the chain's
 synchronous methods, removing any boilerplate needed to handle promises in the main code body.</p>
 <p>Can wrap any other actor which handles values after any promise resolution.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>S</strong> - <code>any</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>actor</strong> - <em>string</em>  - (default = <code>dash.invoke</code>) The actor to wrap.
+<p><strong>actor</strong> - <code>Actor&lt;S&gt;</code>  - (default = <code>dash.invoke</code>) The actor to wrap.
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>Actor&lt;S&gt;</code></p>
 </blockquote>
 <p><strong>Rejects</strong></p>
 <ul>
@@ -1073,23 +1103,28 @@ synchronous methods, removing any boilerplate needed to handle promises in the m
 
 <p><strong>See</strong></p>
 <ul>
-<li><a href="#chain">dash.chain</a> </li>
+<li><a href="/api/Functions/#chain">dash.chain</a> </li>
 </ul>
 <hr />
 <h3 id="debounce">debounce<a class="headerlink" href="#debounce" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">debounce</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">delayInSeconds</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">debounce</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">delayInSeconds</span><span class="p">)</span> <span class="c1">--&gt; Clearable &amp; (...A) -&gt; B</span>
 </pre></div>
 Creates a debounced function that delays calling <em>fn</em> until after <em>delayInSeconds</em> seconds have
 elapsed since the last time the debounced function was attempted to be called.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>A</strong> - <code>any</code></p>
+<p><strong>B</strong> - <code>any</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>fn</strong> - <em>string</em> </p>
-<p><strong>delayInSeconds</strong> - <em>string</em> 
+<p><strong>fn</strong> - <code>(...A) -&gt; B</code> </p>
+<p><strong>delayInSeconds</strong> - <code>number</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em> - the debounced function with method <code>:clear()</code> can be called on to cancel any scheduled call.</p>
+<p><code>Clearable &amp; (...A) -&gt; B</code> - the debounced function with method <code>:clear()</code> can be called on to cancel any scheduled call.</p>
 </blockquote>
 <p><strong>Usage</strong></p>
 <ul>
@@ -1100,17 +1135,21 @@ the illustrated point being debounce will only call <em>fn</em> at the end of a 
 <div class="rodocs-trait">Chainable</div>
 
 <h3 id="id">id<a class="headerlink" href="#id" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">id</span><span class="p">()</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">id</span><span class="p">(...)</span> <span class="c1">--&gt; ...A</span>
 </pre></div>
 A simple function that does nothing, but returns its input parameters.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>A</strong> - <code>any</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>undefined</strong> - <em>string</em> 
+<p><strong>...</strong> - <code>...A</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>...A</code></p>
 </blockquote>
 <p><strong>Usage</strong></p>
 <ul>
@@ -1118,18 +1157,22 @@ A simple function that does nothing, but returns its input parameters.</p>
 </ul>
 <hr />
 <h3 id="invoke">invoke<a class="headerlink" href="#invoke" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">invoke</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">invoke</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="p">...)</span> <span class="c1">--&gt; ...any</span>
 </pre></div>
 An actor which calls the supplied <em>fn</em> with the argument tail.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>S</strong> - <code>any</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>fn</strong> - <em>string</em> </p>
-<p><strong>undefined</strong> - <em>string</em> 
+<p><strong>fn</strong> - <code>any</code> </p>
+<p><strong>...</strong> - <code>any</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>...any</code></p>
 </blockquote>
 <p><strong>Usage</strong></p>
 <ul>
@@ -1137,17 +1180,17 @@ An actor which calls the supplied <em>fn</em> with the argument tail.</p>
 </ul>
 <hr />
 <h3 id="iscallable">isCallable<a class="headerlink" href="#iscallable" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">isCallable</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">isCallable</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="c1">--&gt; bool</span>
 </pre></div>
 Return <code>true</code> if the <em>value</em> is a function or a table with a <code>__call</code> entry in its metatable.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>value</strong> - <em>string</em> 
+<p><strong>value</strong> - <code>any</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>bool</code></p>
 </blockquote>
 <p><strong>Usage</strong></p>
 <ul>
@@ -1155,18 +1198,22 @@ Return <code>true</code> if the <em>value</em> is a function or a table with a <
 </ul>
 <hr />
 <h3 id="maybe">maybe<a class="headerlink" href="#maybe" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">maybe</span><span class="p">(</span><span class="n">actor</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">maybe</span><span class="p">(</span><span class="n">actor</span><span class="p">)</span> <span class="c1">--&gt; Actor&lt;S&gt;</span>
 </pre></div>
 An actor which cancels execution of a chain if a method returns nil, evaluating the chain as nil.</p>
 <p>Can wrap any other actor which handles values that are non-nil.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>S</strong> - <code>any</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>actor</strong> - <em>string</em> 
+<p><strong>actor</strong> - <code>Actor&lt;S&gt;</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>Actor&lt;S&gt;</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="c1">-- We can define a chain of Rodash functions that will skip after a nil is returned.</span>
@@ -1215,21 +1262,26 @@ An actor which cancels execution of a chain if a method returns nil, evaluating 
 
 <hr />
 <h3 id="memoize">memoize<a class="headerlink" href="#memoize" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">memoize</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">serializeArgs</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">memoize</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">serializeArgs</span><span class="p">)</span> <span class="c1">--&gt; (Clearable&lt;...A&gt; &amp; AllClearable &amp; ...A) -&gt; B</span>
 </pre></div>
 Like <code>dash.once</code>, but caches non-nil results of calls to <em>fn</em> keyed by some serialization of the
 input arguments to <em>fn</em>. By default, all the args are serialized simply using <code>tostring</code>.</p>
 <p>Optionally memoize takes <code>function serializeArgs(args, cache)</code>, a function that should return a string key which a
 result should be cached at for a given signature. Return nil to avoid caching the result.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>A</strong> - <code>any</code></p>
+<p><strong>B</strong> - <code>any</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>fn</strong> - <em>string</em> </p>
-<p><strong>serializeArgs</strong> - <em>string</em>  - (default = <code>dash.serialize</code>)
+<p><strong>fn</strong> - <code>((...A) -&gt; B, ...A) -&gt; string?</code> </p>
+<p><strong>serializeArgs</strong> - <code>any</code>  - (default = <code>dash.serialize</code>)
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em> - the function with method <code>:clear(...)</code> that resets the cache for the argument specified, or <code>:clearAll()</code> to clear the entire cache.</p>
+<p><code>(Clearable&lt;...A&gt; &amp; AllClearable &amp; ...A) -&gt; B</code> - the function with method <code>:clear(...)</code> that resets the cache for the argument specified, or <code>:clearAll()</code> to clear the entire cache.</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">menu</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;soup&quot;</span><span class="p">,</span> <span class="s2">&quot;bread&quot;</span><span class="p">,</span> <span class="s2">&quot;butter&quot;</span><span class="p">}</span>
@@ -1254,20 +1306,20 @@ result should be cached at for a given signature. Return nil to avoid caching th
 <p><strong>See</strong></p>
 <ul>
 <li>
-<p><a href="#serialize">dash.serialize</a> </p>
+<p><a href="/api/Tables/#serialize">dash.serialize</a> </p>
 </li>
 <li>
-<p><a href="#serializeDeep">dash.serializeDeep</a> if you want to recursively serialize arguments.</p>
+<p><a href="/api/Tables/#serializeDeep">dash.serializeDeep</a> if you want to recursively serialize arguments.</p>
 </li>
 </ul>
 <hr />
 <h3 id="noop">noop<a class="headerlink" href="#noop" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">noop</span><span class="p">()</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">noop</span><span class="p">()</span> <span class="c1">--&gt; void</span>
 </pre></div>
 A simple function that does nothing, and returns nil.</p>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>void</code></p>
 </blockquote>
 <p><strong>Usage</strong></p>
 <ul>
@@ -1277,18 +1329,23 @@ A simple function that does nothing, and returns nil.</p>
 <div class="rodocs-trait">Chainable</div>
 
 <h3 id="once">once<a class="headerlink" href="#once" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">once</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">once</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span> <span class="c1">--&gt; (Clearable &amp; void) -&gt; B</span>
 </pre></div>
 Returns a function that when called, only calls <em>fn</em> the first time the function is called.
 For subsequent calls, the initial return of <em>fn</em> is returned, even if it is <code>nil</code>.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>A</strong> - <code>any</code></p>
+<p><strong>B</strong> - <code>any</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>fn</strong> - <em>string</em> 
+<p><strong>fn</strong> - <code>(...A) -&gt; B</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em> - the function with method <code>:clear()</code> that resets the cached value.</p>
+<p><code>(Clearable &amp; void) -&gt; B</code> - the function with method <code>:clear()</code> that resets the cached value.</p>
 </blockquote>
 <p><strong>Throws</strong></p>
 <ul>
@@ -1313,17 +1370,21 @@ For subsequent calls, the initial return of <em>fn</em> is returned, even if it 
 <div class="rodocs-trait">Chainable</div>
 
 <h3 id="returns">returns<a class="headerlink" href="#returns" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">returns</span><span class="p">()</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">returns</span><span class="p">(...)</span> <span class="c1">--&gt; (void) -&gt; ...A</span>
 </pre></div>
 Returns a function that when called, returns the original input parameters.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>A</strong> - <code>any</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>undefined</strong> - <em>string</em> 
+<p><strong>...</strong> - <code>...A</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>(void) -&gt; ...A</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">findPlayer</span><span class="p">(</span><span class="s2">&quot;builderman&quot;</span><span class="p">):</span><span class="n">andThen</span><span class="p">(</span><span class="n">dash</span><span class="p">.</span><span class="n">returns</span><span class="p">(</span><span class="s2">&quot;Found Dave!&quot;</span><span class="p">))</span>
@@ -1336,50 +1397,55 @@ Returns a function that when called, returns the original input parameters.</p>
 </ul>
 <hr />
 <h3 id="setinterval">setInterval<a class="headerlink" href="#setinterval" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">setInterval</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">intervalInSeconds</span><span class="p">,</span> <span class="n">delayInSeconds</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">setInterval</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">intervalInSeconds</span><span class="p">,</span> <span class="n">delayInSeconds</span><span class="p">)</span> <span class="c1">--&gt; Clearable</span>
 </pre></div>
 Like <code>dash.setTimeout</code> but calls <em>fn</em> after every interval of <em>intervalInSeconds</em> time has passed.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>fn</strong> - <em>string</em> </p>
-<p><strong>intervalInSeconds</strong> - <em>string</em> </p>
-<p><strong>delayInSeconds</strong> - <em>string</em>  - (default = <em>intervalInSeconds</em>) The delay before the initial call.
+<p><strong>fn</strong> - <code>(Clearable) -&gt; void</code> </p>
+<p><strong>intervalInSeconds</strong> - <code>number</code> </p>
+<p><strong>delayInSeconds</strong> - <code>number?</code>  - (default = <em>intervalInSeconds</em>) The delay before the initial call.
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em> - an instance which <code>:clear()</code> can be called on to prevent <em>fn</em> from firing.</p>
+<p><code>Clearable</code> - an instance which <code>:clear()</code> can be called on to prevent <em>fn</em> from firing.</p>
 </blockquote>
 <hr />
 <h3 id="settimeout">setTimeout<a class="headerlink" href="#settimeout" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">setTimeout</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">delayInSeconds</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">setTimeout</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">delayInSeconds</span><span class="p">)</span> <span class="c1">--&gt; Clearable</span>
 </pre></div>
 Like <code>delay</code>, this calls <em>fn</em> after <em>delayInSeconds</em> time has passed, with the added benefit of being cancelable.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>fn</strong> - <em>string</em> </p>
-<p><strong>delayInSeconds</strong> - <em>string</em> 
+<p><strong>fn</strong> - <code>(Clearable) -&gt; void</code> </p>
+<p><strong>delayInSeconds</strong> - <code>number</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em> - an instance which <code>:clear()</code> can be called on to prevent <em>fn</em> from firing.</p>
+<p><code>Clearable</code> - an instance which <code>:clear()</code> can be called on to prevent <em>fn</em> from firing.</p>
 </blockquote>
 <hr />
 <h3 id="throttle">throttle<a class="headerlink" href="#throttle" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">throttle</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">cooldownInSeconds</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">throttle</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">cooldownInSeconds</span><span class="p">)</span> <span class="c1">--&gt; (...A) -&gt; B</span>
 </pre></div>
 Creates a throttle function that drops any repeat calls within a cooldown period and instead
 returns the result of the last call.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>A</strong> - <code>any</code></p>
+<p><strong>B</strong> - <code>any</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>fn</strong> - <em>string</em> </p>
-<p><strong>cooldownInSeconds</strong> - <em>string</em> 
+<p><strong>fn</strong> - <code>(...A) -&gt; B</code> </p>
+<p><strong>cooldownInSeconds</strong> - <code>number</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>(...A) -&gt; B</code></p>
 </blockquote>
 <p><strong>Usage</strong></p>
 <ul>
@@ -1388,17 +1454,17 @@ the illustrated point being throttle will call <em>fn</em> every period during a
 </ul>
 <hr />
 <h3 id="throws">throws<a class="headerlink" href="#throws" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">throws</span><span class="p">(</span><span class="n">errorMessage</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">throws</span><span class="p">(</span><span class="n">errorMessage</span><span class="p">)</span> <span class="c1">--&gt; (void) -&gt; fail</span>
 </pre></div>
 Returns a function that when called, throws the original message.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>errorMessage</strong> - <em>string</em> 
+<p><strong>errorMessage</strong> - <code>string</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>(void) -&gt; fail</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">findPlayer</span><span class="p">(</span><span class="s2">&quot;builderman&quot;</span><span class="p">):</span><span class="n">andThen</span><span class="p">(</span><span class="n">dash</span><span class="p">.</span><span class="n">throws</span><span class="p">(</span><span class="s2">&quot;DaveNotFound&quot;</span><span class="p">))</span>
@@ -1411,17 +1477,22 @@ Returns a function that when called, throws the original message.</p>
 </ul>
 <hr />
 <h3 id="unary">unary<a class="headerlink" href="#unary" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">unary</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">unary</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span> <span class="c1">--&gt; (A) -&gt; B</span>
 </pre></div>
 Returns a function that wraps the input <em>fn</em> but only passes the first argument to it.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>A</strong> - <code>any</code></p>
+<p><strong>B</strong> - <code>any</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>fn</strong> - <em>string</em> 
+<p><strong>fn</strong> - <code>(A) -&gt; B</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>(A) -&gt; B</code></p>
 </blockquote>
                 
                   

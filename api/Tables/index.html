@@ -415,15 +415,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#defaultserializer" title="defaultSerializer" class="md-nav__link">
-    defaultSerializer
+  <a href="#defaults" title="defaults" class="md-nav__link">
+    defaults
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#defaults" title="defaults" class="md-nav__link">
-    defaults
+  <a href="#defaultserializer" title="defaultSerializer" class="md-nav__link">
+    defaultSerializer
   </a>
   
 </li>
@@ -735,15 +735,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#defaultserializer" title="defaultSerializer" class="md-nav__link">
-    defaultSerializer
+  <a href="#defaults" title="defaults" class="md-nav__link">
+    defaults
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#defaults" title="defaults" class="md-nav__link">
-    defaults
+  <a href="#defaultserializer" title="defaultSerializer" class="md-nav__link">
+    defaultSerializer
   </a>
   
 </li>
@@ -976,19 +976,23 @@ dictionaries and any collection types implemented with tables.</p>
 Note that mutable arguments in Rodash are explicitly typed as such.</p>
 <h2 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h2>
 <h3 id="all">all<a class="headerlink" href="#all" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">all</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">all</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span> <span class="c1">--&gt; bool</span>
 </pre></div>
 Return <code>true</code> if <em>handler</em> returns true for every element in <em>source</em> it is called with.</p>
 <p>If no handler is provided, <code>dash.all</code> returns true if every element is non-nil.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <em>string</em> </p>
-<p><strong>handler</strong> - <em>string</em>  - (default = <code>dash.id</code>)
+<p><strong>source</strong> - <code>T</code> </p>
+<p><strong>handler</strong> - <code>(value: V, key: K) -&gt; bool?</code>  - (default = <code>dash.id</code>)
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>bool</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">names</span> <span class="o">=</span> <span class="p">{</span>
@@ -1004,19 +1008,23 @@ Return <code>true</code> if <em>handler</em> returns true for every element in <
 
 <hr />
 <h3 id="any">any<a class="headerlink" href="#any" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">any</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">any</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span> <span class="c1">--&gt; bool</span>
 </pre></div>
 Return <code>true</code> if <em>handler</em> returns true for at least one element in <em>source</em> it is called with.</p>
 <p>If no handler is provided, <code>dash.any</code> returns true if some element is non-nil.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <em>string</em> </p>
-<p><strong>handler</strong> - <em>string</em>  - (default = <code>dash.id</code>)
+<p><strong>source</strong> - <code>T</code> </p>
+<p><strong>handler</strong> - <code>any</code>  - (default = <code>dash.id</code>)
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>bool</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">names</span> <span class="o">=</span> <span class="p">{</span>
@@ -1032,19 +1040,23 @@ Return <code>true</code> if <em>handler</em> returns true for at least one eleme
 
 <hr />
 <h3 id="assign">assign<a class="headerlink" href="#assign" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">assign</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">assign</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="p">...)</span> <span class="c1">--&gt; T</span>
 </pre></div>
 Adds new elements in <em>target</em> from subsequent table arguments in order, with elements in later
 tables replacing earlier ones if their keys match.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>target</strong> - <em>string</em> </p>
-<p><strong>undefined</strong> - <em>string</em> 
+<p><strong>target</strong> - <code>mut T</code> </p>
+<p><strong>...</strong> - <code>...T</code>  - any number of other tables
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>T</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">someInfo</span> <span class="o">=</span> <span class="p">{</span>
@@ -1089,25 +1101,29 @@ tables replacing earlier ones if their keys match.</p>
 <p><strong>See</strong></p>
 <ul>
 <li>
-<p><a href="#defaults">dash.defaults</a> </p>
+<p><a href="/api/Tables/#defaults">dash.defaults</a> </p>
 </li>
 <li>
-<p><a href="#merge">dash.merge</a> </p>
+<p><a href="/api/Tables/#merge">dash.merge</a> </p>
 </li>
 </ul>
 <hr />
 <h3 id="clone">clone<a class="headerlink" href="#clone" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">clone</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">clone</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; T</span>
 </pre></div>
 Returns a shallow copy of <em>source</em>.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <em>string</em> 
+<p><strong>source</strong> - <code>T</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>T</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">Hermione</span> <span class="o">=</span> <span class="p">{</span>
@@ -1122,31 +1138,35 @@ Returns a shallow copy of <em>source</em>.</p>
 <p><strong>See</strong></p>
 <ul>
 <li>
-<p><a href="#cloneDeep">dash.cloneDeep</a> - if you also want to clone descendants of the table, though this can be costly.</p>
+<p><a href="/api/Tables/#cloneDeep">dash.cloneDeep</a> - if you also want to clone descendants of the table, though this can be costly.</p>
 </li>
 <li>
-<p><a href="#dash.map"><code>dash.map</code></a> - if you want to return different values for each key.</p>
+<p><a href="/api/Tables/#map">dash.map</a> - if you want to return different values for each key.</p>
 </li>
 <li>
-<p><a href="#Cloneable">dash.Cloneable</a> - use this to derive a default <code>:clone()</code> method for class instances.</p>
+<p><a href="/api/Classes/#Cloneable">dash.Cloneable</a> - use this to derive a default <code>:clone()</code> method for class instances.</p>
 </li>
 </ul>
 <hr />
 <h3 id="clonedeep">cloneDeep<a class="headerlink" href="#clonedeep" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">cloneDeep</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">cloneDeep</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; T</span>
 </pre></div>
 Recursively clones descendants of <em>source</em>, returning the cloned object. If references to the
 same table are found, the same clone is used in the result. This means that <code>dash.cloneDeep</code> is
 cycle-safe.</p>
 <p>Elements which are not tables are not modified.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <em>string</em> 
+<p><strong>source</strong> - <code>T</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>T</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">Harry</span> <span class="o">=</span> <span class="p">{</span>
@@ -1166,22 +1186,26 @@ cycle-safe.</p>
 
 <p><strong>See</strong></p>
 <ul>
-<li><a href="#clone">dash.clone</a> - if you simply want to perform a shallow clone.</li>
+<li><a href="/api/Tables/#clone">dash.clone</a> - if you simply want to perform a shallow clone.</li>
 </ul>
 <hr />
 <h3 id="compact">compact<a class="headerlink" href="#compact" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">compact</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">compact</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; V[]</span>
 </pre></div>
 Returns an array of elements from a sparse array <em>source</em> with the returned elements provided
 in original key-order.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <em>string</em> 
+<p><strong>source</strong> - <code>T</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>V[]</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">names</span> <span class="o">=</span> <span class="p">{</span>
@@ -1195,7 +1219,7 @@ in original key-order.</p>
 
 <hr />
 <h3 id="deepequal">deepEqual<a class="headerlink" href="#deepequal" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">deepEqual</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">deepEqual</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="c1">--&gt; bool</span>
 </pre></div>
 Returns <code>true</code> if every element in <em>a</em> recursively matches every element <em>b</em>.</p>
 <ul>
@@ -1204,13 +1228,13 @@ Returns <code>true</code> if every element in <em>a</em> recursively matches eve
 </ul>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>a</strong> - <em>string</em> </p>
-<p><strong>b</strong> - <em>string</em> 
+<p><strong>a</strong> - <code>any</code> </p>
+<p><strong>b</strong> - <code>any</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>bool</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">car</span> <span class="o">=</span> <span class="p">{</span>
@@ -1239,41 +1263,31 @@ Returns <code>true</code> if every element in <em>a</em> recursively matches eve
 <p><strong>See</strong></p>
 <ul>
 <li>
-<p><a href="#isSubset">dash.isSubset</a> </p>
+<p><a href="/api/Tables/#isSubset">dash.isSubset</a> </p>
 </li>
 <li>
-<p><a href="#shallowEqual">dash.shallowEqual</a> </p>
+<p><a href="/api/Tables/#shallowEqual">dash.shallowEqual</a> </p>
 </li>
 </ul>
 <hr />
-<h3 id="defaultserializer">defaultSerializer<a class="headerlink" href="#defaultserializer" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">defaultSerializer</span><span class="p">(</span><span class="n">input</span><span class="p">)</span> <span class="c1">--&gt; string</span>
-</pre></div>
-A function which provides a simple, shallow string representation of a value.</p>
-<p><strong>Parameters</strong></p>
-<blockquote>
-<p><strong>input</strong> - <em>string</em> 
-</p>
-</blockquote>
-<p><strong>Returns</strong></p>
-<blockquote>
-<p><em>string</em></p>
-</blockquote>
-<hr />
 <h3 id="defaults">defaults<a class="headerlink" href="#defaults" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">defaults</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">defaults</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="p">...)</span> <span class="c1">--&gt; T</span>
 </pre></div>
 Adds new elements in <em>target</em> from subsequent table arguments in order, with elements in
 earlier tables replacing earlier ones if their keys match.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>target</strong> - <em>string</em> </p>
-<p><strong>undefined</strong> - <em>string</em> 
+<p><strong>target</strong> - <code>mut T</code> </p>
+<p><strong>...</strong> - <code>...T</code>  - any number of other tables
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>T</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">someInfo</span> <span class="o">=</span> <span class="p">{</span>
@@ -1318,26 +1332,44 @@ earlier tables replacing earlier ones if their keys match.</p>
 <p><strong>See</strong></p>
 <ul>
 <li>
-<p><a href="#assign">dash.assign</a> </p>
+<p><a href="/api/Tables/#assign">dash.assign</a> </p>
 </li>
 <li>
-<p><a href="#merge">dash.merge</a> </p>
+<p><a href="/api/Tables/#merge">dash.merge</a> </p>
 </li>
 </ul>
 <hr />
-<h3 id="entries">entries<a class="headerlink" href="#entries" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">entries</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<h3 id="defaultserializer">defaultSerializer<a class="headerlink" href="#defaultserializer" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">defaultSerializer</span><span class="p">(</span><span class="n">input</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-Returns an array of all the entries of elements in <em>source</em>.</p>
-<p>Each entry is a tuple <code>(key, value)</code>.</p>
+A function which provides a simple, shallow string representation of a value.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <em>string</em> 
+<p><strong>input</strong> - <code>any</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>string</code></p>
+</blockquote>
+<hr />
+<h3 id="entries">entries<a class="headerlink" href="#entries" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">entries</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; {K, V}[]</span>
+</pre></div>
+Returns an array of all the entries of elements in <em>source</em>.</p>
+<p>Each entry is a tuple <code>(key, value)</code>.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+</blockquote>
+<p><strong>Parameters</strong></p>
+<blockquote>
+<p><strong>source</strong> - <code>T</code> 
+</p>
+</blockquote>
+<p><strong>Returns</strong></p>
+<blockquote>
+<p><code>{K, V}[]</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">values</span><span class="p">({</span>
@@ -1349,19 +1381,23 @@ Returns an array of all the entries of elements in <em>source</em>.</p>
 
 <hr />
 <h3 id="filter">filter<a class="headerlink" href="#filter" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">filter</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">filter</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span> <span class="c1">--&gt; V[]</span>
 </pre></div>
 Returns an array of any values in <em>source</em> that the <em>handler</em> function returned <code>true</code> for,
 in order of iteration.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <em>string</em> </p>
-<p><strong>handler</strong> - <em>string</em> 
+<p><strong>source</strong> - <code>T</code> </p>
+<p><strong>handler</strong> - <code>(element: V, key: K) -&gt; bool</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>V[]</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">myTools</span> <span class="o">=</span> <span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">.</span><span class="n">LocalPlayer</span><span class="p">.</span><span class="n">Backpack</span><span class="p">:</span><span class="n">GetChildren</span><span class="p">()</span>
@@ -1373,23 +1409,27 @@ in order of iteration.</p>
 
 <p><strong>See</strong></p>
 <ul>
-<li><a href="#map">dash.map</a> if you would like to remove elements but preserve table keys</li>
+<li><a href="/api/Tables/#map">dash.map</a> if you would like to remove elements but preserve table keys</li>
 </ul>
 <hr />
 <h3 id="find">find<a class="headerlink" href="#find" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span> <span class="c1">--&gt; V?</span>
 </pre></div>
 Picks a value from the table that <em>handler</em> returns <code>true</code> for.</p>
 <p>As tables do not have ordered keys, do not rely on returning any particular value.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <em>string</em> </p>
-<p><strong>handler</strong> - <em>string</em> 
+<p><strong>source</strong> - <code>(T, element: V, key: K) -&gt; bool</code> </p>
+<p><strong>handler</strong> - <code>any</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>V?</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">names</span> <span class="o">=</span> <span class="p">{</span>
@@ -1417,25 +1457,30 @@ Picks a value from the table that <em>handler</em> returns <code>true</code> for
 </ul>
 <p><strong>See</strong></p>
 <ul>
-<li><a href="#first">dash.first</a> </li>
+<li><a href="/api/Arrays/#first">dash.first</a> </li>
 </ul>
 <hr />
 <h3 id="flatmap">flatMap<a class="headerlink" href="#flatmap" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">flatMap</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">flatMap</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span> <span class="c1">--&gt; U[]</span>
 </pre></div>
 Like <code>dash.mapValues</code> but <em>handler</em> must return an array. These elements are then insterted into
 the the resulting array returned.</p>
 <p>You can return an empty array <code>{}</code> from handler to avoid inserting anything for a particular
 element.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+<p><strong>U</strong> - <code>any</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <em>string</em> </p>
-<p><strong>handler</strong> - <em>string</em> 
+<p><strong>source</strong> - <code>(T, element: V, key: K) -&gt; U[]</code> </p>
+<p><strong>handler</strong> - <code>any</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>U[]</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">tools</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">flatMap</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">:</span><span class="n">GetChildren</span><span class="p">(),</span> <span class="kr">function</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
@@ -1449,18 +1494,22 @@ element.</p>
 </div>
 
 <h3 id="get">get<a class="headerlink" href="#get" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="p">...)</span> <span class="c1">--&gt; V?</span>
 </pre></div>
 Get a child or descendant of a table, returning nil if any errors are generated.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>{[K]: V}</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <em>string</em> </p>
-<p><strong>undefined</strong> - <em>string</em> 
+<p><strong>source</strong> - <code>T</code> </p>
+<p><strong>...</strong> - <code>...K</code>  - Further keys to address any descendent.
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>V?</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">upperTorso</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">,</span> <span class="s2">&quot;LocalPlayer&quot;</span><span class="p">,</span> <span class="s2">&quot;Character&quot;</span><span class="p">,</span> <span class="s2">&quot;UpperTorso&quot;</span><span class="p">)</span>
@@ -1474,20 +1523,25 @@ Get a child or descendant of a table, returning nil if any errors are generated.
 
 <hr />
 <h3 id="groupby">groupBy<a class="headerlink" href="#groupby" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">groupBy</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">groupBy</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span> <span class="c1">--&gt; Iterable&lt;K2, Iterable&lt;K, V&gt;&gt;</span>
 </pre></div>
 Like <code>dash.map</code>, but the return of the <em>handler</em> is used to transform the key of each element,
 while the value is preserved.</p>
 <p>If the <em>handler</em> returns nil, the element is dropped from the result.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+<p><strong>K2</strong> - <code>any</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <em>string</em> </p>
-<p><strong>handler</strong> - <em>string</em> 
+<p><strong>source</strong> - <code>(value: T, key: K) -&gt; K2</code> </p>
+<p><strong>handler</strong> - <code>any</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>Iterable&lt;K2, Iterable&lt;K, V&gt;&gt;</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">playerSet</span> <span class="o">=</span> <span class="p">{</span><span class="n">Frodo</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span> <span class="n">Bilbo</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span> <span class="n">Boromir</span> <span class="o">=</span> <span class="kc">true</span><span class="p">}</span>
@@ -1499,18 +1553,22 @@ while the value is preserved.</p>
 
 <hr />
 <h3 id="includes">includes<a class="headerlink" href="#includes" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">includes</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">includes</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span> <span class="c1">--&gt; bool</span>
 </pre></div>
 Returns <code>true</code> if <em>item</em> exists as a value in the <em>source</em> table.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <em>string</em> </p>
-<p><strong>item</strong> - <em>string</em> 
+<p><strong>source</strong> - <code>T</code> </p>
+<p><strong>item</strong> - <code>V</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>bool</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">names</span> <span class="o">=</span> <span class="p">{</span>
@@ -1524,17 +1582,22 @@ Returns <code>true</code> if <em>item</em> exists as a value in the <em>source</
 
 <hr />
 <h3 id="invert">invert<a class="headerlink" href="#invert" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">invert</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">invert</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; Iterable&lt;V, K&gt;</span>
 </pre></div>
 Returns a table with elements from <em>source</em> with their keys and values flipped.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>K</strong> - <code>any</code></p>
+<p><strong>V</strong> - <code>any</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <em>string</em> 
+<p><strong>source</strong> - <code>Iterable&lt;K, V&gt;</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>Iterable&lt;V, K&gt;</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">teams</span> <span class="o">=</span> <span class="p">{</span><span class="n">red</span> <span class="o">=</span> <span class="s2">&quot;Frodo&quot;</span><span class="p">,</span> <span class="n">blue</span> <span class="o">=</span> <span class="s2">&quot;Bilbo&quot;</span><span class="p">,</span> <span class="n">yellow</span> <span class="o">=</span> <span class="s2">&quot;Boromir&quot;</span><span class="p">}</span>
@@ -1544,17 +1607,21 @@ Returns a table with elements from <em>source</em> with their keys and values fl
 
 <hr />
 <h3 id="isarray">isArray<a class="headerlink" href="#isarray" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">isArray</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">isArray</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; bool</span>
 </pre></div>
 Returns <code>true</code> is <em>source</em> is made up only of natural keys <code>1..n</code>.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <em>string</em> 
+<p><strong>source</strong> - <code>T</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>bool</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">isArray</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">})</span> <span class="c1">--&gt; true</span>
@@ -1566,17 +1633,21 @@ Returns <code>true</code> is <em>source</em> is made up only of natural keys <co
 
 <hr />
 <h3 id="isempty">isEmpty<a class="headerlink" href="#isempty" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">isEmpty</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">isEmpty</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; bool</span>
 </pre></div>
 Returns <code>true</code> if <em>source</em> has no keys.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <em>string</em> 
+<p><strong>source</strong> - <code>T</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>bool</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">isEmpty</span><span class="p">({})</span> <span class="c1">--&gt; true</span>
@@ -1586,23 +1657,26 @@ Returns <code>true</code> if <em>source</em> has no keys.</p>
 
 <hr />
 <h3 id="issubset">isSubset<a class="headerlink" href="#issubset" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">isSubset</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">isSubset</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="c1">--&gt; bool</span>
 </pre></div>
 Returns <code>true</code> if all the values in <em>a</em> match corresponding values in <em>b</em> recursively.</p>
 <ul>
 <li>For elements which are not tables, they match if they are equal.</li>
-<li>If they are tables they match if the right is a subset of the left.
-,<T>(T{}, T{}) -&gt; bool</li>
+<li>If they are tables they match if the right is a subset of the left.</li>
 </ul>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>any</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>a</strong> - <em>string</em> </p>
-<p><strong>b</strong> - <em>string</em> 
+<p><strong>a</strong> - <code>T{}</code> </p>
+<p><strong>b</strong> - <code>T{}</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>bool</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">car</span> <span class="o">=</span> <span class="p">{</span>
@@ -1622,38 +1696,47 @@ Returns <code>true</code> if all the values in <em>a</em> match corresponding va
 
 <hr />
 <h3 id="iterator">iterator<a class="headerlink" href="#iterator" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">iterator</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">asArray</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">iterator</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">asArray</span><span class="p">)</span> <span class="c1">--&gt; Iterator&lt;T&gt;</span>
 </pre></div>
 Determines a suitable iterator to use for <em>source</em>, allowing <em>source</em> to be either a plain
 table, a table that has a metatable with an <code>iterable</code> key, or a function.</p>
 <p>By default, the iterator is unordered, but passing <em>asArray</em> as true uses <code>ipairs</code> to iterate
 through natural keys <em>1..n</em> in order.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>Iterable</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <em>string</em> </p>
-<p><strong>asArray</strong> - <em>string</em> 
+<p><strong>source</strong> - <code>T</code> </p>
+<p><strong>asArray</strong> - <code>bool</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>Iterator&lt;T&gt;</code></p>
 </blockquote>
 <hr />
 <h3 id="keyby">keyBy<a class="headerlink" href="#keyby" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">keyBy</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">keyBy</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span> <span class="c1">--&gt; Iterable&lt;K2, V&gt;</span>
 </pre></div>
 Like <code>dash.map</code>, but the return of the <em>handler</em> is used to transform the key of each element,
 while the value is preserved.</p>
 <p>If the <em>handler</em> returns nil, the element is dropped from the result.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+<p><strong>K2</strong> - <code>any</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <em>string</em> </p>
-<p><strong>handler</strong> - <em>string</em> 
+<p><strong>source</strong> - <code>(T, element: V, key: K) -&gt; K2</code> </p>
+<p><strong>handler</strong> - <code>any</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>Iterable&lt;K2, V&gt;</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">playerSet</span> <span class="o">=</span> <span class="p">{</span><span class="n">Frodo</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span> <span class="n">Bilbo</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span> <span class="n">Boromir</span> <span class="o">=</span> <span class="kc">true</span><span class="p">}</span>
@@ -1665,17 +1748,21 @@ while the value is preserved.</p>
 
 <hr />
 <h3 id="keys">keys<a class="headerlink" href="#keys" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">keys</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">keys</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; K[]</span>
 </pre></div>
 Returns an array of all the keys of the elements in <em>source</em>.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <em>string</em> 
+<p><strong>source</strong> - <code>T</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>K[]</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">values</span><span class="p">({</span>
@@ -1687,17 +1774,21 @@ Returns an array of all the keys of the elements in <em>source</em>.</p>
 
 <hr />
 <h3 id="len">len<a class="headerlink" href="#len" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">len</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">len</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; int</span>
 </pre></div>
 Returns the number of elements in <em>source</em>.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <em>string</em> 
+<p><strong>source</strong> - <code>T</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>int</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">names</span> <span class="o">=</span> <span class="p">{</span>
@@ -1710,19 +1801,24 @@ Returns the number of elements in <em>source</em>.</p>
 
 <hr />
 <h3 id="map">map<a class="headerlink" href="#map" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">map</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">map</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span> <span class="c1">--&gt; Iterable&lt;K, V2&gt;</span>
 </pre></div>
 Return new table from <em>source</em> with each value at the same key, but replaced by the return from
 the <em>handler</em> function called for each value and key in the table.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+<p><strong>V2</strong> - <code>any</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <em>string</em> </p>
-<p><strong>handler</strong> - <em>string</em> 
+<p><strong>source</strong> - <code>(T, element: V, key: K) -&gt; V2</code> </p>
+<p><strong>handler</strong> - <code>any</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>Iterable&lt;K, V2&gt;</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="c1">-- Use map to get the same property of each value:</span>
@@ -1752,23 +1848,28 @@ the <em>handler</em> function called for each value and key in the table.</p>
 
 <p><strong>See</strong></p>
 <ul>
-<li><a href="#filter">filter</a> if you want to </li>
+<li><a href="filter">filter</a> if you want to </li>
 </ul>
 <hr />
 <h3 id="mapvalues">mapValues<a class="headerlink" href="#mapvalues" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">mapValues</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">mapValues</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span> <span class="c1">--&gt; V2[]</span>
 </pre></div>
 Like <code>dash.map</code>, but returns an array of the transformed values in the order that they are
 iterated over, dropping the original keys.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+<p><strong>V2</strong> - <code>any</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <em>string</em> </p>
-<p><strong>handler</strong> - <em>string</em> 
+<p><strong>source</strong> - <code>(T, element: V, key: K) -&gt; V2</code> </p>
+<p><strong>handler</strong> - <code>any</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>V2[]</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">ingredients</span> <span class="o">=</span> <span class="p">{</span><span class="n">veg</span> <span class="o">=</span> <span class="s2">&quot;carrot&quot;</span><span class="p">,</span> <span class="n">sauce</span> <span class="o">=</span> <span class="s2">&quot;tomato&quot;</span><span class="p">,</span> <span class="n">herb</span> <span class="o">=</span> <span class="s2">&quot;basil&quot;</span><span class="p">}</span>
@@ -1780,21 +1881,25 @@ iterated over, dropping the original keys.</p>
 
 <hr />
 <h3 id="merge">merge<a class="headerlink" href="#merge" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">merge</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">merge</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="p">...)</span> <span class="c1">--&gt; T</span>
 </pre></div>
 Mutates <em>target</em> by iterating recursively through elements of the subsequent
 arguments in order and inserting or replacing the values in target with each
 element preserving keys.</p>
 <p>If any values are both tables, these are merged recursively using <code>dash.merge</code>.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>target</strong> - <em>string</em> </p>
-<p><strong>undefined</strong> - <em>string</em> 
+<p><strong>target</strong> - <code>mut T</code> </p>
+<p><strong>...</strong> - <code>...T</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>T</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">someInfo</span> <span class="o">=</span> <span class="p">{</span>
@@ -1840,28 +1945,32 @@ element preserving keys.</p>
 <p><strong>See</strong></p>
 <ul>
 <li>
-<p><a href="#assign">dash.assign</a> </p>
+<p><a href="/api/Tables/#assign">dash.assign</a> </p>
 </li>
 <li>
-<p><a href="#defaults">dash.defaults</a> </p>
+<p><a href="/api/Tables/#defaults">dash.defaults</a> </p>
 </li>
 </ul>
 <hr />
 <h3 id="occurences">occurences<a class="headerlink" href="#occurences" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">occurences</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">occurences</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; {[T]: int}</span>
 </pre></div>
 Return a set of the tables that appear as descendants of <em>source</em>, mapped to the number of
 times each table has been found with a unique parent.</p>
 <p>Repeat occurences are not traversed, so the function is cycle-safe. If any tables in the
-result have a count of two or more, they may form cycles in the <em>source</em>.,<T: Iterable<K,V>&gt;(T -&gt; Iterable<T,int>)</p>
+result have a count of two or more, they may form cycles in the <em>source</em>.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <em>string</em> 
+<p><strong>source</strong> - <code>T</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>{[T]: int}</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">plate</span> <span class="o">=</span> <span class="p">{</span><span class="n">veg</span> <span class="o">=</span> <span class="s2">&quot;potato&quot;</span><span class="p">,</span> <span class="n">pie</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;stilton&quot;</span><span class="p">,</span> <span class="s2">&quot;beef&quot;</span><span class="p">}}</span>
@@ -1880,17 +1989,21 @@ result have a count of two or more, they may form cycles in the <em>source</em>.
 
 <hr />
 <h3 id="one">one<a class="headerlink" href="#one" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">one</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">one</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; V, K?</span>
 </pre></div>
 Returns an element from <em>source</em>, if it has one.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <em>string</em> 
+<p><strong>source</strong> - <code>T</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>V, K?</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">one</span><span class="p">({})</span> <span class="c1">--&gt; nil</span>
@@ -1899,18 +2012,22 @@ Returns an element from <em>source</em>, if it has one.</p>
 
 <hr />
 <h3 id="privatize">privatize<a class="headerlink" href="#privatize" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">privatize</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">privatize</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; T{}</span>
 </pre></div>
 Returns a copy of <em>source</em>, ensuring each key starts with an underscore <code>_</code>.
-Keys which are already prefixed with an underscore are left unchanged.,<T>(T{} -&gt; T{})</p>
+Keys which are already prefixed with an underscore are left unchanged.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>any</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <em>string</em> 
+<p><strong>source</strong> - <code>T{}</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>T{}</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">privates</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">privatize</span><span class="p">({</span>
@@ -1928,15 +2045,19 @@ Keys which are already prefixed with an underscore are left unchanged.,<T>(T{} -
 Returns a string representation of <em>source</em> including all elements with sorted keys.</p>
 <p><code>dash.serialize</code> preserves the properties of being unique, stable and cycle-safe if the serializer
 functions provided also obey these properties.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <em>string</em> </p>
-<p><strong>options</strong> - <em>string</em> 
+<p><strong>source</strong> - <code>T</code> </p>
+<p><strong>options</strong> - <code>SerializeOptions&lt;T&gt;</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>string</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">serialize</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">})</span> <span class="c1">--&gt; &quot;{1,2,3}&quot;</span>
@@ -1958,13 +2079,13 @@ appropriate when you need a human-readable string.</li>
 <p><strong>See</strong></p>
 <ul>
 <li>
-<p><a href="#serializeDeep">dash.serializeDeep</a> </p>
+<p><a href="/api/Tables/#serializeDeep">dash.serializeDeep</a> </p>
 </li>
 <li>
-<p><a href="#defaultSerializer">dash.defaultSerializer</a> </p>
+<p><a href="/api/Tables/#defaultSerializer">dash.defaultSerializer</a> </p>
 </li>
 <li>
-<p><a href="#pretty">dash.pretty</a> </p>
+<p><a href="/api/Strings/#pretty">dash.pretty</a> </p>
 </li>
 </ul>
 <hr />
@@ -1974,15 +2095,19 @@ appropriate when you need a human-readable string.</li>
 Like <code>dash.serialize</code>, but if a child element is a table it is serialized recursively.</p>
 <p>Returns a string representation of <em>source</em> including all elements with sorted keys.</p>
 <p>This function preserves uniqueness, stability and cycle-safety.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <em>string</em> </p>
-<p><strong>options</strong> - <em>string</em> 
+<p><strong>source</strong> - <code>T</code> </p>
+<p><strong>options</strong> - <code>SerializeOptions&lt;T&gt;</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>string</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">serializeDeep</span><span class="p">({</span><span class="n">a</span> <span class="o">=</span> <span class="p">{</span><span class="n">b</span> <span class="o">=</span> <span class="s2">&quot;table&quot;</span><span class="p">})</span> <span class="c1">--&gt; &#39;{&quot;a&quot;:{&quot;b&quot;:&quot;table&quot;}}&#39;</span>
@@ -1996,10 +2121,10 @@ Like <code>dash.serialize</code>, but if a child element is a table it is serial
 <p><strong>See</strong></p>
 <ul>
 <li>
-<p><a href="#serialize">dash.serialize</a> </p>
+<p><a href="/api/Tables/#serialize">dash.serialize</a> </p>
 </li>
 <li>
-<p><a href="#defaultSerializer">dash.defaultSerializer</a> </p>
+<p><a href="/api/Tables/#defaultSerializer">dash.defaultSerializer</a> </p>
 </li>
 </ul>
 <hr />
@@ -2007,20 +2132,24 @@ Like <code>dash.serialize</code>, but if a child element is a table it is serial
 </div>
 
 <h3 id="set">set<a class="headerlink" href="#set" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">set</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">set</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="c1">--&gt; bool</span>
 </pre></div>
 Set a child or descendant of a table. Returns <code>true</code> if the operation completed without error.</p>
 <p>If any values along the path are not tables, <code>dash.set</code> will do nothing and return <code>false</code>.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <em>string</em> </p>
-<p><strong>path</strong> - <em>string</em> </p>
-<p><strong>value</strong> - <em>string</em> 
+<p><strong>source</strong> - <code>T</code> </p>
+<p><strong>path</strong> - <code>K[]</code> </p>
+<p><strong>value</strong> - <code>V</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>bool</code> - <code>true</code> if the set worked</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;LocalPlayer&quot;</span><span class="p">,</span> <span class="s2">&quot;Character&quot;</span><span class="p">,</span> <span class="s2">&quot;UpperTorso&quot;</span><span class="p">,</span> <span class="s2">&quot;Color&quot;</span><span class="p">},</span> <span class="n">Color3</span><span class="p">.</span><span class="n">new</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">))</span>
@@ -2029,19 +2158,19 @@ Set a child or descendant of a table. Returns <code>true</code> if the operation
 
 <hr />
 <h3 id="shallowequal">shallowEqual<a class="headerlink" href="#shallowequal" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">shallowEqual</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">shallowEqual</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span> <span class="c1">--&gt; bool</span>
 </pre></div>
 Returns <code>true</code> if <em>left</em> and <em>right</em> are equal, or if they are tables and the elements in one
 are present and have equal values to those in the other.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>left</strong> - <em>string</em> </p>
-<p><strong>right</strong> - <em>string</em> 
+<p><strong>left</strong> - <code>any</code> </p>
+<p><strong>right</strong> - <code>any</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>bool</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">car</span> <span class="o">=</span> <span class="p">{</span>
@@ -2062,22 +2191,26 @@ are present and have equal values to those in the other.</p>
 
 <p><strong>See</strong></p>
 <ul>
-<li><a href="#deepEqual">dash.deepEqual</a> </li>
+<li><a href="/api/Tables/#deepEqual">dash.deepEqual</a> </li>
 </ul>
 <hr />
 <h3 id="unique">unique<a class="headerlink" href="#unique" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">unique</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">unique</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; T[]</span>
 </pre></div>
 Returns an array of the values in <em>source</em>, without any repetitions.</p>
 <p>Values are considered equal if the have the same key representation.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>any</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <em>string</em> 
+<p><strong>source</strong> - <code>T[]</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>T[]</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">list</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">}</span>
@@ -2086,17 +2219,21 @@ Returns an array of the values in <em>source</em>, without any repetitions.</p>
 
 <hr />
 <h3 id="values">values<a class="headerlink" href="#values" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">values</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">values</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; V[]</span>
 </pre></div>
 Returns an array of all the values of the elements in <em>source</em>.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <em>string</em> 
+<p><strong>source</strong> - <code>T</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>V[]</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">values</span><span class="p">({</span>
@@ -2108,18 +2245,22 @@ Returns an array of all the values of the elements in <em>source</em>.</p>
 
 <hr />
 <h3 id="without">without<a class="headerlink" href="#without" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">without</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">without</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="c1">--&gt; V[]</span>
 </pre></div>
 Returns an array of elements in <em>source</em> with any elements of <em>value</em> removed.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <em>string</em> </p>
-<p><strong>value</strong> - <em>string</em> 
+<p><strong>source</strong> - <code>T</code> </p>
+<p><strong>value</strong> - <code>V</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>V[]</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">points</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">}</span>

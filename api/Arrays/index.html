@@ -607,18 +607,22 @@
 <p>Functions can also iterate over custom iterator functions which provide elements with natural keys <em>1..n</em>.</p>
 <h2 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h2>
 <h3 id="append">append<a class="headerlink" href="#append" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="p">...)</span> <span class="c1">--&gt; T[]</span>
 </pre></div>
 Inserts into <em>target</em> the elements from all subsequent arguments in order.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>any</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>target</strong> - <em>string</em> </p>
-<p><strong>undefined</strong> - <em>string</em> 
+<p><strong>target</strong> - <code>mut T[]</code> </p>
+<p><strong>...</strong> - <code>...T[]</code>  - any number of other arrays
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>T[]</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">append</span><span class="p">({},</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span> <span class="p">{</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">})</span> <span class="c1">--&gt; {1, 2, 3, 4, 5, 6}</span>
@@ -634,40 +638,48 @@ Inserts into <em>target</em> the elements from all subsequent arguments in order
 
 <hr />
 <h3 id="defaultcomparator">defaultComparator<a class="headerlink" href="#defaultcomparator" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">defaultComparator</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">defaultComparator</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="c1">--&gt; bool</span>
 </pre></div>
 The default comparator is used by <code>dash.sort</code> and can sort elements of different types, in the
 order: boolean, number, string, function, CFunction, userdata, and table.</p>
 <p>Elements which cannot be sorted naturally will be sorted by their string value.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>any</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>a</strong> - <em>string</em> </p>
-<p><strong>b</strong> - <em>string</em> 
+<p><strong>a</strong> - <code>T</code> </p>
+<p><strong>b</strong> - <code>T</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>bool</code></p>
 </blockquote>
 <p><strong>See</strong></p>
 <ul>
-<li><a href="#sort">dash.sort</a> </li>
+<li><a href="/api/Arrays/#sort">dash.sort</a> </li>
 </ul>
 <hr />
 <h3 id="first">first<a class="headerlink" href="#first" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">first</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">predicate</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">first</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">predicate</span><span class="p">)</span> <span class="c1">--&gt; V?</span>
 </pre></div>
 Returns the earliest value from the array that <em>predicate</em> returns <code>true</code> for.</p>
 <p>If the <em>predicate</em> is not specified, <code>dash.first</code> simply returns the first element of the array.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <em>string</em> </p>
-<p><strong>predicate</strong> - <em>string</em>  - (default = <code>dash.returns(true)</code>)
+<p><strong>source</strong> - <code>T</code> </p>
+<p><strong>predicate</strong> - <code>(element: V, key: K) -&gt; bool</code>  - (default = <code>dash.returns(true)</code>)
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>V?</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">names</span> <span class="o">=</span> <span class="p">{</span>
@@ -701,23 +713,27 @@ Returns the earliest value from the array that <em>predicate</em> returns <code>
 </ul>
 <p><strong>See</strong></p>
 <ul>
-<li><a href="#find">dash.find</a> </li>
+<li><a href="/api/Tables/#find">dash.find</a> </li>
 </ul>
 <hr />
 <h3 id="last">last<a class="headerlink" href="#last" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">last</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">predicate</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">last</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">predicate</span><span class="p">)</span> <span class="c1">--&gt; V?</span>
 </pre></div>
 Returns the last value from the array that <em>predicate</em> returns <code>true</code> for.</p>
 <p>If the <em>predicate</em> is not specified, <code>dash.last</code> simply returns the last element of the array.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <em>string</em> </p>
-<p><strong>predicate</strong> - <em>string</em>  - (default = <code>dash.returns(true)</code>)
+<p><strong>source</strong> - <code>T</code> </p>
+<p><strong>predicate</strong> - <code>(element: V, key: K) -&gt; bool</code>  - (default = <code>dash.returns(true)</code>)
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>V?</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">names</span> <span class="o">=</span> <span class="p">{</span>
@@ -738,29 +754,34 @@ Returns the last value from the array that <em>predicate</em> returns <code>true
 <p><strong>See</strong></p>
 <ul>
 <li>
-<p><a href="#find">dash.find</a> </p>
+<p><a href="/api/Tables/#find">dash.find</a> </p>
 </li>
 <li>
-<p><a href="#first">dash.first</a> </p>
+<p><a href="/api/Arrays/#first">dash.first</a> </p>
 </li>
 </ul>
 <hr />
 <h3 id="reduce">reduce<a class="headerlink" href="#reduce" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">reduce</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="n">initial</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">reduce</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">handler</span><span class="p">,</span> <span class="n">initial</span><span class="p">)</span> <span class="c1">--&gt; R</span>
 </pre></div>
 Runs the <em>handler</em> on each element of <em>source</em> in turn, passing the result of the previous call
 (or <em>initial</em> for the first element) as the first argument, and the current element as a value
 and key as subsequent arguments.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>any</code></p>
+<p><strong>R</strong> - <code>any</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <em>string</em> </p>
-<p><strong>handler</strong> - <em>string</em> </p>
-<p><strong>initial</strong> - <em>string</em> 
+<p><strong>source</strong> - <code>T[]</code> </p>
+<p><strong>handler</strong> - <code>(result: R, value: T, key: int) -&gt; R</code> </p>
+<p><strong>initial</strong> - <code>R</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>R</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">sum</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">reduce</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span> <span class="kr">function</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
@@ -781,17 +802,21 @@ and key as subsequent arguments.</p>
 
 <hr />
 <h3 id="reverse">reverse<a class="headerlink" href="#reverse" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">reverse</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">reverse</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; T[]</span>
 </pre></div>
 Swaps the order of elements in <em>source</em>.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>any</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <em>string</em> 
+<p><strong>source</strong> - <code>T[]</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>T[]</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">reverse</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">})</span> <span class="c1">--&gt; {5, 3, 4, 2, 1}</span>
@@ -799,17 +824,21 @@ Swaps the order of elements in <em>source</em>.</p>
 
 <hr />
 <h3 id="shuffle">shuffle<a class="headerlink" href="#shuffle" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">shuffle</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">shuffle</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; T</span>
 </pre></div>
 Returns a new array with the order of the values from <em>source</em> randomized.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>Iterable</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <em>string</em> 
+<p><strong>source</strong> - <code>T</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>T</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">teamColors</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">}</span>
@@ -819,20 +848,24 @@ Returns a new array with the order of the values from <em>source</em> randomized
 
 <hr />
 <h3 id="slice">slice<a class="headerlink" href="#slice" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">slice</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">slice</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span> <span class="c1">--&gt; T[]</span>
 </pre></div>
 Returns a copied portion of the <em>source</em>.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>any</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <em>string</em> </p>
-<p><strong>first</strong> - <em>string</em>  - (default = 1) The index of the first element to include.</p>
-<p><strong>last</strong> - <em>string</em>  - (default = <code>#source</code>) The index of the last element to include.</p>
-<p><strong>step</strong> - <em>string</em>  - (default = 1) What amount to step the index by during iteration.
+<p><strong>source</strong> - <code>T[]</code> </p>
+<p><strong>first</strong> - <code>int?</code>  - (default = 1) The index of the first element to include.</p>
+<p><strong>last</strong> - <code>int?</code>  - (default = <code>#source</code>) The index of the last element to include.</p>
+<p><strong>step</strong> - <code>int?</code>  - (default = 1) What amount to step the index by during iteration.
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>T[]</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">slice</span><span class="p">({</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">})</span> <span class="c1">--&gt; {10, 20, 30, 40}</span>
@@ -849,20 +882,24 @@ Returns a copied portion of the <em>source</em>.</p>
 
 <hr />
 <h3 id="sort">sort<a class="headerlink" href="#sort" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">sort</span><span class="p">(</span><span class="n">input</span><span class="p">,</span> <span class="n">comparator</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">sort</span><span class="p">(</span><span class="n">input</span><span class="p">,</span> <span class="n">comparator</span><span class="p">)</span> <span class="c1">--&gt; T[]</span>
 </pre></div>
 Returns a sorted array from the <em>input</em> array, based on a <em>comparator</em> function.</p>
 <p>Unlike <code>table.sort</code>, the comparator to <code>dash.sort</code> is optional, but it can also be defined to
 a numeric weight or nil as well as a boolean.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>any</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>input</strong> - <em>string</em> </p>
-<p><strong>comparator</strong> - <em>string</em>  - (optional) should return <code>true</code> or <code>n &lt; 0</code> if the first element should be
+<p><strong>input</strong> - <code>T[]</code> </p>
+<p><strong>comparator</strong> - <code>(T) -&gt; bool | number | nil</code>  - (optional) should return <code>true</code> or <code>n &lt; 0</code> if the first element should be
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>T[]</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">sort</span><span class="p">({</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">})</span> <span class="c1">--&gt; {2, 3, 5}</span>
@@ -873,17 +910,17 @@ a numeric weight or nil as well as a boolean.</p>
 
 <hr />
 <h3 id="sum">sum<a class="headerlink" href="#sum" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">sum</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">sum</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; number</span>
 </pre></div>
 Sums all the values in the <em>source</em> array.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <em>string</em> 
+<p><strong>source</strong> - <code>number[]</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><em>string</em></p>
+<p><code>number</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">sum</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">})</span> <span class="c1">--&gt; 6</span>
