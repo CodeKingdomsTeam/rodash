@@ -696,7 +696,7 @@ Returns the earliest value from the array that <em>predicate</em> returns <code>
 <span class="kr">end</span><span class="p">)</span>
 <span class="n">firstNameWithF</span> <span class="c1">--&gt; &quot;Frodo&quot;, 2</span>
 
-<span class="c1">-- What about a value whcih doesn&#39;t exist?</span>
+<span class="c1">-- What about a value which doesn&#39;t exist?</span>
 <span class="kd">local</span> <span class="n">firstNameWithC</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">first</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
     <span class="kr">return</span> <span class="n">dash</span><span class="p">.</span><span class="n">startsWith</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">)</span>
 <span class="kr">end</span><span class="p">)</span>
