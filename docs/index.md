@@ -2,47 +2,36 @@
 
 Rodash is a collection of functions designed to aid everyday game programming in Roblox. It borrows ideas from [lodash](https://lodash.com) in JS, some simpler functionality of [Penlight](https://github.com/stevedonovan/Penlight) and standalone helper scripts in circulation among the Roblox community.
 
-# Usage
-
-```lua
-local _ = require(game.ReplicatedStorage.Rodash)
-
-local function onlyLocalPlayerHasGold()
-
-	local playersWithGold = _.filter(game.Players:GetChildren(), function( player )
-		_.debug("Tools: {:#?}", player.Backpack)
-		return _.some(player.Backpack:GetChildren(), _.fn:get("OreType", "Value"):endsWith("Gold") end)
-	end)
-
-	return _.shallowEqual(playersWithGold, {game.Players.LocalPlayer})
-
-end
-```
+See the [Getting Started](getting-started) page for examples of how you can use Rodash.
 
 # Installation
 
-There are currently two ways to install Rodash:
+1. Download the latest _rbxmx_ model from the [Github releases page](https://github.com/CodeKingdomsTeam/rodash/releases).
+2. Drag the model file from your _Downloads_ folder into a Roblox Studio project.
+3. Open the `Packages` folder which is created and drag `Rodash` and its siblings into `ReplicatedStorage`.
 
-#### **Method 1. Model File (Roblox Studio)**
+   ![ReplicatedStorage](ReplicatedStorage.png)
 
-1. Download the _rbxm_ model from the [Github releases page](https://github.com/CodeKingdomsTeam/rodash/releases).
-1. Insert the model into Studio and place it in `ReplicatedStorage`
+Then require Rodash in any of your scripts:
 
-#### **Method 2. Filesystem**
+```lua
+local dash = require(game.ReplicatedStorage.Rodash)
 
-1. Clone this repo using `git clone git@github.com:CodeKingdomsTeam/rodash.git` in a suitable directory
-1. Rename the `src` folder to `Rodash`
-1. Use [rojo](https://github.com/LPGhatguy/rojo) to sync the files into a place
-
-#### Importing
-
-If you prefer not to reuse `_`, you can also import the library under a different name, or just import a specific module:
-
+local list = {"cheese"}
+dash.append(list, {"nachos"}, {}, {"chillies", "bbq sauce"})
+list --> {"cheese", "nachos", "chillies", "bbq sauce"}
 ```
-local _r = require(game.ReplicatedStorage.Rodash)
 
-local Tables = require(game.ReplicatedStorage.Rodash.Tables)
+If you prefer, you can alias specific Rodash functions yourself:
+
+```lua
+local dash = require(game.ReplicatedStorage.Rodash)
+local append = dash.append
 ```
+
+# Discussion
+
+If you have any queries or feedback, please [join the discussion](https://discord.gg/PyaNeN5) on the Studio+ discord server!
 
 # Design Principles
 
@@ -56,7 +45,3 @@ Functions:
 - **Prefer immutability** to promote functional design and reduce race conditions
 - **Avoid duplication**, mimicking existing functionality or aliasing other functions
 - **Maintain backwards compatibility** with older versions of the library
-
-# Discussion
-
-If you have any queries or feedback, please [join the discussion](https://discord.gg/PyaNeN5) on the Studio+ discord server!

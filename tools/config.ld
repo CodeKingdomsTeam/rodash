@@ -1,1 +1,0 @@
-tparam_alias('string','string')

@@ -37,10 +37,21 @@
 | -------------------- | -------------------------------------------------------------- |
 | `setup.sh`           | Installs Lua 5.1 and dependencies locally.                     |
 | `build.sh`           | Runs setup, luacheck, tests with coverage and builds the docs. |
-| `test.sh`            | Run the tests.                                                 |
+| `test.sh`            | Run the unit tests.                                            |
 | `tools/buildDocs.sh` | Build the docs.                                                |
 | `tools/format.sh`    | Format the code with `lua-fmt`.                                |
 | `tools/luacheck.sh`  | Runs `luacheck` against all source.                            |
+
+# Development
+
+We use [Rojo](https://rojo.space/docs/0.5.x/) to test Robase during development, and suggest the following workflow:
+
+1. Open `Robase.rbxlx` in Roblox Studio.
+2. Run `rojo serve place.project.json`.
+3. Make sure you have the Rojo plugin installed, and connect to the rojo server.
+4. Test any functions in the `Example` script provided.
+5. Once changes have been made, commit them and make PR to this repo.
+6. Use `rojo build` to use the updated library in your own projects.
 
 # Versioning
 

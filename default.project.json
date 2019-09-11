@@ -1,6 +1,15 @@
 {
-	"name": "Rodash",
+	"name": "Packages",
 	"tree": {
-		"$path": "src"
+		"$className": "Folder",
+		"Rodash": {
+			"$path": "src"
+		},
+		"Promise": {
+			"$path": "modules/roblox-lua-promise/lib"
+		},
+		"t": {
+			"$path": "modules/t/lib/t.lua"
+		}
 	}
 }

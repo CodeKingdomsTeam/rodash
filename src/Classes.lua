@@ -7,6 +7,8 @@ local Arrays = require(script.Parent.Arrays)
 local Functions = require(script.Parent.Functions)
 local Classes = {}
 
+--: type Constructor<T> = ... -> T
+
 --[[
 	Create a class called _name_ with the specified _constructor_. The constructor should return a
 	plain table which will be turned into an instance of _Class_ from a call to `Class.new(...)`.
@@ -14,15 +16,15 @@ local Classes = {}
 	Optionally, you may provide an array of _decorators_ which compose and reduce the Class, adding
 	additional methods and functionality you may need. Specifically you can:
 	
-	1. Add standard functionality to the class e.g. `_.Cloneable`, `_.ShallowEq`
-	2. Mixin an implementation of an interface e.g. `_.mixin( fns )`
-	3. Decorate fields or functions e.g. `_.decorate(_.freeze)`
+	1. Add standard functionality to the class e.g. `dash.Cloneable`, `dash.ShallowEq`
+	2. Mixin an implementation of an interface e.g. `dash.mixin( fns )`
+	3. Decorate fields or functions e.g. `dash.decorate(dash.freeze)`
 
-	@param constructor (default = `_.returns({})`)
+	@param constructor (default = `dash.returns({})`)
 	@param decorators (default = `{}`)
 	@example
 		-- Create a simple Vehicle class
-		local Vehicle = _.class("Vehicle", function( wheelCount ) return 
+		local Vehicle = dash.class("Vehicle", function(wheelCount) return 
 			{
 				speed = 0,
 				wheelCount = wheelCount
@@ -43,15 +45,15 @@ local Classes = {}
 	@usage A private field should only be accessed by a method of the class itself, though Rodash
 		does not restrict this in code.
 	@usage Public fields are recommended when there is no complex access logic e.g. `position.x`
-	@see _.classWithInterface - recommended for providing runtime type-checking.
-	@see _.mixin - extend the class with extra methods.
-	@see _.decorate - include methods that run when an instance of the class is constructed.
+	@see dash.classWithInterface - recommended for providing runtime type-checking.
+	@see dash.mixin - extend the class with extra methods.
+	@see dash.decorate - include methods that run when an instance of the class is constructed.
 ]]
 --: <T>(string, Constructor<T>?, Decorator<T>[]?) -> Class<T>
 function Classes.class(name, constructor, decorators)
-	assert(t.string(name), "Class name must be a string")
-	assert(t.optional(t.callback)(constructor), "Class constructor must be a function or nil")
-	assert(t.optional(t.table)(decorators), "Class decorators must be a table")
+	assert(t.string(name), "BadInput: name must be a string")
+	assert(t.optional(Functions.isCallable)(constructor), "BadInput: constructor must be callable or nil")
+	assert(t.optional(t.table)(decorators), "BadInput: decorators must be a table or nil")
 	local decorate = Functions.compose(unpack(decorators or {}))
 	constructor = constructor or function()
 			return {}
@@ -89,7 +91,7 @@ function Classes.class(name, constructor, decorators)
 		Run after the instance has been properly initialized, allowing methods on the instance to
 		be used.
 		@example
-			local Vehicle = _.class("Vehicle", function( wheelCount ) return 
+			local Vehicle = dash.class("Vehicle", function(wheelCount) return 
 				{
 					speed = 0,
 					wheelCount = wheelCount
@@ -107,7 +109,7 @@ function Classes.class(name, constructor, decorators)
 			end
 			-- Assign an id to the new instance
 			function Vehicle:_generateId()
-				return _.format("#{}: {} wheels", Vehicle._getNextId(), self.wheelCount)
+				return dash.format("#{}: {} wheels", Vehicle._getNextId(), self.wheelCount)
 			end
 			-- Return the id if the instance is represented as a string 
 			function Vehicle:toString()
@@ -117,14 +119,14 @@ function Classes.class(name, constructor, decorators)
 			local car = Vehicle.new(4)
 			tostring(car) --> "#1: 4 wheels"
 	]]
-	--: (mut T:) -> nil
+	--: (mut self) -> ()
 	function Class:_init()
 	end
 
 	--[[
 		Returns `true` if _value_ is an instance of _Class_ or any sub-class.
 		@example
-			local Vehicle = _.class("Vehicle", function( wheelCount ) return 
+			local Vehicle = dash.class("Vehicle", function(wheelCount) return 
 				{
 					speed = 0,
 					wheelCount = wheelCount
@@ -153,7 +155,7 @@ function Classes.class(name, constructor, decorators)
 		Super methods can be accessed using `Class.methodName` and should be called with self.
 
 		@example
-			local Vehicle = _.class("Vehicle", function( wheelCount ) return 
+			local Vehicle = dash.class("Vehicle", function(wheelCount) return 
 				{
 					speed = 0,
 					wheelCount = wheelCount
@@ -171,7 +173,7 @@ function Classes.class(name, constructor, decorators)
 			end
 			-- Assign an id to the new instance
 			function Vehicle:_generateId()
-				return _.format("#{}: {} wheels", Vehicle._getNextId(), self.wheelCount)
+				return dash.format("#{}: {} wheels", Vehicle._getNextId(), self.wheelCount)
 			end
 			-- Let's make a Car class which has a special way to generate ids
 			local Car = Vehicle:extend("Vehicle", function()
@@ -179,13 +181,13 @@ function Classes.class(name, constructor, decorators)
 			end)
 			-- Uses the super method to generate a car-specific id
 			function Car:_generateId()
-				self.id = _.format("Car {}", Vehicle._generateId(self))
+				self.id = dash.format("Car {}", Vehicle._generateId(self))
 			end
 
 			local car = Car.new()
 			car.id --> "Car #1: 4 wheels"
 	]]
-	--: <S: T>(T: string, Constructor<T>? Decorator[]?) -> Class<S>
+	--: <S: T>(T: string, Constructor<T>?, Decorator[]?) -> Class<S>
 	function Class:extend(name, constructor, decorators)
 		local SubClass = Classes.class(name, constructor or Class.new, decorators)
 		setmetatable(SubClass, {__index = self})
@@ -201,7 +203,7 @@ function Classes.class(name, constructor, decorators)
 		do not unify in the future.
 
 		@example
-			local Vehicle = _.classWithInterface("Vehicle", {
+			local Vehicle = dash.classWithInterface("Vehicle", {
 				speed = t.number,
 				wheelCount = t.number,
 				color: t.string
@@ -211,7 +213,7 @@ function Classes.class(name, constructor, decorators)
 				wheelCount = 4,
 				color = "red"
 			})
-			_.pretty(vehicle) --> 'Vehicle {speed = 4, wheelCount = 4, color = "red"}'
+			dash.pretty(vehicle) --> 'Vehicle {speed = 4, wheelCount = 4, color = "red"}'
 	]]
 	--: <S: T>(T: string, S, Decorator[]?) -> Class<S>
 	function Class:extendWithInterface(name, interface, decorators)
@@ -241,7 +243,7 @@ function Classes.class(name, constructor, decorators)
 		Return a string representation of the instance. By default this is the _name_ field (or the
 		Class name if this is not defined), but the method can be overridden.
 	]]
-	--: (T:) -> string
+	--: () -> string
 	function Class:toString()
 		return self.name
 	end
@@ -250,7 +252,7 @@ function Classes.class(name, constructor, decorators)
 		Returns `true` if `self` is considered equal to _other_. This replaces the `==` operator
 		on instances of this class, and can be overridden to provide a custom implementation.
 	]]
-	--: (T:) -> string
+	--: T -> bool
 	function Class:equals(other)
 		return rawequal(self, other)
 	end
@@ -259,7 +261,7 @@ function Classes.class(name, constructor, decorators)
 		Returns `true` if `self` is considered less than  _other_. This replaces the `<` operator
 		on instances of this class, and can be overridden to provide a custom implementation.
 	]]
-	--: (T:) -> string
+	--: T -> string
 	function Class:__lt(other)
 		return false
 	end
@@ -269,7 +271,7 @@ function Classes.class(name, constructor, decorators)
 		`<=` operator on instances of this class, and can be overridden to provide a custom
 		implementation.
 	]]
-	--: (T:) -> string
+	--: T -> string
 	function Class:__le(other)
 		return false
 	end
@@ -286,15 +288,15 @@ end
 	the added benefit over a constructor that `self` and the instance are well-defined.
 
 	Optionally, you may provide an array of _decorators_ which compose and reduce the Class, adding
-	additional functionality in the same way `_.class` does.
+	additional functionality in the same way `dash.class` does.
 
 	@usage Rodash uses `t` by Osyris to perform runtime type assertions, which we recommend using during
 	development and production code to catch errors quickly and fail fast. For more information
 	about `t`, please visit [https://github.com/osyrisrblx/t](https://github.com/osyrisrblx/t).
 	@usage If you want to instantiate private fields, we recommend using a static factory with a
-		public interface, using `_.privatize` if appropriate.
-	@see _.class
-	@see _.privatize
+		public interface, using `dash.privatize` if appropriate.
+	@see dash.class
+	@see dash.privatize
 ]]
 --: <T>(string, T, Decorator<T>[]? -> Class<T>)
 function Classes.classWithInterface(name, interface, decorators)
@@ -332,21 +334,22 @@ end
 	A decorator which adds a dictionary of functions to a Class table.
 	@example
 		local CanBrake = {
-			brake = function( self )
+			brake = function(self)
 				self.speed = 0
 			end
 		}
-		local Car = _.class("Car", function( speed )
+		local Car = dash.class("Car", function(speed)
 			return {
 				speed = speed
 			}
-		end, {_.mixin(CanBrake)})
+		end, {dash.mixin(CanBrake)})
 		local car = Car.new(5)
 		print(car.speed) --> 5
 		car:brake()
 		print(car.speed) --> 0
 	@usage Include the return value of this function in the decorators argument when creating a class.
 ]]
+--: <T>((T, ... -> ...)[] -> Class<T> -> Class<T>)
 function Classes.mixin(fns)
 	assert(t.table(fns), "BadInput: fns must be a table")
 	return function(Class)
@@ -359,8 +362,8 @@ end
 	A decorator which runs _fn_ on each instance of the class that is created, returning
 	the result of the function as the class instance.
 	@example
-		local Frozen = _.decorate(_.freeze)
-		local StaticCar = _.class("StaticCar", function( speed )
+		local Frozen = dash.decorate(dash.freeze)
+		local StaticCar = dash.class("StaticCar", function(speed)
 			return {
 				speed = speed
 			}
@@ -373,6 +376,7 @@ end
 		car:brake() --!> ReadonlyKey: s
 	@usage Include the return value of this function in the decorators argument when creating a class.
 ]]
+--: <T>((self:T, ... -> ...) -> Class<T> -> Class<T>)
 function Classes.decorate(fn)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
 	return function(Class)
@@ -397,7 +401,7 @@ end
 					speed = speed
 				}
 			end,
-			{_.Cloneable}
+			{dash.Cloneable}
 		)
 		function Car:brake()
 			self.speed = 0
@@ -409,6 +413,7 @@ end
 		print(carClone.speed) --> 0
 		print(car.speed) --> 5
 ]]
+--: <T>(Class<T> -> Cloneable<T>)
 function Classes.Cloneable(Class)
 	function Class:clone()
 		local newInstance = Tables.clone(self)
@@ -430,7 +435,7 @@ end
 					speed = speed
 				}
 			end,
-			{_.ShallowEq}
+			{dash.ShallowEq}
 		)
 		function Car:brake()
 			self.speed = 0
@@ -441,6 +446,7 @@ end
 		print(fastCar == fastCar2) --> true
 		print(fastCar == slowCar) --> false
 ]]
+--: <T>(Class<T> -> ShallowEq<T>)
 function Classes.ShallowEq(Class)
 	function Class:equals(other)
 		return Tables.shallowEqual(self, other)
@@ -462,7 +468,7 @@ end
 					speed = speed
 				}
 			end,
-			{_.PartialOrd}
+			{dash.PartialOrd()}
 		)
 		function Car:brake()
 			self.speed = 0
@@ -473,6 +479,7 @@ end
 		print(fastCar == fastCar2) --> true
 		print(fastCar == slowCar) --> false
 ]]
+--: <T>(string[]? -> Class<T> -> PartialOrd<T>)
 function Classes.PartialOrd(keys)
 	if keys then
 		assert(Tables.isArray(keys), "BadInput: keys must be an array if defined")
@@ -514,7 +521,27 @@ function Classes.PartialOrd(keys)
 	end
 end
 
-function Classes.ToString(keys)
+--[[
+	A decorator which derives a `:toString()` method for the _Class_ that displays a serialized
+	string of the class name and values of any _keys_ provided.
+
+	@param keys (default = _all the keys of the instance except `"Class"`_)
+
+	@example
+		local Car =
+			Classes.class(
+			"Car",
+			function(speed)
+				return {
+					speed = speed
+				}
+			end,
+			{dash.Formatable()}
+		)
+		print(Car.new(5)) --> "Car({speed:5})"
+]]
+--: <T>(string[]? -> Class<T> -> Formatable<T>)
+function Classes.Formatable(keys)
 	return function(Class)
 		function Class:toString()
 			local Strings = require(script.Parent.Strings)
@@ -538,7 +565,7 @@ end
 	Create an enumeration from an array string _keys_, provided in upper snake-case.
 
 	An Enum is used when a value should only be one of a limited number of possible states.
-	`_.enum` creates a string enum, which uses a name for each state so it is easy to refer to.
+	`dash.enum` creates a string enum, which uses a name for each state so it is easy to refer to.
 	For ease of use values in the enum are identical to their key.
 
 	Enums are frozen and will throw if access to a missing key is attempted, helping to eliminate
@@ -548,14 +575,14 @@ end
 
 	@param keys provided in upper snake-case.
 	@example
-		local TOGGLE = _.enum("ON", "OFF")
+		local TOGGLE = dash.enum("ON", "OFF")
 		local switch = TOGGLE.ON
 		if switch == TOGGLE.ON then
 			game.Workspace.RoomLight.Brightness = 1
 		else
 			game.Workspace.RoomLight.Brightness = 0
 		end
-	@see _.match
+	@see dash.match
 ]]
 --: <T>(string -> Enum<T>)
 function Classes.enum(keys)
@@ -572,15 +599,15 @@ function Classes.enum(keys)
 end
 
 --[[
-	Given an _enum_ and _strategies_, a dictionary of functions keyed by enum values, `_.match`
+	Given an _enum_ and _strategies_, a dictionary of functions keyed by enum values, `dash.match`
 	returns a function that will execute the strategy for any value provided.
 
 	A strategy for every enum key must be implemented, and this helps prevent missing values
 	from causing problems later on down the line.
 
 	@example
-		local TOGGLE = _.enum("ON", "OFF")
-		local setLightTo = _.match(TOGGLE, {
+		local TOGGLE = dash.enum("ON", "OFF")
+		local setLightTo = dash.match(TOGGLE, {
 			ON = function(light)
 				light.Brightness = 1
 			end,
@@ -596,7 +623,7 @@ end
 		setLightTo("Dim", game.Workspace.RoomLight)
 		--!> BadInput: enumValue must be an instance of enum
 ]]
---: <T: Iterable<K>, V>(Enum<T>, {[K]: () -> V}) -> K -> V
+--: <T, Strategy:((...A) -> V)>(Enum<T>, {[enumValue: T]: Strategy}) -> (enumValue: T, ...A) -> V
 function Classes.match(enum, strategies)
 	assert(t.table(enum), "BadInput: enum should be a table")
 	assert(
@@ -613,13 +640,13 @@ function Classes.match(enum, strategies)
 end
 
 --[[
-	`_.finalize` takes _object_ and makes updating or accessing missing keys throw `FinalObject`.
+	`dash.finalize` takes _object_ and makes updating or accessing missing keys throw `FinalObject`.
 	@example
 		local drink = {
 			mixer = "coke",
 			spirit = "rum"
 		}
-		_.finalize(drink)
+		dash.finalize(drink)
 		drink.mixer = "soda"
 		drink.mixer --> "soda"
 		print(drink.syrup)
@@ -627,7 +654,7 @@ end
 		drink.syrup = "peach"
 		--!> "FinalObject: Attempt to add key mixer on final object"
 ]]
---: <T: table>(mut T -> T)
+--: <T:{}>(mut T -> T)
 function Classes.finalize(object)
 	local backend = getmetatable(object)
 	local proxy = {
@@ -683,18 +710,18 @@ function Classes.symbol(name)
 end
 
 --[[
-	`_.freeze` takes _object_ and returns a new read-only version which prevents any values from
+	`dash.freeze` takes _object_ and returns a new read-only version which prevents any values from
 	being changed.
 	
 	Unfortunately you cannot iterate using `pairs` or `ipairs` on frozen objects because Lua 5.1
-	does not support overwriting these in metatables. However, you can use `_.iterator` to get
+	does not support overwriting these in metatables. However, you can use `dash.iterator` to get
 	an iterator 
 
-	Iterating functions in Rodash such as `_.map`, `_.filter` etc. can iterate over frozen objects
-	without this. If you want to treat the objects as arrays use `_.iterator(frozenObjet, true)`
+	Iterating functions in Rodash such as `dash.map`, `dash.filter` etc. can iterate over frozen objects
+	without this. If you want to treat the objects as arrays use `dash.iterator(frozenObject, true)`
 	explicitly.
 	@example
-		local drink = _.freeze({
+		local drink = dash.freeze({
 			mixer = "coke",
 			spirit = "rum"
 		})
@@ -704,7 +731,7 @@ end
 		print(drink.syrup) --> nil
 		drink.syrup = "peach"
 		--!> "ReadonlyKey: Attempt to write to a frozen key peach"
-	@see _.iterator
+	@see dash.iterator
 ]]
 --: <T: table>(T -> T)
 function Classes.freeze(object)
@@ -737,12 +764,12 @@ end
 	Returns `true` if _value_ is an instance of _type_.
 
 	Type can currently be either an _Enum_ or a _Class_ table. For instances of classes,
-	`_.isA` will also return true if the instance is an instance of any sub-class.
+	`dash.isA` will also return true if the instance is an instance of any sub-class.
 
 	The function will catch any errors thrown during this check, returning false if so.
 
 	@example
-		local Vehicle = _.class("Vehicle", function( wheelCount ) return 
+		local Vehicle = dash.class("Vehicle", function(wheelCount) return 
 			{
 				speed = 0,
 				wheelCount = wheelCount
@@ -753,11 +780,11 @@ end
 		Vehicle.isA(5) --> false
 
 	@example
-		local TOGGLE = _.enum("ON", "OFF")
+		local TOGGLE = dash.enum("ON", "OFF")
 		TOGGLE.isA("ON") --> true
 		TOGGLE.isA(5) --> false
 
-	@usage This is useful if you no nothing about _value_.
+	@usage This is useful if you know nothing about _value_.
 ]]
 --: <T>(any, Type<T> -> bool)
 function Classes.isA(value, Type)

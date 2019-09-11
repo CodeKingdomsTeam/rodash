@@ -1,0 +1,220 @@
+Type "Type"
+= TypeDef
+/ _ type:GenericFunction _ {
+	return type;
+}
+
+TypeDef "TypeDef"
+= "type" _ left:Type _ "=" _ right:Type {
+	return {
+        typeKind: 'definition',
+        left,
+        right
+    }
+}
+
+GenericFunction "GenericFunction"
+= generics:GenericTuple _ tuple:Tuple? {
+	if ( tuple ) {
+        tuple.genericTypes = generics;
+        return tuple;
+	}
+	return {
+		typeKind: 'tuple',
+        elementTypes: [],
+		genericTypes: generics
+	}
+}
+/ Tuple
+
+GenericTuple "GenericTuple"
+= "<" _ left:Generic right:(_ "," _ Generic)* _ ">" {
+    const generics = [];
+	generics.push(left);
+    right.map(key => {
+        generics.push(key[3]);
+    })
+    return generics;
+}
+
+Generic "Generic"
+= isRestParameter:"..."? _ left:GenericName right:(_ ":" _ UnitaryType)? {
+	var generic = {			
+		tag: left,
+		typeKind: 'generic',
+		extendingType: right ? right[3] : {
+		    typeKind: 'any'
+		}
+	};
+    if (isRestParameter) {
+	    generic.isRestParameter = true
+    }
+    return generic;
+}
+
+Tuple "Tuple"
+= left:Union right:(_ "," _ Union)* functionType:(_ "->" _ ReturnType)? {
+	let elementTypes = [left].concat( right.map(key => key[3]) );
+	if ( functionType ) {
+		if ( !right.length && left.typeKind === 'tuple') {
+			elementTypes = left.elementTypes
+		}
+		let fn = {
+			typeKind: 'function',
+			parameterTypes: elementTypes,
+			returnType: functionType[3]
+		};
+        return fn;
+	}
+	if ( !right.length ) {
+        return left;
+    }
+	return {
+		typeKind: 'tuple',
+		elementTypes
+	};
+}
+
+ReturnType "ReturnType"
+= isYield:"yield"? type:Type {
+	if (isYield) {
+    	type.isYielding = true;
+    }
+	return type;
+}
+
+Union "Union"
+= left:Intersection right:(_ "|" _ Intersection)* {
+    if ( !right.length ) {
+        return left;
+    }
+	return {
+		typeKind: 'union',
+		allowedTypes: [left].concat( right.map(key => key[3]) )
+	}
+}
+
+Intersection "Intersection"
+= left:UnitaryType right:(_ "&" _ UnitaryType)* {
+    if ( !right.length ) {
+        return left;
+    }
+	return {
+		typeKind: 'intersection',
+		requiredTypes: [left].concat( right.map(key => key[3]) )
+	}
+}
+
+UnitaryType "UnitaryType"
+= mutType:("mut" _)? tag:(ParameterTag _ ":")? restParameter:("..." _)? type:FixedType generics:(_ "<" _ GenericArgs _  ">")? capture:(_ "[]" / _ "{}")* optional:(_ "?")? {
+    if ( generics ) {
+        type.genericParameters = generics[3];
+    }
+    if (capture.length) {
+        type = { typeKind: 'table', dimensions: capture.map(function(match) { return {isArray:match[1] === "[]"} }), elementType: type }
+    }
+    if (restParameter) {
+        type.isRestParameter = true;
+    }
+    if (mutType) {
+        type.isMutable = true;
+    }
+    if (optional) {
+        type = {
+            typeKind: 'optional',
+            optionalType: type
+        }
+    }
+	if ( tag ) {
+		type.tag = tag[0];
+	}
+    return type;
+}
+/ "..." {
+	return {
+    	isRestParameter: true,
+        typeKind: 'any'
+    };
+}
+
+GenericArgs "GenericArgs"
+= left:UnitaryType right:(_ "," _ GenericArgs)? {
+	return [left].concat(right ? right[3] : []);
+}
+
+FixedType "FixedType"
+= "{" _ tuple:Tuple?_ "}" {
+    return {
+        typeKind: 'array',
+        valueType: tuple
+    };
+}
+/ "{" _ iterator:IteratorType _ "}" {
+    return {
+        typeKind: 'dictionary',
+        keyType: iterator.keyType,
+		valueType: iterator.valueType
+    }
+}
+/ TypeName
+/ "(" _ type:Type? _ ")" {
+	return type || {
+		typeKind: 'void'
+	};
+}
+
+IteratorType "IteratorType"
+= "[" _ key:UnitaryType _ "]" _ ":" _ value:Tuple {
+	return {
+		keyType: key,
+		valueType: value
+	};
+}
+
+GenericName "GenericName"
+= _ [A-Za-z_][A-Za-z0-9_]* {
+	return text();
+}
+
+ParameterTag "ParameterTag"
+= _ [A-Za-z_][A-Za-z0-9_]* {
+	return text();
+}
+
+TypeName "TypeName"
+= _ name:([A-Za-z][A-Za-z0-9._]*) {
+
+	name = name[0] + name[1].join('');
+
+	switch (name) {
+
+		case 'char':
+		case 'string':
+		case 'number':
+		case 'int':
+		case 'uint':
+		case 'float':
+		case 'number':        
+		case 'bool':
+		case 'nil':
+		case 'never':
+		case 'fail':
+		case 'any':
+		case 'void':
+
+			return {
+				typeKind: name
+			};
+
+		default:
+
+			return {
+				typeKind: 'alias',
+				aliasName: name
+			}
+
+	}
+}
+
+_ "whitespace"
+= [ \t\n\r]*

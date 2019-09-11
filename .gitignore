@@ -53,8 +53,9 @@ luac.out
 /testReport.xml
 
 /site
-.mkdocs.yml
+mkdocs.yml
 /docs/api
+/docs/glossary.md
 
 node_modules
 
