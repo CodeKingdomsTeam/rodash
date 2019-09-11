@@ -165,7 +165,7 @@ function Functions.once(fn)
 end
 
 --[[
-	Calls the supplied _fn_ on the subject and any additional arguments, returing the result.
+	Calls the supplied _fn_ on the subject and any additional arguments, returning the result.
 	@trait Chainable
 ]]
 --: <S: Subject, A, R>(S, (S, ...A -> R), ...A -> R)

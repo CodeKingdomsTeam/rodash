@@ -14,7 +14,7 @@ See the [Getting Started](getting-started) page for examples of how you can use 
 
 Then require Rodash in any of your scripts:
 
-```
+```lua
 local dash = require(game.ReplicatedStorage.Rodash)
 
 local list = {"cheese"}
@@ -24,9 +24,9 @@ list --> {"cheese", "nachos", "chillies", "bbq sauce"}
 
 If you prefer, you can alias specific Rodash functions yourself:
 
-```
-local Rodash = require(game.ReplicatedStorage.Rodash)
-local append = Rodash.append
+```lua
+local dash = require(game.ReplicatedStorage.Rodash)
+local append = dash.append
 ```
 
 # Discussion

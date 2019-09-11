@@ -24,7 +24,7 @@ local Classes = {}
 	@param decorators (default = `{}`)
 	@example
 		-- Create a simple Vehicle class
-		local Vehicle = dash.class("Vehicle", function( wheelCount ) return 
+		local Vehicle = dash.class("Vehicle", function(wheelCount) return 
 			{
 				speed = 0,
 				wheelCount = wheelCount
@@ -91,7 +91,7 @@ function Classes.class(name, constructor, decorators)
 		Run after the instance has been properly initialized, allowing methods on the instance to
 		be used.
 		@example
-			local Vehicle = dash.class("Vehicle", function( wheelCount ) return 
+			local Vehicle = dash.class("Vehicle", function(wheelCount) return 
 				{
 					speed = 0,
 					wheelCount = wheelCount
@@ -126,7 +126,7 @@ function Classes.class(name, constructor, decorators)
 	--[[
 		Returns `true` if _value_ is an instance of _Class_ or any sub-class.
 		@example
-			local Vehicle = dash.class("Vehicle", function( wheelCount ) return 
+			local Vehicle = dash.class("Vehicle", function(wheelCount) return 
 				{
 					speed = 0,
 					wheelCount = wheelCount
@@ -155,7 +155,7 @@ function Classes.class(name, constructor, decorators)
 		Super methods can be accessed using `Class.methodName` and should be called with self.
 
 		@example
-			local Vehicle = dash.class("Vehicle", function( wheelCount ) return 
+			local Vehicle = dash.class("Vehicle", function(wheelCount) return 
 				{
 					speed = 0,
 					wheelCount = wheelCount
@@ -334,11 +334,11 @@ end
 	A decorator which adds a dictionary of functions to a Class table.
 	@example
 		local CanBrake = {
-			brake = function( self )
+			brake = function(self)
 				self.speed = 0
 			end
 		}
-		local Car = dash.class("Car", function( speed )
+		local Car = dash.class("Car", function(speed)
 			return {
 				speed = speed
 			}
@@ -363,7 +363,7 @@ end
 	the result of the function as the class instance.
 	@example
 		local Frozen = dash.decorate(dash.freeze)
-		local StaticCar = dash.class("StaticCar", function( speed )
+		local StaticCar = dash.class("StaticCar", function(speed)
 			return {
 				speed = speed
 			}
@@ -769,7 +769,7 @@ end
 	The function will catch any errors thrown during this check, returning false if so.
 
 	@example
-		local Vehicle = dash.class("Vehicle", function( wheelCount ) return 
+		local Vehicle = dash.class("Vehicle", function(wheelCount) return 
 			{
 				speed = 0,
 				wheelCount = wheelCount

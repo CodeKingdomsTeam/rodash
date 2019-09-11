@@ -16,7 +16,7 @@ local baseRandomStream = Random.new()
 	isn't a promise.
 	@trait Yieldable
 	@example
-		local heat = function( item )
+		local heat = function(item)
 			return dash.delay(1).returns("hot " .. item)
 		end
 		local recipe = {"wrap", heat("steak"), heat("rice")}
@@ -54,9 +54,9 @@ end
 	
 	@returns an array mapping the input to resolved elements.
 	@example
-		local heat = function( item )
+		local heat = function(item)
 			local oven = dash.parallel({item, dash.delay(1)})
-			return oven:andThen(function( result )
+			return oven:andThen(function(result)
 				return "hot-" .. result[1] 
 			end)
 		end
@@ -92,9 +92,9 @@ end
 	@returns a dictionary mapping the input to resolved elements.
 	@rejects passthrough
 	@example
-		local heat = function( item )
+		local heat = function(item)
 			local oven = dash.parallel({item, dash.delay(1)})
-			return oven:andThen(function( result )
+			return oven:andThen(function(result)
 				return "hot-" .. result[1] 
 			end)
 		end
@@ -195,7 +195,7 @@ end
 	whether it has resolved or rejected.
 	@param fn _function(ok, result)_
 	@example
-		local getHunger = dash.async(function( player )
+		local getHunger = dash.async(function(player)
 			if player.health == 0 then
 				error("Player is dead!")
 			else
@@ -203,7 +203,7 @@ end
 			end
 		end)
 		local localPlayer = game.Players.LocalPlayer
-		local isHungry = getHunger( localPlayer ):finally(function( isAlive, result )
+		local isHungry = getHunger( localPlayer ):finally(function(isAlive, result)
 			return isAlive and result < 5
 		end)
 ]]
@@ -296,14 +296,14 @@ end
 	after any asynchronous actions, and rejects if the function throws an error.
 	@rejects passthrough
 	@example
-		local fetch = dash.async(function( url )
+		local fetch = dash.async(function(url)
 			local HttpService = game:GetService("HttpService")
 			return HttpService:GetAsync(url)
 		end)
 		dash.parallelAll({
 			main = fetch("http://example.com/burger"),
 			side = fetch("http://example.com/fries") 
-		}):andThen(function( meal )
+		}):andThen(function(meal)
 			print("Meal", dash.pretty(meal))
 		end)
 		-->> Meal {burger = "Cheeseburger", fries = "Curly fries"} (ideal response)

@@ -107,7 +107,7 @@ end
 	@example
 		-- Use map to remove elements while preserving keys:
 		local ingredients = {veg = "carrot", sauce = "tomato", herb = "basil"}
-		local carrotsAndHerbs = dash.map(ingredients, function( value, key )
+		local carrotsAndHerbs = dash.map(ingredients, function(value, key)
 			if value == "carrot" or key == "herb" then
 				return value
 			end
@@ -116,7 +116,7 @@ end
 	@example
 		-- Use map with multiple values of a table at once:
 		local numbers = {1, 1, 2, 3, 5} 
-		local nextNumbers = dash.map(numbers, function( value, key )
+		local nextNumbers = dash.map(numbers, function(value, key)
 			return value + (numbers[key - 1] or 0)
 		end)
 		nextNumbers --> {1, 2, 3, 5, 8}

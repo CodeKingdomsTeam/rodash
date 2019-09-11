@@ -37,7 +37,7 @@ A cleaner way to get the player names from the list of players is using `map`:
 local dash = require(game.ReplicatedStorage.Rodash)
 
 dash.setInterval(function()
-	local playerNames = dash.map(game.Players:GetChildren(), function( name )
+	local playerNames = dash.map(game.Players:GetChildren(), function(name)
 		return player.Name
 	end)
 	local nameList = table.concat(playerNames, ",")
@@ -74,7 +74,7 @@ dash.setInterval(function()
 end, 1)
 ```
 
-Rodash dash.format and dash.pretty can be used to quickly print values that you need from Lua. Here, we can quickly get the length of the playerNames array, and then print the array:
+Rodash dash.format can be used to quickly print values that you need from Lua. Specifically, format can print variables using `{}` regardless of what type they are. Here, we can quickly get the length of the playerNames array, and then print the array with dash.pretty using the `#?` formatter:
 
 ```lua
 local dash = require(game.ReplicatedStorage.Rodash)
