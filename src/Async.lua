@@ -2,6 +2,12 @@
 	Building upon the functionality of [Roblox Lua Promise](https://github.com/LPGhatguy/roblox-lua-promise)
 	and borrowing ideas from [Bluebird](http://bluebirdjs.com/docs/getting-started.html),
 	these functions improve the experience of working with asynchronous code in Roblox.
+
+	Promises can be thought of as a variable whose value might not be known immediately when they
+	are defined. They allow you to pass around a "promise" to the value, rather than yielding or
+	waiting until the value has resolved. This means you can write functions which pass any
+	promises to right places in your code, and delay running any code which requires the value
+	until it is ready.
 ]]
 local t = require(script.Parent.Parent.t)
 local Tables = require(script.Parent.Tables)
@@ -66,6 +72,7 @@ end
 	@usage This function is like `Promise.all` but allows objects in the array which aren't
 		promises. These are considered resolved immediately.
 	@usage Promises that return nil values will cause the return array to be sparse.
+	@see [Promise](https://github.com/LPGhatguy/roblox-lua-promise)
 ]]
 --: <T>((Promise<T> | T)[] -> Promise<T[]>)
 function Async.parallel(array)
@@ -103,6 +110,17 @@ end
 			filling = heat("cheese")
 		})
 		toastie:await() --> {bread = "brown", filling = "hot-cheese"} (1 second later)
+	@example
+		local fetch = dash.async(function(url)
+			local HttpService = game:GetService("HttpService")
+			return HttpService:GetAsync(url)
+		end)
+		dash.parallelAll({
+			main = fetch("http://example.com/burger"),
+			side = fetch("http://example.com/fries") 
+		}):andThen(function(meal)
+			print("Meal", dash.pretty(meal))
+		end)
 	@usage Values which are not promises are considered resolved immediately.
 ]]
 --: <T>((Promise<T> | T){}) -> Promise<T{}>
@@ -157,8 +175,20 @@ end
 	@returns an array containing the first n resolutions, in the order that they resolved.
 	@rejects passthrough
 	@throws OutOfBoundsError - if the number of required promises is greater than the input length.
-	@usage Promises which return nil values are ignored due to the in-order constraint.
+	@example
+		-- Here promise resolves to the result of fetch, or resolves to "No burger for you" if the
+		-- fetch takes more than 2 seconds.
+		local fetch = dash.async(function(url)
+			local HttpService = game:GetService("HttpService")
+			return HttpService:GetAsync(url)
+		end)
+		local promise = dash.race(
+			dash.delay(2):andThen(dash.returns("No burger for you"),
+			fetch("http://example.com/burger")
+		)
+	@usage Note that Promises which return nil values will produce a sparse array.
 	@usage The size of _array_ must be equal to or larger than _n_.
+	@see `dash.async`
 ]]
 --: <T>(Promise<T>[], uint?) -> Promise<T[]>
 function Async.race(array, n)
@@ -192,7 +222,8 @@ end
 
 --[[
 	Returns a promise which completes after the _promise_ input has completed, regardless of
-	whether it has resolved or rejected.
+	whether it has resolved or rejected. The _fn_ is passed `true` if the promise did not error,
+	otherwise `false`, and the promise's _result_ as the second argument.
 	@param fn _function(ok, result)_
 	@example
 		local getHunger = dash.async(function(player)
@@ -207,16 +238,16 @@ end
 			return isAlive and result < 5
 		end)
 ]]
---: <T>(Promise<T>, (bool, T) -> nil) -> Promise<nil>
+--: <T, R>(Promise<T>, (bool, T) -> R) -> Promise<R>
 function Async.finally(promise, fn)
 	assert(Async.isPromise(promise), "BadInput: promise must be a promise")
 	return promise:andThen(
 		function(...)
-			fn(true, ...)
+			return fn(true, ...)
 		end
 	):catch(
 		function(...)
-			fn(false, ...)
+			return fn(false, ...)
 		end
 	)
 end
@@ -255,10 +286,16 @@ end
 	once all functions have resolved. Like compose, functions receive the resolution of the
 	previous promise as argument(s).
 	@example
-		local function fry(item) return dash.delay(1):andThen(dash.returns("fried " .. item)) end
-		local function cheesify(item) return dash.delay(1):andThen(dash.returns("cheesy " .. item)) end
-		local prepare = dash.compose(fry, cheesify)
+		local function fry(item)
+			return dash.delay(1):andThen(dash.returns("fried " .. item))
+		end
+		local function cheesify(item)
+			return dash.delay(1):andThen(dash.returns("cheesy " .. item))
+		end
+		local prepare = dash.series(fry, cheesify)
 		prepare("nachos"):await() --> "cheesy fried nachos" (after 2s)
+	@see `dash.parallel`
+	@see `dash.delay`
 ]]
 --: <A>((...A -> Promise<A>)[]) -> ...A -> Promise<A>
 function Async.series(...)
@@ -300,14 +337,12 @@ end
 			local HttpService = game:GetService("HttpService")
 			return HttpService:GetAsync(url)
 		end)
-		dash.parallelAll({
-			main = fetch("http://example.com/burger"),
-			side = fetch("http://example.com/fries") 
-		}):andThen(function(meal)
-			print("Meal", dash.pretty(meal))
+		fetch("http://example.com/burger"):andThen(function(meal)
+			print("Meal:", meal)
 		end)
-		-->> Meal {burger = "Cheeseburger", fries = "Curly fries"} (ideal response)
+		-->> Meal: Cheeseburger (ideal response)
 	@usage With `promise:await` the `dash.async` function can be used just like the async-await pattern in languages like JS.
+	@see `dash.parallel`
 ]]
 --: <T, A>(Yieldable<T, A>) -> ...A -> Promise<T>
 function Async.async(fn)
@@ -335,6 +370,12 @@ end
 	Wraps any functions in _dictionary_ with `dash.async`, returning a new dictionary containing
 	functions that return promises when called rather than yielding.
 	@example
+		local http = dash.asyncAll(game:GetService("HttpService"))
+		http:GetAsync("http://example.com/burger"):andThen(function(meal)
+			print("Meal", meal)
+		end)
+		-->> Meal: Cheeseburger (some time later)
+	@example
 		local buyDinner = dash.async(function()
 			local http = dash.asyncAll(game:GetService("HttpService"))
 			local order = dash.parallelAll({
@@ -344,6 +385,8 @@ end
 			return http:PostAsync("http://example.com/purchase", order:await())
 		end)
 		buyDinner():await() --> "Purchased!" (some time later)
+	@see `dash.async`
+	@see `dash.parallelAll`
 ]]
 --: <T, Args>(Yieldable<T, Args>{}) -> (...Args -> Promise<T>){}
 function Async.asyncAll(dictionary)
@@ -382,11 +425,26 @@ end
 	| **onDone(response, durationInSeconds)** | _(T, number) -> nil_ | a hook for when the promise resolves |
 	| **onFail(errorMessage)** | _string -> nil_ | a hook for when the promise has failed and no more retries are allowed |
 	
+	@example
+		-- Use dash.retryWithBackoff to retry a GET request repeatedly.
+		local fetchPizza = dash.async(function()
+			local HttpService = game:GetService("HttpService")
+			return HttpService:GetAsync("https://example.com/pizza")
+		end)
+		dash.retryWithBackoff(fetchPizza, {
+			maxTries = 3,
+			onRetry = function(waitTime, errorMessage)
+				print("Failed to fetch due to", errorMessage)
+				print("Retrying in ", waitTime)
+			end
+		}):andThen(function(resultingPizza) 
+			print("Great, you have: ", resultingPizza)
+		end)
 	@rejects passthrough
 ]]
---: <T>(() -> Promise<T>, BackoffOptions) -> Promise<T>
-function Async.retryWithBackoff(getPromise, backoffOptions)
-	assert(Functions.isCallable(getPromise), "BadInput: getPromise must be callable")
+--: <T>(Async<T>, BackoffOptions) -> Promise<T>
+function Async.retryWithBackoff(asyncFn, backoffOptions)
+	assert(Functions.isCallable(asyncFn), "BadInput: asyncFn must be callable")
 	local function backoffThenRetry(errorMessage)
 		local waitTime =
 			(backoffOptions.retryExponentInSeconds ^ backoffOptions.attemptNumber) * backoffOptions.randomStream:NextNumber() +
@@ -395,7 +453,7 @@ function Async.retryWithBackoff(getPromise, backoffOptions)
 		return Async.delay(waitTime):andThen(
 			function()
 				return Async.retryWithBackoff(
-					getPromise,
+					asyncFn,
 					Tables.assign(
 						{},
 						backoffOptions,
@@ -457,7 +515,7 @@ function Async.retryWithBackoff(getPromise, backoffOptions)
 	local ok, response =
 		pcall(
 		function()
-			return getPromise()
+			return asyncFn()
 		end
 	)
 

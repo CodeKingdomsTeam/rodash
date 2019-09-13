@@ -1,4 +1,4 @@
---[[
+--[=[
 	A collection of functions that operate specifically on arrays, defined as tables with just keys _1..n_.
 
 	```lua
@@ -14,8 +14,8 @@
 		42
 	```
 
-	Functions can also iterate over custom iterator functions which provide elements with natural keys _1..n_.
-]]
+	These functions can iterate over any [Ordered](/types#Ordered) values.
+]=]
 local t = require(script.Parent.Parent.t)
 local Tables = require(script.Parent.Tables)
 
@@ -41,12 +41,15 @@ local typeIndex = {
 }
 
 --[[
+	Given two values _a_ and _b_, this function return `true` if _a_ is typically considered lower
+	than _b_.
+
 	The default comparator is used by `dash.sort` and can sort elements of different types, in the
 	order: boolean, number, string, function, CFunction, userdata, and table.
-		
+
 	Elements which cannot be sorted naturally will be sorted by their string value.
 
-	@see dash.sort
+	@see `dash.sort`
 ]]
 --: <T>((T, T) -> bool)
 function Arrays.defaultComparator(a, b)
@@ -69,15 +72,26 @@ end
 --[[
 	Returns a sorted array from the _input_ array, based on a _comparator_ function.
 
-	Unlike `table.sort`, the comparator to `dash.sort` is optional, but it can also be defined to
-	a numeric weight or nil as well as a boolean.
+	Unlike `table.sort`, the comparator to `dash.sort` is optional, but if defined it can also
+	return a numeric weight or nil as well as a boolean to provide an ordering of the elements.
 
-	@param comparator (optional) should return `true` or `n < 0` if the first element should be
-		before the second in the resulting array, or `0` or `nil` if the elements have the same
-		order.
+	@param comparator (optional) should return `true` or `n < 0` if the first element should be before the second in the resulting array, or `0` or `nil` if the elements have the same order.
 
 	@example dash.sort({2, 5, 3}) --> {2, 3, 5}
 	@example dash.sort({"use", "the", "force", "Luke"}) --> {"Luke", "force", "the", "use"}
+	@example
+		dash.sort({
+			name = "Luke",
+			health = 50
+		}, {
+			name = "Yoda",
+			health = 9001
+		}, {
+			name = "Jar Jar Binks",
+			health = 0
+		}, function(a, b)
+			return a.health < b.health
+		end) --> the characters sorted in ascending order by their health
 ]]
 --: <T>(T[], (T -> bool | number | nil) -> T[])
 function Arrays.sort(input, comparator)
@@ -105,7 +119,9 @@ function Arrays.sort(input, comparator)
 end
 
 --[[
-	Returns a copied portion of the _source_.
+	Returns a copied portion of the _source_, between the _first_ and _last_ elements inclusive and
+	jumping _step_ each time if provided.
+	
 	@param first (default = 1) The index of the first element to include.
 	@param last (default = `#source`) The index of the last element to include.
 	@param step (default = 1) What amount to step the index by during iteration.
@@ -176,7 +192,7 @@ function Arrays.reduce(source, handler, initial)
 end
 
 --[[
-	Inserts into _target_ the elements from all subsequent arguments in order.
+	Inserts into the _target_ array the elements from all subsequent arguments in order.
 	@param ... any number of other arrays
 	@example dash.append({}, {1, 2, 3}, {4, 5, 6}) --> {1, 2, 3, 4, 5, 6}
 	@example dash.append({1, 2, 3}) --> {1, 2, 3}
@@ -258,7 +274,7 @@ end
 		-- Find the index of a value:
 		local _, index = dash.first(names, dash.fn:matches("Bilbo"))
 		index --> 2
-	@see dash.find 
+	@see `dash.find` 
 	@usage If you need to find a value in a table which isn't an array, use `dash.find`.
 ]]
 --: <T: Iterable<K,V>>(T, (element: V, key: K -> bool) -> V?)
@@ -293,8 +309,8 @@ end
 
 		local _, key = dash.last(names, dash.fn:matches("Frodo"))
 		key --> 2
-	@see dash.find
-	@see dash.first
+	@see `dash.find`
+	@see `dash.first`
 ]]
 --: <T: Iterable<K,V>>(T, (element: V, key: K -> bool) -> V?)
 function Arrays.last(source, predicate)

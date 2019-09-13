@@ -45,9 +45,9 @@ local Classes = {}
 	@usage A private field should only be accessed by a method of the class itself, though Rodash
 		does not restrict this in code.
 	@usage Public fields are recommended when there is no complex access logic e.g. `position.x`
-	@see dash.classWithInterface - recommended for providing runtime type-checking.
-	@see dash.mixin - extend the class with extra methods.
-	@see dash.decorate - include methods that run when an instance of the class is constructed.
+	@see `dash.classWithInterface` - recommended for providing runtime type-checking.
+	@see `dash.mixin` - extend the class with extra methods.
+	@see `dash.decorate` - include methods that run when an instance of the class is constructed.
 ]]
 --: <T>(string, Constructor<T>?, Decorator<T>[]?) -> Class<T>
 function Classes.class(name, constructor, decorators)
@@ -64,6 +64,14 @@ function Classes.class(name, constructor, decorators)
 	}
 	--[[
 		Return a new instance of the class, passing any arguments to the specified constructor.
+		@example
+			local Car = dash.class("Car", function(speed)
+				return {
+					speed = speed
+				}
+			end)
+			local car = Car.new(5)
+			dash.pretty(car) --> 'Car {speed = 5}'
 	]]
 	--: Constructor<T>
 	function Class.new(...)
@@ -198,22 +206,26 @@ function Classes.class(name, constructor, decorators)
 		Create a subclass of _Class_ with a new _name_ that inherits the metatable of _Class_,
 		optionally overriding the _constructor_ and providing additional _decorators_.
 
+		@example
+			local Vehicle = dash.classWithInterface("Vehicle", {
+				color = t.string
+			})
+			local Car = Vehicle:extendWithInterface("Car", {
+				bootContents = t.array(t.string)
+			})
+			local car = Car.new({
+				color = "red",
+				bootContents = "tyre", "bannana"
+			})
+			dash.pretty(car) --> 'Car {bootContents = {"tyre", "bannana"}, color = "red"}'
+
 		@usage Interfaces currently silently override super interfaces, even if their types
 		are incompatible. Avoid doing this as more advanced type checking may throw if the types
 		do not unify in the future.
 
-		@example
-			local Vehicle = dash.classWithInterface("Vehicle", {
-				speed = t.number,
-				wheelCount = t.number,
-				color: t.string
-			})
-			local vehicle = Vehicle.new({
-				speed = 5,
-				wheelCount = 4,
-				color = "red"
-			})
-			dash.pretty(vehicle) --> 'Vehicle {speed = 4, wheelCount = 4, color = "red"}'
+		@see `dash.extend`
+		@see `dash.classWithInterface`
+		@see [The t library](https://github.com/osyrisrblx/t) - used to check types at runtime.
 	]]
 	--: <S: T>(T: string, S, Decorator[]?) -> Class<S>
 	function Class:extendWithInterface(name, interface, decorators)
@@ -242,6 +254,38 @@ function Classes.class(name, constructor, decorators)
 	--[[
 		Return a string representation of the instance. By default this is the _name_ field (or the
 		Class name if this is not defined), but the method can be overridden.
+		@example
+			local Car = dash.class("Car", function(name)
+				return {
+					name = name
+				}
+			end)
+			
+			local car = Car.new()
+			car:toString() --> 'Car'
+			tostring(car) --> 'Car'
+			print("Hello " .. car) -->> Hello Car
+
+			local bob = Car.new("Bob")
+			bob:toString() --> 'Bob'
+			tostring(bob) --> 'Bob'
+			print("Hello " .. bob) -->> Hello Bob
+
+		@example
+			local NamedCar = dash.class("NamedCar", function(name)
+				return {
+					name = name
+				}
+			end)
+
+			function NamedCar:toString()
+				return "Car called " .. self.name
+			end
+
+			local bob = NamedCar.new("Bob")
+			bob:toString() --> 'Car called Bob'
+			tostring(bob) --> 'Car called Bob'
+			print("Hello " .. bob) -->> Hello Car called Bob
 	]]
 	--: () -> string
 	function Class:toString()
@@ -280,25 +324,44 @@ function Classes.class(name, constructor, decorators)
 end
 
 --[[
-	Create a class called _name_ that implements a specific strict interface which is asserted when
-	any instance is created.
+	Create a class called _name_ that implements a specific strict _interface_ which is asserted
+	when any instance is created.
 
 	Instead of using a constructor, an instance is initialized with a table containing the required
 	fields. If an `_init` method is present on the instance, this is called afterwards, which has
 	the added benefit over a constructor that `self` and the instance are well-defined.
 
-	Optionally, you may provide an array of _decorators_ which compose and reduce the Class, adding
-	additional functionality in the same way `dash.class` does.
+	Rodash uses [The t library](https://github.com/osyrisrblx/t) to check types at runtime, meaning
+	the interface must be a dictionary of keys mapped to type assertion functions, such as
+	`t.number`, `dash.isCallable` etc.
+
+	Optionally, you may provide an array of _decorators_ which are reduced with the Class, adding
+	additional functionality in the same way `dash.class` does. See [Decorator](/types#Decorator)
+	for more information.
+
+	@example
+		local Vehicle = dash.classWithInterface("Vehicle", {
+			speed = t.number,
+			wheelCount = t.number,
+			color = t.string
+		})
+		local vehicle = Vehicle.new({
+			speed = 5,
+			wheelCount = 4,
+			color = "red"
+		})
+		dash.pretty(vehicle) --> 'Vehicle {speed = 4, wheelCount = 4, color = "red"}'
 
 	@usage Rodash uses `t` by Osyris to perform runtime type assertions, which we recommend using during
 	development and production code to catch errors quickly and fail fast. For more information
 	about `t`, please visit [https://github.com/osyrisrblx/t](https://github.com/osyrisrblx/t).
 	@usage If you want to instantiate private fields, we recommend using a static factory with a
-		public interface, using `dash.privatize` if appropriate.
-	@see dash.class
-	@see dash.privatize
+		public interface, See `dash.privatize` for an example.
+	@see `dash.class`
+	@see `dash.privatize`
+	@see [The t library](https://github.com/osyrisrblx/t) - used to check types at runtime.
 ]]
---: <T>(string, T, Decorator<T>[]? -> Class<T>)
+--: <T>(string, Interface<T>, Decorator<T>[]? -> Class<T>)
 function Classes.classWithInterface(name, interface, decorators)
 	local function getImplementsInterface(currentInterface)
 		local ok, problem = t.values(t.callback)(currentInterface)
@@ -359,9 +422,10 @@ function Classes.mixin(fns)
 end
 
 --[[
-	A decorator which runs _fn_ on each instance of the class that is created, returning
+	Returns a decorator which runs _fn_ on each instance of the class that is created, returning
 	the result of the function as the class instance.
 	@example
+		-- Create a decorator which freezes all class keys
 		local Frozen = dash.decorate(dash.freeze)
 		local StaticCar = dash.class("StaticCar", function(speed)
 			return {
@@ -373,7 +437,9 @@ end
 		end
 		local car = Car.new(5)
 		print(car.speed) --> 5
-		car:brake() --!> ReadonlyKey: s
+		-- The car cannot change speed because speed is now readonly.
+		car:brake() --!> ReadonlyKey: Attempt to write to a frozen key speed
+	@see `dash.freeze`
 	@usage Include the return value of this function in the decorators argument when creating a class.
 ]]
 --: <T>((self:T, ... -> ...) -> Class<T> -> Class<T>)
@@ -445,6 +511,11 @@ end
 		local slowCar = Car.new(5)
 		print(fastCar == fastCar2) --> true
 		print(fastCar == slowCar) --> false
+	@usage If you want to check for equality that includes deep descendants, we recommend you
+		implement a custom `:equals` method on your class rather than use `dash.deepEqual` as this
+		may be slow or fail to check the type of instances in the tree.
+	@see `dash.deepEqual` - if you want to consider deep equality
+	@see `Class:equals`
 ]]
 --: <T>(Class<T> -> ShallowEq<T>)
 function Classes.ShallowEq(Class)
@@ -533,10 +604,11 @@ end
 			"Car",
 			function(speed)
 				return {
-					speed = speed
+					speed = speed,
+					color = "red"
 				}
 			end,
-			{dash.Formatable()}
+			{dash.Formatable({"speed"})}
 		)
 		print(Car.new(5)) --> "Car({speed:5})"
 ]]
@@ -582,7 +654,7 @@ end
 		else
 			game.Workspace.RoomLight.Brightness = 0
 		end
-	@see dash.match
+	@see `dash.match`
 ]]
 --: <T>(string -> Enum<T>)
 function Classes.enum(keys)
@@ -687,11 +759,35 @@ function Classes.finalize(object)
 end
 
 --[[
-	Create a symbol with a specified _name_.
+	Create a symbol with a specified _name_. We recommend upper snake-case as the symbol is a
+	constant, unless you are linking the symbol conceptually to a different string.
 	
 	Symbols are useful when you want a value that isn't equal to any other type, for example if you
 	want to store a unique property on an object that won't be accidentally accessed with a simple
 	string lookup.
+
+	@example
+		local DOUBLE = dash.symbol("DOUBLE")
+		-- This function acts like filter, but doubles any elements in a row for which DOUBLE is
+		-- returned rather than true or false.
+		local function filterWithDouble(array, fn)
+			return dash.flatMap(array, function(element)
+				local result = fn(element)
+				if result == DOUBLE then
+					return {result, result}
+				elseif result then
+					return {result}
+				else
+					return {}
+				end
+			end)
+		end
+
+		local array = {1, 2, 3, 4, 5}
+		local function isEven(value)
+			return value % 2 == 0
+		end
+		filterWithDouble(array, isEven) --> {1, 2, 2, 3, 4, 4, 5}
 ]]
 --: <T>(string -> Symbol<T>)
 function Classes.symbol(name)
@@ -715,23 +811,26 @@ end
 	
 	Unfortunately you cannot iterate using `pairs` or `ipairs` on frozen objects because Lua 5.1
 	does not support overwriting these in metatables. However, you can use `dash.iterator` to get
-	an iterator 
+	an iterator for the object and use that.
 
 	Iterating functions in Rodash such as `dash.map`, `dash.filter` etc. can iterate over frozen objects
 	without this. If you want to treat the objects as arrays use `dash.iterator(frozenObject, true)`
 	explicitly.
+
 	@example
 		local drink = dash.freeze({
-			mixer = "coke",
-			spirit = "rum"
+			flavor = "mint",
+			topping = "sprinkles"
 		})
-		print(drink.mixer) --> "coke"
-		drink.mixer = "soda"
-		--!> "ReadonlyKey: Attempt to write to a frozen key mixer"
+		print(drink.flavor) --> "mint"
+		drink.flavor = "vanilla"
+		--!> "ReadonlyKey: Attempt to write to a frozen key flavor"
 		print(drink.syrup) --> nil
-		drink.syrup = "peach"
-		--!> "ReadonlyKey: Attempt to write to a frozen key peach"
-	@see dash.iterator
+		drink.topping = "flake"
+		--!> "ReadonlyKey: Attempt to write to a frozen key topping"
+
+		dash.values(drink) --> {"mint", "sprinkles"}
+	@see `dash.iterator`
 ]]
 --: <T: table>(T -> T)
 function Classes.freeze(object)
@@ -769,8 +868,8 @@ end
 	The function will catch any errors thrown during this check, returning false if so.
 
 	@example
-		local Vehicle = dash.class("Vehicle", function(wheelCount) return 
-			{
+		local Vehicle = dash.class("Vehicle", function(wheelCount)
+			return {
 				speed = 0,
 				wheelCount = wheelCount
 			}

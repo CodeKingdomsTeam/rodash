@@ -4,7 +4,7 @@ Rodash is a collection of functions designed to aid everyday game programming in
 
 # [Getting Started](https://codekingdomsteam.github.io/rodash/)
 
-Please download [the latest release](https://codekingdomsteam.github.io/rodash/releases) and [read the docs](https://codekingdomsteam.github.io/rodash/) to learn how to use Rodash in your games.
+Please [read the docs](https://codekingdomsteam.github.io/rodash/) to learn how to use Rodash in your games.
 
 # Contributing
 
