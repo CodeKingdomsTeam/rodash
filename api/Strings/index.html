@@ -567,6 +567,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../../types/" title="Types" class="md-nav__link">
+      Types
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
     <a href="../../glossary/" title="Glossary" class="md-nav__link">
       Glossary
     </a>
@@ -858,7 +870,7 @@ Converts <em>char</em> into a hex representation</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>char</strong> - <code>char</code> </p>
-<p><strong>format</strong> - <code>string?</code>  - (optional) a string passed to <code>dash.format</code> which formats the hex value of each of the character's code points.</p>
+<p><strong>format</strong> - <code>string?</code>  - (optional) a string passed to <a href="/rodash/api/Strings/#format">dash.format</a> which formats the hex value of each of the character's code points.</p>
 <p><strong>useBytes</strong> - <code>boolean?</code>  - (default = false) whether to use the character's bytes, rather than UTF-8 code points.
 </p>
 </blockquote>
@@ -889,8 +901,8 @@ Converts <em>char</em> into a hex representation</p>
 <h3 id="debug">debug<a class="headerlink" href="#debug" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">debug</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="p">...)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-This function first calls <code>dash.format</code> on the arguments provided and then outputs the response
-to the debug target, set using <code>dash.setDebug</code>. By default, this function does nothing, allowing
+This function first calls <a href="/rodash/api/Strings/#format">dash.format</a> on the arguments provided and then outputs the response
+to the debug target, set using <a href="/rodash/api/Strings/#setdebug">dash.setDebug</a>. By default, this function does nothing, allowing
 developers to leave the calls in the source code if that is beneficial.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
@@ -902,11 +914,22 @@ developers to leave the calls in the source code if that is beneficial.</p>
 <blockquote>
 <p><code>string</code></p>
 </blockquote>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="c1">-- During development:</span>
+<span class="n">dash</span><span class="p">.</span><span class="n">setDebug</span><span class="p">()</span>
+<span class="c1">-- At any point in the code:</span>
+<span class="n">dash</span><span class="p">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Hello is printed&quot;</span><span class="p">)</span>
+<span class="c1">--&gt;&gt; Hello is printed</span>
+</pre></div>
+
 <p><strong>Usage</strong></p>
 <ul>
 <li>A common pattern would be to <code>dash.setDebug()</code> to alias to <code>print</code> during local development,
-and call e.g. <code>dash.setDebug(dash.bind(HttpService.PostAsync, "https://example.com/log"))</code>
-on a production build to allow remote debugging.</li>
+and send debug messages to an HTTP server on a production build to allow remote debugging.</li>
+</ul>
+<p><strong>See</strong></p>
+<ul>
+<li><a href="/rodash/api/Strings/#setdebug">dash.setDebug</a></li>
 </ul>
 <hr />
 <div class="rodocs-trait">Chainable
@@ -915,7 +938,7 @@ on a production build to allow remote debugging.</li>
 <h3 id="decodehtml">decodeHtml<a class="headerlink" href="#decodehtml" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">decodeHtml</span><span class="p">(</span><span class="n">str</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-The inverse of <code>dash.encodeHtml</code>.
+The inverse of <a href="/rodash/api/Strings/#encodehtml">dash.encodeHtml</a>.
 Converts any HTML entities in <code>str</code> to their corresponding characters.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
@@ -936,7 +959,8 @@ Converts any HTML entities in <code>str</code> to their corresponding characters
 <h3 id="decodeurl">decodeUrl<a class="headerlink" href="#decodeurl" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">decodeUrl</span><span class="p">(</span><span class="n">str</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-The inverse of <code>dash.encodeUrl</code>.</p>
+The inverse of <a href="/rodash/api/Strings/#encodeurl">dash.encodeUrl</a>. Use this to turn a URL which has been encoded for use in a
+HTTP request back into its original form.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>str</strong> - <code>string</code> 
@@ -961,7 +985,8 @@ The inverse of <code>dash.encodeUrl</code>.</p>
 <h3 id="decodeurlcomponent">decodeUrlComponent<a class="headerlink" href="#decodeurlcomponent" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">decodeUrlComponent</span><span class="p">(</span><span class="n">str</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-The inverse of <code>dash.encodeUrlComponent</code>.</p>
+The inverse of <a href="/rodash/api/Strings/#encodeurlcomponent">dash.encodeUrlComponent</a>. Use this to turn a string which has been encoded for
+use as a component of a url back into its original form.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>str</strong> - <code>string</code> 
@@ -1043,7 +1068,10 @@ to the end of a url.</p>
 <h3 id="encodeurl">encodeUrl<a class="headerlink" href="#encodeurl" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">encodeUrl</span><span class="p">(</span><span class="n">str</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-Encodes <em>str</em> for use as a URL, for example as an entire URL.</p>
+Encodes <em>str</em> for use as a URL, for example when calling an HTTP endpoint.</p>
+<p>Note that, unlike this function, undefined actually attempts to encode a string
+for purposes as a URL component rather than an entire URL, and as such will not produce a valid
+URL.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>str</strong> - <code>string</code> 
@@ -1062,13 +1090,17 @@ Encodes <em>str</em> for use as a URL, for example as an entire URL.</p>
 <ul>
 <li>This method is designed to act like <code>encodeURI</code> in JavaScript.</li>
 </ul>
+<p><strong>See</strong></p>
+<ul>
+<li><a href="/rodash/api/Strings/#encodeurlcomponent">dash.encodeUrlComponent</a></li>
+</ul>
 <hr />
 <div class="rodocs-trait">Chainable</div>
 
 <h3 id="encodeurlcomponent">encodeUrlComponent<a class="headerlink" href="#encodeurlcomponent" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">encodeUrlComponent</span><span class="p">(</span><span class="n">str</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-Encodes <em>str</em> for use in a URL, for example as a query parameter of a URL.</p>
+Encodes <em>str</em> for use in a URL, for example as a query parameter of a call to an HTTP endpoint.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>str</strong> - <code>string</code> 
@@ -1089,7 +1121,7 @@ Encodes <em>str</em> for use in a URL, for example as a query parameter of a URL
 <p>This method is designed to act like <code>encodeURIComponent</code> in JavaScript.</p>
 </li>
 <li>
-<p>This is very similar to <code>HttpService.EncodeUrl</code>, but is included for parity and conforms closer to the standard (e.g. EncodeUrl unnecessarily encodes <code>!</code>).</p>
+<p>This is very similar to undefined, but is included for parity and conforms closer to the standard (e.g. EncodeUrl unnecessarily encodes <code>!</code>).</p>
 </li>
 </ul>
 <hr />
@@ -1123,7 +1155,7 @@ Checks if <code>str</code> ends with the string <code>suffix</code>.</p>
 </pre></div>
 Returns the <em>format</em> string with placeholders <code>{...}</code> substituted with readable representations
 of the subsequent arguments.</p>
-<p>This function is a simpler &amp; more powerful version of <code>string.format</code>, inspired by <code>format!</code>
+<p>This function is a simpler &amp; more powerful version of <a href="/rodash/api/Strings/#format">dash.format</a>, inspired by <code>format!</code>
 in Rust.</p>
 <ul>
 <li><code>{}</code> formats and prints the next argument using <code>:format()</code> if available, or a suitable
@@ -1132,10 +1164,10 @@ default representation depending on its type.</li>
 <li><code>{#2}</code> prints the length of the 2nd argument.</li>
 </ul>
 <p>Display parameters can be combined after a <code>:</code> in the curly braces. Any format parameters used
-in <code>string.format</code> can be used here, along with these extras:</p>
+in <a href="/rodash/api/Strings/#format">dash.format</a> can be used here, along with these extras:</p>
 <ul>
-<li><code>{:?}</code> formats any value using <code>dash.serializeDeep</code>.</li>
-<li><code>{:#?}</code> formats any value using <code>dash.pretty</code>.</li>
+<li><code>{:?}</code> formats any value using <a href="/rodash/api/Tables/#serializedeep">dash.serializeDeep</a>.</li>
+<li><code>{:#?}</code> formats any value using <a href="/rodash/api/Strings/#pretty">dash.pretty</a>.</li>
 <li><code>{:b}</code> formats a number in its binary representation.</li>
 </ul>
 <p><strong>Parameters</strong></p>
@@ -1176,10 +1208,10 @@ for complete list of formating options and further use cases.</p>
 <p><strong>See</strong></p>
 <ul>
 <li>
-<p><a href="/api/Tables/#serializeDeep">dash.serializeDeep</a> </p>
+<p><a href="/rodash/api/Tables/#serializedeep">dash.serializeDeep</a></p>
 </li>
 <li>
-<p><a href="/api/Strings/#pretty">dash.pretty</a> </p>
+<p><a href="/rodash/api/Strings/#pretty">dash.pretty</a></p>
 </li>
 </ul>
 <hr />
@@ -1197,6 +1229,10 @@ Format a specific <em>value</em> using the specified <em>displayString</em>.</p>
 <blockquote>
 <p><code>string</code></p>
 </blockquote>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">formatValue</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="s2">&quot;:06X&quot;</span><span class="p">)</span> <span class="c1">--&gt; 0000FF</span>
+</pre></div>
+
 <hr />
 <h3 id="hextochar">hexToChar<a class="headerlink" href="#hextochar" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">hexToChar</span><span class="p">(</span><span class="n">hex</span><span class="p">)</span> <span class="c1">--&gt; char</span>
@@ -1294,19 +1330,42 @@ Makes a string of <code>length</code> from <code>str</code> by repeating charact
 </pre></div>
 Returns a human-readable string for the given <em>value</em>. The string will be formatted across
 multiple lines if a descendant element gets longer than <code>80</code> characters.</p>
+<p>Optionally a table of <a href="/types#SerializeOptions">SerializeOptions</a> can be passed which will pass
+to the underlying <a href="/rodash/api/Tables/#serialize">dash.serialize</a> function so you can customise what is displayed.</p>
+<p><strong>Types</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>any</code></p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>value</strong> - <code>any</code> </p>
-<p><strong>serializeOptions</strong> - <code>bool</code> 
+<p><strong>value</strong> - <code>T</code> </p>
+<p><strong>serializeOptions</strong> - <code>SerializeOptions&lt;T&gt;?</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
 <p><code>string</code></p>
 </blockquote>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">fox</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Mr. Fox&quot;</span><span class="p">,</span>
+    <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;red&quot;</span>
+<span class="p">}</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dash</span><span class="p">.</span><span class="n">pretty</span><span class="p">(</span><span class="n">fox</span><span class="p">))</span>
+<span class="c1">--&gt;&gt; {color = &quot;red&quot;, name = &quot;Mr. Fox&quot;}</span>
+</pre></div>
+
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">fox</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Mr. Fox&quot;</span><span class="p">,</span>
+    <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;red&quot;</span>
+<span class="p">}</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dash</span><span class="p">.</span><span class="n">pretty</span><span class="p">(</span><span class="n">fox</span><span class="p">,</span> <span class="p">{</span><span class="n">omitKeys</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">}}))</span>
+<span class="c1">--&gt;&gt; {color = &quot;red&quot;}</span>
+</pre></div>
+
 <p><strong>See</strong></p>
 <ul>
-<li><a href="/api/Tables/#serializeDeep">dash.serializeDeep</a> for a compact alternative.</li>
+<li><a href="/rodash/api/Tables/#serializedeep">dash.serializeDeep</a> for a compact alternative.</li>
 </ul>
 <hr />
 <div class="rodocs-trait">Chainable
@@ -1341,7 +1400,7 @@ Makes a string of <code>length</code> from <code>str</code> by repeating charact
 <h3 id="setdebug">setDebug<a class="headerlink" href="#setdebug" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">setDebug</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span> <span class="c1">--&gt; void</span>
 </pre></div>
-Hooks up any debug methods to invoke <em>fn</em>. By default, <code>dash.debug</code> does nothing.</p>
+Hooks up any debug methods to invoke <em>fn</em>. By default, <a href="/rodash/api/Strings/#debug">dash.debug</a> does nothing.</p>
 <p><strong>Types</strong></p>
 <blockquote>
 <p><strong>T</strong> - <code>any</code></p>
@@ -1355,9 +1414,29 @@ Hooks up any debug methods to invoke <em>fn</em>. By default, <code>dash.debug</
 <blockquote>
 <p><code>void</code></p>
 </blockquote>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">postMessage</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">async</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+    <span class="n">HttpService</span><span class="p">.</span><span class="n">PostAsync</span><span class="p">(</span><span class="s2">&quot;https://example.com/log&quot;</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+<span class="kr">end</span>
+<span class="c1">-- During production:</span>
+<span class="n">dash</span><span class="p">.</span><span class="n">setDebug</span><span class="p">(</span><span class="n">postMessage</span><span class="p">)</span>
+<span class="c1">-- At any point in the code:</span>
+<span class="n">dash</span><span class="p">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Hello is printed&quot;</span><span class="p">)</span>
+<span class="c1">-- &quot;Hello is printed&quot; is posted to the server</span>
+</pre></div>
+
 <p><strong>Usage</strong></p>
 <ul>
-<li>Calling <code>dash.setDebug()</code> will simply print all calls to <code>dash.debug</code> with formatted arguments.</li>
+<li>Calling <code>dash.setDebug()</code> will simply print all calls to <a href="/rodash/api/Strings/#debug">dash.debug</a> with formatted arguments.</li>
+</ul>
+<p><strong>See</strong></p>
+<ul>
+<li>
+<p><a href="/rodash/api/Strings/#debug">dash.debug</a></p>
+</li>
+<li>
+<p><a href="/rodash/api/Async/#async">dash.async</a></p>
+</li>
 </ul>
 <hr />
 <div class="rodocs-trait">Chainable
@@ -1422,7 +1501,7 @@ by a table of the matched delimiters.</p>
 <p>This method is useful only when you need a <em>pattern</em> as a delimiter.</p>
 </li>
 <li>
-<p>Use the Roblox native <code>string.split</code> if you are splitting on a simple string.</p>
+<p>Use the Roblox native undefined if you are splitting on a simple string.</p>
 </li>
 </ul>
 <hr />

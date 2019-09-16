@@ -503,6 +503,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../../types/" title="Types" class="md-nav__link">
+      Types
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
     <a href="../../glossary/" title="Glossary" class="md-nav__link">
       Glossary
     </a>
@@ -676,6 +688,11 @@
 <p>Building upon the functionality of <a href="https://github.com/LPGhatguy/roblox-lua-promise">Roblox Lua Promise</a>
 and borrowing ideas from <a href="http://bluebirdjs.com/docs/getting-started.html">Bluebird</a>,
 these functions improve the experience of working with asynchronous code in Roblox.</p>
+<p>Promises can be thought of as a variable whose value might not be known immediately when they
+are defined. They allow you to pass around a "promise" to the value, rather than yielding or
+waiting until the value has resolved. This means you can write functions which pass any
+promises to right places in your code, and delay running any code which requires the value
+until it is ready.</p>
 <h2 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h2>
 <h3 id="async_1">async<a class="headerlink" href="#async_1" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">async</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span> <span class="c1">--&gt; (...A) -&gt; Promise&lt;T&gt;</span>
@@ -699,31 +716,32 @@ after any asynchronous actions, and rejects if the function throws an error.</p>
 </blockquote>
 <p><strong>Rejects</strong></p>
 <ul>
-<li>passthrough</li>
+<li><em>passthrough</em> - The returned promise will reject if promises passed as arguments reject.</li>
 </ul>
 <p><strong>Examples</strong></p>
-<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">fetch</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">async</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span> <span class="n">url</span> <span class="p">)</span>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">fetch</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">async</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
     <span class="kd">local</span> <span class="n">HttpService</span> <span class="o">=</span> <span class="n">game</span><span class="p">:</span><span class="n">GetService</span><span class="p">(</span><span class="s2">&quot;HttpService&quot;</span><span class="p">)</span>
     <span class="kr">return</span> <span class="n">HttpService</span><span class="p">:</span><span class="n">GetAsync</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
 <span class="kr">end</span><span class="p">)</span>
-<span class="n">dash</span><span class="p">.</span><span class="n">parallelAll</span><span class="p">({</span>
-    <span class="n">main</span> <span class="o">=</span> <span class="n">fetch</span><span class="p">(</span><span class="s2">&quot;http://example.com/burger&quot;</span><span class="p">),</span>
-    <span class="n">side</span> <span class="o">=</span> <span class="n">fetch</span><span class="p">(</span><span class="s2">&quot;http://example.com/fries&quot;</span><span class="p">)</span> 
-<span class="p">}):</span><span class="n">andThen</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span> <span class="n">meal</span> <span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Meal&quot;</span><span class="p">,</span> <span class="n">dash</span><span class="p">.</span><span class="n">pretty</span><span class="p">(</span><span class="n">meal</span><span class="p">))</span>
+<span class="n">fetch</span><span class="p">(</span><span class="s2">&quot;http://example.com/burger&quot;</span><span class="p">):</span><span class="n">andThen</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">meal</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Meal:&quot;</span><span class="p">,</span> <span class="n">meal</span><span class="p">)</span>
 <span class="kr">end</span><span class="p">)</span>
-<span class="c1">--&gt;&gt; Meal {burger = &quot;Cheeseburger&quot;, fries = &quot;Curly fries&quot;} (ideal response)</span>
+<span class="c1">--&gt;&gt; Meal: Cheeseburger (ideal response)</span>
 </pre></div>
 
 <p><strong>Usage</strong></p>
 <ul>
-<li>With <code>promise:await</code> the <code>dash.async</code> function can be used just like the async-await pattern in languages like JS.</li>
+<li>With <code>promise:await</code> the <a href="/rodash/api/Async/#async">dash.async</a> function can be used just like the async-await pattern in languages like JS.</li>
+</ul>
+<p><strong>See</strong></p>
+<ul>
+<li><a href="/rodash/api/Async/#parallel">dash.parallel</a></li>
 </ul>
 <hr />
 <h3 id="asyncall">asyncAll<a class="headerlink" href="#asyncall" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">asyncAll</span><span class="p">(</span><span class="n">dictionary</span><span class="p">)</span> <span class="c1">--&gt; (...Args) -&gt; Promise&lt;T&gt;{}</span>
 </pre></div>
-Wraps any functions in <em>dictionary</em> with <code>dash.async</code>, returning a new dictionary containing
+Wraps any functions in <em>dictionary</em> with <a href="/rodash/api/Async/#async">dash.async</a>, returning a new dictionary containing
 functions that return promises when called rather than yielding.</p>
 <p><strong>Types</strong></p>
 <blockquote>
@@ -740,6 +758,13 @@ functions that return promises when called rather than yielding.</p>
 <p><code>(...Args) -&gt; Promise&lt;T&gt;{}</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">http</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">asyncAll</span><span class="p">(</span><span class="n">game</span><span class="p">:</span><span class="n">GetService</span><span class="p">(</span><span class="s2">&quot;HttpService&quot;</span><span class="p">))</span>
+<span class="n">http</span><span class="p">:</span><span class="n">GetAsync</span><span class="p">(</span><span class="s2">&quot;http://example.com/burger&quot;</span><span class="p">):</span><span class="n">andThen</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">meal</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Meal&quot;</span><span class="p">,</span> <span class="n">meal</span><span class="p">)</span>
+<span class="kr">end</span><span class="p">)</span>
+<span class="c1">--&gt;&gt; Meal: Cheeseburger (some time later)</span>
+</pre></div>
+
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">buyDinner</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">async</span><span class="p">(</span><span class="kr">function</span><span class="p">()</span>
     <span class="kd">local</span> <span class="n">http</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">asyncAll</span><span class="p">(</span><span class="n">game</span><span class="p">:</span><span class="n">GetService</span><span class="p">(</span><span class="s2">&quot;HttpService&quot;</span><span class="p">))</span>
     <span class="kd">local</span> <span class="n">order</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">parallelAll</span><span class="p">({</span>
@@ -751,6 +776,15 @@ functions that return promises when called rather than yielding.</p>
 <span class="n">buyDinner</span><span class="p">():</span><span class="n">await</span><span class="p">()</span> <span class="c1">--&gt; &quot;Purchased!&quot; (some time later)</span>
 </pre></div>
 
+<p><strong>See</strong></p>
+<ul>
+<li>
+<p><a href="/rodash/api/Async/#async">dash.async</a></p>
+</li>
+<li>
+<p><a href="/rodash/api/Async/#parallelall">dash.parallelAll</a></p>
+</li>
+</ul>
 <hr />
 <div class="rodocs-trait">Yieldable</div>
 
@@ -773,7 +807,7 @@ isn't a promise.</p>
 <p><code>T</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
-<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">heat</span> <span class="o">=</span> <span class="kr">function</span><span class="p">(</span> <span class="n">item</span> <span class="p">)</span>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">heat</span> <span class="o">=</span> <span class="kr">function</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
     <span class="kr">return</span> <span class="n">dash</span><span class="p">.</span><span class="n">delay</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="n">returns</span><span class="p">(</span><span class="s2">&quot;hot &quot;</span> <span class="o">..</span> <span class="n">item</span><span class="p">)</span>
 <span class="kr">end</span>
 <span class="kd">local</span> <span class="n">recipe</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;wrap&quot;</span><span class="p">,</span> <span class="n">heat</span><span class="p">(</span><span class="s2">&quot;steak&quot;</span><span class="p">),</span> <span class="n">heat</span><span class="p">(</span><span class="s2">&quot;rice&quot;</span><span class="p">)}</span>
@@ -803,26 +837,28 @@ Returns a promise which resolves after the given delayInSeconds.</p>
 
 <hr />
 <h3 id="finally">finally<a class="headerlink" href="#finally" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">finally</span><span class="p">(</span><span class="n">promise</span><span class="p">,</span> <span class="n">fn</span><span class="p">)</span> <span class="c1">--&gt; Promise&lt;nil&gt;</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">finally</span><span class="p">(</span><span class="n">promise</span><span class="p">,</span> <span class="n">fn</span><span class="p">)</span> <span class="c1">--&gt; Promise&lt;R&gt;</span>
 </pre></div>
 Returns a promise which completes after the <em>promise</em> input has completed, regardless of
-whether it has resolved or rejected.</p>
+whether it has resolved or rejected. The <em>fn</em> is passed <code>true</code> if the promise did not error,
+otherwise <code>false</code>, and the promise's <em>result</em> as the second argument.</p>
 <p><strong>Types</strong></p>
 <blockquote>
 <p><strong>T</strong> - <code>any</code></p>
+<p><strong>R</strong> - <code>any</code></p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>promise</strong> - <code>(Promise&lt;T&gt;, bool, T) -&gt; nil</code> </p>
+<p><strong>promise</strong> - <code>(Promise&lt;T&gt;, bool, T) -&gt; R</code> </p>
 <p><strong>fn</strong> - <code>any</code>  - <em>function(ok, result)</em>
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>Promise&lt;nil&gt;</code></p>
+<p><code>Promise&lt;R&gt;</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
-<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">getHunger</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">async</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span> <span class="n">player</span> <span class="p">)</span>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">getHunger</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">async</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
     <span class="kr">if</span> <span class="n">player</span><span class="p">.</span><span class="n">health</span> <span class="o">==</span> <span class="mi">0</span> <span class="kr">then</span>
         <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;Player is dead!&quot;</span><span class="p">)</span>
     <span class="kr">else</span>
@@ -830,7 +866,7 @@ whether it has resolved or rejected.</p>
     <span class="kr">end</span>
 <span class="kr">end</span><span class="p">)</span>
 <span class="kd">local</span> <span class="n">localPlayer</span> <span class="o">=</span> <span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">.</span><span class="n">LocalPlayer</span>
-<span class="kd">local</span> <span class="n">isHungry</span> <span class="o">=</span> <span class="n">getHunger</span><span class="p">(</span> <span class="n">localPlayer</span> <span class="p">):</span><span class="n">finally</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span> <span class="n">isAlive</span><span class="p">,</span> <span class="n">result</span> <span class="p">)</span>
+<span class="kd">local</span> <span class="n">isHungry</span> <span class="o">=</span> <span class="n">getHunger</span><span class="p">(</span> <span class="n">localPlayer</span> <span class="p">):</span><span class="n">finally</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">isAlive</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
     <span class="kr">return</span> <span class="n">isAlive</span> <span class="ow">and</span> <span class="n">result</span> <span class="o">&lt;</span> <span class="mi">5</span>
 <span class="kr">end</span><span class="p">)</span>
 </pre></div>
@@ -839,7 +875,7 @@ whether it has resolved or rejected.</p>
 <h3 id="ispromise">isPromise<a class="headerlink" href="#ispromise" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">isPromise</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="c1">--&gt; bool</span>
 </pre></div>
-Wraps <code>Promise.is</code> but catches any errors thrown in attempting to ascertain if <em>value</em> is a
+Wraps undefined but catches any errors thrown in attempting to ascertain if <em>value</em> is a
 promise, which will occur if the value throws when trying to access missing keys.</p>
 <p><strong>Types</strong></p>
 <blockquote>
@@ -865,7 +901,7 @@ Returns a promise which never resolves or rejects.</p>
 </blockquote>
 <p><strong>Usage</strong></p>
 <ul>
-<li>Useful in combination with <code>dash.race</code> where a resolution or rejection should be ignored.</li>
+<li>Useful in combination with <a href="/rodash/api/Async/#race">dash.race</a> where a resolution or rejection should be ignored.</li>
 </ul>
 <hr />
 <h3 id="parallel">parallel<a class="headerlink" href="#parallel" title="Permanent link">&para;</a></h3>
@@ -889,12 +925,12 @@ Returns a promise which never resolves or rejects.</p>
 </blockquote>
 <p><strong>Rejects</strong></p>
 <ul>
-<li>passthrough</li>
+<li><em>passthrough</em> - The returned promise will reject if promises passed as arguments reject.</li>
 </ul>
 <p><strong>Examples</strong></p>
-<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">heat</span> <span class="o">=</span> <span class="kr">function</span><span class="p">(</span> <span class="n">item</span> <span class="p">)</span>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">heat</span> <span class="o">=</span> <span class="kr">function</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
     <span class="kd">local</span> <span class="n">oven</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">parallel</span><span class="p">({</span><span class="n">item</span><span class="p">,</span> <span class="n">dash</span><span class="p">.</span><span class="n">delay</span><span class="p">(</span><span class="mi">1</span><span class="p">)})</span>
-    <span class="kr">return</span> <span class="n">oven</span><span class="p">:</span><span class="n">andThen</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span> <span class="n">result</span> <span class="p">)</span>
+    <span class="kr">return</span> <span class="n">oven</span><span class="p">:</span><span class="n">andThen</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
         <span class="kr">return</span> <span class="s2">&quot;hot-&quot;</span> <span class="o">..</span> <span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> 
     <span class="kr">end</span><span class="p">)</span>
 <span class="kr">end</span>
@@ -905,12 +941,16 @@ Returns a promise which never resolves or rejects.</p>
 <p><strong>Usage</strong></p>
 <ul>
 <li>
-<p>This function is like <code>Promise.all</code> but allows objects in the array which aren't
+<p>This function is like <a href="/rodash/api/Tables/#all">dash.all</a> but allows objects in the array which aren't
 promises. These are considered resolved immediately.</p>
 </li>
 <li>
 <p>Promises that return nil values will cause the return array to be sparse.</p>
 </li>
+</ul>
+<p><strong>See</strong></p>
+<ul>
+<li><a href="https://github.com/LPGhatguy/roblox-lua-promise">Promise</a></li>
 </ul>
 <hr />
 <h3 id="parallelall">parallelAll<a class="headerlink" href="#parallelall" title="Permanent link">&para;</a></h3>
@@ -934,12 +974,12 @@ if any of them are promises that reject.</p>
 </blockquote>
 <p><strong>Rejects</strong></p>
 <ul>
-<li>passthrough</li>
+<li><em>passthrough</em> - The returned promise will reject if promises passed as arguments reject.</li>
 </ul>
 <p><strong>Examples</strong></p>
-<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">heat</span> <span class="o">=</span> <span class="kr">function</span><span class="p">(</span> <span class="n">item</span> <span class="p">)</span>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">heat</span> <span class="o">=</span> <span class="kr">function</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
     <span class="kd">local</span> <span class="n">oven</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">parallel</span><span class="p">({</span><span class="n">item</span><span class="p">,</span> <span class="n">dash</span><span class="p">.</span><span class="n">delay</span><span class="p">(</span><span class="mi">1</span><span class="p">)})</span>
-    <span class="kr">return</span> <span class="n">oven</span><span class="p">:</span><span class="n">andThen</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span> <span class="n">result</span> <span class="p">)</span>
+    <span class="kr">return</span> <span class="n">oven</span><span class="p">:</span><span class="n">andThen</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
         <span class="kr">return</span> <span class="s2">&quot;hot-&quot;</span> <span class="o">..</span> <span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> 
     <span class="kr">end</span><span class="p">)</span>
 <span class="kr">end</span>
@@ -948,6 +988,18 @@ if any of them are promises that reject.</p>
     <span class="n">filling</span> <span class="o">=</span> <span class="n">heat</span><span class="p">(</span><span class="s2">&quot;cheese&quot;</span><span class="p">)</span>
 <span class="p">})</span>
 <span class="n">toastie</span><span class="p">:</span><span class="n">await</span><span class="p">()</span> <span class="c1">--&gt; {bread = &quot;brown&quot;, filling = &quot;hot-cheese&quot;} (1 second later)</span>
+</pre></div>
+
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">fetch</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">async</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">HttpService</span> <span class="o">=</span> <span class="n">game</span><span class="p">:</span><span class="n">GetService</span><span class="p">(</span><span class="s2">&quot;HttpService&quot;</span><span class="p">)</span>
+    <span class="kr">return</span> <span class="n">HttpService</span><span class="p">:</span><span class="n">GetAsync</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<span class="kr">end</span><span class="p">)</span>
+<span class="n">dash</span><span class="p">.</span><span class="n">parallelAll</span><span class="p">({</span>
+    <span class="n">main</span> <span class="o">=</span> <span class="n">fetch</span><span class="p">(</span><span class="s2">&quot;http://example.com/burger&quot;</span><span class="p">),</span>
+    <span class="n">side</span> <span class="o">=</span> <span class="n">fetch</span><span class="p">(</span><span class="s2">&quot;http://example.com/fries&quot;</span><span class="p">)</span> 
+<span class="p">}):</span><span class="n">andThen</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">meal</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Meal&quot;</span><span class="p">,</span> <span class="n">dash</span><span class="p">.</span><span class="n">pretty</span><span class="p">(</span><span class="n">meal</span><span class="p">))</span>
+<span class="kr">end</span><span class="p">)</span>
 </pre></div>
 
 <p><strong>Usage</strong></p>
@@ -980,22 +1032,39 @@ first <em>n</em> promises if specified. If any promise rejects, race rejects wit
 </ul>
 <p><strong>Rejects</strong></p>
 <ul>
-<li>passthrough</li>
+<li><em>passthrough</em> - The returned promise will reject if promises passed as arguments reject.</li>
 </ul>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="c1">-- Here promise resolves to the result of fetch, or resolves to &quot;No burger for you&quot; if the</span>
+<span class="c1">-- fetch takes more than 2 seconds.</span>
+<span class="kd">local</span> <span class="n">fetch</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">async</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">HttpService</span> <span class="o">=</span> <span class="n">game</span><span class="p">:</span><span class="n">GetService</span><span class="p">(</span><span class="s2">&quot;HttpService&quot;</span><span class="p">)</span>
+    <span class="kr">return</span> <span class="n">HttpService</span><span class="p">:</span><span class="n">GetAsync</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<span class="kr">end</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">promise</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">race</span><span class="p">(</span>
+    <span class="n">dash</span><span class="p">.</span><span class="n">delay</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span><span class="n">andThen</span><span class="p">(</span><span class="n">dash</span><span class="p">.</span><span class="n">returns</span><span class="p">(</span><span class="s2">&quot;No burger for you&quot;</span><span class="p">),</span>
+    <span class="n">fetch</span><span class="p">(</span><span class="s2">&quot;http://example.com/burger&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+
 <p><strong>Usage</strong></p>
 <ul>
 <li>
-<p>Promises which return nil values are ignored due to the in-order constraint.</p>
+<p>Note that Promises which return nil values will produce a sparse array.</p>
 </li>
 <li>
 <p>The size of <em>array</em> must be equal to or larger than <em>n</em>.</p>
 </li>
 </ul>
+<p><strong>See</strong></p>
+<ul>
+<li><a href="/rodash/api/Async/#async">dash.async</a></li>
+</ul>
 <hr />
 <h3 id="resolve">resolve<a class="headerlink" href="#resolve" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">resolve</span><span class="p">(...)</span> <span class="c1">--&gt; Promise&lt;T&gt;</span>
 </pre></div>
-Like <code>Promise.resolve</code> but can take any number of arguments.</p>
+Like <a href="/rodash/api/Async/#resolve">dash.resolve</a> but can take any number of arguments.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>...</strong> - <code>T</code> 
@@ -1021,7 +1090,7 @@ Like <code>Promise.resolve</code> but can take any number of arguments.</p>
 </ul>
 <hr />
 <h3 id="retrywithbackoff">retryWithBackoff<a class="headerlink" href="#retrywithbackoff" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">retryWithBackoff</span><span class="p">(</span><span class="n">getPromise</span><span class="p">,</span> <span class="n">backoffOptions</span><span class="p">)</span> <span class="c1">--&gt; Promise&lt;T&gt;</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">retryWithBackoff</span><span class="p">(</span><span class="n">asyncFn</span><span class="p">,</span> <span class="n">backoffOptions</span><span class="p">)</span> <span class="c1">--&gt; Promise&lt;T&gt;</span>
 </pre></div>
 Try running a function which returns a promise and retry if the function throws
 and error or the promise rejects. The retry behaviour can be adapted using
@@ -1086,8 +1155,8 @@ a random exponential delay and <em>y</em> is a constant delay.</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>getPromise</strong> - <code>(void) -&gt; Promise&lt;T&gt;, BackoffOptions</code> </p>
-<p><strong>backoffOptions</strong> - <code>any</code> 
+<p><strong>asyncFn</strong> - <code>Async&lt;T&gt;</code> </p>
+<p><strong>backoffOptions</strong> - <code>BackoffOptions</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
@@ -1096,13 +1165,30 @@ a random exponential delay and <em>y</em> is a constant delay.</p>
 </blockquote>
 <p><strong>Rejects</strong></p>
 <ul>
-<li>passthrough</li>
+<li><em>passthrough</em> - The returned promise will reject if promises passed as arguments reject.</li>
 </ul>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="c1">-- Use dash.retryWithBackoff to retry a GET request repeatedly.</span>
+<span class="kd">local</span> <span class="n">fetchPizza</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">async</span><span class="p">(</span><span class="kr">function</span><span class="p">()</span>
+    <span class="kd">local</span> <span class="n">HttpService</span> <span class="o">=</span> <span class="n">game</span><span class="p">:</span><span class="n">GetService</span><span class="p">(</span><span class="s2">&quot;HttpService&quot;</span><span class="p">)</span>
+    <span class="kr">return</span> <span class="n">HttpService</span><span class="p">:</span><span class="n">GetAsync</span><span class="p">(</span><span class="s2">&quot;https://example.com/pizza&quot;</span><span class="p">)</span>
+<span class="kr">end</span><span class="p">)</span>
+<span class="n">dash</span><span class="p">.</span><span class="n">retryWithBackoff</span><span class="p">(</span><span class="n">fetchPizza</span><span class="p">,</span> <span class="p">{</span>
+    <span class="n">maxTries</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="n">onRetry</span> <span class="o">=</span> <span class="kr">function</span><span class="p">(</span><span class="n">waitTime</span><span class="p">,</span> <span class="n">errorMessage</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Failed to fetch due to&quot;</span><span class="p">,</span> <span class="n">errorMessage</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Retrying in &quot;</span><span class="p">,</span> <span class="n">waitTime</span><span class="p">)</span>
+    <span class="kr">end</span>
+<span class="p">}):</span><span class="n">andThen</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">resultingPizza</span><span class="p">)</span> 
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Great, you have: &quot;</span><span class="p">,</span> <span class="n">resultingPizza</span><span class="p">)</span>
+<span class="kr">end</span><span class="p">)</span>
+</pre></div>
+
 <hr />
 <h3 id="series">series<a class="headerlink" href="#series" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">series</span><span class="p">(...)</span> <span class="c1">--&gt; (...A) -&gt; Promise&lt;A&gt;</span>
 </pre></div>
-Like <code>dash.compose</code> but takes functions that can return a promise. Returns a promise that resolves
+Like <a href="/rodash/api/Functions/#compose">dash.compose</a> but takes functions that can return a promise. Returns a promise that resolves
 once all functions have resolved. Like compose, functions receive the resolution of the
 previous promise as argument(s).</p>
 <p><strong>Types</strong></p>
@@ -1119,12 +1205,25 @@ previous promise as argument(s).</p>
 <p><code>(...A) -&gt; Promise&lt;A&gt;</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
-<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="kr">function</span> <span class="nf">fry</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="kr">return</span> <span class="n">dash</span><span class="p">.</span><span class="n">delay</span><span class="p">(</span><span class="mi">1</span><span class="p">):</span><span class="n">andThen</span><span class="p">(</span><span class="n">dash</span><span class="p">.</span><span class="n">returns</span><span class="p">(</span><span class="s2">&quot;fried &quot;</span> <span class="o">..</span> <span class="n">item</span><span class="p">))</span> <span class="kr">end</span>
-<span class="kd">local</span> <span class="kr">function</span> <span class="nf">cheesify</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="kr">return</span> <span class="n">dash</span><span class="p">.</span><span class="n">delay</span><span class="p">(</span><span class="mi">1</span><span class="p">):</span><span class="n">andThen</span><span class="p">(</span><span class="n">dash</span><span class="p">.</span><span class="n">returns</span><span class="p">(</span><span class="s2">&quot;cheesy &quot;</span> <span class="o">..</span> <span class="n">item</span><span class="p">))</span> <span class="kr">end</span>
-<span class="kd">local</span> <span class="n">prepare</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">compose</span><span class="p">(</span><span class="n">fry</span><span class="p">,</span> <span class="n">cheesify</span><span class="p">)</span>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="kr">function</span> <span class="nf">fry</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+    <span class="kr">return</span> <span class="n">dash</span><span class="p">.</span><span class="n">delay</span><span class="p">(</span><span class="mi">1</span><span class="p">):</span><span class="n">andThen</span><span class="p">(</span><span class="n">dash</span><span class="p">.</span><span class="n">returns</span><span class="p">(</span><span class="s2">&quot;fried &quot;</span> <span class="o">..</span> <span class="n">item</span><span class="p">))</span>
+<span class="kr">end</span>
+<span class="kd">local</span> <span class="kr">function</span> <span class="nf">cheesify</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+    <span class="kr">return</span> <span class="n">dash</span><span class="p">.</span><span class="n">delay</span><span class="p">(</span><span class="mi">1</span><span class="p">):</span><span class="n">andThen</span><span class="p">(</span><span class="n">dash</span><span class="p">.</span><span class="n">returns</span><span class="p">(</span><span class="s2">&quot;cheesy &quot;</span> <span class="o">..</span> <span class="n">item</span><span class="p">))</span>
+<span class="kr">end</span>
+<span class="kd">local</span> <span class="n">prepare</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">series</span><span class="p">(</span><span class="n">fry</span><span class="p">,</span> <span class="n">cheesify</span><span class="p">)</span>
 <span class="n">prepare</span><span class="p">(</span><span class="s2">&quot;nachos&quot;</span><span class="p">):</span><span class="n">await</span><span class="p">()</span> <span class="c1">--&gt; &quot;cheesy fried nachos&quot; (after 2s)</span>
 </pre></div>
 
+<p><strong>See</strong></p>
+<ul>
+<li>
+<p><a href="/rodash/api/Async/#parallel">dash.parallel</a></p>
+</li>
+<li>
+<p><a href="/rodash/api/Async/#delay">dash.delay</a></p>
+</li>
+</ul>
 <hr />
 <h3 id="timeout">timeout<a class="headerlink" href="#timeout" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">timeout</span><span class="p">(</span><span class="n">promise</span><span class="p">,</span> <span class="n">deadlineInSeconds</span><span class="p">,</span> <span class="n">timeoutMessage</span><span class="p">)</span> <span class="c1">--&gt; Promise&lt;T&gt;</span>

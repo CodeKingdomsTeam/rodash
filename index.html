@@ -234,9 +234,45 @@
       
     
     
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Home
+      </label>
+    
     <a href="." title="Home" class="md-nav__link md-nav__link--active">
       Home
     </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#using-the-latest-release" title="Using the latest release" class="md-nav__link">
+    Using the latest release
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-rojo" title="Using Rojo" class="md-nav__link">
+    Using Rojo
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
     
   </li>
 
@@ -355,6 +391,18 @@
 
 
   <li class="md-nav__item">
+    <a href="types/" title="Types" class="md-nav__link">
+      Types
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
     <a href="glossary/" title="Glossary" class="md-nav__link">
       Glossary
     </a>
@@ -378,6 +426,29 @@
     
   
   
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#using-the-latest-release" title="Using the latest release" class="md-nav__link">
+    Using the latest release
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-rojo" title="Using Rojo" class="md-nav__link">
+    Using Rojo
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -395,23 +466,27 @@
 <p>Rodash is a collection of functions designed to aid everyday game programming in Roblox. It borrows ideas from <a href="https://lodash.com">lodash</a> in JS, some simpler functionality of <a href="https://github.com/stevedonovan/Penlight">Penlight</a> and standalone helper scripts in circulation among the Roblox community.</p>
 <p>See the <a href="getting-started">Getting Started</a> page for examples of how you can use Rodash.</p>
 <h1 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h1>
+<h2 id="using-the-latest-release">Using the latest release<a class="headerlink" href="#using-the-latest-release" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Download the latest <em>rbxmx</em> model from the <a href="https://github.com/CodeKingdomsTeam/rodash/releases">Github releases page</a>.</li>
 <li>Drag the model file from your <em>Downloads</em> folder into a Roblox Studio project.</li>
 <li>Open the <code>Packages</code> folder which is created and drag <code>Rodash</code> and its siblings into <code>ReplicatedStorage</code>.</li>
 </ol>
 <p><img alt="ReplicatedStorage" src="ReplicatedStorage.png" /></p>
-<p>Then require Rodash in any of your scripts:</p>
-<div class="codehilite"><pre><span></span>local dash = require(game.ReplicatedStorage.Rodash)
+<h2 id="using-rojo">Using Rojo<a class="headerlink" href="#using-rojo" title="Permanent link">&para;</a></h2>
+<p>If you are familiar with Git and <a href="https://rojo.space/docs/0.5.x/">Rojo</a> you can also clone the <a href="https://github.com/CodeKingdomsTeam/rodash/">Rodash repo</a> and incorporate the dependencies from the <code>default.project.json</code> file into your own project.</p>
+<h1 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h1>
+<p>Require Rodash in any of your scripts:</p>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">dash</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">ReplicatedStorage</span><span class="p">.</span><span class="n">Rodash</span><span class="p">)</span>
 
-local list = {&quot;cheese&quot;}
-dash.append(list, {&quot;nachos&quot;}, {}, {&quot;chillies&quot;, &quot;bbq sauce&quot;})
-list --&gt; {&quot;cheese&quot;, &quot;nachos&quot;, &quot;chillies&quot;, &quot;bbq sauce&quot;}
+<span class="kd">local</span> <span class="n">list</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;cheese&quot;</span><span class="p">}</span>
+<span class="n">dash</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">list</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;nachos&quot;</span><span class="p">},</span> <span class="p">{},</span> <span class="p">{</span><span class="s2">&quot;chillies&quot;</span><span class="p">,</span> <span class="s2">&quot;bbq sauce&quot;</span><span class="p">})</span>
+<span class="n">list</span> <span class="c1">--&gt; {&quot;cheese&quot;, &quot;nachos&quot;, &quot;chillies&quot;, &quot;bbq sauce&quot;}</span>
 </pre></div>
 
 <p>If you prefer, you can alias specific Rodash functions yourself:</p>
-<div class="codehilite"><pre><span></span>local Rodash = require(game.ReplicatedStorage.Rodash)
-local append = Rodash.append
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">dash</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">ReplicatedStorage</span><span class="p">.</span><span class="n">Rodash</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">append</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">append</span>
 </pre></div>
 
 <h1 id="discussion">Discussion<a class="headerlink" href="#discussion" title="Permanent link">&para;</a></h1>

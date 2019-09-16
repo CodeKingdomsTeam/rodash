@@ -651,6 +651,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../../types/" title="Types" class="md-nav__link">
+      Types
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
     <a href="../../glossary/" title="Glossary" class="md-nav__link">
       Glossary
     </a>
@@ -971,15 +983,15 @@
                 <h1 id="tables">Tables<a class="headerlink" href="#tables" title="Permanent link">&para;</a></h1>
 <p>A collection of functions that operate on Lua tables. These can operate on arrays,
 dictionaries and any collection types implemented with tables.</p>
-<p>Functions can also iterate over custom iterator functions.</p>
+<p>These functions can iterate over any <a href="/types#Iterable">Iterable</a> values.</p>
 <p>These functions typically act on immutable tables and return new tables in functional style.
-Note that mutable arguments in Rodash are explicitly typed as such.</p>
+Note that mutable arguments in Rodash are explicitly typed as such with the <code>mut</code> keyword.</p>
 <h2 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h2>
 <h3 id="all">all<a class="headerlink" href="#all" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">all</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span> <span class="c1">--&gt; bool</span>
 </pre></div>
 Return <code>true</code> if <em>handler</em> returns true for every element in <em>source</em> it is called with.</p>
-<p>If no handler is provided, <code>dash.all</code> returns true if every element is non-nil.</p>
+<p>If no handler is provided, <a href="/rodash/api/Tables/#all">dash.all</a> returns true if every element is non-nil.</p>
 <p><strong>Types</strong></p>
 <blockquote>
 <p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
@@ -987,7 +999,7 @@ Return <code>true</code> if <em>handler</em> returns true for every element in <
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>source</strong> - <code>T</code> </p>
-<p><strong>handler</strong> - <code>(value: V, key: K) -&gt; bool?</code>  - (default = <code>dash.id</code>)
+<p><strong>handler</strong> - <code>(value: V, key: K) -&gt; bool?</code>  - (default = <a href="/rodash/api/Functions/#id">dash.id</a>)
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
@@ -1011,7 +1023,7 @@ Return <code>true</code> if <em>handler</em> returns true for every element in <
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">any</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span> <span class="c1">--&gt; bool</span>
 </pre></div>
 Return <code>true</code> if <em>handler</em> returns true for at least one element in <em>source</em> it is called with.</p>
-<p>If no handler is provided, <code>dash.any</code> returns true if some element is non-nil.</p>
+<p>If no handler is provided, <a href="/rodash/api/Tables/#any">dash.any</a> returns true if some element is non-nil.</p>
 <p><strong>Types</strong></p>
 <blockquote>
 <p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
@@ -1019,7 +1031,7 @@ Return <code>true</code> if <em>handler</em> returns true for at least one eleme
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>source</strong> - <code>T</code> </p>
-<p><strong>handler</strong> - <code>any</code>  - (default = <code>dash.id</code>)
+<p><strong>handler</strong> - <code>any</code>  - (default = <a href="/rodash/api/Functions/#id">dash.id</a>)
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
@@ -1101,10 +1113,10 @@ tables replacing earlier ones if their keys match.</p>
 <p><strong>See</strong></p>
 <ul>
 <li>
-<p><a href="/api/Tables/#defaults">dash.defaults</a> </p>
+<p><a href="/rodash/api/Tables/#defaults">dash.defaults</a></p>
 </li>
 <li>
-<p><a href="/api/Tables/#merge">dash.merge</a> </p>
+<p><a href="/rodash/api/Tables/#merge">dash.merge</a></p>
 </li>
 </ul>
 <hr />
@@ -1138,13 +1150,13 @@ Returns a shallow copy of <em>source</em>.</p>
 <p><strong>See</strong></p>
 <ul>
 <li>
-<p><a href="/api/Tables/#cloneDeep">dash.cloneDeep</a> - if you also want to clone descendants of the table, though this can be costly.</p>
+<p><a href="/rodash/api/Tables/#clonedeep">dash.cloneDeep</a> - if you also want to clone descendants of the table, though this can be costly.</p>
 </li>
 <li>
-<p><a href="/api/Tables/#map">dash.map</a> - if you want to return different values for each key.</p>
+<p><a href="/rodash/api/Tables/#map">dash.map</a> - if you want to return different values for each key.</p>
 </li>
 <li>
-<p><a href="/api/Classes/#Cloneable">dash.Cloneable</a> - use this to derive a default <code>:clone()</code> method for class instances.</p>
+<p><a href="/rodash/api/Classes/#cloneable">dash.Cloneable</a> - use this to derive a default <code>:clone()</code> method for class instances.</p>
 </li>
 </ul>
 <hr />
@@ -1152,7 +1164,7 @@ Returns a shallow copy of <em>source</em>.</p>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">cloneDeep</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; T</span>
 </pre></div>
 Recursively clones descendants of <em>source</em>, returning the cloned object. If references to the
-same table are found, the same clone is used in the result. This means that <code>dash.cloneDeep</code> is
+same table are found, the same clone is used in the result. This means that <a href="/rodash/api/Tables/#clonedeep">dash.cloneDeep</a> is
 cycle-safe.</p>
 <p>Elements which are not tables are not modified.</p>
 <p><strong>Types</strong></p>
@@ -1186,7 +1198,7 @@ cycle-safe.</p>
 
 <p><strong>See</strong></p>
 <ul>
-<li><a href="/api/Tables/#clone">dash.clone</a> - if you simply want to perform a shallow clone.</li>
+<li><a href="/rodash/api/Tables/#clone">dash.clone</a> - if you simply want to perform a shallow clone.</li>
 </ul>
 <hr />
 <h3 id="compact">compact<a class="headerlink" href="#compact" title="Permanent link">&para;</a></h3>
@@ -1263,10 +1275,10 @@ Returns <code>true</code> if every element in <em>a</em> recursively matches eve
 <p><strong>See</strong></p>
 <ul>
 <li>
-<p><a href="/api/Tables/#isSubset">dash.isSubset</a> </p>
+<p><a href="/rodash/api/Tables/#issubset">dash.isSubset</a></p>
 </li>
 <li>
-<p><a href="/api/Tables/#shallowEqual">dash.shallowEqual</a> </p>
+<p><a href="/rodash/api/Tables/#shallowequal">dash.shallowEqual</a></p>
 </li>
 </ul>
 <hr />
@@ -1274,7 +1286,7 @@ Returns <code>true</code> if every element in <em>a</em> recursively matches eve
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">defaults</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="p">...)</span> <span class="c1">--&gt; T</span>
 </pre></div>
 Adds new elements in <em>target</em> from subsequent table arguments in order, with elements in
-earlier tables replacing earlier ones if their keys match.</p>
+earlier tables overriding later ones if their keys match.</p>
 <p><strong>Types</strong></p>
 <blockquote>
 <p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
@@ -1332,10 +1344,10 @@ earlier tables replacing earlier ones if their keys match.</p>
 <p><strong>See</strong></p>
 <ul>
 <li>
-<p><a href="/api/Tables/#assign">dash.assign</a> </p>
+<p><a href="/rodash/api/Tables/#assign">dash.assign</a></p>
 </li>
 <li>
-<p><a href="/api/Tables/#merge">dash.merge</a> </p>
+<p><a href="/rodash/api/Tables/#merge">dash.merge</a></p>
 </li>
 </ul>
 <hr />
@@ -1352,6 +1364,13 @@ A function which provides a simple, shallow string representation of a value.</p
 <blockquote>
 <p><code>string</code></p>
 </blockquote>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">defaultSerializer</span><span class="p">()</span> <span class="c1">--&gt; &quot;nil&quot;</span>
+<span class="n">dash</span><span class="p">.</span><span class="n">defaultSerializer</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span> <span class="c1">--&gt; &quot;true&quot;</span>
+<span class="n">dash</span><span class="p">.</span><span class="n">defaultSerializer</span><span class="p">(</span><span class="mf">5.8</span><span class="p">)</span> <span class="c1">--&gt; &quot;5.8&quot;</span>
+<span class="n">dash</span><span class="p">.</span><span class="n">defaultSerializer</span><span class="p">(</span><span class="s2">&quot;Hello &quot;</span> <span class="o">..</span> <span class="err">\</span><span class="n">n</span> <span class="o">..</span> <span class="s2">&quot; there&quot;</span><span class="p">)</span> <span class="c1">--&gt; &#39;&quot;Hello \n there&quot;&#39;</span>
+</pre></div>
+
 <hr />
 <h3 id="entries">entries<a class="headerlink" href="#entries" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">entries</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; {K, V}[]</span>
@@ -1409,14 +1428,15 @@ in order of iteration.</p>
 
 <p><strong>See</strong></p>
 <ul>
-<li><a href="/api/Tables/#map">dash.map</a> if you would like to remove elements but preserve table keys</li>
+<li><a href="/rodash/api/Tables/#map">dash.map</a> if you would like to remove elements but preserve table keys</li>
 </ul>
 <hr />
 <h3 id="find">find<a class="headerlink" href="#find" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">find</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span> <span class="c1">--&gt; V?</span>
 </pre></div>
 Picks a value from the table that <em>handler</em> returns <code>true</code> for.</p>
-<p>As tables do not have ordered keys, do not rely on returning any particular value.</p>
+<p>If multiple elements might return true, any one of them may be returned as the iteration order
+over a table is stochastic.</p>
 <p><strong>Types</strong></p>
 <blockquote>
 <p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
@@ -1453,18 +1473,19 @@ Picks a value from the table that <em>handler</em> returns <code>true</code> for
 
 <p><strong>Usage</strong></p>
 <ul>
-<li>If you need to find the first value of an array that matches, use <code>dash.first</code>.</li>
+<li>If you need to find the first value of an array that matches, use <a href="/rodash/api/Arrays/#first">dash.first</a>.</li>
 </ul>
 <p><strong>See</strong></p>
 <ul>
-<li><a href="/api/Arrays/#first">dash.first</a> </li>
+<li><a href="/rodash/api/Arrays/#first">dash.first</a></li>
 </ul>
 <hr />
 <h3 id="flatmap">flatMap<a class="headerlink" href="#flatmap" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">flatMap</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span> <span class="c1">--&gt; U[]</span>
 </pre></div>
-Like <code>dash.mapValues</code> but <em>handler</em> must return an array. These elements are then insterted into
-the the resulting array returned.</p>
+Like <a href="/rodash/api/Tables/#mapvalues">dash.mapValues</a> this function iterates through <em>source</em> and returns an array of values,
+using <em>handler</em> to transform them. However, <em>handler</em> must return an array of results, these
+elements being insterted into the resulting array.</p>
 <p>You can return an empty array <code>{}</code> from handler to avoid inserting anything for a particular
 element.</p>
 <p><strong>Types</strong></p>
@@ -1525,8 +1546,9 @@ Get a child or descendant of a table, returning nil if any errors are generated.
 <h3 id="groupby">groupBy<a class="headerlink" href="#groupby" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">groupBy</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span> <span class="c1">--&gt; Iterable&lt;K2, Iterable&lt;K, V&gt;&gt;</span>
 </pre></div>
-Like <code>dash.map</code>, but the return of the <em>handler</em> is used to transform the key of each element,
-while the value is preserved.</p>
+This function iterates over <em>source</em>, calling <em>handler</em> to obtain a key for each element.
+Elements from <em>source</em> are then appended to an array of elements based on their key, so
+that this function returns a dictionary of arrays of the elements grouped by their keys.</p>
 <p>If the <em>handler</em> returns nil, the element is dropped from the result.</p>
 <p><strong>Types</strong></p>
 <blockquote>
@@ -1544,13 +1566,22 @@ while the value is preserved.</p>
 <p><code>Iterable&lt;K2, Iterable&lt;K, V&gt;&gt;</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
-<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">playerSet</span> <span class="o">=</span> <span class="p">{</span><span class="n">Frodo</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span> <span class="n">Bilbo</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span> <span class="n">Boromir</span> <span class="o">=</span> <span class="kc">true</span><span class="p">}</span>
-<span class="kd">local</span> <span class="n">healthSet</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">mapKeys</span><span class="p">(</span><span class="n">playerSet</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-    <span class="kr">return</span> <span class="n">dash</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="s2">&quot;Health&quot;</span><span class="p">)</span>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">playerSet</span> <span class="o">=</span> <span class="p">{</span><span class="n">Frodo</span> <span class="o">=</span> <span class="s2">&quot;Frodo&quot;</span><span class="p">,</span> <span class="n">Bilbo</span> <span class="o">=</span> <span class="s2">&quot;Bilbo&quot;</span><span class="p">,</span> <span class="n">Boromir</span> <span class="o">=</span> <span class="s2">&quot;Boromir&quot;</span><span class="p">}</span>
+<span class="kd">local</span> <span class="n">healthSet</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">keyBy</span><span class="p">(</span><span class="n">playerSet</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="kr">return</span> <span class="n">dash</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="s2">&quot;Character&quot;</span><span class="p">,</span> <span class="s2">&quot;Humanoid&quot;</span><span class="p">,</span> <span class="s2">&quot;Health&quot;</span><span class="p">)</span>
 <span class="kr">end</span><span class="p">)</span>
-<span class="n">healthSet</span> <span class="c1">--&gt; {100 = true, 50 = true, 0 = true}</span>
+<span class="n">healthSet</span> <span class="c1">--&gt; {100 = {}, 50 = {&quot;Bilbo&quot;, &quot;Frodo&quot;}, 0 = {&quot;Boromir&quot;}}</span>
 </pre></div>
 
+<p><strong>See</strong></p>
+<ul>
+<li>
+<p><a href="/rodash/api/Tables/#keyby">dash.keyBy</a> - if you only want one element to be preserved at each key</p>
+</li>
+<li>
+<p><a href="/rodash/api/Tables/#get">dash.get</a></p>
+</li>
+</ul>
 <hr />
 <h3 id="includes">includes<a class="headerlink" href="#includes" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">includes</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span> <span class="c1">--&gt; bool</span>
@@ -1635,7 +1666,7 @@ Returns <code>true</code> is <em>source</em> is made up only of natural keys <co
 <h3 id="isempty">isEmpty<a class="headerlink" href="#isempty" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">isEmpty</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; bool</span>
 </pre></div>
-Returns <code>true</code> if <em>source</em> has no keys.</p>
+Returns <code>true</code> if <em>source</em> has no keys. </p>
 <p><strong>Types</strong></p>
 <blockquote>
 <p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
@@ -1655,14 +1686,18 @@ Returns <code>true</code> if <em>source</em> has no keys.</p>
 <span class="n">dash</span><span class="p">.</span><span class="n">isEmpty</span><span class="p">({</span><span class="n">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">})</span> <span class="c1">--&gt; false</span>
 </pre></div>
 
+<p><strong>Usage</strong></p>
+<ul>
+<li>Note that a table only has a length if it is an array, so this can be used on non-arrays.</li>
+</ul>
 <hr />
 <h3 id="issubset">isSubset<a class="headerlink" href="#issubset" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">isSubset</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="c1">--&gt; bool</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">isSubset</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span> <span class="c1">--&gt; bool</span>
 </pre></div>
-Returns <code>true</code> if all the values in <em>a</em> match corresponding values in <em>b</em> recursively.</p>
+Returns <code>true</code> if all the values in <em>left</em> match corresponding values in <em>right</em> recursively.</p>
 <ul>
 <li>For elements which are not tables, they match if they are equal.</li>
-<li>If they are tables they match if the right is a subset of the left.</li>
+<li>If they are tables they match if the right table is a subset of the left.</li>
 </ul>
 <p><strong>Types</strong></p>
 <blockquote>
@@ -1670,8 +1705,8 @@ Returns <code>true</code> if all the values in <em>a</em> match corresponding va
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>a</strong> - <code>T{}</code> </p>
-<p><strong>b</strong> - <code>T{}</code> 
+<p><strong>left</strong> - <code>T{}</code> </p>
+<p><strong>right</strong> - <code>T{}</code> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
@@ -1698,9 +1733,9 @@ Returns <code>true</code> if all the values in <em>a</em> match corresponding va
 <h3 id="iterator">iterator<a class="headerlink" href="#iterator" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">iterator</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">asArray</span><span class="p">)</span> <span class="c1">--&gt; Iterator&lt;T&gt;</span>
 </pre></div>
-Determines a suitable iterator to use for <em>source</em>, allowing <em>source</em> to be either a plain
-table, a table that has a metatable with an <code>iterable</code> key, or a function.</p>
-<p>By default, the iterator is unordered, but passing <em>asArray</em> as true uses <code>ipairs</code> to iterate
+Determines a suitable <a href="/types#Iterator">Iterator</a> to use for <em>source</em>, allowing <em>source</em> to
+be either a plain table, a table that has a metatable with an <code>iterable</code> key, or a function.</p>
+<p>By default, the iterator is unordered, but passing <em>asArray</em> as <code>true</code> uses <code>ipairs</code> to iterate
 through natural keys <em>1..n</em> in order.</p>
 <p><strong>Types</strong></p>
 <blockquote>
@@ -1720,8 +1755,9 @@ through natural keys <em>1..n</em> in order.</p>
 <h3 id="keyby">keyBy<a class="headerlink" href="#keyby" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">keyBy</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span> <span class="c1">--&gt; Iterable&lt;K2, V&gt;</span>
 </pre></div>
-Like <code>dash.map</code>, but the return of the <em>handler</em> is used to transform the key of each element,
-while the value is preserved.</p>
+This function iterates over <em>source</em>, calling <em>handler</em> to obtain a key for each element.
+The element is then assigned by its key to the resulting object, overriding any previous
+element assigned to that key from source.</p>
 <p>If the <em>handler</em> returns nil, the element is dropped from the result.</p>
 <p><strong>Types</strong></p>
 <blockquote>
@@ -1741,11 +1777,15 @@ while the value is preserved.</p>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">playerSet</span> <span class="o">=</span> <span class="p">{</span><span class="n">Frodo</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span> <span class="n">Bilbo</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span> <span class="n">Boromir</span> <span class="o">=</span> <span class="kc">true</span><span class="p">}</span>
 <span class="kd">local</span> <span class="n">healthSet</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">keyBy</span><span class="p">(</span><span class="n">playerSet</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-    <span class="kr">return</span> <span class="n">dash</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="s2">&quot;Health&quot;</span><span class="p">)</span>
+    <span class="kr">return</span> <span class="n">dash</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="s2">&quot;Character&quot;</span><span class="p">,</span> <span class="s2">&quot;Humanoid&quot;</span><span class="p">,</span> <span class="s2">&quot;Health&quot;</span><span class="p">)</span>
 <span class="kr">end</span><span class="p">)</span>
 <span class="n">healthSet</span> <span class="c1">--&gt; {100 = true, 50 = true, 0 = true}</span>
 </pre></div>
 
+<p><strong>See</strong></p>
+<ul>
+<li><a href="/rodash/api/Tables/#groupby">dash.groupBy</a> - if you want to preseve all the elements at each key.</li>
+</ul>
 <hr />
 <h3 id="keys">keys<a class="headerlink" href="#keys" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">keys</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; K[]</span>
@@ -1766,9 +1806,9 @@ Returns an array of all the keys of the elements in <em>source</em>.</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">values</span><span class="p">({</span>
-<span class="n">Frodo</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-<span class="n">Boromir</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
-<span class="n">Bilbo</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">Frodo</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">Boromir</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="n">Bilbo</span> <span class="o">=</span> <span class="mi">3</span>
 <span class="p">})</span> <span class="c1">--&gt; {&quot;Frodo&quot;, &quot;Boromir&quot;, &quot;Bilbo&quot;} (in some order)</span>
 </pre></div>
 
@@ -1799,12 +1839,16 @@ Returns the number of elements in <em>source</em>.</p>
 <span class="n">dash</span><span class="p">.</span><span class="n">len</span><span class="p">(</span><span class="n">names</span><span class="p">)</span> <span class="c1">--&gt; 3</span>
 </pre></div>
 
+<p><strong>Usage</strong></p>
+<ul>
+<li>Note that a table only has a length if it is an array, so this can be used on non-arrays.</li>
+</ul>
 <hr />
 <h3 id="map">map<a class="headerlink" href="#map" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">map</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span> <span class="c1">--&gt; Iterable&lt;K, V2&gt;</span>
 </pre></div>
-Return new table from <em>source</em> with each value at the same key, but replaced by the return from
-the <em>handler</em> function called for each value and key in the table.</p>
+Create a new table from <em>source</em> where each value is replaced with the value returned from
+calling <em>handler</em> with each element in <em>source</em>.</p>
 <p><strong>Types</strong></p>
 <blockquote>
 <p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
@@ -1830,7 +1874,7 @@ the <em>handler</em> function called for each value and key in the table.</p>
 
 <div class="codehilite"><pre><span></span><span class="c1">-- Use map to remove elements while preserving keys:</span>
 <span class="kd">local</span> <span class="n">ingredients</span> <span class="o">=</span> <span class="p">{</span><span class="n">veg</span> <span class="o">=</span> <span class="s2">&quot;carrot&quot;</span><span class="p">,</span> <span class="n">sauce</span> <span class="o">=</span> <span class="s2">&quot;tomato&quot;</span><span class="p">,</span> <span class="n">herb</span> <span class="o">=</span> <span class="s2">&quot;basil&quot;</span><span class="p">}</span>
-<span class="kd">local</span> <span class="n">carrotsAndHerbs</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">ingredients</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="n">key</span> <span class="p">)</span>
+<span class="kd">local</span> <span class="n">carrotsAndHerbs</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">ingredients</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
     <span class="kr">if</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;carrot&quot;</span> <span class="ow">or</span> <span class="n">key</span> <span class="o">==</span> <span class="s2">&quot;herb&quot;</span> <span class="kr">then</span>
         <span class="kr">return</span> <span class="n">value</span>
     <span class="kr">end</span>
@@ -1840,7 +1884,7 @@ the <em>handler</em> function called for each value and key in the table.</p>
 
 <div class="codehilite"><pre><span></span><span class="c1">-- Use map with multiple values of a table at once:</span>
 <span class="kd">local</span> <span class="n">numbers</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">}</span> 
-<span class="kd">local</span> <span class="n">nextNumbers</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">numbers</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="n">key</span> <span class="p">)</span>
+<span class="kd">local</span> <span class="n">nextNumbers</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">numbers</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
     <span class="kr">return</span> <span class="n">value</span> <span class="o">+</span> <span class="p">(</span><span class="n">numbers</span><span class="p">[</span><span class="n">key</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span>
 <span class="kr">end</span><span class="p">)</span>
 <span class="n">nextNumbers</span> <span class="c1">--&gt; {1, 2, 3, 5, 8}</span>
@@ -1848,13 +1892,13 @@ the <em>handler</em> function called for each value and key in the table.</p>
 
 <p><strong>See</strong></p>
 <ul>
-<li><a href="filter">filter</a> if you want to </li>
+<li><a href="/rodash/api/Tables/#filter">dash.filter</a> - if you want to remove values using a predicate.</li>
 </ul>
 <hr />
 <h3 id="mapvalues">mapValues<a class="headerlink" href="#mapvalues" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">mapValues</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span> <span class="c1">--&gt; V2[]</span>
 </pre></div>
-Like <code>dash.map</code>, but returns an array of the transformed values in the order that they are
+Like <a href="/rodash/api/Tables/#map">dash.map</a>, but returns an array of the transformed values in the order that they are
 iterated over, dropping the original keys.</p>
 <p><strong>Types</strong></p>
 <blockquote>
@@ -1879,6 +1923,14 @@ iterated over, dropping the original keys.</p>
 <span class="n">list</span> <span class="c1">--&gt; {&quot;carrot x2&quot;, &quot;tomato x2&quot;, &quot;basil x2&quot;} (in some order)</span>
 </pre></div>
 
+<p><strong>Usage</strong></p>
+<ul>
+<li>This is equivalent to <code>dash.values(dash.map(...))</code> but more concise.</li>
+</ul>
+<p><strong>See</strong></p>
+<ul>
+<li><a href="/rodash/api/Tables/#map">dash.map</a></li>
+</ul>
 <hr />
 <h3 id="merge">merge<a class="headerlink" href="#merge" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">merge</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="p">...)</span> <span class="c1">--&gt; T</span>
@@ -1886,7 +1938,7 @@ iterated over, dropping the original keys.</p>
 Mutates <em>target</em> by iterating recursively through elements of the subsequent
 arguments in order and inserting or replacing the values in target with each
 element preserving keys.</p>
-<p>If any values are both tables, these are merged recursively using <code>dash.merge</code>.</p>
+<p>If any values are both tables, these are merged recursively using <a href="/rodash/api/Tables/#merge">dash.merge</a>.</p>
 <p><strong>Types</strong></p>
 <blockquote>
 <p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
@@ -1945,10 +1997,10 @@ element preserving keys.</p>
 <p><strong>See</strong></p>
 <ul>
 <li>
-<p><a href="/api/Tables/#assign">dash.assign</a> </p>
+<p><a href="/rodash/api/Tables/#assign">dash.assign</a></p>
 </li>
 <li>
-<p><a href="/api/Tables/#defaults">dash.defaults</a> </p>
+<p><a href="/rodash/api/Tables/#defaults">dash.defaults</a></p>
 </li>
 </ul>
 <hr />
@@ -1974,17 +2026,17 @@ result have a count of two or more, they may form cycles in the <em>source</em>.
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">plate</span> <span class="o">=</span> <span class="p">{</span><span class="n">veg</span> <span class="o">=</span> <span class="s2">&quot;potato&quot;</span><span class="p">,</span> <span class="n">pie</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;stilton&quot;</span><span class="p">,</span> <span class="s2">&quot;beef&quot;</span><span class="p">}}</span>
-<span class="n">dash</span><span class="p">.</span><span class="n">occurences</span><span class="p">(</span><span class="n">plate</span><span class="p">)</span> <span class="c1">--&gt; {</span>
-    <span class="p">[{</span><span class="n">veg</span> <span class="o">=</span> <span class="s2">&quot;potato&quot;</span><span class="p">,</span> <span class="n">pie</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;stilton&quot;</span><span class="p">,</span> <span class="s2">&quot;beef&quot;</span><span class="p">}}]</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="p">[{</span><span class="s2">&quot;stilton&quot;</span><span class="p">,</span> <span class="s2">&quot;beef&quot;</span><span class="p">}]</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="p">}</span>
+<span class="n">dash</span><span class="p">.</span><span class="n">occurences</span><span class="p">(</span><span class="n">plate</span><span class="p">)</span> <span class="cm">--[[&gt; {</span>
+<span class="cm">    [{veg = &quot;potato&quot;, pie = {&quot;stilton&quot;, &quot;beef&quot;}}] = 1</span>
+<span class="cm">    [{&quot;stilton&quot;, &quot;beef&quot;}] = 1</span>
+<span class="cm">}]]</span>
 </pre></div>
 
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">kyle</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Kyle&quot;</span><span class="p">}</span>
 <span class="n">kyle</span><span class="p">.</span><span class="n">child</span> <span class="o">=</span> <span class="n">kyle</span>
-<span class="n">dash</span><span class="p">.</span><span class="n">occurences</span><span class="p">(</span><span class="n">kyle</span><span class="p">)</span> <span class="c1">--&gt; {</span>
-    <span class="p">[{</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Kyle&quot;</span><span class="p">,</span> <span class="n">child</span> <span class="o">=</span> <span class="n">kyle</span><span class="p">}]</span> <span class="o">=</span> <span class="mi">2</span>
-<span class="p">}</span>
+<span class="n">dash</span><span class="p">.</span><span class="n">occurences</span><span class="p">(</span><span class="n">kyle</span><span class="p">)</span> <span class="cm">--[[&gt; {</span>
+<span class="cm">    [{name = &quot;Kyle&quot;, child = kyle}] = 2</span>
+<span class="cm">}]]</span>
 </pre></div>
 
 <hr />
@@ -1992,6 +2044,8 @@ result have a count of two or more, they may form cycles in the <em>source</em>.
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">one</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; V, K?</span>
 </pre></div>
 Returns an element from <em>source</em>, if it has one.</p>
+<p>If there are multiple elements in <em>source</em>, any one of them may be returned as the iteration
+order over a table is stochastic.</p>
 <p><strong>Types</strong></p>
 <blockquote>
 <p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
@@ -2014,8 +2068,8 @@ Returns an element from <em>source</em>, if it has one.</p>
 <h3 id="privatize">privatize<a class="headerlink" href="#privatize" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">privatize</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; T{}</span>
 </pre></div>
-Returns a copy of <em>source</em>, ensuring each key starts with an underscore <code>_</code>.
-Keys which are already prefixed with an underscore are left unchanged.</p>
+Returns a copy of <em>source</em>, ensuring each key starts with an underscore <code>_</code>.</p>
+<p>Keys which are already prefixed with an underscore are left unchanged.</p>
 <p><strong>Types</strong></p>
 <blockquote>
 <p><strong>T</strong> - <code>any</code></p>
@@ -2038,12 +2092,49 @@ Keys which are already prefixed with an underscore are left unchanged.</p>
 <span class="n">privates</span> <span class="c1">--&gt; {_1 = 1, _public = 2, _private = 3}</span>
 </pre></div>
 
+<div class="codehilite"><pre><span></span><span class="c1">-- Make a static factory to create Cars with private fields</span>
+<span class="kd">local</span> <span class="n">interface</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">speed</span> <span class="o">=</span> <span class="n">t</span><span class="p">.</span><span class="n">number</span><span class="p">,</span>
+    <span class="n">color</span> <span class="o">=</span> <span class="n">t</span><span class="p">.</span><span class="n">string</span>
+<span class="p">}</span>
+<span class="kd">local</span> <span class="n">Car</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">classWithInterface</span><span class="p">(</span>
+    <span class="n">dash</span><span class="p">.</span><span class="n">privatize</span><span class="p">(</span><span class="n">interface</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="kd">local</span> <span class="n">CarFactory</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">make</span> <span class="o">=</span> <span class="kr">function</span><span class="p">(</span><span class="n">props</span><span class="p">)</span>
+        <span class="kr">return</span> <span class="n">Car</span><span class="p">.</span><span class="n">new</span><span class="p">(</span><span class="n">dash</span><span class="p">.</span><span class="n">privatize</span><span class="p">(</span><span class="n">props</span><span class="p">))</span>
+    <span class="kr">end</span>
+<span class="p">}</span>
+<span class="c1">-- Create a new car using a public interface:</span>
+<span class="kd">local</span> <span class="n">car</span> <span class="o">=</span> <span class="n">CarFactory</span><span class="p">.</span><span class="n">make</span><span class="p">({</span>
+    <span class="n">speed</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;red&#39;</span>
+<span class="p">})</span>
+<span class="c1">-- By convention, private fields should only by their owner.</span>
+<span class="n">car</span><span class="p">.</span><span class="n">_speed</span> <span class="c1">--&gt; 5</span>
+</pre></div>
+
+<p><strong>Usage</strong></p>
+<ul>
+<li>Fields starting with an underscore are considered private in many programming languages
+without inbuild access control. This function allows you to translate a public interface
+into a private one suitable for a class instance with private fields.</li>
+</ul>
+<p><strong>See</strong></p>
+<ul>
+<li>
+<p><a href="/rodash/api/Classes/#class">dash.class</a></p>
+</li>
+<li>
+<p><a href="/rodash/api/Classes/#classwithinterface">dash.classWithInterface</a></p>
+</li>
+</ul>
 <hr />
 <h3 id="serialize">serialize<a class="headerlink" href="#serialize" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">serialize</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 Returns a string representation of <em>source</em> including all elements with sorted keys.</p>
-<p><code>dash.serialize</code> preserves the properties of being unique, stable and cycle-safe if the serializer
+<p><a href="/rodash/api/Tables/#serialize">dash.serialize</a> preserves the properties of being unique, stable and cycle-safe if the serializer
 functions provided also obey these properties.</p>
 <p><strong>Types</strong></p>
 <blockquote>
@@ -2072,27 +2163,27 @@ functions provided also obey these properties.</p>
 
 <p><strong>Usage</strong></p>
 <ul>
-<li>Use <code>dash.serialize</code> when you need a representation of a table which doesn't need to be
-human-readable, or you need to customize the way serialization works. <code>dash.pretty</code> is more
+<li>Use <a href="/rodash/api/Tables/#serialize">dash.serialize</a> when you need a representation of a table which doesn't need to be
+human-readable, or you need to customize the way serialization works. <a href="/rodash/api/Strings/#pretty">dash.pretty</a> is more
 appropriate when you need a human-readable string.</li>
 </ul>
 <p><strong>See</strong></p>
 <ul>
 <li>
-<p><a href="/api/Tables/#serializeDeep">dash.serializeDeep</a> </p>
+<p><a href="/rodash/api/Tables/#serializedeep">dash.serializeDeep</a></p>
 </li>
 <li>
-<p><a href="/api/Tables/#defaultSerializer">dash.defaultSerializer</a> </p>
+<p><a href="/rodash/api/Tables/#defaultserializer">dash.defaultSerializer</a></p>
 </li>
 <li>
-<p><a href="/api/Strings/#pretty">dash.pretty</a> </p>
+<p><a href="/rodash/api/Strings/#pretty">dash.pretty</a></p>
 </li>
 </ul>
 <hr />
 <h3 id="serializedeep">serializeDeep<a class="headerlink" href="#serializedeep" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">serializeDeep</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">options</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
-Like <code>dash.serialize</code>, but if a child element is a table it is serialized recursively.</p>
+Like <a href="/rodash/api/Tables/#serialize">dash.serialize</a>, but if a child element is a table it is serialized recursively.</p>
 <p>Returns a string representation of <em>source</em> including all elements with sorted keys.</p>
 <p>This function preserves uniqueness, stability and cycle-safety.</p>
 <p><strong>Types</strong></p>
@@ -2121,10 +2212,10 @@ Like <code>dash.serialize</code>, but if a child element is a table it is serial
 <p><strong>See</strong></p>
 <ul>
 <li>
-<p><a href="/api/Tables/#serialize">dash.serialize</a> </p>
+<p><a href="/rodash/api/Tables/#serialize">dash.serialize</a></p>
 </li>
 <li>
-<p><a href="/api/Tables/#defaultSerializer">dash.defaultSerializer</a> </p>
+<p><a href="/rodash/api/Tables/#defaultserializer">dash.defaultSerializer</a></p>
 </li>
 </ul>
 <hr />
@@ -2134,8 +2225,9 @@ Like <code>dash.serialize</code>, but if a child element is a table it is serial
 <h3 id="set">set<a class="headerlink" href="#set" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">set</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="c1">--&gt; bool</span>
 </pre></div>
-Set a child or descendant of a table. Returns <code>true</code> if the operation completed without error.</p>
-<p>If any values along the path are not tables, <code>dash.set</code> will do nothing and return <code>false</code>.</p>
+Set a child or descendant value in a table. Returns <code>true</code> if the operation completed without error.</p>
+<p>The function walks through the object using keys from <em>path</em> in turn. If any values along the
+path are not tables, <a href="/rodash/api/Tables/#set">dash.set</a> will do nothing and return <code>false</code>.</p>
 <p><strong>Types</strong></p>
 <blockquote>
 <p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
@@ -2191,7 +2283,7 @@ are present and have equal values to those in the other.</p>
 
 <p><strong>See</strong></p>
 <ul>
-<li><a href="/api/Tables/#deepEqual">dash.deepEqual</a> </li>
+<li><a href="/rodash/api/Tables/#deepequal">dash.deepEqual</a></li>
 </ul>
 <hr />
 <h3 id="unique">unique<a class="headerlink" href="#unique" title="Permanent link">&para;</a></h3>
@@ -2237,9 +2329,9 @@ Returns an array of all the values of the elements in <em>source</em>.</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">values</span><span class="p">({</span>
-<span class="n">Frodo</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-<span class="n">Boromir</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
-<span class="n">Bilbo</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">Frodo</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">Boromir</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="n">Bilbo</span> <span class="o">=</span> <span class="mi">3</span>
 <span class="p">})</span> <span class="c1">--&gt; {1, 2, 3} (in some order)</span>
 </pre></div>
 
@@ -2307,13 +2399,13 @@ Returns an array of elements in <em>source</em> with any elements of <em>value</
           </a>
         
         
-          <a href="../../glossary/" title="Glossary" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../../types/" title="Types" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
               <span class="md-flex__ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Glossary
+                Types
               </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink">

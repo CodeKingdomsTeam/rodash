@@ -539,6 +539,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../../types/" title="Types" class="md-nav__link">
+      Types
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
     <a href="../../glossary/" title="Glossary" class="md-nav__link">
       Glossary
     </a>
@@ -798,6 +810,16 @@ Returns a function which executes <em>fn</em>, passing a subject ahead of the bo
 <p><code>(S) -&gt; S</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="kr">function</span> <span class="nf">setHealthTo</span><span class="p">(</span><span class="n">player</span><span class="p">,</span> <span class="n">health</span><span class="p">)</span>
+    <span class="n">player</span><span class="p">.</span><span class="n">Health</span> <span class="o">=</span> <span class="n">health</span>
+<span class="kr">end</span>
+<span class="kd">local</span> <span class="n">restoreHealth</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">bindTail</span><span class="p">(</span><span class="n">setHealthTo</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">Jimbo</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">Health</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="p">}</span>
+<span class="n">restoreHealth</span>
+</pre></div>
+
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">filterHurtPlayers</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">bindTail</span><span class="p">(</span><span class="n">dash</span><span class="p">.</span><span class="n">filter</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
     <span class="kr">return</span> <span class="n">player</span><span class="p">.</span><span class="n">Health</span> <span class="o">&lt;</span> <span class="n">player</span><span class="p">.</span><span class="n">MaxHealth</span>
 <span class="kr">end</span><span class="p">)</span>
@@ -810,11 +832,19 @@ Returns a function which executes <em>fn</em>, passing a subject ahead of the bo
 
 <p><strong>Usage</strong></p>
 <ul>
-<li>Chainable rodash function feeds are mapped to <code>dash.fn</code>, such as <code>dash.fn.map(handler)</code>.</li>
+<li>Chainable rodash function feeds are mapped to undefined, such as <code>dash.fn.map(handler)</code>.</li>
+</ul>
+<p><strong>See</strong></p>
+<ul>
+<li>
+<p><a href="/rodash/api/Tables/#filter">dash.filter</a></p>
+</li>
+<li>
+<p><a href="/rodash/api/Functions/#compose">dash.compose</a></p>
+</li>
 </ul>
 <hr />
-<div class="rodocs-trait">Chainable
-</div>
+<div class="rodocs-trait">Chainable</div>
 
 <h3 id="call">call<a class="headerlink" href="#call" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="p">...)</span> <span class="c1">--&gt; R</span>
@@ -837,6 +867,35 @@ Calls the supplied <em>fn</em> on the subject and any additional arguments, retu
 <blockquote>
 <p><code>R</code></p>
 </blockquote>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="kr">function</span> <span class="nf">get</span><span class="p">(</span><span class="n">object</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+    <span class="kr">return</span> <span class="n">object</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+<span class="kr">end</span>
+<span class="kd">local</span> <span class="n">Jimbo</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">Name</span> <span class="o">=</span> <span class="s2">&quot;Jimbo&quot;</span>
+<span class="p">}</span>
+<span class="n">dash</span><span class="p">.</span><span class="n">call</span><span class="p">(</span><span class="n">Jimbo</span><span class="p">,</span> <span class="n">get</span><span class="p">,</span> <span class="s2">&quot;Name&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;Jimbo&quot;</span>
+</pre></div>
+
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="kr">function</span> <span class="nf">get</span><span class="p">(</span><span class="n">object</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+    <span class="kr">return</span> <span class="n">object</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+<span class="kr">end</span>
+<span class="kd">local</span> <span class="n">isABaggins</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">call</span><span class="p">(</span><span class="n">get</span><span class="p">,</span> <span class="s2">&quot;Name&quot;</span><span class="p">):</span><span class="n">endsWith</span><span class="p">(</span><span class="s2">&quot;Baggins&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">Jimbo</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">Name</span> <span class="o">=</span> <span class="s2">&quot;Jimbo&quot;</span>
+<span class="p">}</span>
+<span class="n">isABaggins</span><span class="p">(</span><span class="n">Jimbo</span><span class="p">)</span> <span class="c1">--&gt; false</span>
+</pre></div>
+
+<p><strong>Usage</strong></p>
+<ul>
+<li>This is useful when used in the <code>dash.fn:call</code> form to call arbitrary function
+inside a chain.</li>
+</ul>
+<p><strong>See</strong></p>
+<ul>
+<li><a href="/rodash/api/Functions/#chain">dash.chain</a></li>
+</ul>
 <hr />
 <div class="rodocs-trait">Chainable</div>
 
@@ -852,7 +911,7 @@ check the value of the data at each step and change how the chain proceeds.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>fns</strong> - <code>any</code> </p>
-<p><strong>actor</strong> - <code>any</code>  - called for each result in the chain to determine how the next operation should process it. (default = <code>dash.invoke</code>)
+<p><strong>actor</strong> - <code>any</code>  - called for each result in the chain to determine how the next operation should process it. (default = <a href="/rodash/api/Functions/#invoke">dash.invoke</a>)
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
@@ -914,12 +973,12 @@ check the value of the data at each step and change how the chain proceeds.</p>
 <p><strong>Usage</strong></p>
 <ul>
 <li>
-<p>The "Rodash" chain: <code>dash.chain(_)</code> is aliased to <code>dash.fn</code>, so instead of writing
+<p>The "Rodash" chain: <code>dash.chain(_)</code> is aliased to undefined, so instead of writing
 <code>dash.chain(_):filter</code> you can simply write <code>dash.fn:filter</code>, or any other chainable method.</p>
 </li>
 <li>
-<p>A chained function can be made using <code>dash.chain</code> or built inductively using other chained
-methods of <code>dash.fn</code>.</p>
+<p>A chained function can be made using <a href="/rodash/api/Functions/#chain">dash.chain</a> or built inductively using other chained
+methods of undefined.</p>
 </li>
 <li>
 <p>A chainable method is one that has the subject which is passed through a chain as the
@@ -929,16 +988,16 @@ first argument, and subsequent arguments</p>
 <p><strong>See</strong></p>
 <ul>
 <li>
-<p><a href="/api/Functions/#chainFn">dash.chainFn</a> - Makes a function chainable if it returns a chain.</p>
+<p><a href="/rodash/api/Functions/#chainfn">dash.chainFn</a> - Makes a function chainable if it returns a chain.</p>
 </li>
 <li>
-<p><a href="/api/Functions/#invoke">dash.invoke</a> - the identity actor</p>
+<p><a href="/rodash/api/Functions/#invoke">dash.invoke</a> - the identity actor</p>
 </li>
 <li>
-<p><a href="/api/Functions/#continue">dash.continue</a> - an actor for chains of asynchronous functions</p>
+<p><a href="/rodash/api/Functions/#continue">dash.continue</a> - an actor for chains of asynchronous functions</p>
 </li>
 <li>
-<p><a href="/api/Functions/#maybe">dash.maybe</a> - an actor for chains of partial functions</p>
+<p><a href="/rodash/api/Functions/#maybe">dash.maybe</a> - an actor for chains of partial functions</p>
 </li>
 </ul>
 <hr />
@@ -995,7 +1054,7 @@ taking the subject as first argument.</p>
 
 <p><strong>See</strong></p>
 <ul>
-<li><a href="/api/Functions/#chain">dash.chain</a> </li>
+<li><a href="/rodash/api/Functions/#chain">dash.chain</a></li>
 </ul>
 <hr />
 <div class="rodocs-trait">Chainable
@@ -1020,8 +1079,12 @@ the return of the previous function as argument(s) to the next.</p>
 <p><code>(...A) -&gt; A</code></p>
 </blockquote>
 <p><strong>Examples</strong></p>
-<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="kr">function</span> <span class="nf">fry</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="kr">return</span> <span class="s2">&quot;fried &quot;</span> <span class="o">..</span> <span class="n">item</span> <span class="kr">end</span>
-<span class="kd">local</span> <span class="kr">function</span> <span class="nf">cheesify</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="kr">return</span> <span class="s2">&quot;cheesy &quot;</span> <span class="o">..</span> <span class="n">item</span> <span class="kr">end</span>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="kr">function</span> <span class="nf">fry</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+    <span class="kr">return</span> <span class="s2">&quot;fried &quot;</span> <span class="o">..</span> <span class="n">item</span>
+<span class="kr">end</span>
+<span class="kd">local</span> <span class="kr">function</span> <span class="nf">cheesify</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+    <span class="kr">return</span> <span class="s2">&quot;cheesy &quot;</span> <span class="o">..</span> <span class="n">item</span>
+<span class="kr">end</span>
 <span class="kd">local</span> <span class="n">prepare</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">compose</span><span class="p">(</span><span class="n">fry</span><span class="p">,</span> <span class="n">cheesify</span><span class="p">)</span>
 <span class="n">prepare</span><span class="p">(</span><span class="s2">&quot;nachos&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;cheesy fried nachos&quot;</span>
 </pre></div>
@@ -1034,7 +1097,7 @@ the return of the previous function as argument(s) to the next.</p>
 <h3 id="continue">continue<a class="headerlink" href="#continue" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">continue</span><span class="p">(</span><span class="n">actor</span><span class="p">)</span> <span class="c1">--&gt; Actor&lt;S&gt;</span>
 </pre></div>
-An actor getter which awaits on any promises returned by chain methods, and continues execution
+An <a href="/types#Actor">Actor</a> getter which awaits on any promises returned by chain methods, and continues execution
 when the promise completes.</p>
 <p>This allows any asynchronous methods to be used in chains without modifying any of the chain's
 synchronous methods, removing any boilerplate needed to handle promises in the main code body.</p>
@@ -1045,7 +1108,7 @@ synchronous methods, removing any boilerplate needed to handle promises in the m
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>actor</strong> - <code>Actor&lt;S&gt;</code>  - (default = <code>dash.invoke</code>) The actor to wrap.
+<p><strong>actor</strong> - <code>Actor&lt;S&gt;</code>  - (default = <a href="/rodash/api/Functions/#invoke">dash.invoke</a>) The actor to wrap.
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
@@ -1054,7 +1117,7 @@ synchronous methods, removing any boilerplate needed to handle promises in the m
 </blockquote>
 <p><strong>Rejects</strong></p>
 <ul>
-<li>passthrough</li>
+<li><em>passthrough</em> - The returned promise will reject if promises passed as arguments reject.</li>
 </ul>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="c1">-- Let&#39;s define a function which returns an answer after a delay</span>
@@ -1103,7 +1166,7 @@ synchronous methods, removing any boilerplate needed to handle promises in the m
 
 <p><strong>See</strong></p>
 <ul>
-<li><a href="/api/Functions/#chain">dash.chain</a> </li>
+<li><a href="/rodash/api/Functions/#chain">dash.chain</a></li>
 </ul>
 <hr />
 <h3 id="debounce">debounce<a class="headerlink" href="#debounce" title="Permanent link">&para;</a></h3>
@@ -1153,13 +1216,14 @@ A simple function that does nothing, but returns its input parameters.</p>
 </blockquote>
 <p><strong>Usage</strong></p>
 <ul>
-<li>This is typically referred to as the "identity" function.</li>
+<li>This is typically referred to as the "identity" function. Useful for when a function is
+expecting a callback to transform a value but you don't want to make any change to it.</li>
 </ul>
 <hr />
 <h3 id="invoke">invoke<a class="headerlink" href="#invoke" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">invoke</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="p">...)</span> <span class="c1">--&gt; ...any</span>
 </pre></div>
-An actor which calls the supplied <em>fn</em> with the argument tail.</p>
+An <a href="/types#Actor">Actor</a> which calls the supplied <em>fn</em> with the argument tail.</p>
 <p><strong>Types</strong></p>
 <blockquote>
 <p><strong>S</strong> - <code>any</code></p>
@@ -1174,9 +1238,19 @@ An actor which calls the supplied <em>fn</em> with the argument tail.</p>
 <blockquote>
 <p><code>...any</code></p>
 </blockquote>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">getName</span> <span class="o">=</span> <span class="kr">function</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
+    <span class="kr">return</span> <span class="n">player</span><span class="p">.</span><span class="n">Name</span>
+<span class="kr">end</span>
+<span class="kd">local</span> <span class="n">Jimbo</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">Name</span> <span class="o">=</span> <span class="s2">&quot;Jimbo&quot;</span>
+<span class="p">}</span>
+<span class="n">dash</span><span class="p">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">getName</span><span class="p">,</span> <span class="n">Jimbo</span><span class="p">)</span> <span class="c1">--&gt; &quot;Jimbo&quot;</span>
+</pre></div>
+
 <p><strong>Usage</strong></p>
 <ul>
-<li>This is the default <em>actor</em> for <code>dash.chain</code> and acts as an identity, meaning it has no effect on the result.</li>
+<li>This is the default <em>actor</em> for <a href="/rodash/api/Functions/#chain">dash.chain</a> and acts as an identity, meaning it has no effect on the result.</li>
 </ul>
 <hr />
 <h3 id="iscallable">isCallable<a class="headerlink" href="#iscallable" title="Permanent link">&para;</a></h3>
@@ -1200,7 +1274,7 @@ Return <code>true</code> if the <em>value</em> is a function or a table with a <
 <h3 id="maybe">maybe<a class="headerlink" href="#maybe" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">maybe</span><span class="p">(</span><span class="n">actor</span><span class="p">)</span> <span class="c1">--&gt; Actor&lt;S&gt;</span>
 </pre></div>
-An actor which cancels execution of a chain if a method returns nil, evaluating the chain as nil.</p>
+An <a href="/types#Actor">Actor</a> which cancels execution of a chain if a method returns nil, evaluating the chain as nil.</p>
 <p>Can wrap any other actor which handles values that are non-nil.</p>
 <p><strong>Types</strong></p>
 <blockquote>
@@ -1264,7 +1338,7 @@ An actor which cancels execution of a chain if a method returns nil, evaluating 
 <h3 id="memoize">memoize<a class="headerlink" href="#memoize" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">memoize</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">serializeArgs</span><span class="p">)</span> <span class="c1">--&gt; (Clearable&lt;...A&gt; &amp; AllClearable &amp; ...A) -&gt; B</span>
 </pre></div>
-Like <code>dash.once</code>, but caches non-nil results of calls to <em>fn</em> keyed by some serialization of the
+Like <a href="/rodash/api/Functions/#once">dash.once</a>, but caches non-nil results of calls to <em>fn</em> keyed by some serialization of the
 input arguments to <em>fn</em>. By default, all the args are serialized simply using <code>tostring</code>.</p>
 <p>Optionally memoize takes <code>function serializeArgs(args, cache)</code>, a function that should return a string key which a
 result should be cached at for a given signature. Return nil to avoid caching the result.</p>
@@ -1276,7 +1350,7 @@ result should be cached at for a given signature. Return nil to avoid caching th
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>fn</strong> - <code>((...A) -&gt; B, ...A) -&gt; string?</code> </p>
-<p><strong>serializeArgs</strong> - <code>any</code>  - (default = <code>dash.serialize</code>)
+<p><strong>serializeArgs</strong> - <code>any</code>  - (default = <a href="/rodash/api/Tables/#serialize">dash.serialize</a>)
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
@@ -1306,10 +1380,13 @@ result should be cached at for a given signature. Return nil to avoid caching th
 <p><strong>See</strong></p>
 <ul>
 <li>
-<p><a href="/api/Tables/#serialize">dash.serialize</a> </p>
+<p><a href="/rodash/api/Functions/#once">dash.once</a></p>
 </li>
 <li>
-<p><a href="/api/Tables/#serializeDeep">dash.serializeDeep</a> if you want to recursively serialize arguments.</p>
+<p><a href="/rodash/api/Tables/#serialize">dash.serialize</a></p>
+</li>
+<li>
+<p><a href="/rodash/api/Tables/#serializedeep">dash.serializeDeep</a> if you want to recursively serialize arguments.</p>
 </li>
 </ul>
 <hr />
@@ -1323,7 +1400,8 @@ A simple function that does nothing, and returns nil.</p>
 </blockquote>
 <p><strong>Usage</strong></p>
 <ul>
-<li>Shorthand for <code>function() end</code>.</li>
+<li>Shorthand for <code>function() end</code>. Useful for when a function is expecting a callback but
+you don't want to do anything.</li>
 </ul>
 <hr />
 <div class="rodocs-trait">Chainable</div>
@@ -1353,7 +1431,7 @@ For subsequent calls, the initial return of <em>fn</em> is returned, even if it 
 </ul>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">fry</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">once</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-    <span class="kr">return</span> <span class="s2">&quot;fried &quot;</span> <span class="o">..</span> <span class="n">tiem</span>
+    <span class="kr">return</span> <span class="s2">&quot;fried &quot;</span> <span class="o">..</span> <span class="n">item</span>
 <span class="kr">end</span><span class="p">)</span>
 <span class="n">fry</span><span class="p">(</span><span class="s2">&quot;sardine&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;fried sardine&quot;</span>
 <span class="n">fry</span><span class="p">(</span><span class="s2">&quot;squid&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;fried sardine&quot;</span>
@@ -1399,7 +1477,10 @@ Returns a function that when called, returns the original input parameters.</p>
 <h3 id="setinterval">setInterval<a class="headerlink" href="#setinterval" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">setInterval</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">intervalInSeconds</span><span class="p">,</span> <span class="n">delayInSeconds</span><span class="p">)</span> <span class="c1">--&gt; Clearable</span>
 </pre></div>
-Like <code>dash.setTimeout</code> but calls <em>fn</em> after every interval of <em>intervalInSeconds</em> time has passed.</p>
+Like <a href="/rodash/api/Functions/#settimeout">dash.setTimeout</a> but calls <em>fn</em> after every interval of <em>intervalInSeconds</em> time has
+passed.</p>
+<p>The <em>fn</em> is called in a separate thread, meaning that it will not block the thread it is called
+in, and if the calling threads, the <em>fn</em> will still be called at the expected times.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>fn</strong> - <code>(Clearable) -&gt; void</code> </p>
@@ -1411,11 +1492,26 @@ Like <code>dash.setTimeout</code> but calls <em>fn</em> after every interval of 
 <blockquote>
 <p><code>Clearable</code> - an instance which <code>:clear()</code> can be called on to prevent <em>fn</em> from firing.</p>
 </blockquote>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">waitInterval</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">setInterval</span><span class="p">(</span><span class="kr">function</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Waiting for more players...&quot;</span><span class="p">)</span>
+<span class="kr">end</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">.</span><span class="n">PlayerAdded</span><span class="p">:</span><span class="n">Connect</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
+    <span class="n">waitInterval</span><span class="p">:</span><span class="n">clear</span><span class="p">()</span>
+<span class="kr">end</span><span class="p">)</span>
+</pre></div>
+
+<p><strong>See</strong></p>
+<ul>
+<li><a href="/rodash/api/Functions/#settimeout">dash.setTimeout</a></li>
+</ul>
 <hr />
 <h3 id="settimeout">setTimeout<a class="headerlink" href="#settimeout" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">setTimeout</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">delayInSeconds</span><span class="p">)</span> <span class="c1">--&gt; Clearable</span>
 </pre></div>
 Like <code>delay</code>, this calls <em>fn</em> after <em>delayInSeconds</em> time has passed, with the added benefit of being cancelable.</p>
+<p>The <em>fn</em> is called in a separate thread, meaning that it will not block the thread it is called
+in, and if the calling threads, the <em>fn</em> will still be called at the expected time.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>fn</strong> - <code>(Clearable) -&gt; void</code> </p>
@@ -1426,6 +1522,19 @@ Like <code>delay</code>, this calls <em>fn</em> after <em>delayInSeconds</em> ti
 <blockquote>
 <p><code>Clearable</code> - an instance which <code>:clear()</code> can be called on to prevent <em>fn</em> from firing.</p>
 </blockquote>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">waitTimeout</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">setTimeout</span><span class="p">(</span><span class="kr">function</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sorry, no players came online!&quot;</span><span class="p">)</span>
+<span class="kr">end</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">.</span><span class="n">PlayerAdded</span><span class="p">:</span><span class="n">Connect</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
+    <span class="n">waitTimeout</span><span class="p">:</span><span class="n">clear</span><span class="p">()</span>
+<span class="kr">end</span><span class="p">)</span>
+</pre></div>
+
+<p><strong>See</strong></p>
+<ul>
+<li><a href="/rodash/api/Async/#delay">dash.delay</a></li>
+</ul>
 <hr />
 <h3 id="throttle">throttle<a class="headerlink" href="#throttle" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">throttle</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">cooldownInSeconds</span><span class="p">)</span> <span class="c1">--&gt; (...A) -&gt; B</span>
@@ -1447,10 +1556,26 @@ returns the result of the last call.</p>
 <blockquote>
 <p><code>(...A) -&gt; B</code></p>
 </blockquote>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">post</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">async</span><span class="p">(</span><span class="n">HttpService</span><span class="p">.</span><span class="n">Post</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">saveMap</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">throttle</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">post</span><span class="p">(</span><span class="s2">&quot;https://example.com/save&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+<span class="kr">end</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">saveMap</span><span class="p">(</span><span class="n">map</span><span class="p">)</span> <span class="c1">-- This saves the map</span>
+<span class="n">saveMap</span><span class="p">(</span><span class="n">map</span><span class="p">)</span> <span class="c1">-- This function call is throttled and won&#39;t result in post being called</span>
+<span class="n">saveMap</span><span class="p">(</span><span class="n">map</span><span class="p">)</span> <span class="c1">-- Same again</span>
+<span class="n">wait</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">saveMap</span><span class="p">(</span><span class="n">map</span><span class="p">)</span> <span class="c1">-- Enough time has passed, so this saves the map again</span>
+</pre></div>
+
 <p><strong>Usage</strong></p>
 <ul>
 <li>A nice <a href="http://demo.nimius.net/debounce_throttle/">visualisation of debounce vs. throttle</a>,
 the illustrated point being throttle will call <em>fn</em> every period during a spurt of events.</li>
+</ul>
+<p><strong>See</strong></p>
+<ul>
+<li><a href="/rodash/api/Async/#async">dash.async</a></li>
 </ul>
 <hr />
 <h3 id="throws">throws<a class="headerlink" href="#throws" title="Permanent link">&para;</a></h3>
@@ -1473,7 +1598,7 @@ Returns a function that when called, throws the original message.</p>
 
 <p><strong>Usage</strong></p>
 <ul>
-<li>Useful for when you want a callback to discard the arguments passed in and instead use static ones.</li>
+<li>Useful for when you want a callback to discard any result and throw a message instead.</li>
 </ul>
 <hr />
 <h3 id="unary">unary<a class="headerlink" href="#unary" title="Permanent link">&para;</a></h3>
@@ -1494,6 +1619,13 @@ Returns a function that wraps the input <em>fn</em> but only passes the first ar
 <blockquote>
 <p><code>(A) -&gt; B</code></p>
 </blockquote>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">printOneArgument</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">unary</span><span class="p">(</span><span class="kr">function</span><span class="p">(...)</span>
+    <span class="nb">print</span><span class="p">(...)</span>
+<span class="kr">end</span><span class="p">)</span>
+<span class="n">printOneArgument</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">,</span> <span class="s2">&quot;World&quot;</span><span class="p">,</span> <span class="s2">&quot;!&quot;</span><span class="p">)</span>
+<span class="c1">--&gt;&gt; Hello</span>
+</pre></div>
                 
                   
                 
