@@ -2,7 +2,7 @@ import { parse } from 'luaparse';
 import { readdir, readFile, writeFile } from 'fs-extra';
 import { basename, extname, join } from 'path';
 import { ArgumentParser } from 'argparse';
-import { generateMd, Nodes } from './generateMd';
+import { generateMd, Nodes, LibraryProps } from './generateMd';
 import { generateMakeDocsYml } from './generateMakeDocsYml';
 import { FunctionDeclaration, MemberExpression, Identifier } from './astTypings';
 import { uniq } from 'lodash';
@@ -15,8 +15,18 @@ parser.addArgument(['-o', '--output'], {
 	help: 'The directory where md files should be written to',
 	defaultValue: '.',
 });
+parser.addArgument(['-l', '--libName'], {
+	help: 'The name of the library',
+});
+parser.addArgument(['-r', '--rootUrl'], {
+	help: 'The root URL library',
+});
 parser.addArgument('source', {
-	help: 'The directory where lua files should be read from',
+	help: 'The directory where any lua files should be read from',
+	defaultValue: '.',
+});
+parser.addArgument('docsSource', {
+	help: 'The directory where any md files should be read from',
 	defaultValue: '.',
 });
 
@@ -30,7 +40,26 @@ export interface Glossary {
 	[module: string]: string[];
 }
 
-async function processFiles(source: string, output: string) {
+export interface Options {
+	libName: string;
+	rootUrl: string;
+	source: string;
+	docsSource: string;
+	output: string;
+}
+
+export function substituteLinks(libraryProps: LibraryProps, text: string) {
+	return text.replace(/`([A-Za-z]+)\.([A-Za-z]+)`/g, (match, libName, fnName) => {
+		const glossaryLink = libraryProps.glossaryMap[fnName];
+		if (!glossaryLink) {
+			console.log('Missing glossary link', match);
+		}
+		return glossaryLink && glossaryLink.fullText;
+	});
+}
+
+async function processSourceFiles(options: Options) {
+	const { source, docsSource, libName, rootUrl, output } = options;
 	const files = await readdir(source);
 	const fileParses: FileParse[] = await Promise.all(
 		files
@@ -61,20 +90,50 @@ async function processFiles(source: string, output: string) {
 		glossary[fileParse.name] = fileParse.fnNames;
 	}
 
-	const glossaryLinks = getGlossaryLinks(glossary);
-
-	await writeFile(join(output, 'glossary.md'), getGlossary(glossaryLinks));
-
-	const mdFiles = await Promise.all(
+	const glossaryLinks = getGlossaryLinks(options, glossary);
+	const glossaryWritePromise = writeFile(join(output, 'glossary.md'), getGlossary(glossaryLinks));
+	const sourceFilesWritePromise = Promise.all(
 		fileParses.map(async ({ name, nodesByLine, maxLines }) => {
 			const outputName = name + '.md';
-			const md = generateMd(name, nodesByLine, maxLines, 'dash', glossaryLinks);
-			await writeFile(join(output, 'api', outputName), md);
+			const libraryProps = {
+				fileName: name,
+				libName,
+				glossaryMap: glossaryLinks,
+				rootUrl,
+			};
+			const mdText = generateMd(libraryProps, nodesByLine, maxLines);
+			const mdTextWithLinks = substituteLinks(libraryProps, mdText);
+			await writeFile(join(output, 'api', outputName), mdTextWithLinks);
 			console.log('Built md:', outputName);
 			return outputName;
 		}),
 	);
-	await writeFile('mkdocs.yml', generateMakeDocsYml(mdFiles));
+	const mdFilesWritePromise = processMdSourceFiles(docsSource, output, glossaryLinks);
+
+	const filePromises = [
+		glossaryWritePromise,
+		sourceFilesWritePromise.then(mdFiles => writeFile('mkdocs.yml', generateMakeDocsYml(mdFiles))),
+		mdFilesWritePromise,
+	];
+
+	return Promise.all(filePromises);
+}
+
+async function processMdSourceFiles(docsSource: string, output: string, glossaryMap: GlossaryMap) {
+	const files = await readdir(docsSource);
+	return files
+		.filter(file => extname(file) === '.md')
+		.map(async file => {
+			const libraryProps = {
+				fileName: file,
+				libName: 'dash',
+				glossaryMap,
+				rootUrl: '/rodash/',
+			};
+			const text = await readFile(join(docsSource, file), 'utf8');
+			const textWithLinks = substituteLinks(libraryProps, text);
+			return writeFile(join(output, file), textWithLinks);
+		});
 }
 
 export function getFnNames(nodes: Nodes, maxLine: number): string[] {
@@ -96,6 +155,7 @@ export function getFnNames(nodes: Nodes, maxLine: number): string[] {
 interface GlossaryLink {
 	name: string;
 	text: string;
+	fullText: string;
 	link: string;
 }
 
@@ -103,17 +163,18 @@ export interface GlossaryMap {
 	[name: string]: GlossaryLink;
 }
 
-function getGlossaryLinks(glossary: Glossary) {
+function getGlossaryLinks(options: Options, glossary: Glossary) {
 	const glossaryMap: GlossaryMap = {};
 	for (const fileName in glossary) {
 		for (const fnName of glossary[fileName]) {
 			const [memberName, idName] = fnName.split('.');
 			const shortName = memberName === fileName ? idName : fnName;
-			const link = `/api/${fileName}/#${shortName}`;
+			const link = `${options.rootUrl}api/${fileName}/#${shortName.toLowerCase()}`;
 			glossaryMap[shortName] = {
 				name: shortName,
 				link,
 				text: `[${shortName}](${link})`,
+				fullText: `[${options.libName}.${shortName}](${link})`,
 			};
 		}
 	}
@@ -135,8 +196,7 @@ ${list}
 (async function() {
 	try {
 		const args = parser.parseArgs();
-		await processFiles(args.source, args.output);
-		console.log('Done!');
+		await processSourceFiles(args), console.log('Done!');
 	} catch (e) {
 		console.error(e);
 		process.exit(1);

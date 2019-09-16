@@ -425,6 +425,7 @@ end
 	| **onDone(response, durationInSeconds)** | _(T, number) -> nil_ | a hook for when the promise resolves |
 	| **onFail(errorMessage)** | _string -> nil_ | a hook for when the promise has failed and no more retries are allowed |
 	
+	@rejects passthrough
 	@example
 		-- Use dash.retryWithBackoff to retry a GET request repeatedly.
 		local fetchPizza = dash.async(function()
@@ -440,7 +441,6 @@ end
 		}):andThen(function(resultingPizza) 
 			print("Great, you have: ", resultingPizza)
 		end)
-	@rejects passthrough
 ]]
 --: <T>(Async<T>, BackoffOptions) -> Promise<T>
 function Async.retryWithBackoff(asyncFn, backoffOptions)

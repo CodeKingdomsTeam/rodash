@@ -21,17 +21,20 @@ export interface FunctionDoc {
 	comments: string[];
 }
 
+export interface LibraryProps {
+	libName: string;
+	fileName: string;
+	glossaryMap: GlossaryMap;
+	rootUrl: string;
+}
+
 export interface Nodes {
 	[line: string]: Node;
 }
 
-export function generateMd(
-	fileName: string,
-	nodes: Nodes,
-	maxLine: number,
-	libName: string,
-	glossaryMap: GlossaryMap,
-) {
+export function generateUnstruturedMd() {}
+
+export function generateMd(libraryProps: LibraryProps, nodes: Nodes, maxLine: number) {
 	let topComment = '';
 	let inHeader = true;
 	const functions: FunctionDoc[] = [];
@@ -53,7 +56,7 @@ export function generateMd(
 			if (!doc.typing) {
 				console.log('Skipping untyped method:', doc.comments);
 			} else {
-				const fn = getFnDoc(fileName, libName, node as FunctionDeclaration, doc, glossaryMap);
+				const fn = getFnDoc(libraryProps, node as FunctionDeclaration, doc);
 				if (fn) {
 					if (!fn.comments.length) {
 						console.log('Skipping undocumented method:', fn.sortName);
@@ -67,7 +70,7 @@ export function generateMd(
 	}
 
 	return `
-# ${fileName}
+# ${libraryProps.fileName}
 
 ${topComment}
 
@@ -141,11 +144,9 @@ function getCommentTextAndEntries(commentNode: Comment) {
 }
 
 function getFnDoc(
-	fileName: string,
-	libName: string,
+	libraryProps: LibraryProps,
 	node: FunctionDeclaration,
 	doc: Doc,
-	glossaryMap: GlossaryMap,
 ): FunctionDoc | undefined {
 	const lines = [];
 	if (node.identifier && node.identifier.type === 'MemberExpression') {
@@ -153,8 +154,8 @@ function getFnDoc(
 		const name = (member.identifier as Identifier).name;
 		const baseName = member.base.name;
 		const params = node.parameters.map(id => (id.type === 'VarargLiteral' ? '...' : id.name));
-		const prefixName = baseName === fileName ? libName : baseName;
-		const sortName = baseName === fileName ? name : baseName + '.' + name;
+		const prefixName = baseName === libraryProps.fileName ? libraryProps.libName : baseName;
+		const sortName = baseName === libraryProps.fileName ? name : baseName + '.' + name;
 
 		const returnType = stringifyType(
 			doc.typing.returnType || { typeKind: TypeKind.ANY, isRestParameter: true },
@@ -241,17 +242,7 @@ function ${prefixName}.${name}(${params.join(', ')}) --> ${returnType}
 		}
 		const see = filterEntries(doc.entries, 'see');
 		if (see.length) {
-			lines.push(
-				'\n**See**\n',
-				...see.map(({ content }) => {
-					const [, linkName, suffix] = content.match(/^\s*([^\s]+)\s*(.*)/);
-					const prefix = libName + '.';
-					const link = linkName.startsWith(prefix)
-						? glossaryMap[linkName.substring(prefix.length)].link
-						: linkName;
-					return `\n* [${linkName}](${link}) ${suffix}`;
-				}),
-			);
+			lines.push('\n**See**\n', ...see.map(({ content }) => `\n* ${content}`));
 		}
 		return {
 			name,
@@ -263,18 +254,9 @@ function ${prefixName}.${name}(${params.join(', ')}) --> ${returnType}
 }
 
 function formatList(entries: DocEntry[], modifier?: (line: string) => string) {
-	return entries.map(({ content }) => '\n* ' + content);
+	return entries.map(({ content }) => '\n* ' + (modifier ? modifier(content) : content));
 }
 
 function filterEntries(entries: DocEntry[], tag: string) {
 	return entries.filter(entry => entry.tag === tag);
-}
-
-function escapeHtml(unsafe: string) {
-	return unsafe
-		.replace(/&/g, '&amp;')
-		.replace(/</g, '&lt;')
-		.replace(/>/g, '&gt;')
-		.replace(/"/g, '&quot;')
-		.replace(/'/g, '&#039;');
 }

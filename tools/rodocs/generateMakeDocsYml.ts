@@ -18,6 +18,7 @@ nav:
   - Getting Started: getting-started.md
   - API Reference:
 ${files.map(name => `      - ${basename(name, '.md')}: api/${name}`).join('\n')}
+  - Types: types.md
   - Glossary: glossary.md
 
 extra_css:

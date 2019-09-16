@@ -1,5 +1,7 @@
 # Setup
 
+Note that you only need to follow these steps if you want to contribute to Rodash. Follow the installation instructions in the documentation if you simply want to use the library.
+
 1. Ensure you have Git installed:
 
    ## Windows
@@ -41,6 +43,23 @@
 | `tools/buildDocs.sh` | Build the docs.                                                |
 | `tools/format.sh`    | Format the code with `lua-fmt`.                                |
 | `tools/luacheck.sh`  | Runs `luacheck` against all source.                            |
+
+# Dependencies
+
+Rodash installs a number of dependencies for managing development and builds in a few different languages & their package managers. Notable dependencies include:
+
+* Python with pip
+	* virtualenv - allows Lua 5.1 to be run in a virtual environment to prevent any clash with existing installations.
+	* hererocks - installs the correct version of Lua in a local directory to avoid clash with existing installations.
+	* mkdocs - allows the docs website to be generated from markdown files
+	* precommit - automatically lints and formats lua code during commit
+* Typescript with Yarn
+	* luaparse - parses the Lua source code allowing docs to be automatically generated
+	* lua-fmt - formats lua source code
+* Lua with luarocks
+	* busted - a unit test harness
+	* luacov - a coverage tool
+	* luacheck - a linter for lua
 
 # Development
 

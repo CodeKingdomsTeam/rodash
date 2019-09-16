@@ -166,7 +166,7 @@ end
 	@example
 		local playerSet = {Frodo = true, Bilbo = true, Boromir = true}
 		local healthSet = dash.keyBy(playerSet, function(name)
-			return dash.get(game.Players, name, "Health")
+			return dash.get(game.Players, name, "Character", "Humanoid", "Health")
 		end)
 		healthSet --> {100 = true, 50 = true, 0 = true}
 ]]
@@ -421,13 +421,12 @@ end
 	If the _handler_ returns nil, the element is dropped from the result.
 	@see `dash.keyBy` - if you only want one element to be preserved at each key
 	@see `dash.get`
-	@see `dash.mapKeys`
 	@example
-		local playerSet = {Frodo = true, Bilbo = true, Boromir = true}
-		local healthSet = dash.mapKeys(playerSet, function(name)
-			return dash.get(game.Players, name, "Health")
+		local playerSet = {Frodo = "Frodo", Bilbo = "Bilbo", Boromir = "Boromir"}
+		local healthSet = dash.keyBy(playerSet, function(name)
+			return dash.get(game.Players, name, "Character", "Humanoid", "Health")
 		end)
-		healthSet --> {100 = true, 50 = true, 0 = true}
+		healthSet --> {100 = {}, 50 = {"Bilbo", "Frodo"}, 0 = {"Boromir"}}
 ]]
 --: <T: Iterable<K,V>, K2>(((value: T, key: K) -> K2) -> Iterable<K2, Iterable<K,V>>)
 function Tables.groupBy(source, handler)
