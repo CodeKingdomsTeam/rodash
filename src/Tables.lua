@@ -2,7 +2,7 @@
 	A collection of functions that operate on Lua tables. These can operate on arrays,
 	dictionaries and any collection types implemented with tables.
 
-	These functions can iterate over any [Iterable](/types#Iterable) values.
+	These functions can iterate over any [Iterable](/rodash/types#Iterable) values.
 
 	These functions typically act on immutable tables and return new tables in functional style.
 	Note that mutable arguments in Rodash are explicitly typed as such with the `mut` keyword.
@@ -17,7 +17,7 @@ local function assertHandlerIsFn(handler)
 end
 
 --[[
-	Determines a suitable [Iterator](/types#Iterator) to use for _source_, allowing _source_ to
+	Determines a suitable [Iterator](/rodash/types#Iterator) to use for _source_, allowing _source_ to
 	be either a plain table, a table that has a metatable with an `iterable` key, or a function.
 
 	By default, the iterator is unordered, but passing _asArray_ as `true` uses `ipairs` to iterate

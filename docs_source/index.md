@@ -42,6 +42,8 @@ local append = dash.append
 
 If you have any queries or feedback, please [join the discussion](https://discord.gg/PyaNeN5) on the Studio+ discord server!
 
+Please report any bugs to the [Issue Tracker](https://github.com/CodeKingdomsTeam/rodash/issues).
+
 # Design Principles
 
 The Rodash design principles make it quick and easy to use the library to write concise operations, or incrementally simplify existing Roblox code.

@@ -377,7 +377,7 @@ function Functions.chainFn(fn)
 end
 
 --[[
-	An [Actor](/types#Actor) which calls the supplied _fn_ with the argument tail.
+	An [Actor](/rodash/types#Actor) which calls the supplied _fn_ with the argument tail.
 	@example
 		local getName = function(player)
 			return player.Name
@@ -395,7 +395,7 @@ function Functions.invoke(fn, ...)
 end
 
 --[[
-	An [Actor](/types#Actor) which cancels execution of a chain if a method returns nil, evaluating the chain as nil.
+	An [Actor](/rodash/types#Actor) which cancels execution of a chain if a method returns nil, evaluating the chain as nil.
 
 	Can wrap any other actor which handles values that are non-nil.
 	@example 
@@ -457,7 +457,7 @@ function Functions.maybe(actor)
 end
 
 --[[
-	An [Actor](/types#Actor) getter which awaits on any promises returned by chain methods, and continues execution
+	An [Actor](/rodash/types#Actor) getter which awaits on any promises returned by chain methods, and continues execution
 	when the promise completes.
 
 	This allows any asynchronous methods to be used in chains without modifying any of the chain's
@@ -531,6 +531,31 @@ local getRodashChain =
 		return Functions.chain(rd)
 	end
 )
+
+--[[
+	A [Chain](/rodash/types/#Chain) built from Rodash itself. Any
+	[Chainable](/rodash/types/#Chainable) Rodash function can be used as a method on this object,
+	omitting the subject until the whole chain is evaluated by calling it with the subject.
+	@example
+		local getNames = dash.fn:map(function( player )
+			return player.Name
+		end)
+		getNames(game.Players) --> {"Bilbo Baggins", "Frodo Baggins", "Peregrin Took"}
+	@example
+		local getNames = dash.fn:map(function( player )
+			return player.Name
+		end):filter(function( name )
+			return dash.endsWith(name, "Baggins")
+		end)
+		getNames(game.Players) --> {"Bilbo Baggins", "Frodo Baggins"}
+	@example
+		local getNames = dash.fn:map(function( player )
+			return player.Name
+		end):filter(dash.fn:endsWith("Baggins"))
+		getNames(game.Players) --> {"Bilbo Baggins", "Frodo Baggins"}
+	@see `dash.chain` - to make your own chains.
+]]
+--: Chain<dash>
 Functions.fn = {}
 setmetatable(
 	Functions.fn,

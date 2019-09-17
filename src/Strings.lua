@@ -614,7 +614,7 @@ end
 	Returns a human-readable string for the given _value_. The string will be formatted across
 	multiple lines if a descendant element gets longer than `80` characters.
 
-	Optionally a table of [SerializeOptions](/types#SerializeOptions) can be passed which will pass
+	Optionally a table of [SerializeOptions](/rodash/types#SerializeOptions) can be passed which will pass
 	to the underlying `dash.serialize` function so you can customise what is displayed.
 
 	@example

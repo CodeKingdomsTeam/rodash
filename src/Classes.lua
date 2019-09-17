@@ -221,7 +221,7 @@ function Classes.class(name, constructor, decorators)
 		are incompatible. Avoid doing this as more advanced type checking may throw if the types
 		do not unify in the future.
 
-		@see `dash.extend`
+		@see `Class.extend`
 		@see `dash.classWithInterface`
 		@see [The t library](https://github.com/osyrisrblx/t) - used to check types at runtime.
 	]]
@@ -334,7 +334,7 @@ end
 	`t.number`, `dash.isCallable` etc.
 
 	Optionally, you may provide an array of _decorators_ which are reduced with the Class, adding
-	additional functionality in the same way `dash.class` does. See [Decorator](/types#Decorator)
+	additional functionality in the same way `dash.class` does. See [Decorator](/rodash/types#Decorator)
 	for more information.
 
 	@example

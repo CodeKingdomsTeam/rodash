@@ -14,7 +14,7 @@
 		42
 	```
 
-	These functions can iterate over any [Ordered](/types#Ordered) values.
+	These functions can iterate over any [Ordered](/rodash/types#Ordered) values.
 ]=]
 local t = require(script.Parent.Parent.t)
 local Tables = require(script.Parent.Tables)

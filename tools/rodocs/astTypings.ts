@@ -21,3 +21,7 @@ export interface Comment extends Node {
 	raw: string;
 	value: string;
 }
+
+export interface AssignmentStatement extends Node {
+	variables: Node[];
+}

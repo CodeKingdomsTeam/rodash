@@ -1,4 +1,11 @@
-import { Node, Comment, MemberExpression, FunctionDeclaration, Identifier } from './astTypings';
+import {
+	Node,
+	Comment,
+	MemberExpression,
+	FunctionDeclaration,
+	Identifier,
+	AssignmentStatement,
+} from './astTypings';
 import { keyBy } from 'lodash';
 import { GlossaryMap } from './index';
 import * as parser from './typeParser';
@@ -10,7 +17,6 @@ import {
 	PLURALITY,
 	getMetaDescription,
 	describeGeneric,
-	Type,
 } from './LuaTypes';
 
 interface DocEntry {
@@ -24,7 +30,7 @@ interface Doc {
 	comments: string[];
 	entries: DocEntry[];
 }
-export interface FunctionDoc {
+export interface MdDoc {
 	name: string;
 	content: string;
 	sortName: string;
@@ -42,12 +48,11 @@ export interface Nodes {
 	[line: string]: Node;
 }
 
-export function generateUnstruturedMd() {}
-
 export function generateMd(libraryProps: LibraryProps, nodes: Nodes, maxLine: number) {
 	let topComment = '';
 	let inHeader = true;
-	const functions: FunctionDoc[] = [];
+	const functions: MdDoc[] = [];
+	const members: MdDoc[] = [];
 	for (let i = 0; i <= maxLine; i++) {
 		if (!nodes[i]) {
 			continue;
@@ -61,32 +66,56 @@ export function generateMd(libraryProps: LibraryProps, nodes: Nodes, maxLine: nu
 				inHeader = false;
 			}
 		}
-		if (node.type === 'FunctionDeclaration') {
+		if (node.type === 'FunctionDeclaration' || node.type === 'AssignmentStatement') {
 			const doc = getDocAtLocation(node.loc.start.line, nodes);
 			if (!doc.typing) {
 				console.log('Skipping untyped method:', doc.comments);
 			} else {
-				const fn = getFnDoc(libraryProps, node as FunctionDeclaration, doc);
-				if (fn) {
-					if (!fn.comments.length) {
-						console.log('Skipping undocumented method:', fn.sortName);
-					} else {
-						functions.push(fn);
+				if (node.type === 'AssignmentStatement') {
+					const member = getMemberDoc(libraryProps, node as AssignmentStatement, doc);
+					if (member) {
+						if (!member.comments.length) {
+							console.log('Skipping undocumented method:', member.sortName);
+						} else {
+							members.push(member);
+						}
+					}
+				} else {
+					const fn = getFnDoc(libraryProps, node as FunctionDeclaration, doc);
+					if (fn) {
+						if (!fn.comments.length) {
+							console.log('Skipping undocumented method:', fn.sortName);
+						} else {
+							functions.push(fn);
+						}
 					}
 				}
 			}
 		}
 		functions.sort((a, b) => (a.sortName.toLowerCase() < b.sortName.toLowerCase() ? -1 : 1));
+		members.sort((a, b) => (a.sortName.toLowerCase() < b.sortName.toLowerCase() ? -1 : 1));
 	}
+
+	const functionDocs = functions.length
+		? `## Functions
+
+${functions.map(fn => fn.content).join('\n\n---\n\n')}`
+		: '';
+
+	const memberDocs = members.length
+		? `## Members
+
+${members.map(fn => fn.content).join('\n\n---\n\n')}`
+		: '';
 
 	return `
 # ${libraryProps.fileName}
 
 ${topComment}
 
-## Functions
+${functionDocs}
 
-${functions.map(fn => fn.content).join('\n\n---\n\n')}
+${memberDocs}
 
 `;
 }
@@ -156,11 +185,46 @@ function getCommentTextAndEntries(commentNode: Comment) {
 	};
 }
 
+function getMemberDoc(
+	libraryProps: LibraryProps,
+	node: AssignmentStatement,
+	doc: Doc,
+): MdDoc | undefined {
+	const member = node.variables[0] as MemberExpression;
+	const name = (member.identifier as Identifier).name;
+	const baseName = member.base.name;
+	const prefixName = baseName === libraryProps.fileName ? libraryProps.libName : baseName;
+	const sortName = baseName === libraryProps.fileName ? name : baseName + '.' + name;
+	const lines = [];
+	lines.push(
+		`### ${name} \n`,
+		'```lua' +
+			`
+${prefixName}.${name} -- ${doc.typeString}
+` +
+			'```',
+		doc.comments,
+	);
+	const examples = filterEntries(doc.entries, 'example');
+	if (examples.length) {
+		lines.push(
+			'\n**Examples**\n',
+			...examples.map(example => '```lua\n' + example.content + '\n```\n\n'),
+		);
+	}
+	return {
+		name,
+		sortName,
+		content: lines.join('\n'),
+		comments: doc.comments,
+	};
+}
+
 function getFnDoc(
 	libraryProps: LibraryProps,
 	node: FunctionDeclaration,
 	doc: Doc,
-): FunctionDoc | undefined {
+): MdDoc | undefined {
 	const lines = [];
 	if (node.identifier && node.identifier.type === 'MemberExpression') {
 		const member = node.identifier as MemberExpression;
@@ -184,8 +248,8 @@ function getFnDoc(
 function ${prefixName}.${name}(${params.join(', ')})
 ` +
 				'```',
+			doc.comments,
 		);
-		lines.push(doc.comments);
 		const paramEntries = filterEntries(doc.entries, 'param');
 		const paramMap = keyBy(
 			paramEntries.map(entry => entry.content.match(/^\s*([A-Za-z.]+)\s(.*)/)),

@@ -4,7 +4,12 @@ import { basename, extname, join } from 'path';
 import { ArgumentParser } from 'argparse';
 import { generateMd, Nodes, LibraryProps } from './generateMd';
 import { generateMakeDocsYml } from './generateMakeDocsYml';
-import { FunctionDeclaration, MemberExpression, Identifier } from './astTypings';
+import {
+	FunctionDeclaration,
+	MemberExpression,
+	Identifier,
+	AssignmentStatement,
+} from './astTypings';
 import { uniq } from 'lodash';
 const parser = new ArgumentParser({
 	version: '1.0.0',
@@ -34,7 +39,7 @@ interface FileParse {
 	name: string;
 	maxLines: number;
 	nodesByLine: Nodes;
-	fnNames: string[];
+	docNames: string[];
 }
 export interface Glossary {
 	[module: string]: string[];
@@ -49,8 +54,8 @@ export interface Options {
 }
 
 export function substituteLinks(libraryProps: LibraryProps, text: string) {
-	return text.replace(/`([A-Za-z]+)\.([A-Za-z]+)`/g, (match, libName, fnName) => {
-		const glossaryLink = libraryProps.glossaryMap[fnName];
+	return text.replace(/`([A-Za-z]+)\.([A-Za-z]+)`/g, (match, libName, docName) => {
+		const glossaryLink = libraryProps.glossaryMap[docName];
 		if (!glossaryLink) {
 			console.log('Missing glossary link', match);
 			return match;
@@ -83,13 +88,13 @@ async function processSourceFiles(options: Options) {
 					},
 				});
 				const name = basename(file, '.lua');
-				const fnNames = getFnNames(nodesByLine, maxLines);
-				return { name, nodesByLine, maxLines, fnNames };
+				const docNames = getDocNames(nodesByLine, maxLines);
+				return { name, nodesByLine, maxLines, docNames };
 			}),
 	);
 	const glossary: Glossary = {};
 	for (const fileParse of fileParses) {
-		glossary[fileParse.name] = fileParse.fnNames;
+		glossary[fileParse.name] = fileParse.docNames;
 	}
 
 	const glossaryLinks = getGlossaryLinks(options, glossary);
@@ -138,7 +143,7 @@ async function processMdSourceFiles(docsSource: string, output: string, glossary
 		});
 }
 
-export function getFnNames(nodes: Nodes, maxLine: number): string[] {
+export function getDocNames(nodes: Nodes, maxLine: number): string[] {
 	const names = [];
 	for (const line in nodes) {
 		const node = nodes[line];
@@ -146,6 +151,13 @@ export function getFnNames(nodes: Nodes, maxLine: number): string[] {
 			const fnNode = node as FunctionDeclaration;
 			if (fnNode.identifier && fnNode.identifier.type === 'MemberExpression') {
 				const member = fnNode.identifier as MemberExpression;
+				const name = (member.identifier as Identifier).name;
+				names.push(member.base.name + '.' + name);
+			}
+		} else if (node.type === 'AssignmentStatement') {
+			const assignmentNode = node as AssignmentStatement;
+			const member = assignmentNode.variables[0] as MemberExpression;
+			if (member && member.type === 'MemberExpression') {
 				const name = (member.identifier as Identifier).name;
 				names.push(member.base.name + '.' + name);
 			}
@@ -168,9 +180,9 @@ export interface GlossaryMap {
 function getGlossaryLinks(options: Options, glossary: Glossary) {
 	const glossaryMap: GlossaryMap = {};
 	for (const fileName in glossary) {
-		for (const fnName of glossary[fileName]) {
-			const [memberName, idName] = fnName.split('.');
-			const shortName = memberName === fileName ? idName : fnName;
+		for (const docName of glossary[fileName]) {
+			const [memberName, idName] = docName.split('.');
+			const shortName = memberName === fileName ? idName : docName;
 			const link = `${options.rootUrl}api/${fileName}/#${shortName.toLowerCase()}`;
 			glossaryMap[shortName] = {
 				name: shortName,
