@@ -53,8 +53,10 @@ export function substituteLinks(libraryProps: LibraryProps, text: string) {
 		const glossaryLink = libraryProps.glossaryMap[fnName];
 		if (!glossaryLink) {
 			console.log('Missing glossary link', match);
+			return match;
+		} else {
+			return glossaryLink.fullText;
 		}
-		return glossaryLink && glossaryLink.fullText;
 	});
 }
 

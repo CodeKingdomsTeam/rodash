@@ -150,7 +150,7 @@ end
 	@param delimiter (default = "")
 	@trait Chainable
 ]]
---: string, pattern -> string[], string[]
+--: string, Pattern -> string[], string[]
 function Strings.splitOn(str, pattern)
 	assertStrIsString(str)
 	assert(t.optional(t.string)(pattern), "BadInput: pattern must be a string or nil")
@@ -255,23 +255,23 @@ end
 	This function first calls `dash.format` on the arguments provided and then outputs the response
 	to the debug target, set using `dash.setDebug`. By default, this function does nothing, allowing
 	developers to leave the calls in the source code if that is beneficial.
-	@param subject the format match string
+	@param format the format match string
 	@example
 		-- During development:
 		dash.setDebug()
 		-- At any point in the code:
-		dash.debug("Hello is printed")
-		-->> Hello is printed
+		dash.debug("Hello {}", game.Players.LocalPlayer)
+		-->> Hello builderman (for example)
 	@usage A common pattern would be to `dash.setDebug()` to alias to `print` during local development,
 		and send debug messages to an HTTP server on a production build to allow remote debugging.
 	@see `dash.setDebug`
 ]]
---: any, ... -> string
-function Strings.debug(subject, ...)
+--: string, ... -> string
+function Strings.debug(format, ...)
 	if Strings.debugTarget == nil then
 		return
 	end
-	Strings.debugTarget(Strings.format(...))
+	Strings.debugTarget(Strings.format(format, ...))
 end
 
 --[[
@@ -290,7 +290,7 @@ end
 	@see `dash.debug`
 	@see `dash.async`
 ]]
---: <T>(Function<T> -> ())
+--: <A>(...A -> ())
 function Strings.setDebug(fn)
 	Strings.debugTarget = fn
 end

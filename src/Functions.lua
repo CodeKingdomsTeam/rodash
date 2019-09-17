@@ -61,7 +61,7 @@ end
 		printOneArgument("Hello", "World", "!")
 		-->> Hello
 ]]
---: <A, B>((A -> B) -> A -> B)
+--: <A, R>((A -> R) -> A -> R)
 function Functions.unary(fn)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
 	return function(first)
@@ -95,7 +95,7 @@ end
 		local damageLocalPlayer = dash.bind(damagePlayer, game.Players.LocalPlayer)
 		damageLocalPlayer(5)
 ]]
---: <A, B, R>(((...A, ...B -> R), ...A) -> ...B -> R)
+--: <A, A2, R>(((...A, ...A2 -> R), ...A) -> ...A2 -> R)
 function Functions.bind(fn, ...)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
 	local args = {...}
@@ -155,7 +155,7 @@ end
 	@throws _passthrough_ - any error thrown when called will cause `nil` to cache and pass through the error.
 	@usage Useful for when you want to lazily compute something expensive that doesn't change.
 ]]
---: <...A, B>((...A -> B), B?) -> Clearable & () -> B
+--: <A, R>((...A -> R), R?) -> Clearable & (...A -> R)
 function Functions.once(fn)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
 	local called = false
@@ -207,7 +207,7 @@ end
 		inside a chain.
 	@see `dash.chain`
 ]]
---: <S: Subject, A, R>(S, (S, ...A -> R), ...A -> R)
+--: <S, A, R>(S, (S, ...A -> R), ...A -> R)
 function Functions.call(subject, fn, ...)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
 	return fn(subject, ...)
@@ -284,9 +284,7 @@ end
 	@see `dash.continue` - an actor for chains of asynchronous functions
 	@see `dash.maybe` - an actor for chains of partial functions
 ]]
---: type Chainable<S: Subject> = S, ... -> S
---: type Actor<S: Subject> = (... -> S) -> ... -> S
---: <S: Subject>(Chainable<S>{}, Actor<S>) -> Chain<S>
+--: <S>(Chainable<S>{}, Actor<S>) -> Chain<S>
 function Functions.chain(fns, actor)
 	if actor == nil then
 		actor = Functions.invoke
@@ -390,7 +388,7 @@ end
 		dash.invoke(getName, Jimbo) --> "Jimbo"
 	@usage This is the default _actor_ for `dash.chain` and acts as an identity, meaning it has no effect on the result.
 ]]
---: <S>(Actor<S>)
+--: <S, A>((A -> S), ...A -> S)
 function Functions.invoke(fn, ...)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
 	return fn(...)
@@ -612,7 +610,7 @@ end
 	@see `dash.serialize`
 	@see `dash.serializeDeep` if you want to recursively serialize arguments.
 ]]
---: <...A, B>((...A -> B), ...A -> string?) -> Clearable<...A> & AllClearable & (...A) -> B
+--: <A, R>((...A -> R), ...A -> string?) -> Clearable<A> & AllClearable & (...A -> R)
 function Functions.memoize(fn, serializeArgs)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
 	serializeArgs = serializeArgs or Functions.unary(Tables.serialize)
@@ -738,7 +736,7 @@ end
 	@usage A nice [visualisation of debounce vs. throttle](http://demo.nimius.net/debounce_throttle/), 
 		the illustrated point being debounce will only call _fn_ at the end of a spurt of events.
 ]]
---: <A, B>(...A -> B), number -> Clearable & (...A -> B)
+--: <A, R>(...A -> R), number -> Clearable & (...A -> R)
 function Functions.debounce(fn, delayInSeconds)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
 	assert(type(delayInSeconds) == "number", "BadInput: delayInSeconds must be a number")
@@ -792,7 +790,7 @@ end
 		the illustrated point being throttle will call _fn_ every period during a spurt of events.
 	@see `dash.async`
 ]]
---: <A, B>((...A) -> B), number -> ...A -> B
+--: <A, R>((...A) -> R), number -> ...A -> R
 function Functions.throttle(fn, cooldownInSeconds)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
 	assert(type(cooldownInSeconds) == "number", "BadInput: cooldownInSeconds must be a number > 0")

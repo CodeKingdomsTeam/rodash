@@ -52,7 +52,7 @@ end
 		getUpperTorso(players.LocalPlayer) --> Part
 	@trait Chainable
 ]]
---: <T: {[K]: V}>(T, ...K) -> V?
+--: <K, V, T: {[K]: V}>(T, ...K) -> V?
 function Tables.get(source, ...)
 	local path = {...}
 	local ok, value =
@@ -197,7 +197,7 @@ end
 		end)
 		tools --> {Spoon, Ring, Sting, Book}
 ]]
---: <T: Iterable<K,V>, U>((T, (element: V, key: K) -> U[]) -> U[])
+--: <T: Iterable<K,V>, V2>((T, (element: V, key: K) -> V2[]) -> V2[])
 function Tables.flatMap(source, handler)
 	assertHandlerIsFn(handler)
 	local Arrays = require(script.Parent.Arrays)

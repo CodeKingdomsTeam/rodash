@@ -388,7 +388,7 @@ end
 	@see `dash.async`
 	@see `dash.parallelAll`
 ]]
---: <T, Args>(Yieldable<T, Args>{}) -> (...Args -> Promise<T>){}
+--: <T, A>(Yieldable<T, A>{}) -> (...A -> Promise<T>){}
 function Async.asyncAll(dictionary)
 	assert(t.table(dictionary), "BadInput: dictionary must be a table")
 	local result =

@@ -7,8 +7,6 @@ local Arrays = require(script.Parent.Arrays)
 local Functions = require(script.Parent.Functions)
 local Classes = {}
 
---: type Constructor<T> = ... -> T
-
 --[[
 	Create a class called _name_ with the specified _constructor_. The constructor should return a
 	plain table which will be turned into an instance of _Class_ from a call to `Class.new(...)`.
@@ -73,7 +71,7 @@ function Classes.class(name, constructor, decorators)
 			local car = Car.new(5)
 			dash.pretty(car) --> 'Car {speed = 5}'
 	]]
-	--: Constructor<T>
+	--: <S, A>(...A -> S)
 	function Class.new(...)
 		local instance = constructor(...)
 		setmetatable(
@@ -195,7 +193,7 @@ function Classes.class(name, constructor, decorators)
 			local car = Car.new()
 			car.id --> "Car #1: 4 wheels"
 	]]
-	--: <S: T>(T: string, Constructor<T>?, Decorator[]?) -> Class<S>
+	--: <S: T>(string, Constructor<S>?, Decorator<S>[]?) -> Class<S>
 	function Class:extend(name, constructor, decorators)
 		local SubClass = Classes.class(name, constructor or Class.new, decorators)
 		setmetatable(SubClass, {__index = self})
@@ -695,7 +693,7 @@ end
 		setLightTo("Dim", game.Workspace.RoomLight)
 		--!> BadInput: enumValue must be an instance of enum
 ]]
---: <T, Strategy:((...A) -> V)>(Enum<T>, {[enumValue: T]: Strategy}) -> (enumValue: T, ...A) -> V
+--: <T, ...A, V>(Enum<T>, {[enumValue: T]: Strategy<V, A>}) -> (enumValue: T, ...A) -> V
 function Classes.match(enum, strategies)
 	assert(t.table(enum), "BadInput: enum should be a table")
 	assert(

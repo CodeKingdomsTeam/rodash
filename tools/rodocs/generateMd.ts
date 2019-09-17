@@ -2,7 +2,16 @@ import { Node, Comment, MemberExpression, FunctionDeclaration, Identifier } from
 import { keyBy } from 'lodash';
 import { GlossaryMap } from './index';
 import * as parser from './typeParser';
-import { stringifyType, FunctionType, TypeKind } from './LuaTypes';
+import {
+	describeType,
+	stringifyType,
+	FunctionType,
+	TypeKind,
+	PLURALITY,
+	getMetaDescription,
+	describeGeneric,
+	Type,
+} from './LuaTypes';
 
 interface DocEntry {
 	tag: string;
@@ -10,6 +19,7 @@ interface DocEntry {
 }
 
 interface Doc {
+	typeString: string;
 	typing: FunctionType;
 	comments: string[];
 	entries: DocEntry[];
@@ -83,6 +93,7 @@ ${functions.map(fn => fn.content).join('\n\n---\n\n')}
 
 function getDocAtLocation(loc: number, nodes: Nodes): Doc {
 	let typing: FunctionType;
+	let typeString: string;
 	const comments = [];
 	const entries = [];
 	// Work backwards from the location to find comments above the specified point, which will form
@@ -97,7 +108,8 @@ function getDocAtLocation(loc: number, nodes: Nodes): Doc {
 			if (comment.raw.match(/^\-\-\:/)) {
 				const type = comment.value.substring(1);
 				try {
-					typing = parser.parse(type.trim()) as FunctionType;
+					typeString = type.trim();
+					typing = parser.parse(typeString) as FunctionType;
 				} catch (e) {
 					console.warn('BadType:', type, e);
 				}
@@ -111,6 +123,7 @@ function getDocAtLocation(loc: number, nodes: Nodes): Doc {
 		}
 	}
 	return {
+		typeString,
 		typing,
 		comments: comments.reverse(),
 		entries: entries,
@@ -157,9 +170,8 @@ function getFnDoc(
 		const prefixName = baseName === libraryProps.fileName ? libraryProps.libName : baseName;
 		const sortName = baseName === libraryProps.fileName ? name : baseName + '.' + name;
 
-		const returnType = stringifyType(
-			doc.typing.returnType || { typeKind: TypeKind.ANY, isRestParameter: true },
-		);
+		const returnType = doc.typing.returnType || { typeKind: TypeKind.ANY, isRestParameter: true };
+		const returnTypeString = stringifyType(returnType);
 
 		const traits = filterEntries(doc.entries, 'trait');
 		if (traits.length) {
@@ -169,7 +181,7 @@ function getFnDoc(
 			`### ${sortName} \n`,
 			'```lua' +
 				`
-function ${prefixName}.${name}(${params.join(', ')}) --> ${returnType}
+function ${prefixName}.${name}(${params.join(', ')})
 ` +
 				'```',
 		);
@@ -179,11 +191,23 @@ function ${prefixName}.${name}(${params.join(', ')}) --> ${returnType}
 			paramEntries.map(entry => entry.content.match(/^\s*([A-Za-z.]+)\s(.*)/)),
 			entry => entry && entry[1],
 		);
+		lines.push('\n**Type**\n', '`' + doc.typeString + '`');
+
+		const metaDescription = getMetaDescription(doc.typing, {
+			generics: {
+				T: 'the type of _self_',
+			},
+			rootUrl: libraryProps.rootUrl,
+		});
+
 		if (doc.typing.genericTypes) {
 			lines.push(
-				'\n**Types**\n',
+				'\n**Generics**\n',
 				...doc.typing.genericTypes.map(
-					generic => `\n> __${generic.tag}__ - \`${stringifyType(generic.extendingType)}\``,
+					generic =>
+						`\n> __${generic.tag}__ - \`${stringifyType(
+							generic.extendingType,
+						)}\` - ${describeGeneric(generic, metaDescription)}`,
 				),
 			);
 		}
@@ -195,18 +219,25 @@ function ${prefixName}.${name}(${params.join(', ')}) --> ${returnType}
 					const parameterType = parameterTypes[i] || {
 						typeKind: TypeKind.ANY,
 					};
-					return `> __${param}__ - \`${stringifyType(parameterType)}\` ${
-						paramMap[param] ? ' - ' + paramMap[param][2] : ''
-					}\n>`;
+					return `> __${param}__ - \`${stringifyType(parameterType)}\` - ${describeType(
+						parameterType,
+						metaDescription,
+						PLURALITY.SINGULAR,
+					)} ${paramMap[param] && paramMap[param][2] ? ' - ' + paramMap[param][2] : ''}\n>`;
 				}),
 			);
 		}
 		const returns = filterEntries(doc.entries, 'returns');
 		lines.push('\n**Returns**\n');
+		const returnTypeDescription = describeType(returnType, metaDescription, PLURALITY.SINGULAR);
 		if (returns.length) {
-			lines.push(...returns.map(({ content }) => `\n> \`${returnType}\` - ${content}`));
+			lines.push(
+				...returns.map(
+					({ content }) => `\n> \`${returnTypeString}\` - ${returnTypeDescription} - ${content}`,
+				),
+			);
 		} else {
-			lines.push(`\n> \`${returnType}\``);
+			lines.push(`\n> \`${returnTypeString}\` - ${returnTypeDescription}`);
 		}
 		const throws = filterEntries(doc.entries, 'throws');
 		if (throws.length) {

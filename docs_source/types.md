@@ -23,6 +23,8 @@
 
 ### Chainable
 
+### Chain
+
 ### Function
 
 ### Constructor
@@ -44,3 +46,10 @@
 ### Yieldable
 
 ### Async
+
+### Clearable
+### AllClearable
+
+## Pattern
+
+### DisplayString

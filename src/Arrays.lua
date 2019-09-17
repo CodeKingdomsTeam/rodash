@@ -75,7 +75,7 @@ end
 	Unlike `table.sort`, the comparator to `dash.sort` is optional, but if defined it can also
 	return a numeric weight or nil as well as a boolean to provide an ordering of the elements.
 
-	@param comparator (optional) should return `true` or `n < 0` if the first element should be before the second in the resulting array, or `0` or `nil` if the elements have the same order.
+	@param comparator should return `true` or `n < 0` if the first element should be before the second in the resulting array, or `0` or `nil` if the elements have the same order.
 
 	@example dash.sort({2, 5, 3}) --> {2, 3, 5}
 	@example dash.sort({"use", "the", "force", "Luke"}) --> {"Luke", "force", "the", "use"}
@@ -93,7 +93,7 @@ end
 			return a.health < b.health
 		end) --> the characters sorted in ascending order by their health
 ]]
---: <T>(T[], (T -> bool | number | nil) -> T[])
+--: <T>(T[], (T -> bool | number | nil)? -> T[])
 function Arrays.sort(input, comparator)
 	assert(t.table(input), "BadInput: input must be an array")
 
