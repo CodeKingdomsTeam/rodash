@@ -65,7 +65,7 @@
     <link rel="stylesheet" href="../assets/fonts/material-icons.css">
     
     
-      <link rel="stylesheet" href="../rodocs.css">
+      <link rel="stylesheet" href="../docublox.css">
     
     
       
@@ -89,7 +89,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="#iterable" tabindex="1" class="md-skip">
+      <a href="#dynamic-typing" tabindex="1" class="md-skip">
         Skip to content
       </a>
     
@@ -369,149 +369,324 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#dynamic-typing" title="Dynamic Typing" class="md-nav__link">
+    Dynamic Typing
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#static-typing" title="Static Typing" class="md-nav__link">
+    Static Typing
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lua-primitives" title="Lua primitives" class="md-nav__link">
+    Lua primitives
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extended-primitives" title="Extended primitives" class="md-nav__link">
+    Extended primitives
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modifying-types" title="Modifying types" class="md-nav__link">
+    Modifying types
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#structural-types" title="Structural types" class="md-nav__link">
+    Structural types
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#function-types" title="Function types" class="md-nav__link">
+    Function types
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#callable" title="Callable" class="md-nav__link">
+    Callable
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#composite-types" title="Composite types" class="md-nav__link">
+    Composite types
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#generic-types" title="Generic types" class="md-nav__link">
+    Generic types
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#iterable-types" title="Iterable types" class="md-nav__link">
+    Iterable types
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#iterators" title="Iterators" class="md-nav__link">
+    Iterators
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stateful-iterator" title="Stateful Iterator" class="md-nav__link">
+    Stateful Iterator
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stateless-iterator" title="Stateless Iterator" class="md-nav__link">
+    Stateless Iterator
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#iterable" title="Iterable" class="md-nav__link">
     Iterable
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#iterator" title="Iterator" class="md-nav__link">
-    Iterator
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#ordered" title="Ordered" class="md-nav__link">
     Ordered
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#key" title="Key" class="md-nav__link">
-    Key
-  </a>
+        
+      </ul>
+    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#value" title="Value" class="md-nav__link">
-    Value
+  <a href="#asynchronous-types" title="Asynchronous types" class="md-nav__link">
+    Asynchronous types
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#serializeoptions" title="SerializeOptions" class="md-nav__link">
-    SerializeOptions
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#backoffoptions" title="BackoffOptions" class="md-nav__link">
-    BackoffOptions
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#decorator" title="Decorator" class="md-nav__link">
-    Decorator
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#actor" title="Actor" class="md-nav__link">
-    Actor
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#chainable" title="Chainable" class="md-nav__link">
-    Chainable
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#function" title="Function" class="md-nav__link">
-    Function
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#constructor" title="Constructor" class="md-nav__link">
-    Constructor
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cloneable" title="Cloneable" class="md-nav__link">
-    Cloneable
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#shalloweq" title="ShallowEq" class="md-nav__link">
-    ShallowEq
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#class" title="Class" class="md-nav__link">
-    Class
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#partialord" title="PartialOrd" class="md-nav__link">
-    PartialOrd
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#enum" title="Enum" class="md-nav__link">
-    Enum
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#symbol" title="Symbol" class="md-nav__link">
-    Symbol
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#promise" title="Promise" class="md-nav__link">
     Promise
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#yieldable" title="Yieldable" class="md-nav__link">
     Yieldable
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#async" title="Async" class="md-nav__link">
     Async
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#class-types" title="Class types" class="md-nav__link">
+    Class types
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#class" title="Class" class="md-nav__link">
+    Class
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#constructor" title="Constructor" class="md-nav__link">
+    Constructor
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enum" title="Enum" class="md-nav__link">
+    Enum
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#symbol" title="Symbol" class="md-nav__link">
+    Symbol
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decorator-types" title="Decorator types" class="md-nav__link">
+    Decorator types
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#decorator" title="Decorator" class="md-nav__link">
+    Decorator
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cloneable" title="Cloneable" class="md-nav__link">
+    Cloneable
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#partialord" title="PartialOrd" class="md-nav__link">
+    PartialOrd
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shalloweq" title="ShallowEq" class="md-nav__link">
+    ShallowEq
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#chaining-types" title="Chaining types" class="md-nav__link">
+    Chaining types
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#actor" title="Actor" class="md-nav__link">
+    Actor
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chainable" title="Chainable" class="md-nav__link">
+    Chainable
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chain" title="Chain" class="md-nav__link">
+    Chain
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#library-types" title="Library types" class="md-nav__link">
+    Library types
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#clearable" title="Clearable" class="md-nav__link">
+    Clearable
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#allclearable" title="AllClearable" class="md-nav__link">
+    AllClearable
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#displaystring" title="DisplayString" class="md-nav__link">
+    DisplayString
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#serializeoptions" title="SerializeOptions" class="md-nav__link">
+    SerializeOptions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backoffoptions" title="BackoffOptions" class="md-nav__link">
+    BackoffOptions
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -557,149 +732,324 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#dynamic-typing" title="Dynamic Typing" class="md-nav__link">
+    Dynamic Typing
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#static-typing" title="Static Typing" class="md-nav__link">
+    Static Typing
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lua-primitives" title="Lua primitives" class="md-nav__link">
+    Lua primitives
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extended-primitives" title="Extended primitives" class="md-nav__link">
+    Extended primitives
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modifying-types" title="Modifying types" class="md-nav__link">
+    Modifying types
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#structural-types" title="Structural types" class="md-nav__link">
+    Structural types
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#function-types" title="Function types" class="md-nav__link">
+    Function types
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#callable" title="Callable" class="md-nav__link">
+    Callable
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#composite-types" title="Composite types" class="md-nav__link">
+    Composite types
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#generic-types" title="Generic types" class="md-nav__link">
+    Generic types
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#iterable-types" title="Iterable types" class="md-nav__link">
+    Iterable types
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#iterators" title="Iterators" class="md-nav__link">
+    Iterators
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stateful-iterator" title="Stateful Iterator" class="md-nav__link">
+    Stateful Iterator
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stateless-iterator" title="Stateless Iterator" class="md-nav__link">
+    Stateless Iterator
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#iterable" title="Iterable" class="md-nav__link">
     Iterable
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#iterator" title="Iterator" class="md-nav__link">
-    Iterator
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#ordered" title="Ordered" class="md-nav__link">
     Ordered
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#key" title="Key" class="md-nav__link">
-    Key
-  </a>
+        
+      </ul>
+    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#value" title="Value" class="md-nav__link">
-    Value
+  <a href="#asynchronous-types" title="Asynchronous types" class="md-nav__link">
+    Asynchronous types
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#serializeoptions" title="SerializeOptions" class="md-nav__link">
-    SerializeOptions
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#backoffoptions" title="BackoffOptions" class="md-nav__link">
-    BackoffOptions
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#decorator" title="Decorator" class="md-nav__link">
-    Decorator
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#actor" title="Actor" class="md-nav__link">
-    Actor
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#chainable" title="Chainable" class="md-nav__link">
-    Chainable
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#function" title="Function" class="md-nav__link">
-    Function
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#constructor" title="Constructor" class="md-nav__link">
-    Constructor
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cloneable" title="Cloneable" class="md-nav__link">
-    Cloneable
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#shalloweq" title="ShallowEq" class="md-nav__link">
-    ShallowEq
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#class" title="Class" class="md-nav__link">
-    Class
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#partialord" title="PartialOrd" class="md-nav__link">
-    PartialOrd
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#enum" title="Enum" class="md-nav__link">
-    Enum
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#symbol" title="Symbol" class="md-nav__link">
-    Symbol
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#promise" title="Promise" class="md-nav__link">
     Promise
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#yieldable" title="Yieldable" class="md-nav__link">
     Yieldable
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#async" title="Async" class="md-nav__link">
     Async
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#class-types" title="Class types" class="md-nav__link">
+    Class types
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#class" title="Class" class="md-nav__link">
+    Class
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#constructor" title="Constructor" class="md-nav__link">
+    Constructor
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enum" title="Enum" class="md-nav__link">
+    Enum
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#symbol" title="Symbol" class="md-nav__link">
+    Symbol
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decorator-types" title="Decorator types" class="md-nav__link">
+    Decorator types
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#decorator" title="Decorator" class="md-nav__link">
+    Decorator
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cloneable" title="Cloneable" class="md-nav__link">
+    Cloneable
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#partialord" title="PartialOrd" class="md-nav__link">
+    PartialOrd
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shalloweq" title="ShallowEq" class="md-nav__link">
+    ShallowEq
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#chaining-types" title="Chaining types" class="md-nav__link">
+    Chaining types
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#actor" title="Actor" class="md-nav__link">
+    Actor
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chainable" title="Chainable" class="md-nav__link">
+    Chainable
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chain" title="Chain" class="md-nav__link">
+    Chain
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#library-types" title="Library types" class="md-nav__link">
+    Library types
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#clearable" title="Clearable" class="md-nav__link">
+    Clearable
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#allclearable" title="AllClearable" class="md-nav__link">
+    AllClearable
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#displaystring" title="DisplayString" class="md-nav__link">
+    DisplayString
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#serializeoptions" title="SerializeOptions" class="md-nav__link">
+    SerializeOptions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backoffoptions" title="BackoffOptions" class="md-nav__link">
+    BackoffOptions
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -724,30 +1074,630 @@
                 
                   <h1>Types</h1>
                 
-                <h3 id="iterable">Iterable<a class="headerlink" href="#iterable" title="Permanent link">&para;</a></h3>
-<h3 id="iterator">Iterator<a class="headerlink" href="#iterator" title="Permanent link">&para;</a></h3>
+                <p>Every function in Rodash is dynamically and statically typed.</p>
+<p>This means you know what arguments  Rodash functions can take and what they can return when you write your code, and Rodash will also check that you've passed in valid values when you run it.</p>
+<h2 id="dynamic-typing">Dynamic Typing<a class="headerlink" href="#dynamic-typing" title="Permanent link">&para;</a></h2>
+<p>Dynamic typing means checking that the values passed into a function are valid when the function is run. Rodash functions will throw a <code>BadInput</code> error if any arguments are invalid, allowing you to catch errors quickly and fail fast during development.</p>
+<p>Rodash uses <a href="https://github.com/osyrisrblx/t">the "t" library</a> by Osyris to perform runtime type assertions, which we recommend using in your own code during development and production code.</p>
+<h2 id="static-typing">Static Typing<a class="headerlink" href="#static-typing" title="Permanent link">&para;</a></h2>
+<p>Lua is a dynamically-typed language, which means that you can't tell from normal Lua source code what type of values you should use when calling functions, unless you understand how the function internals work.</p>
+<p>Rodash uses a type language that borrows heavily from the Typescript type language.</p>
+<p>Types are added using optional annotations, which are added using <code>--:</code>. For example:</p>
+<div class="codehilite"><pre><span></span><span class="c1">--: string, string -&gt; bool</span>
+<span class="kr">function</span> <span class="nf">endsWith</span><span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="n">suffix</span><span class="p">)</span>
+</pre></div>
+
+<p>This states that <a href="/rodash/api/Strings/#endswith">dash.endsWith</a> takes two string arguments and returns a boolean.</p>
+<h2 id="lua-primitives">Lua primitives<a class="headerlink" href="#lua-primitives" title="Permanent link">&para;</a></h2>
+<p>These types correspond to basic Lua types:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Number</td>
+<td><code>number</code></td>
+<td>A Lua number</td>
+</tr>
+<tr>
+<td>String</td>
+<td><code>string</code></td>
+<td>A Lua string</td>
+</tr>
+<tr>
+<td>Boolean</td>
+<td><code>bool</code></td>
+<td>A Lua boolean</td>
+</tr>
+<tr>
+<td>Nil</td>
+<td><code>nil</code></td>
+<td>The Lua nil</td>
+</tr>
+<tr>
+<td>Userdata</td>
+<td><code>userdata</code></td>
+<td>A Lua userdata object</td>
+</tr>
+<tr>
+<td>Table</td>
+<td><code>table</code></td>
+<td>A Lua table i.e. with <code>type(value) == "table"</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="extended-primitives">Extended primitives<a class="headerlink" href="#extended-primitives" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Usage</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Any</td>
+<td><code>any</code></td>
+<td>A type representing all of the valid types (excluding fail)</td>
+</tr>
+<tr>
+<td>Some</td>
+<td><code>some</code></td>
+<td>A type representing all of the valid non-nil types</td>
+</tr>
+<tr>
+<td>Character</td>
+<td><code>char</code></td>
+<td>A single character of a string</td>
+</tr>
+<tr>
+<td>Pattern</td>
+<td><code>pattern</code></td>
+<td>A string representing a valid Lua pattern</td>
+</tr>
+<tr>
+<td>Integer</td>
+<td><code>int</code></td>
+<td>An integer</td>
+</tr>
+<tr>
+<td>Unsigned integer</td>
+<td><code>uint</code></td>
+<td>An unsigned (positive) integer</td>
+</tr>
+<tr>
+<td>Float</td>
+<td><code>float</code></td>
+<td>A floating point number</td>
+</tr>
+<tr>
+<td>Never</td>
+<td><code>never</code></td>
+<td>A Promise that never resolves</td>
+</tr>
+<tr>
+<td>Void</td>
+<td><code>void</code> or <code>()</code></td>
+<td>An empty tuple, typically to represent an empty return type or empty function-arguments</td>
+</tr>
+<tr>
+<td>Fail</td>
+<td><code>fail</code></td>
+<td>A return value which means that the function will always throw an error</td>
+</tr>
+</tbody>
+</table>
+<h2 id="modifying-types">Modifying types<a class="headerlink" href="#modifying-types" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Usage</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mutable parameter</td>
+<td><code>mut X</code></td>
+<td>A function which takes a value of type <code>mut X</code> may modify the value of type <code>X</code> during execution</td>
+</tr>
+<tr>
+<td>Yield return</td>
+<td><code>yield X</code></td>
+<td>A function which returns <code>yield X</code> may yield when executed before returning a value of type <code>X</code></td>
+</tr>
+<tr>
+<td>Self</td>
+<td><code>self X</code></td>
+<td>A function which takes <code>self X</code> as a parameter must be defined using <code>:</code> and called as a method on a value of type <code>X</code>. Only required if the method should be called on a different type to the one it is defined under</td>
+</tr>
+</tbody>
+</table>
+<h2 id="structural-types">Structural types<a class="headerlink" href="#structural-types" title="Permanent link">&para;</a></h2>
+<p>Like many scripting languages, Lua has a general structure type <code>table</code> which can be used to represent arrays, dictionaries, sets, classes, and many other data types. The type language uses a strict set of definitions for different ways tables can be used:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Usage</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tuple</td>
+<td><code>(X, Y, Z)</code></td>
+<td>Values of particular types separated by commas, such as an argument or return list in a Lua function</td>
+</tr>
+<tr>
+<td>Array</td>
+<td><code>X[]</code></td>
+<td>A Lua table that has a finite number of <a href="/rodash/types/#Ordered">Ordered</a> keys with values of type <code>X</code></td>
+</tr>
+<tr>
+<td>Fixed array</td>
+<td><code>{X, Y, Z}</code></td>
+<td>An array with a fixed number of values, where the first value has type <code>X</code>, the second type <code>Y</code> etc.</td>
+</tr>
+<tr>
+<td>Dictionary</td>
+<td><code>X{}</code></td>
+<td>a Lua table which has values of type <code>X</code></td>
+</tr>
+<tr>
+<td>Map</td>
+<td><code>{[X]: Y}</code></td>
+<td>A Lua table with keys of type <code>X</code> mapping to values of type <code>Y</code></td>
+</tr>
+<tr>
+<td>Multi-dimensional table</td>
+<td><code>X[][]</code><br/><code>X{}{}</code><br/><code>X{}[]{}</code></td>
+<td>A 2d or higher dimensional table, with values being arrays, dictionaries or multi-dimensional tables themselves</td>
+</tr>
+</tbody>
+</table>
+<p>Rodash methods use more general types where possible, specifically <a href="/rodash/types/#Ordered">Ordered</a> and <a href="/rodash/types/#Iterable">Iterable</a> values. This let's you operate on iterators as well as tables.</p>
+<h2 id="function-types">Function types<a class="headerlink" href="#function-types" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Function</td>
+<td><code>X, Y -&gt; Z</code></td>
+<td>A callable value taking parameters with type <code>X</code> and <code>Y</code> and returning a value of type <code>Z</code></td>
+</tr>
+<tr>
+<td>Multiple returns</td>
+<td><code>X -&gt; Y, Z</code></td>
+<td>A callable value taking a parameter of type <code>X</code> and returning two values of type <code>Y</code> and <code>Z</code> respectively</td>
+</tr>
+<tr>
+<td>Void function</td>
+<td><code>() -&gt; ()</code></td>
+<td>A function that takes no parameters and returns nothing</td>
+</tr>
+<tr>
+<td>Rest function</td>
+<td><code>...X -&gt; ...Y</code></td>
+<td>A function that takes any number of parameters of type <code>X</code> and returns any number values of type <code>Y</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="callable">Callable<a class="headerlink" href="#callable" title="Permanent link">&para;</a></h3>
+<p>Any value that can be called has a function type. In practice, a value is callable if and only if it is one of the following:</p>
+<ul>
+<li>A Lua <code>function</code></li>
+<li>A Lua <code>CFunction</code></li>
+<li>A Lua <code>table</code> with a metatable that has a valid <code>__call</code> property defined</li>
+</ul>
+<p>This is more general than just checking if a value has a function type.</p>
+<p><strong>Usage</strong></p>
+<p>You can test if a value is callable using <a href="/rodash/api/Functions/#iscallable">dash.isCallable</a>.</p>
+<h2 id="composite-types">Composite types<a class="headerlink" href="#composite-types" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Optional</td>
+<td><code>X?</code></td>
+<td>Equivalent to the type <code>X | nil</code>, meaning a value of this type either has type <code>X</code> or <code>nil</code></td>
+</tr>
+<tr>
+<td>Union</td>
+<td><code>X | Y</code></td>
+<td>Values of this type can either be of type <code>X</code> or of type <code>Y</code> (or both)</td>
+</tr>
+<tr>
+<td>Intersection</td>
+<td><code>X &amp; Y</code></td>
+<td>Values of this type must be of both types <code>X</code> and <code>Y</code>. For example, if <code>X</code> and <code>Y</code> are interfaces the value must implement both of them.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="generic-types">Generic types<a class="headerlink" href="#generic-types" title="Permanent link">&para;</a></h2>
+<p>Generics allow the same function to be used with different types. Known types are replaced with type variables, which are usually single capital letters such as <code>T</code> or <code>K</code>, but can be any word beginning with a capital letter.</p>
+<p>When a generic function is called, the same type variable must refer to the same type everywhere it appears in the type definition. </p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Generic function</td>
+<td><code>&lt;T&gt;(T -&gt; T)</code></td>
+<td>A generic function that takes a parameter of type <code>T</code> and returns a value of the same type <code>T</code></td>
+</tr>
+<tr>
+<td>Generic arguments</td>
+<td><code>&lt;A&gt;(...A -&gt; A)</code></td>
+<td>A generic function that takes any number of parameters of type <code>A</code> and returns a value of the same type <code>A</code></td>
+</tr>
+<tr>
+<td>Generic bounds</td>
+<td><code>&lt;T: X&gt;(T -&gt; T)</code></td>
+<td>A function that has a type variable <code>T</code> which must be of the type <code>X</code></td>
+</tr>
+<tr>
+<td>Parameterized object</td>
+<td><code>X&lt;T&gt;</code></td>
+<td>An object of type <code>X</code> that is parameterized to type <code>T</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Examples</strong></p>
+<p>The <a href="/rodash/api/Arrays/#last">dash.last</a> function returns the last element of an array, and has a type signature of <code>&lt;T&gt;(T[] -&gt; T)</code>. If you call it with an array of strings with type <code>string[]</code>, then <code>T = string</code> and the function becomes parameterized, meaning its type <code>string[] -&gt; string</code>. This shows you that the function will return a <code>string</code>. If you simply used <code>any[] -&gt; any</code> without using a generics, you couldn't know that the function always returned a value of the same type.</p>
+<p>Like <code>T[]</code> was parameterized as a string array when <code>T = string</code>, any structural types like dictionaries or <a href="/rodash/types/#Classes">Classes</a> can also parameterized.</p>
+<p><strong>Usage</strong></p>
+<p>Note that using <code>...X</code> when <code>X</code> refers to a tuple expands the elements from the tuple in-order, as a value can't have a tuple type itself. For example, <a href="/rodash/api/Functions/#id">dash.id</a> has the type signature <code>&lt;A&gt;(...A -&gt; ...A)</code>. If you call <code>id(1, "Hello")</code> then <code>A = (number, string)</code> and the function becomes typed as: <code>number, string -&gt; number, string</code>.</p>
+<h2 id="iterable-types">Iterable types<a class="headerlink" href="#iterable-types" title="Permanent link">&para;</a></h2>
+<h3 id="iterators">Iterators<a class="headerlink" href="#iterators" title="Permanent link">&para;</a></h3>
+<p>An iterator is a function which returns <code>(key, value)</code> pairs when it is called. You might not use them often in your own code but they are very common in Lua - any loop you write takes an iterator. For example <code>ipairs(object)</code> in the code:
+<div class="codehilite"><pre><span></span><span class="kr">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="kr">in</span> <span class="nb">ipairs</span><span class="p">(</span><span class="n">object</span><span class="p">)</span> <span class="kr">do</span>
+</pre></div></p>
+<p>They are more abstract than using a concrete table to store data which means you can use them to:</p>
+<ul>
+<li>Represent an infinite list, such as countable sequences of numbers like the naturals.</li>
+<li>Represent a stream, such as a random stream or events coming from an input source.</li>
+<li>Avoid calculating all the elements of a list at once, such as a lazy list retrieving elements from an HTTP endpoint</li>
+</ul>
+<p>You cannot modify the source of values in an iterator, so they are safer to use if you don't want a function changing the underlying source.</p>
+<p><strong>Type</strong></p>
+<p><code>type Iterator&lt;K,V&gt; = (props: any, previousKey: K?) -&gt; K, V</code></p>
+<h3 id="stateful-iterator">Stateful Iterator<a class="headerlink" href="#stateful-iterator" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nf">statefulIterator</span><span class="p">()</span> <span class="c1">--&gt; K, V</span>
+</pre></div>
+
+<p>Stateful iterators take no arguments and simply return the next <code>(key, value)</code> pair when called. These are simple to make and prevent code from skipping or seeking to arbitrary elements in the underlying source.</p>
+<p>You can use <a href="/rodash/api/Tables/#iterator">dash.iterator</a> to create your own iterator for a table. This is useful where you cannot use <code>pairs</code> or <code>ipairs</code> natively such as when using read-only objects - see <a href="/rodash/api/Classes/#freeze">dash.freeze</a>.</p>
+<p><strong>Type</strong></p>
+<p><code>&lt;K,V&gt;(() -&gt; K, V)</code></p>
+<p><strong>Generics</strong></p>
+<blockquote>
+<p><strong>K</strong> - <code>some</code> - the primary key type (can be any non-nil value)</p>
+<p><strong>V</strong> - <code>some</code> - the secondary key type (can be any non-nil value)</p>
+</blockquote>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="c1">-- Calling range returns a stateful iterator that counts from a to b.</span>
+<span class="kr">function</span> <span class="nf">range</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">key</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="kr">return</span> <span class="kr">function</span><span class="p">()</span>
+        <span class="kd">local</span> <span class="n">value</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="n">key</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">key</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="kr">if</span> <span class="n">value</span> <span class="o">&lt;=</span> <span class="n">b</span> <span class="kr">then</span>
+            <span class="kr">return</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span>
+        <span class="kr">end</span>
+    <span class="kr">end</span>
+<span class="kr">end</span>
+</pre></div>
+
+<p><strong>Usage</strong></p>
+<p>Stateful iterators that you write can be used in any Rodash function that takes an <a href="/rodash/types/#Iterable">Iterable</a>.</p>
+<h3 id="stateless-iterator">Stateless Iterator<a class="headerlink" href="#stateless-iterator" title="Permanent link">&para;</a></h3>
+<div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nf">statelessIterator</span><span class="p">(</span><span class="n">props</span><span class="p">,</span> <span class="n">previousKey</span><span class="p">)</span> <span class="c1">--&gt; K, V</span>
+</pre></div>
+
+<p>Stateless iterators take two arguments <code>(props, previousKey)</code> which are used to address a <code>(key, value)</code> pair to return.</p>
+<p>A stateless iterator should return the first <code>(key, value)</code> pair if the <em>previousKey</em> <code>nil</code> is passed in.</p>
+<p><strong>Type</strong></p>
+<p><code>&lt;K,V&gt;((any, K?) -&gt; K, V)</code></p>
+<p><strong>Properties</strong></p>
+<blockquote>
+<p><strong>props</strong> - <code>any</code> - any value - the static properties that the iterator uses
+<strong>previousKey</strong> - <code>K?</code> - the iterator state type (optional) - (default = <code>nil</code>) the previous key acts as the state for the iterator so it doesn't need to store its own state</p>
+</blockquote>
+<p><strong>Generics</strong></p>
+<blockquote>
+<p><strong>K</strong> - <code>some</code> - the primary key type (can be any non-nil value)</p>
+<p><strong>V</strong> - <code>some</code> - the secondary key type (can be any non-nil value)</p>
+<p><strong>S</strong> - <code>some</code> - the iterator state type (can be any non-nil value)</p>
+</blockquote>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="c1">-- This function is a stateless iterator </span>
+<span class="kr">function</span> <span class="nf">evenNumbers</span><span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">previousKey</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">previousKey</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="kr">return</span> <span class="n">key</span><span class="p">,</span> <span class="n">key</span> <span class="o">*</span> <span class="mi">2</span>
+<span class="kr">end</span>
+</pre></div>
+
+<p><strong>Usage</strong></p>
+<p>Stateless iterators that you write can be used in any Rodash function that takes an <a href="/rodash/types/#Iterable">Iterable</a>.</p>
+<h3 id="iterable">Iterable<a class="headerlink" href="#iterable" title="Permanent link">&para;</a></h3>
+<p>An iterable value is either a dictionary or an <a href="/rodash/types/#Iterator">Iterator</a>. Many Rodash functions can operate on iterator functions as well as tables.</p>
+<p><strong>Type</strong></p>
+<p><code>type Iterable&lt;K,V&gt; = {[K]:V} | Iterator&lt;K,V&gt;</code></p>
+<p><strong>Generics</strong></p>
+<blockquote>
+<p><strong>K</strong> - <code>any</code> - the primary key type (can be any value)</p>
+<p><strong>V</strong> - <code>any</code> - the primary value type (can be any value)</p>
+</blockquote>
+<p><strong>See</strong></p>
+<ul>
+<li><a href="/rodash/types/#Iterator">Iterator</a></li>
+</ul>
 <h3 id="ordered">Ordered<a class="headerlink" href="#ordered" title="Permanent link">&para;</a></h3>
-<p>iterator functions which provide elements with natural keys <em>1..n</em>.
-    For example, if you have a function that returns elements of an infinite array, the function
-    <a href="/rodash/api/Arrays/#first">dash.first</a> can be used to return the first element which matches a particular condition.</p>
-<h3 id="key">Key<a class="headerlink" href="#key" title="Permanent link">&para;</a></h3>
-<h3 id="value">Value<a class="headerlink" href="#value" title="Permanent link">&para;</a></h3>
-<h3 id="serializeoptions">SerializeOptions<a class="headerlink" href="#serializeoptions" title="Permanent link">&para;</a></h3>
-<h3 id="backoffoptions">BackoffOptions<a class="headerlink" href="#backoffoptions" title="Permanent link">&para;</a></h3>
-<h3 id="decorator">Decorator<a class="headerlink" href="#decorator" title="Permanent link">&para;</a></h3>
-<h3 id="actor">Actor<a class="headerlink" href="#actor" title="Permanent link">&para;</a></h3>
-<h3 id="chainable">Chainable<a class="headerlink" href="#chainable" title="Permanent link">&para;</a></h3>
-<h3 id="function">Function<a class="headerlink" href="#function" title="Permanent link">&para;</a></h3>
-<h3 id="constructor">Constructor<a class="headerlink" href="#constructor" title="Permanent link">&para;</a></h3>
-<h3 id="cloneable">Cloneable<a class="headerlink" href="#cloneable" title="Permanent link">&para;</a></h3>
-<h3 id="shalloweq">ShallowEq<a class="headerlink" href="#shalloweq" title="Permanent link">&para;</a></h3>
+<p>An ordered value is either an array or an ordered <a href="/rodash/types/#Iterator">Iterator</a>. For something to be ordered, the keys returned during iteration must be the natural numbers. This means the first key must be <code>1</code>, the second <code>2</code>, the third <code>3</code>, etc.</p>
+<p><strong>Type</strong></p>
+<p><code>type Ordered&lt;V&gt; = V[] | Iterator&lt;number,V&gt;</code></p>
+<p><strong>Generics</strong></p>
+<blockquote>
+<p><strong>V</strong> - <code>any</code> - the primary value type (can be any value)</p>
+</blockquote>
+<p><strong>Usage</strong></p>
+<p>For example, you could write an ordered iterator of numbers, and <a href="/rodash/api/Arrays/#first">dash.first</a> will to return the first number which matches a particular condition.</p>
+<p><strong>See</strong></p>
+<ul>
+<li><a href="/rodash/types/#Iterator">Iterator</a></li>
+</ul>
+<h2 id="asynchronous-types">Asynchronous types<a class="headerlink" href="#asynchronous-types" title="Permanent link">&para;</a></h2>
+<h3 id="promise">Promise<a class="headerlink" href="#promise" title="Permanent link">&para;</a></h3>
+<p>Any promise value created using the <a href="https://github.com/LPGhatguy/roblox-lua-promise">Roblox Lua Promise</a> library has <code>Promise&lt;T&gt;</code> type. See the documentation of this library for examples on how to use promises.</p>
+<p><strong>Type</strong></p>
+<p><code>interface Promise&lt;T&gt;</code></p>
+<p><strong>Generics</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>any</code> - the primary type (can be any value)</p>
+</blockquote>
+<h3 id="yieldable">Yieldable<a class="headerlink" href="#yieldable" title="Permanent link">&para;</a></h3>
+<p>A marker type for a function which may yield. We recommend you use promises instead of writing your own yielding functions as they can have unpredictable behavior, such as causing threads to block outside your control.</p>
+<p>Because of this, only functions which are marked as yieldable are assumed to be capable of yielding.</p>
+<p><strong>Type</strong></p>
+<p><code>type Yieldable&lt;T&gt; = ... -&gt; yield T</code></p>
+<p><strong>Generics</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>any</code> - the primary type (can be any value)</p>
+</blockquote>
+<h3 id="async">Async<a class="headerlink" href="#async" title="Permanent link">&para;</a></h3>
+<p>A marker type for a function which returns a promise.</p>
+<p><strong>Type</strong></p>
+<p><code>type Async&lt;T&gt; = ... -&gt; Promise&lt;T&gt;</code></p>
+<p><strong>Generics</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>any</code> - the primary type (can be any value)</p>
+</blockquote>
+<h2 id="class-types">Class types<a class="headerlink" href="#class-types" title="Permanent link">&para;</a></h2>
 <h3 id="class">Class<a class="headerlink" href="#class" title="Permanent link">&para;</a></h3>
-<h3 id="partialord">PartialOrd<a class="headerlink" href="#partialord" title="Permanent link">&para;</a></h3>
+<h3 id="constructor">Constructor<a class="headerlink" href="#constructor" title="Permanent link">&para;</a></h3>
 <h3 id="enum">Enum<a class="headerlink" href="#enum" title="Permanent link">&para;</a></h3>
 <h3 id="symbol">Symbol<a class="headerlink" href="#symbol" title="Permanent link">&para;</a></h3>
-<h3 id="promise">Promise<a class="headerlink" href="#promise" title="Permanent link">&para;</a></h3>
-<h3 id="yieldable">Yieldable<a class="headerlink" href="#yieldable" title="Permanent link">&para;</a></h3>
-<h3 id="async">Async<a class="headerlink" href="#async" title="Permanent link">&para;</a></h3>
+<h2 id="decorator-types">Decorator types<a class="headerlink" href="#decorator-types" title="Permanent link">&para;</a></h2>
+<h3 id="decorator">Decorator<a class="headerlink" href="#decorator" title="Permanent link">&para;</a></h3>
+<h3 id="cloneable">Cloneable<a class="headerlink" href="#cloneable" title="Permanent link">&para;</a></h3>
+<h3 id="partialord">PartialOrd<a class="headerlink" href="#partialord" title="Permanent link">&para;</a></h3>
+<h3 id="shalloweq">ShallowEq<a class="headerlink" href="#shalloweq" title="Permanent link">&para;</a></h3>
+<h2 id="chaining-types">Chaining types<a class="headerlink" href="#chaining-types" title="Permanent link">&para;</a></h2>
+<h3 id="actor">Actor<a class="headerlink" href="#actor" title="Permanent link">&para;</a></h3>
+<h3 id="chainable">Chainable<a class="headerlink" href="#chainable" title="Permanent link">&para;</a></h3>
+<h3 id="chain">Chain<a class="headerlink" href="#chain" title="Permanent link">&para;</a></h3>
+<h2 id="library-types">Library types<a class="headerlink" href="#library-types" title="Permanent link">&para;</a></h2>
+<h3 id="clearable">Clearable<a class="headerlink" href="#clearable" title="Permanent link">&para;</a></h3>
+<p>A stateful object with a <code>clear</code> method that resets the object state.</p>
+<p><strong>Type</strong>
+<code>interface Clearable&lt;A&gt;</code></p>
+<p><strong>Generics</strong></p>
+<blockquote>
+<p><strong>A</strong> - <code>any</code> - the primary arguments</p>
+</blockquote>
+<p><strong>Properties</strong></p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>clear(...)</strong></td>
+<td><code>...A -&gt; ()</code></td>
+<td>reset the object state addressed by the arguments provided</td>
+</tr>
+</tbody>
+</table>
+<p><strong>See</strong></p>
+<ul>
+<li><a href="/rodash/api/Functions/#settimeout">dash.setTimeout</a></li>
+<li><a href="/rodash/api/Functions/#setinterval">dash.setInterval</a></li>
+<li><a href="/rodash/api/Functions/#memoize">dash.memoize</a></li>
+</ul>
+<h3 id="allclearable">AllClearable<a class="headerlink" href="#allclearable" title="Permanent link">&para;</a></h3>
+<p>A stateful object with a <code>clearAll</code> method that resets the all parts of the object state.</p>
+<p><strong>Type</strong>
+<code>interface AllClearable</code></p>
+<p><strong>Properties</strong></p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>clearAll()</strong></td>
+<td><code>() -&gt; ()</code></td>
+<td>reset the entire object state</td>
+</tr>
+</tbody>
+</table>
+<p><strong>See</strong></p>
+<ul>
+<li><a href="/rodash/api/Functions/#memoize">dash.memoize</a></li>
+</ul>
+<h3 id="displaystring">DisplayString<a class="headerlink" href="#displaystring" title="Permanent link">&para;</a></h3>
+<p>A DisplayString is a <code>string</code> that is a valid argument to <a href="/rodash/api/Strings/#formatvalue">dash.formatValue</a>. Examples include:</p>
+<ul>
+<li><code>#b</code> - prints a number in its binary representation</li>
+<li><code>#?</code> - pretty prints a table using <a href="/rodash/api/Strings/#pretty">dash.pretty</a></li>
+</ul>
+<p><strong>Usage</strong></p>
+<p>See <a href="/rodash/api/Strings/#format">dash.format</a> for a full description of valid display strings.</p>
+<h3 id="serializeoptions">SerializeOptions<a class="headerlink" href="#serializeoptions" title="Permanent link">&para;</a></h3>
+<p>Customize how <a href="/rodash/api/Tables/#serialize">dash.serialize</a>, <a href="/rodash/api/Tables/#serializedeep">dash.serializeDeep</a> and <a href="/rodash/api/Strings/#pretty">dash.pretty</a> convert objects into strings using these options:</p>
+<p><strong>Type</strong></p>
+<p><code>interface SeralizeOptions&lt;T: Iterable&lt;K,V&gt;&gt;</code></p>
+<p><strong>Generics</strong></p>
+<blockquote>
+<p><strong>K</strong> - <code>any</code> - the primary key type (can be any value)</p>
+<p><strong>V</strong> - <code>any</code> - the primary value type (can be any value)</p>
+<p><strong>T</strong> - <code>Iterable&lt;K,V&gt;</code> - An <a href="/rodash/types/#Iterable">Iterable</a> (of the primary key type and the primary value type)</p>
+</blockquote>
+<p><strong>Properties</strong></p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>keys</strong></td>
+<td><code>K[]?</code></td>
+<td>(optional) if defined, only the keys present in this array will be serialized</td>
+</tr>
+<tr>
+<td><strong>omitKeys</strong></td>
+<td><code>K[]?</code></td>
+<td>(optional) an array of keys which should not be serialized</td>
+</tr>
+<tr>
+<td><strong>serializeValue(value)</strong></td>
+<td><code>V -&gt; string</code></td>
+<td>(default = <a href="/rodash/api/Tables/#defaultserializer">dash.defaultSerializer</a>) returns the string representation for a value in the object</td>
+</tr>
+<tr>
+<td><strong>serializeKey(key)</strong></td>
+<td><code>K -&gt; string</code></td>
+<td>(default = <a href="/rodash/api/Tables/#defaultserializer">dash.defaultSerializer</a>) returns the string representation for a key in the object</td>
+</tr>
+<tr>
+<td><strong>serializeElement(keyString, valueString, options)</strong></td>
+<td><code>string, string, SerializeOptions&lt;T&gt; -&gt; string</code></td>
+<td>returns the string representation for a serialized key-value pair</td>
+</tr>
+<tr>
+<td><strong>serializeTable(contents, ref, options)</strong></td>
+<td><code>string[], string?, SerializeOptions&lt;T&gt; -&gt; string</code></td>
+<td>(default = returns "{elements}") given an array of serialized table elements and an optional reference, this returns the string representation for a table</td>
+</tr>
+<tr>
+<td><strong>keyDelimiter</strong></td>
+<td><code>":"</code></td>
+<td>The string that is put between a serialized key and value pair</td>
+</tr>
+<tr>
+<td><strong>valueDelimiter</strong></td>
+<td><code>","</code></td>
+<td>The string that is put between each element of the object</td>
+</tr>
+</tbody>
+</table>
+<h3 id="backoffoptions">BackoffOptions<a class="headerlink" href="#backoffoptions" title="Permanent link">&para;</a></h3>
+<p>Customize the function of <a href="/rodash/api/Async/#retrywithbackoff">dash.retryWithBackoff</a> using these options:</p>
+<p><strong>Type</strong></p>
+<p><code>interface SeralizeOptions&lt;T&gt;</code></p>
+<p><strong>Generics</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>any</code> - the primary type</p>
+</blockquote>
+<p><strong>Properties</strong></p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>maxTries</strong></td>
+<td><code>int</code></td>
+<td>how many tries (including the first one) the function should be called</td>
+</tr>
+<tr>
+<td><strong>retryExponentInSeconds</strong></td>
+<td><code>number</code></td>
+<td>customize the backoff exponent</td>
+</tr>
+<tr>
+<td><strong>retryConstantInSeconds</strong></td>
+<td><code>number</code></td>
+<td>customize the backoff constant</td>
+</tr>
+<tr>
+<td><strong>randomStream</strong></td>
+<td><code>Random</code></td>
+<td>use a Roblox "Random" instance to control the backoff</td>
+</tr>
+<tr>
+<td><strong>shouldRetry(response)</strong></td>
+<td><code>T -&gt; bool</code></td>
+<td>called if maxTries &gt; 1 to determine whether a retry should occur</td>
+</tr>
+<tr>
+<td><strong>onRetry(waitTime, errorMessage)</strong></td>
+<td><code>(number, string) -&gt; nil</code></td>
+<td>a hook for when a retry is triggered, with the delay before retry and error message which caused the failure</td>
+</tr>
+<tr>
+<td><strong>onDone(response, durationInSeconds)</strong></td>
+<td><code>(T, number) -&gt; nil</code></td>
+<td>a hook for when the promise resolves</td>
+</tr>
+<tr>
+<td><strong>onFail(errorMessage)</strong></td>
+<td><code>string -&gt; nil</code></td>
+<td>a hook for when the promise has failed and no more retries are allowed</td>
+</tr>
+</tbody>
+</table>
                 
                   
                 

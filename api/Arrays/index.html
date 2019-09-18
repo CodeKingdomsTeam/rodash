@@ -65,7 +65,7 @@
     <link rel="stylesheet" href="../../assets/fonts/material-icons.css">
     
     
-      <link rel="stylesheet" href="../../rodocs.css">
+      <link rel="stylesheet" href="../../docublox.css">
     
     
       
@@ -616,25 +616,27 @@
 <span class="mi">42</span>
 </pre></div>
 
-<p>These functions can iterate over any <a href="/types#Ordered">Ordered</a> values.</p>
+<p>These functions can iterate over any <a href="/rodash/types#Ordered">Ordered</a> values.</p>
 <h2 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h2>
 <h3 id="append">append<a class="headerlink" href="#append" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="p">...)</span> <span class="c1">--&gt; T[]</span>
 </pre></div>
 Inserts into the <em>target</em> array the elements from all subsequent arguments in order.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T&gt;(mut T[], ...Ordered&lt;T&gt; -&gt; T[])</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>any</code></p>
+<p><strong>T</strong> - <code>any</code> - the primary type (extends any value)</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>target</strong> - <code>mut T[]</code> </p>
-<p><strong>...</strong> - <code>...T[]</code>  - any number of other arrays
+<p><strong>target</strong> - <code>mut T[]</code> - an array (of the primary type) (which can be mutated) </p>
+<p><strong>...</strong> - <code>...Ordered&lt;T&gt;</code> - <a href="/rodash/types/#Ordered">Ordereds</a> (of the primary type)  - any number of other arrays
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>T[]</code></p>
+<p><code>T[]</code> - an array (of the primary type)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">append</span><span class="p">({},</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span> <span class="p">{</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">})</span> <span class="c1">--&gt; {1, 2, 3, 4, 5, 6}</span>
@@ -657,19 +659,21 @@ than <em>b</em>.</p>
 <p>The default comparator is used by <a href="/rodash/api/Arrays/#sort">dash.sort</a> and can sort elements of different types, in the
 order: boolean, number, string, function, CFunction, userdata, and table.</p>
 <p>Elements which cannot be sorted naturally will be sorted by their string value.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T&gt;((T, T) -&gt; bool)</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>any</code></p>
+<p><strong>T</strong> - <code>any</code> - the primary type (extends any value)</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>a</strong> - <code>T</code> </p>
-<p><strong>b</strong> - <code>T</code> 
+<p><strong>a</strong> - <code>T</code> - the primary type </p>
+<p><strong>b</strong> - <code>T</code> - the primary type 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>bool</code></p>
+<p><code>bool</code> - a boolean</p>
 </blockquote>
 <p><strong>See</strong></p>
 <ul>
@@ -681,19 +685,21 @@ order: boolean, number, string, function, CFunction, userdata, and table.</p>
 </pre></div>
 Returns the earliest value from the array that <em>predicate</em> returns <code>true</code> for.</p>
 <p>If the <em>predicate</em> is not specified, <a href="/rodash/api/Arrays/#first">dash.first</a> simply returns the first element of the array.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T: Iterable&lt;K,V&gt;&gt;(T, (element: V, key: K -&gt; bool) -&gt; V?)</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code> - the primary type (extends <a href="/rodash/types/#Iterable">an Iterable</a> (of the primary key type and the primary value type))</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <code>T</code> </p>
-<p><strong>predicate</strong> - <code>(element: V, key: K) -&gt; bool</code>  - (default = <code>dash.returns(true)</code>)
+<p><strong>source</strong> - <code>T</code> - the primary type </p>
+<p><strong>predicate</strong> - <code>(element: V, key: K) -&gt; bool</code> - a function (taking <em>element</em> (the primary value type) and <em>key</em> (the primary key type), and returning a boolean)  - (default = <code>dash.returns(true)</code>)
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>V?</code></p>
+<p><code>V?</code> - the primary value type (optional)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">names</span> <span class="o">=</span> <span class="p">{</span>
@@ -735,19 +741,21 @@ Returns the earliest value from the array that <em>predicate</em> returns <code>
 </pre></div>
 Returns the last value from the array that <em>predicate</em> returns <code>true</code> for.</p>
 <p>If the <em>predicate</em> is not specified, <a href="/rodash/api/Arrays/#last">dash.last</a> simply returns the last element of the array.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T: Iterable&lt;K,V&gt;&gt;(T, (element: V, key: K -&gt; bool) -&gt; V?)</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code> - the primary type (extends <a href="/rodash/types/#Iterable">an Iterable</a> (of the primary key type and the primary value type))</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <code>T</code> </p>
-<p><strong>predicate</strong> - <code>(element: V, key: K) -&gt; bool</code>  - (default = <code>dash.returns(true)</code>)
+<p><strong>source</strong> - <code>T</code> - the primary type </p>
+<p><strong>predicate</strong> - <code>(element: V, key: K) -&gt; bool</code> - a function (taking <em>element</em> (the primary value type) and <em>key</em> (the primary key type), and returning a boolean)  - (default = <code>dash.returns(true)</code>)
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>V?</code></p>
+<p><code>V?</code> - the primary value type (optional)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">names</span> <span class="o">=</span> <span class="p">{</span>
@@ -781,21 +789,23 @@ Returns the last value from the array that <em>predicate</em> returns <code>true
 Runs the <em>handler</em> on each element of <em>source</em> in turn, passing the result of the previous call
 (or <em>initial</em> for the first element) as the first argument, and the current element as a value
 and key as subsequent arguments.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T, R&gt;(Ordered&lt;T&gt;, (result: R, value: T, key: int -&gt; R), R) -&gt; R</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>any</code></p>
-<p><strong>R</strong> - <code>any</code></p>
+<p><strong>T</strong> - <code>any</code> - the primary type (extends any value)</p>
+<p><strong>R</strong> - <code>any</code> - the result type (extends any value)</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <code>T[]</code> </p>
-<p><strong>handler</strong> - <code>(result: R, value: T, key: int) -&gt; R</code> </p>
-<p><strong>initial</strong> - <code>R</code> 
+<p><strong>source</strong> - <code>Ordered&lt;T&gt;</code> - <a href="/rodash/types/#Ordered">an Ordered</a> (of the primary type) </p>
+<p><strong>handler</strong> - <code>(result: R, value: T, key: int) -&gt; R</code> - a function (taking <em>result</em> (the result type), <em>value</em> (the primary type) and <em>key</em> (an integer), and returning the result type) </p>
+<p><strong>initial</strong> - <code>R</code> - the result type 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>R</code></p>
+<p><code>R</code> - the result type</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">sum</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">reduce</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span> <span class="kr">function</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
@@ -819,18 +829,20 @@ and key as subsequent arguments.</p>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">reverse</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; T[]</span>
 </pre></div>
 Swaps the order of elements in <em>source</em>.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T&gt;(T[] -&gt; T[])</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>any</code></p>
+<p><strong>T</strong> - <code>any</code> - the primary type (extends any value)</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <code>T[]</code> 
+<p><strong>source</strong> - <code>T[]</code> - an array (of the primary type) 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>T[]</code></p>
+<p><code>T[]</code> - an array (of the primary type)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">reverse</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">})</span> <span class="c1">--&gt; {5, 3, 4, 2, 1}</span>
@@ -838,21 +850,23 @@ Swaps the order of elements in <em>source</em>.</p>
 
 <hr />
 <h3 id="shuffle">shuffle<a class="headerlink" href="#shuffle" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">shuffle</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; T</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">shuffle</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; T[]</span>
 </pre></div>
 Returns a new array with the order of the values from <em>source</em> randomized.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T&gt;(T[] -&gt; T[])</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>Iterable</code></p>
+<p><strong>T</strong> - <code>any</code> - the primary type (extends any value)</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <code>T</code> 
+<p><strong>source</strong> - <code>T[]</code> - an array (of the primary type) 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>T</code></p>
+<p><code>T[]</code> - an array (of the primary type)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">teamColors</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">}</span>
@@ -866,21 +880,23 @@ Returns a new array with the order of the values from <em>source</em> randomized
 </pre></div>
 Returns a copied portion of the <em>source</em>, between the <em>first</em> and <em>last</em> elements inclusive and
 jumping <em>step</em> each time if provided.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T&gt;(T[], int?, int?, int? -&gt; T[])</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>any</code></p>
+<p><strong>T</strong> - <code>any</code> - the primary type (extends any value)</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <code>T[]</code> </p>
-<p><strong>first</strong> - <code>int?</code>  - (default = 1) The index of the first element to include.</p>
-<p><strong>last</strong> - <code>int?</code>  - (default = <code>#source</code>) The index of the last element to include.</p>
-<p><strong>step</strong> - <code>int?</code>  - (default = 1) What amount to step the index by during iteration.
+<p><strong>source</strong> - <code>T[]</code> - an array (of the primary type) </p>
+<p><strong>first</strong> - <code>int?</code> - an integer (optional)  - (default = 1) The index of the first element to include.</p>
+<p><strong>last</strong> - <code>int?</code> - an integer (optional)  - (default = <code>#source</code>) The index of the last element to include.</p>
+<p><strong>step</strong> - <code>int?</code> - an integer (optional)  - (default = 1) What amount to step the index by during iteration.
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>T[]</code></p>
+<p><code>T[]</code> - an array (of the primary type)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">slice</span><span class="p">({</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">})</span> <span class="c1">--&gt; {10, 20, 30, 40}</span>
@@ -902,19 +918,21 @@ jumping <em>step</em> each time if provided.</p>
 Returns a sorted array from the <em>input</em> array, based on a <em>comparator</em> function.</p>
 <p>Unlike <a href="/rodash/api/Arrays/#sort">dash.sort</a>, the comparator to <a href="/rodash/api/Arrays/#sort">dash.sort</a> is optional, but if defined it can also
 return a numeric weight or nil as well as a boolean to provide an ordering of the elements.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T&gt;(T[], (T -&gt; bool | number | nil)? -&gt; T[])</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>any</code></p>
+<p><strong>T</strong> - <code>any</code> - the primary type (extends any value)</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>input</strong> - <code>T[]</code> </p>
-<p><strong>comparator</strong> - <code>(T) -&gt; bool | number | nil</code>  - (optional) should return <code>true</code> or <code>n &lt; 0</code> if the first element should be before the second in the resulting array, or <code>0</code> or <code>nil</code> if the elements have the same order.
+<p><strong>input</strong> - <code>T[]</code> - an array (of the primary type) </p>
+<p><strong>comparator</strong> - <code>(T) -&gt; bool | number | nil?</code> - a function (taking the primary type, and returning a boolean or a number or nil) (optional)  - should return <code>true</code> or <code>n &lt; 0</code> if the first element should be before the second in the resulting array, or <code>0</code> or <code>nil</code> if the elements have the same order.
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>T[]</code></p>
+<p><code>T[]</code> - an array (of the primary type)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">sort</span><span class="p">({</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">})</span> <span class="c1">--&gt; {2, 3, 5}</span>
@@ -942,14 +960,16 @@ return a numeric weight or nil as well as a boolean to provide an ordering of th
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">sum</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; number</span>
 </pre></div>
 Sums all the values in the <em>source</em> array.</p>
+<p><strong>Type</strong></p>
+<p><code>Ordered&lt;number&gt; -&gt; number</code></p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <code>number[]</code> 
+<p><strong>source</strong> - <code>Ordered&lt;number&gt;</code> - <a href="/rodash/types/#Ordered">an Ordered</a> (of number) 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>number</code></p>
+<p><code>number</code> - a number</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">sum</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">})</span> <span class="c1">--&gt; 6</span>

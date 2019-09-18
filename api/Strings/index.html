@@ -65,7 +65,7 @@
     <link rel="stylesheet" href="../../assets/fonts/material-icons.css">
     
     
-      <link rel="stylesheet" href="../../rodocs.css">
+      <link rel="stylesheet" href="../../docublox.css">
     
     
       
@@ -815,21 +815,23 @@
                 <h1 id="strings">Strings<a class="headerlink" href="#strings" title="Permanent link">&para;</a></h1>
 <p>Useful functions to manipulate strings, based on similar implementations in other standard libraries.</p>
 <h2 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h2>
-<div class="rodocs-trait">Chainable
+<div class="docublox-trait">Chainable
 </div>
 
 <h3 id="camelcase">camelCase<a class="headerlink" href="#camelcase" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">camelCase</span><span class="p">(</span><span class="n">str</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 Convert <code>str</code> to camel-case.</p>
+<p><strong>Type</strong></p>
+<p><code>string -&gt; string</code></p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>str</strong> - <code>string</code> 
+<p><strong>str</strong> - <code>string</code> - a string 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>string</code></p>
+<p><code>string</code> - a string</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">camelCase</span><span class="p">(</span><span class="s1">&#39;Pepperoni Pizza&#39;</span><span class="p">)</span> <span class="c1">--&gt; &#39;pepperoniPizza&#39;</span>
@@ -842,21 +844,23 @@ Convert <code>str</code> to camel-case.</p>
 </pre></div>
 
 <hr />
-<div class="rodocs-trait">Chainable
+<div class="docublox-trait">Chainable
 </div>
 
 <h3 id="capitalize">capitalize<a class="headerlink" href="#capitalize" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">capitalize</span><span class="p">(</span><span class="n">str</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 Capitalize the first letter of <code>str</code>.</p>
+<p><strong>Type</strong></p>
+<p><code>string -&gt; string</code></p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>str</strong> - <code>string</code> 
+<p><strong>str</strong> - <code>string</code> - a string 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>string</code></p>
+<p><code>string</code> - a string</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">capitalize</span><span class="p">(</span><span class="s2">&quot;hello mould&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;Hello mould&quot;</span>
@@ -867,16 +871,18 @@ Capitalize the first letter of <code>str</code>.</p>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">charToHex</span><span class="p">(</span><span class="n">char</span><span class="p">,</span> <span class="n">format</span><span class="p">,</span> <span class="n">useBytes</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 Converts <em>char</em> into a hex representation</p>
+<p><strong>Type</strong></p>
+<p><code>char, string?, boolean? -&gt; string</code></p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>char</strong> - <code>char</code> </p>
-<p><strong>format</strong> - <code>string?</code>  - (optional) a string passed to <a href="/rodash/api/Strings/#format">dash.format</a> which formats the hex value of each of the character's code points.</p>
-<p><strong>useBytes</strong> - <code>boolean?</code>  - (default = false) whether to use the character's bytes, rather than UTF-8 code points.
+<p><strong>char</strong> - <code>char</code> - a char </p>
+<p><strong>format</strong> - <code>string?</code> - a string (optional)  - (optional) a string passed to <a href="/rodash/api/Strings/#format">dash.format</a> which formats the hex value of each of the character's code points.</p>
+<p><strong>useBytes</strong> - <code>boolean?</code> - <a href="/rodash/types/#boolean">a boolean</a> (optional)  - (default = false) whether to use the character's bytes, rather than UTF-8 code points.
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>string</code></p>
+<p><code>string</code> - a string</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">charToHex</span><span class="p">(</span><span class="s2">&quot;&lt;&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;3C&quot;</span>
@@ -899,27 +905,29 @@ Converts <em>char</em> into a hex representation</p>
 
 <hr />
 <h3 id="debug">debug<a class="headerlink" href="#debug" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">debug</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="p">...)</span> <span class="c1">--&gt; string</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">debug</span><span class="p">(</span><span class="n">format</span><span class="p">,</span> <span class="p">...)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 This function first calls <a href="/rodash/api/Strings/#format">dash.format</a> on the arguments provided and then outputs the response
 to the debug target, set using <a href="/rodash/api/Strings/#setdebug">dash.setDebug</a>. By default, this function does nothing, allowing
 developers to leave the calls in the source code if that is beneficial.</p>
+<p><strong>Type</strong></p>
+<p><code>string, ... -&gt; string</code></p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>subject</strong> - <code>any</code>  - the format match string</p>
-<p><strong>...</strong> - <code>...any</code> 
+<p><strong>format</strong> - <code>string</code> - a string  - the format match string</p>
+<p><strong>...</strong> - <code>...any</code> - any values 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>string</code></p>
+<p><code>string</code> - a string</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="c1">-- During development:</span>
 <span class="n">dash</span><span class="p">.</span><span class="n">setDebug</span><span class="p">()</span>
 <span class="c1">-- At any point in the code:</span>
-<span class="n">dash</span><span class="p">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Hello is printed&quot;</span><span class="p">)</span>
-<span class="c1">--&gt;&gt; Hello is printed</span>
+<span class="n">dash</span><span class="p">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Hello {}&quot;</span><span class="p">,</span> <span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">.</span><span class="n">LocalPlayer</span><span class="p">)</span>
+<span class="c1">--&gt;&gt; Hello builderman (for example)</span>
 </pre></div>
 
 <p><strong>Usage</strong></p>
@@ -932,7 +940,7 @@ and send debug messages to an HTTP server on a production build to allow remote 
 <li><a href="/rodash/api/Strings/#setdebug">dash.setDebug</a></li>
 </ul>
 <hr />
-<div class="rodocs-trait">Chainable
+<div class="docublox-trait">Chainable
 </div>
 
 <h3 id="decodehtml">decodeHtml<a class="headerlink" href="#decodehtml" title="Permanent link">&para;</a></h3>
@@ -940,35 +948,39 @@ and send debug messages to an HTTP server on a production build to allow remote 
 </pre></div>
 The inverse of <a href="/rodash/api/Strings/#encodehtml">dash.encodeHtml</a>.
 Converts any HTML entities in <code>str</code> to their corresponding characters.</p>
+<p><strong>Type</strong></p>
+<p><code>string -&gt; string</code></p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>str</strong> - <code>string</code> 
+<p><strong>str</strong> - <code>string</code> - a string 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>string</code></p>
+<p><code>string</code> - a string</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">decodeHtml</span><span class="p">(</span><span class="s2">&quot;&amp;lt;b&amp;gt;&amp;#34;Smashed&amp;quot;&amp;lt;/b&amp;gt; &amp;apos;Avocado&amp;#39; &amp;#x1F60F;&quot;</span><span class="p">)</span> <span class="c1">--&gt; [[&lt;b&gt;&quot;Smashed&quot;&lt;/b&gt; &#39;Avocado&#39; 😏]]</span>
 </pre></div>
 
 <hr />
-<div class="rodocs-trait">Chainable</div>
+<div class="docublox-trait">Chainable</div>
 
 <h3 id="decodeurl">decodeUrl<a class="headerlink" href="#decodeurl" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">decodeUrl</span><span class="p">(</span><span class="n">str</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 The inverse of <a href="/rodash/api/Strings/#encodeurl">dash.encodeUrl</a>. Use this to turn a URL which has been encoded for use in a
 HTTP request back into its original form.</p>
+<p><strong>Type</strong></p>
+<p><code>string -&gt; string</code></p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>str</strong> - <code>string</code> 
+<p><strong>str</strong> - <code>string</code> - a string 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>string</code></p>
+<p><code>string</code> - a string</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">decodeUrl</span><span class="p">(</span><span class="s2">&quot;https://Egg+Fried%20Rice!?&quot;</span><span class="p">)</span>
@@ -980,21 +992,23 @@ HTTP request back into its original form.</p>
 <li>This method is designed to act like <code>decodeURI</code> in JavaScript.</li>
 </ul>
 <hr />
-<div class="rodocs-trait">Chainable</div>
+<div class="docublox-trait">Chainable</div>
 
 <h3 id="decodeurlcomponent">decodeUrlComponent<a class="headerlink" href="#decodeurlcomponent" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">decodeUrlComponent</span><span class="p">(</span><span class="n">str</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 The inverse of <a href="/rodash/api/Strings/#encodeurlcomponent">dash.encodeUrlComponent</a>. Use this to turn a string which has been encoded for
 use as a component of a url back into its original form.</p>
+<p><strong>Type</strong></p>
+<p><code>string -&gt; string</code></p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>str</strong> - <code>string</code> 
+<p><strong>str</strong> - <code>string</code> - a string 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>string</code></p>
+<p><code>string</code> - a string</p>
 </blockquote>
 <p><strong>Throws</strong></p>
 <ul>
@@ -1010,21 +1024,23 @@ use as a component of a url back into its original form.</p>
 <li>This method is designed to act like <code>decodeURIComponent</code> in JavaScript.</li>
 </ul>
 <hr />
-<div class="rodocs-trait">Chainable
+<div class="docublox-trait">Chainable
 </div>
 
 <h3 id="encodehtml">encodeHtml<a class="headerlink" href="#encodehtml" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">encodeHtml</span><span class="p">(</span><span class="n">str</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 Converts the characters <code>&amp;&lt;&gt;"'</code> in <code>str</code> to their corresponding HTML entities.</p>
+<p><strong>Type</strong></p>
+<p><code>string -&gt; string</code></p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>str</strong> - <code>string</code> 
+<p><strong>str</strong> - <code>string</code> - a string 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>string</code></p>
+<p><code>string</code> - a string</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">encodeHtml</span><span class="p">(</span><span class="s">[[Pease &lt; Bacon &gt; &quot;Fish&quot; &amp; &#39;Chips&#39;]]</span><span class="p">)</span> <span class="c1">--&gt; &quot;Peas &amp;lt; Bacon &amp;gt; &amp;quot;Fish&amp;quot; &amp;amp; &amp;apos;Chips&amp;apos;&quot;</span>
@@ -1036,19 +1052,21 @@ Converts the characters <code>&amp;&lt;&gt;"'</code> in <code>str</code> to thei
 </pre></div>
 Takes a <em>query</em> dictionary of key-value pairs and builds a query string that can be concatenated
 to the end of a url.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;K,V&gt;(Iterable&lt;K,V&gt; -&gt; string)</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>K</strong> - <code>any</code></p>
-<p><strong>V</strong> - <code>any</code></p>
+<p><strong>K</strong> - <code>any</code> - the primary key type (extends any value)</p>
+<p><strong>V</strong> - <code>any</code> - the primary value type (extends any value)</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>query</strong> - <code>Iterable&lt;K, V&gt;</code> 
+<p><strong>query</strong> - <code>Iterable&lt;K, V&gt;</code> - <a href="/rodash/types/#Iterable">an Iterable</a> (of the primary key type and the primary value type) 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>string</code></p>
+<p><code>string</code> - a string</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">encodeQueryString</span><span class="p">({</span>
@@ -1063,23 +1081,25 @@ to the end of a url.</p>
 <li>A query string which contains duplicate keys with different values is technically valid, but this function doesn't provide a way to produce them.</li>
 </ul>
 <hr />
-<div class="rodocs-trait">Chainable</div>
+<div class="docublox-trait">Chainable</div>
 
 <h3 id="encodeurl">encodeUrl<a class="headerlink" href="#encodeurl" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">encodeUrl</span><span class="p">(</span><span class="n">str</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 Encodes <em>str</em> for use as a URL, for example when calling an HTTP endpoint.</p>
-<p>Note that, unlike this function, undefined actually attempts to encode a string
+<p>Note that, unlike this function, <code>HttpService.EncodeUrl</code> actually attempts to encode a string
 for purposes as a URL component rather than an entire URL, and as such will not produce a valid
 URL.</p>
+<p><strong>Type</strong></p>
+<p><code>string -&gt; string</code></p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>str</strong> - <code>string</code> 
+<p><strong>str</strong> - <code>string</code> - a string 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>string</code></p>
+<p><code>string</code> - a string</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">encodeUrl</span><span class="p">(</span><span class="s2">&quot;https://example.com/Egg+Fried Rice!?🤷🏼‍♀️&quot;</span><span class="p">)</span>
@@ -1095,20 +1115,22 @@ URL.</p>
 <li><a href="/rodash/api/Strings/#encodeurlcomponent">dash.encodeUrlComponent</a></li>
 </ul>
 <hr />
-<div class="rodocs-trait">Chainable</div>
+<div class="docublox-trait">Chainable</div>
 
 <h3 id="encodeurlcomponent">encodeUrlComponent<a class="headerlink" href="#encodeurlcomponent" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">encodeUrlComponent</span><span class="p">(</span><span class="n">str</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 Encodes <em>str</em> for use in a URL, for example as a query parameter of a call to an HTTP endpoint.</p>
+<p><strong>Type</strong></p>
+<p><code>string -&gt; string</code></p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>str</strong> - <code>string</code> 
+<p><strong>str</strong> - <code>string</code> - a string 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>string</code></p>
+<p><code>string</code> - a string</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">encodeUrlComponent</span><span class="p">(</span><span class="s2">&quot;https://example.com/Egg+Fried Rice!?🤷🏼‍♀️&quot;</span><span class="p">)</span>
@@ -1121,26 +1143,28 @@ Encodes <em>str</em> for use in a URL, for example as a query parameter of a cal
 <p>This method is designed to act like <code>encodeURIComponent</code> in JavaScript.</p>
 </li>
 <li>
-<p>This is very similar to undefined, but is included for parity and conforms closer to the standard (e.g. EncodeUrl unnecessarily encodes <code>!</code>).</p>
+<p>This is very similar to <code>HttpService.EncodeUrl</code>, but is included for parity and conforms closer to the standard (e.g. EncodeUrl unnecessarily encodes <code>!</code>).</p>
 </li>
 </ul>
 <hr />
-<div class="rodocs-trait">Chainable
+<div class="docublox-trait">Chainable
 </div>
 
 <h3 id="endswith">endsWith<a class="headerlink" href="#endswith" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">endsWith</span><span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="n">suffix</span><span class="p">)</span> <span class="c1">--&gt; bool</span>
 </pre></div>
 Checks if <code>str</code> ends with the string <code>suffix</code>.</p>
+<p><strong>Type</strong></p>
+<p><code>string, string -&gt; bool</code></p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>str</strong> - <code>string</code> </p>
-<p><strong>suffix</strong> - <code>string</code> 
+<p><strong>str</strong> - <code>string</code> - a string </p>
+<p><strong>suffix</strong> - <code>string</code> - a string 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>bool</code></p>
+<p><code>bool</code> - a boolean</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">endsWith</span><span class="p">(</span><span class="s2">&quot;Fun Roblox Games&quot;</span><span class="p">,</span> <span class="s2">&quot;Games&quot;</span><span class="p">)</span> <span class="c1">--&gt; true</span>
@@ -1170,15 +1194,17 @@ in <a href="/rodash/api/Strings/#format">dash.format</a> can be used here, along
 <li><code>{:#?}</code> formats any value using <a href="/rodash/api/Strings/#pretty">dash.pretty</a>.</li>
 <li><code>{:b}</code> formats a number in its binary representation.</li>
 </ul>
+<p><strong>Type</strong></p>
+<p><code>string, ... -&gt; string</code></p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>format</strong> - <code>string</code> </p>
-<p><strong>...</strong> - <code>...any</code> 
+<p><strong>format</strong> - <code>string</code> - a string </p>
+<p><strong>...</strong> - <code>...any</code> - any values 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>string</code></p>
+<p><code>string</code> - a string</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">props</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;teeth&quot;</span><span class="p">,</span> <span class="s2">&quot;claws&quot;</span><span class="p">,</span> <span class="s2">&quot;whiskers&quot;</span><span class="p">,</span> <span class="s2">&quot;tail&quot;</span><span class="p">}</span>
@@ -1219,33 +1245,41 @@ for complete list of formating options and further use cases.</p>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">formatValue</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">displayString</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 Format a specific <em>value</em> using the specified <em>displayString</em>.</p>
+<p><strong>Type</strong></p>
+<p><code>any, DisplayString -&gt; string</code></p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>value</strong> - <code>any</code> </p>
-<p><strong>displayString</strong> - <code>DisplayString</code> 
+<p><strong>value</strong> - <code>any</code> - any value </p>
+<p><strong>displayString</strong> - <code>DisplayString</code> - <a href="/rodash/types/#DisplayString">a DisplayString</a> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>string</code></p>
+<p><code>string</code> - a string</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">formatValue</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="s2">&quot;:06X&quot;</span><span class="p">)</span> <span class="c1">--&gt; 0000FF</span>
 </pre></div>
 
+<p><strong>See</strong></p>
+<ul>
+<li><a href="/rodash/api/Strings/#format">dash.format</a> - for a full description of valid display strings.</li>
+</ul>
 <hr />
 <h3 id="hextochar">hexToChar<a class="headerlink" href="#hextochar" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">hexToChar</span><span class="p">(</span><span class="n">hex</span><span class="p">)</span> <span class="c1">--&gt; char</span>
 </pre></div>
 Generates a character from its <em>hex</em> representation.</p>
+<p><strong>Type</strong></p>
+<p><code>str -&gt; char</code></p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>hex</strong> - <code>str</code> 
+<p><strong>hex</strong> - <code>str</code> - <a href="/rodash/types/#str">a str</a> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>char</code></p>
+<p><code>char</code> - a char</p>
 </blockquote>
 <p><strong>Throws</strong></p>
 <ul>
@@ -1265,21 +1299,23 @@ Generates a character from its <em>hex</em> representation.</p>
 </pre></div>
 
 <hr />
-<div class="rodocs-trait">Chainable
+<div class="docublox-trait">Chainable
 </div>
 
 <h3 id="kebabcase">kebabCase<a class="headerlink" href="#kebabcase" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">kebabCase</span><span class="p">(</span><span class="n">str</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 Convert <code>str</code> to kebab-case, making all letters lowercase.</p>
+<p><strong>Type</strong></p>
+<p><code>string -&gt; string</code></p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>str</strong> - <code>string</code> 
+<p><strong>str</strong> - <code>string</code> - a string 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>string</code></p>
+<p><code>string</code> - a string</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">kebabCase</span><span class="p">(</span><span class="s1">&#39;strongStilton&#39;</span><span class="p">)</span> <span class="c1">--&gt; &#39;strong-stilton&#39;</span>
@@ -1296,23 +1332,25 @@ Convert <code>str</code> to kebab-case, making all letters lowercase.</p>
 <li>Chain with <code>:upper()</code> if you need an upper kebab-case string.</li>
 </ul>
 <hr />
-<div class="rodocs-trait">Chainable
+<div class="docublox-trait">Chainable
 </div>
 
 <h3 id="leftpad">leftPad<a class="headerlink" href="#leftpad" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">leftPad</span><span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">prefix</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 Makes a string of <code>length</code> from <code>str</code> by repeating characters from <code>prefix</code> at the start of the string.</p>
+<p><strong>Type</strong></p>
+<p><code>string, number, string -&gt; string</code></p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>str</strong> - <code>string</code> </p>
-<p><strong>length</strong> - <code>number</code> </p>
-<p><strong>prefix</strong> - <code>string</code>  - (default = <code>" "</code>)
+<p><strong>str</strong> - <code>string</code> - a string </p>
+<p><strong>length</strong> - <code>number</code> - a number </p>
+<p><strong>prefix</strong> - <code>string</code> - a string  - (default = <code>" "</code>)
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>string</code></p>
+<p><code>string</code> - a string</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">leftPad</span><span class="p">(</span><span class="s2">&quot;toast&quot;</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span> <span class="c1">--&gt; &quot; toast&quot;</span>
@@ -1330,21 +1368,23 @@ Makes a string of <code>length</code> from <code>str</code> by repeating charact
 </pre></div>
 Returns a human-readable string for the given <em>value</em>. The string will be formatted across
 multiple lines if a descendant element gets longer than <code>80</code> characters.</p>
-<p>Optionally a table of <a href="/types#SerializeOptions">SerializeOptions</a> can be passed which will pass
+<p>Optionally a table of <a href="/rodash/types#SerializeOptions">SerializeOptions</a> can be passed which will pass
 to the underlying <a href="/rodash/api/Tables/#serialize">dash.serialize</a> function so you can customise what is displayed.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T&gt;(T, SerializeOptions&lt;T&gt;? -&gt; string)</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>any</code></p>
+<p><strong>T</strong> - <code>any</code> - the primary type (extends any value)</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>value</strong> - <code>T</code> </p>
-<p><strong>serializeOptions</strong> - <code>SerializeOptions&lt;T&gt;?</code> 
+<p><strong>value</strong> - <code>T</code> - the primary type </p>
+<p><strong>serializeOptions</strong> - <code>SerializeOptions&lt;T&gt;?</code> - <a href="/rodash/types/#SerializeOptions">a SerializeOptions</a> (of the primary type) (optional) 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>string</code></p>
+<p><code>string</code> - a string</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">fox</span> <span class="o">=</span> <span class="p">{</span>
@@ -1368,23 +1408,25 @@ to the underlying <a href="/rodash/api/Tables/#serialize">dash.serialize</a> fun
 <li><a href="/rodash/api/Tables/#serializedeep">dash.serializeDeep</a> for a compact alternative.</li>
 </ul>
 <hr />
-<div class="rodocs-trait">Chainable
+<div class="docublox-trait">Chainable
 </div>
 
 <h3 id="rightpad">rightPad<a class="headerlink" href="#rightpad" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">rightPad</span><span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">suffix</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 Makes a string of <code>length</code> from <code>str</code> by repeating characters from <code>suffix</code> at the end of the string.</p>
+<p><strong>Type</strong></p>
+<p><code>string, number, string -&gt; string</code></p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>str</strong> - <code>string</code> </p>
-<p><strong>length</strong> - <code>number</code> </p>
-<p><strong>suffix</strong> - <code>string</code>  - (default = <code>" "</code>)
+<p><strong>str</strong> - <code>string</code> - a string </p>
+<p><strong>length</strong> - <code>number</code> - a number </p>
+<p><strong>suffix</strong> - <code>string</code> - a string  - (default = <code>" "</code>)
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>string</code></p>
+<p><code>string</code> - a string</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">rightPad</span><span class="p">(</span><span class="s2">&quot;toast&quot;</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span> <span class="c1">--&gt; &quot;toast &quot;</span>
@@ -1401,18 +1443,20 @@ Makes a string of <code>length</code> from <code>str</code> by repeating charact
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">setDebug</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span> <span class="c1">--&gt; void</span>
 </pre></div>
 Hooks up any debug methods to invoke <em>fn</em>. By default, <a href="/rodash/api/Strings/#debug">dash.debug</a> does nothing.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;A&gt;(...A -&gt; ())</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>any</code></p>
+<p><strong>A</strong> - <code>any</code> - the primary arguments (extends any value)</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>fn</strong> - <code>Function&lt;T&gt;</code>  - (default = <code>print</code>)
+<p><strong>fn</strong> - <code>...A</code> - the primary arguments  - (default = <code>print</code>)
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>void</code></p>
+<p><code>void</code> - nothing</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">postMessage</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">async</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
@@ -1439,21 +1483,23 @@ Hooks up any debug methods to invoke <em>fn</em>. By default, <a href="/rodash/a
 </li>
 </ul>
 <hr />
-<div class="rodocs-trait">Chainable
+<div class="docublox-trait">Chainable
 </div>
 
 <h3 id="snakecase">snakeCase<a class="headerlink" href="#snakecase" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">snakeCase</span><span class="p">(</span><span class="n">str</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 Convert <code>str</code> to snake-case, making all letters uppercase.</p>
+<p><strong>Type</strong></p>
+<p><code>string -&gt; string</code></p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>str</strong> - <code>string</code> 
+<p><strong>str</strong> - <code>string</code> - a string 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>string</code></p>
+<p><code>string</code> - a string</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">snakeCase</span><span class="p">(</span><span class="s1">&#39;sweetChickenCurry&#39;</span><span class="p">)</span> <span class="c1">--&gt; &#39;SWEET_CHICKEN_CURRY&#39;</span>
@@ -1470,7 +1516,7 @@ Convert <code>str</code> to snake-case, making all letters uppercase.</p>
 <li>Chain with <code>:lower()</code> if you need a lower snake-case string.</li>
 </ul>
 <hr />
-<div class="rodocs-trait">Chainable
+<div class="docublox-trait">Chainable
 </div>
 
 <h3 id="spliton">splitOn<a class="headerlink" href="#spliton" title="Permanent link">&para;</a></h3>
@@ -1478,15 +1524,17 @@ Convert <code>str</code> to snake-case, making all letters uppercase.</p>
 </pre></div>
 Splits <code>str</code> into parts based on a pattern delimiter and returns a table of the parts, followed
 by a table of the matched delimiters.</p>
+<p><strong>Type</strong></p>
+<p><code>string, pattern -&gt; string[], string[]</code></p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>str</strong> - <code>string</code> </p>
-<p><strong>pattern</strong> - <code>pattern</code> 
+<p><strong>str</strong> - <code>string</code> - a string </p>
+<p><strong>pattern</strong> - <code>pattern</code> - <a href="/rodash/types/#pattern">a pattern</a> 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>string[], string[]</code></p>
+<p><code>string[], string[]</code> - a tuple (an array (of strings) and an array (of strings))</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">splitOn</span><span class="p">(</span><span class="s2">&quot;rice&quot;</span><span class="p">)</span> <span class="c1">--&gt; {&quot;r&quot;, &quot;i&quot;, &quot;c&quot;, &quot;e&quot;}, {&quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;}</span>
@@ -1501,26 +1549,28 @@ by a table of the matched delimiters.</p>
 <p>This method is useful only when you need a <em>pattern</em> as a delimiter.</p>
 </li>
 <li>
-<p>Use the Roblox native undefined if you are splitting on a simple string.</p>
+<p>Use the Roblox native <code>string.split</code> if you are splitting on a simple string.</p>
 </li>
 </ul>
 <hr />
-<div class="rodocs-trait">Chainable
+<div class="docublox-trait">Chainable
 </div>
 
 <h3 id="startswith">startsWith<a class="headerlink" href="#startswith" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">startsWith</span><span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="n">prefix</span><span class="p">)</span> <span class="c1">--&gt; bool</span>
 </pre></div>
 Checks if <code>str</code> starts with the string <code>start</code>.</p>
+<p><strong>Type</strong></p>
+<p><code>string, string -&gt; bool</code></p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>str</strong> - <code>string</code> </p>
-<p><strong>prefix</strong> - <code>string</code> 
+<p><strong>str</strong> - <code>string</code> - a string </p>
+<p><strong>prefix</strong> - <code>string</code> - a string 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>bool</code></p>
+<p><code>bool</code> - a boolean</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">startsWith</span><span class="p">(</span><span class="s2">&quot;Fun Roblox Games&quot;</span><span class="p">,</span> <span class="s2">&quot;Fun&quot;</span><span class="p">)</span> <span class="c1">--&gt; true</span>
@@ -1530,21 +1580,23 @@ Checks if <code>str</code> starts with the string <code>start</code>.</p>
 </pre></div>
 
 <hr />
-<div class="rodocs-trait">Chainable
+<div class="docublox-trait">Chainable
 </div>
 
 <h3 id="titlecase">titleCase<a class="headerlink" href="#titlecase" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">titleCase</span><span class="p">(</span><span class="n">str</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 Convert <code>str</code> to title-case, where the first letter of each word is capitalized.</p>
+<p><strong>Type</strong></p>
+<p><code>string -&gt; string</code></p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>str</strong> - <code>string</code> 
+<p><strong>str</strong> - <code>string</code> - a string 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>string</code></p>
+<p><code>string</code> - a string</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">titleCase</span><span class="p">(</span><span class="s2">&quot;jello world&quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;Jello World&quot;</span>
@@ -1561,21 +1613,23 @@ Convert <code>str</code> to title-case, where the first letter of each word is c
 <li>Dashes, underscores and apostraphes don't break words.</li>
 </ul>
 <hr />
-<div class="rodocs-trait">Chainable
+<div class="docublox-trait">Chainable
 </div>
 
 <h3 id="trim">trim<a class="headerlink" href="#trim" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">trim</span><span class="p">(</span><span class="n">str</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 Removes any spaces from the start and end of <code>str</code>.</p>
+<p><strong>Type</strong></p>
+<p><code>string -&gt; string</code></p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>str</strong> - <code>string</code> 
+<p><strong>str</strong> - <code>string</code> - a string 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>string</code></p>
+<p><code>string</code> - a string</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">trim</span><span class="p">(</span><span class="s2">&quot;  roast veg  &quot;</span><span class="p">)</span> <span class="c1">--&gt; &quot;roast veg&quot;</span>

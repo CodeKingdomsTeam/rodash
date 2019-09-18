@@ -65,7 +65,7 @@
     <link rel="stylesheet" href="../../assets/fonts/material-icons.css">
     
     
-      <link rel="stylesheet" href="../../rodocs.css">
+      <link rel="stylesheet" href="../../docublox.css">
     
     
       
@@ -493,6 +493,26 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#members" title="Members" class="md-nav__link">
+    Members
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fn" title="fn" class="md-nav__link">
+    fn
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
       
       
       
@@ -737,6 +757,26 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#members" title="Members" class="md-nav__link">
+    Members
+  </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fn" title="fn" class="md-nav__link">
+    fn
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
       
       
       
@@ -760,26 +800,28 @@
 <p>Utility functions and building blocks for functional programming styles.</p>
 <h2 id="functions_1">Functions<a class="headerlink" href="#functions_1" title="Permanent link">&para;</a></h2>
 <h3 id="bind">bind<a class="headerlink" href="#bind" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">bind</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="p">...)</span> <span class="c1">--&gt; (...B) -&gt; R</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">bind</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="p">...)</span> <span class="c1">--&gt; (...A2) -&gt; R</span>
 </pre></div>
 Takes a function <em>fn</em> and binds <em>arguments</em> to the head of the <em>fn</em> argument list.
 Returns a function which executes <em>fn</em>, passing the bound arguments supplied, followed by any
 dynamic arguments.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;A, A2, R&gt;(((...A, ...A2 -&gt; R), ...A) -&gt; ...A2 -&gt; R)</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>A</strong> - <code>any</code></p>
-<p><strong>B</strong> - <code>any</code></p>
-<p><strong>R</strong> - <code>any</code></p>
+<p><strong>A</strong> - <code>any</code> - the primary arguments (extends any value)</p>
+<p><strong>A2</strong> - <code>any</code> - the secondary arguments (extends any value)</p>
+<p><strong>R</strong> - <code>any</code> - the result type (extends any value)</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>fn</strong> - <code>(...A, ...B) -&gt; R</code> </p>
-<p><strong>...</strong> - <code>...A</code> 
+<p><strong>fn</strong> - <code>(...A, ...A2) -&gt; R</code> - a function (taking the primary arguments and the secondary arguments, and returning the result type) </p>
+<p><strong>...</strong> - <code>...A</code> - the primary arguments 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>(...B) -&gt; R</code></p>
+<p><code>(...A2) -&gt; R</code> - a function (taking the secondary arguments, and returning the result type)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="kr">function</span> <span class="nf">damagePlayer</span><span class="p">(</span> <span class="n">player</span><span class="p">,</span> <span class="n">amount</span> <span class="p">)</span>
@@ -795,19 +837,21 @@ dynamic arguments.</p>
 </pre></div>
 Takes a chainable function <em>fn</em> and binds <em>arguments</em> to the tail of the <em>fn</em> argument list.
 Returns a function which executes <em>fn</em>, passing a subject ahead of the bound arguments supplied.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;S&gt;(Chainable&lt;S&gt;, ...) -&gt; S -&gt; S</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>S</strong> - <code>any</code></p>
+<p><strong>S</strong> - <code>any</code> - the subject type (extends any value)</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>fn</strong> - <code>Chainable&lt;S&gt;</code> </p>
-<p><strong>...</strong> - <code>...any</code> 
+<p><strong>fn</strong> - <code>Chainable&lt;S&gt;</code> - <a href="/rodash/types/#Chainable">a Chainable</a> (of the subject type) </p>
+<p><strong>...</strong> - <code>...any</code> - any values 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>(S) -&gt; S</code></p>
+<p><code>(S) -&gt; S</code> - a function (taking the subject type, and returning the subject type)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="kr">function</span> <span class="nf">setHealthTo</span><span class="p">(</span><span class="n">player</span><span class="p">,</span> <span class="n">health</span><span class="p">)</span>
@@ -832,7 +876,7 @@ Returns a function which executes <em>fn</em>, passing a subject ahead of the bo
 
 <p><strong>Usage</strong></p>
 <ul>
-<li>Chainable rodash function feeds are mapped to undefined, such as <code>dash.fn.map(handler)</code>.</li>
+<li>Chainable rodash function feeds are mapped to <a href="/rodash/api/Functions/#fn">dash.fn</a>, such as <code>dash.fn.map(handler)</code>.</li>
 </ul>
 <p><strong>See</strong></p>
 <ul>
@@ -844,28 +888,30 @@ Returns a function which executes <em>fn</em>, passing a subject ahead of the bo
 </li>
 </ul>
 <hr />
-<div class="rodocs-trait">Chainable</div>
+<div class="docublox-trait">Chainable</div>
 
 <h3 id="call">call<a class="headerlink" href="#call" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="p">...)</span> <span class="c1">--&gt; R</span>
 </pre></div>
 Calls the supplied <em>fn</em> on the subject and any additional arguments, returning the result.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;S, A, R&gt;(S, (S, ...A -&gt; R), ...A -&gt; R)</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>S</strong> - <code>Subject</code></p>
-<p><strong>A</strong> - <code>any</code></p>
-<p><strong>R</strong> - <code>any</code></p>
+<p><strong>S</strong> - <code>any</code> - the subject type (extends any value)</p>
+<p><strong>A</strong> - <code>any</code> - the primary arguments (extends any value)</p>
+<p><strong>R</strong> - <code>any</code> - the result type (extends any value)</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>subject</strong> - <code>S</code> </p>
-<p><strong>fn</strong> - <code>(S, ...A) -&gt; R</code> </p>
-<p><strong>...</strong> - <code>...A</code> 
+<p><strong>subject</strong> - <code>S</code> - the subject type </p>
+<p><strong>fn</strong> - <code>(S, ...A) -&gt; R</code> - a function (taking the subject type and the primary arguments, and returning the result type) </p>
+<p><strong>...</strong> - <code>...A</code> - the primary arguments 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>R</code></p>
+<p><code>R</code> - the result type</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="kr">function</span> <span class="nf">get</span><span class="p">(</span><span class="n">object</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
@@ -897,10 +943,10 @@ inside a chain.</li>
 <li><a href="/rodash/api/Functions/#chain">dash.chain</a></li>
 </ul>
 <hr />
-<div class="rodocs-trait">Chainable</div>
+<div class="docublox-trait">Chainable</div>
 
 <h3 id="chain">chain<a class="headerlink" href="#chain" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">chain</span><span class="p">(</span><span class="n">fns</span><span class="p">,</span> <span class="n">actor</span><span class="p">)</span> <span class="c1">--&gt; ...any</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">chain</span><span class="p">(</span><span class="n">fns</span><span class="p">,</span> <span class="n">actor</span><span class="p">)</span> <span class="c1">--&gt; Chain&lt;S&gt;</span>
 </pre></div>
 Chain takes a dictionary of chainable functions and returns a Chain instance with
 methods mapped to the input functions.</p>
@@ -908,15 +954,21 @@ methods mapped to the input functions.</p>
 sequences of operations on some data with a very concise syntax. An <em>actor</em> function can
 check the value of the data at each step and change how the chain proceeds.</p>
 <p>Calling a <em>Chain</em> with a subject reduces the chained operations in order on the subject. </p>
+<p><strong>Type</strong></p>
+<p><code>&lt;S&gt;(Chainable&lt;S&gt;{}, Actor&lt;S&gt;) -&gt; Chain&lt;S&gt;</code></p>
+<p><strong>Generics</strong></p>
+<blockquote>
+<p><strong>S</strong> - <code>any</code> - the subject type (extends any value)</p>
+</blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>fns</strong> - <code>any</code> </p>
-<p><strong>actor</strong> - <code>any</code>  - called for each result in the chain to determine how the next operation should process it. (default = <a href="/rodash/api/Functions/#invoke">dash.invoke</a>)
+<p><strong>fns</strong> - <code>Chainable&lt;S&gt;{}</code> - a dictionary (of <a href="/rodash/types/#Chainable">Chainables</a> (of the subject type)) </p>
+<p><strong>actor</strong> - <code>Actor&lt;S&gt;</code> - <a href="/rodash/types/#Actor">an Actor</a> (of the subject type)  - called for each result in the chain to determine how the next operation should process it. (default = <a href="/rodash/api/Functions/#invoke">dash.invoke</a>)
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>...any</code></p>
+<p><code>Chain&lt;S&gt;</code> - <a href="/rodash/types/#Chain">a Chain</a> (of the subject type)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="c1">-- Define a simple chain that can operate a list of numbers.</span>
@@ -973,12 +1025,12 @@ check the value of the data at each step and change how the chain proceeds.</p>
 <p><strong>Usage</strong></p>
 <ul>
 <li>
-<p>The "Rodash" chain: <code>dash.chain(_)</code> is aliased to undefined, so instead of writing
+<p>The "Rodash" chain: <code>dash.chain(_)</code> is aliased to <a href="/rodash/api/Functions/#fn">dash.fn</a>, so instead of writing
 <code>dash.chain(_):filter</code> you can simply write <code>dash.fn:filter</code>, or any other chainable method.</p>
 </li>
 <li>
 <p>A chained function can be made using <a href="/rodash/api/Functions/#chain">dash.chain</a> or built inductively using other chained
-methods of undefined.</p>
+methods of <a href="/rodash/api/Functions/#fn">dash.fn</a>.</p>
 </li>
 <li>
 <p>A chainable method is one that has the subject which is passed through a chain as the
@@ -1008,20 +1060,22 @@ Wraps a function, making it chainable if it returns a chain itself.</p>
 <p>This allows you to define custom functions in terms of the arguments they will take when called
 in a chain, and return a chained function which performs the operation, rather than explicitly
 taking the subject as first argument.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T, A, R&gt;((...A -&gt; T -&gt; R) -&gt; T, ...A -&gt; R)</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>any</code></p>
-<p><strong>A</strong> - <code>any</code></p>
-<p><strong>R</strong> - <code>any</code></p>
+<p><strong>T</strong> - <code>any</code> - the primary type (extends any value)</p>
+<p><strong>A</strong> - <code>any</code> - the primary arguments (extends any value)</p>
+<p><strong>R</strong> - <code>any</code> - the result type (extends any value)</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>fn</strong> - <code>(...A) -&gt; (T) -&gt; R</code> 
+<p><strong>fn</strong> - <code>(...A) -&gt; (T) -&gt; R</code> - a function (taking the primary arguments, and returning a function (taking the primary type, and returning the result type)) 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>(T, ...A) -&gt; R</code></p>
+<p><code>(T, ...A) -&gt; R</code> - a function (taking the primary type and the primary arguments, and returning the result type)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="c1">-- In the chain example addN was defined like so:</span>
@@ -1057,7 +1111,7 @@ taking the subject as first argument.</p>
 <li><a href="/rodash/api/Functions/#chain">dash.chain</a></li>
 </ul>
 <hr />
-<div class="rodocs-trait">Chainable
+<div class="docublox-trait">Chainable
 </div>
 
 <h3 id="compose">compose<a class="headerlink" href="#compose" title="Permanent link">&para;</a></h3>
@@ -1065,18 +1119,20 @@ taking the subject as first argument.</p>
 </pre></div>
 Returns a function that calls the argument functions in left-right order on an input, passing
 the return of the previous function as argument(s) to the next.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;A&gt;((...A -&gt; ...A)[]) -&gt; ...A -&gt; A</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>A</strong> - <code>any</code></p>
+<p><strong>A</strong> - <code>any</code> - the primary arguments (extends any value)</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>...</strong> - <code>(...A) -&gt; ...A[]</code> 
+<p><strong>...</strong> - <code>(...A) -&gt; ...A[]</code> - an array (of functions (taking the primary arguments, and returning the primary arguments)) 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>(...A) -&gt; A</code></p>
+<p><code>(...A) -&gt; A</code> - a function (taking the primary arguments, and returning the primary arguments)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="kr">function</span> <span class="nf">fry</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
@@ -1097,23 +1153,25 @@ the return of the previous function as argument(s) to the next.</p>
 <h3 id="continue">continue<a class="headerlink" href="#continue" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">continue</span><span class="p">(</span><span class="n">actor</span><span class="p">)</span> <span class="c1">--&gt; Actor&lt;S&gt;</span>
 </pre></div>
-An <a href="/types#Actor">Actor</a> getter which awaits on any promises returned by chain methods, and continues execution
+An <a href="/rodash/types#Actor">Actor</a> getter which awaits on any promises returned by chain methods, and continues execution
 when the promise completes.</p>
 <p>This allows any asynchronous methods to be used in chains without modifying any of the chain's
 synchronous methods, removing any boilerplate needed to handle promises in the main code body.</p>
 <p>Can wrap any other actor which handles values after any promise resolution.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;S&gt;(Actor&lt;S&gt; -&gt; Actor&lt;S&gt;)</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>S</strong> - <code>any</code></p>
+<p><strong>S</strong> - <code>any</code> - the subject type (extends any value)</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>actor</strong> - <code>Actor&lt;S&gt;</code>  - (default = <a href="/rodash/api/Functions/#invoke">dash.invoke</a>) The actor to wrap.
+<p><strong>actor</strong> - <code>Actor&lt;S&gt;</code> - <a href="/rodash/types/#Actor">an Actor</a> (of the subject type)  - (default = <a href="/rodash/api/Functions/#invoke">dash.invoke</a>) The actor to wrap.
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>Actor&lt;S&gt;</code></p>
+<p><code>Actor&lt;S&gt;</code> - <a href="/rodash/types/#Actor">an Actor</a> (of the subject type)</p>
 </blockquote>
 <p><strong>Rejects</strong></p>
 <ul>
@@ -1170,24 +1228,26 @@ synchronous methods, removing any boilerplate needed to handle promises in the m
 </ul>
 <hr />
 <h3 id="debounce">debounce<a class="headerlink" href="#debounce" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">debounce</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">delayInSeconds</span><span class="p">)</span> <span class="c1">--&gt; Clearable &amp; (...A) -&gt; B</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">debounce</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">delayInSeconds</span><span class="p">)</span> <span class="c1">--&gt; Clearable &amp; (...A) -&gt; R</span>
 </pre></div>
 Creates a debounced function that delays calling <em>fn</em> until after <em>delayInSeconds</em> seconds have
 elapsed since the last time the debounced function was attempted to be called.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;A, R&gt;(...A -&gt; R), number -&gt; Clearable &amp; (...A -&gt; R)</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>A</strong> - <code>any</code></p>
-<p><strong>B</strong> - <code>any</code></p>
+<p><strong>A</strong> - <code>any</code> - the primary arguments (extends any value)</p>
+<p><strong>R</strong> - <code>any</code> - the result type (extends any value)</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>fn</strong> - <code>(...A) -&gt; B</code> </p>
-<p><strong>delayInSeconds</strong> - <code>number</code> 
+<p><strong>fn</strong> - <code>(...A) -&gt; R</code> - a function (taking the primary arguments, and returning the result type) </p>
+<p><strong>delayInSeconds</strong> - <code>number</code> - a number 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>Clearable &amp; (...A) -&gt; B</code> - the debounced function with method <code>:clear()</code> can be called on to cancel any scheduled call.</p>
+<p><code>Clearable &amp; (...A) -&gt; R</code> - an intersection (of <a href="/rodash/types/#Clearable">a Clearable</a> and a function (taking the primary arguments, and returning the result type)) - the debounced function with method <code>:clear()</code> can be called on to cancel any scheduled call.</p>
 </blockquote>
 <p><strong>Usage</strong></p>
 <ul>
@@ -1195,24 +1255,26 @@ elapsed since the last time the debounced function was attempted to be called.</
 the illustrated point being debounce will only call <em>fn</em> at the end of a spurt of events.</li>
 </ul>
 <hr />
-<div class="rodocs-trait">Chainable</div>
+<div class="docublox-trait">Chainable</div>
 
 <h3 id="id">id<a class="headerlink" href="#id" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">id</span><span class="p">(...)</span> <span class="c1">--&gt; ...A</span>
 </pre></div>
 A simple function that does nothing, but returns its input parameters.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;A&gt;(...A -&gt; ...A)</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>A</strong> - <code>any</code></p>
+<p><strong>A</strong> - <code>any</code> - the primary arguments (extends any value)</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>...</strong> - <code>...A</code> 
+<p><strong>...</strong> - <code>...A</code> - the primary arguments 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>...A</code></p>
+<p><code>...A</code> - the primary arguments</p>
 </blockquote>
 <p><strong>Usage</strong></p>
 <ul>
@@ -1221,22 +1283,25 @@ expecting a callback to transform a value but you don't want to make any change 
 </ul>
 <hr />
 <h3 id="invoke">invoke<a class="headerlink" href="#invoke" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">invoke</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="p">...)</span> <span class="c1">--&gt; ...any</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">invoke</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="p">...)</span> <span class="c1">--&gt; S</span>
 </pre></div>
-An <a href="/types#Actor">Actor</a> which calls the supplied <em>fn</em> with the argument tail.</p>
-<p><strong>Types</strong></p>
+An <a href="/rodash/types#Actor">Actor</a> which calls the supplied <em>fn</em> with the argument tail.</p>
+<p><strong>Type</strong></p>
+<p><code>&lt;S, A&gt;((A -&gt; S), ...A -&gt; S)</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>S</strong> - <code>any</code></p>
+<p><strong>S</strong> - <code>any</code> - the subject type (extends any value)</p>
+<p><strong>A</strong> - <code>any</code> - the primary arguments (extends any value)</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>fn</strong> - <code>any</code> </p>
-<p><strong>...</strong> - <code>any</code> 
+<p><strong>fn</strong> - <code>(A) -&gt; S</code> - a function (taking the primary arguments, and returning the subject type) </p>
+<p><strong>...</strong> - <code>...A</code> - the primary arguments 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>...any</code></p>
+<p><code>S</code> - the subject type</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">getName</span> <span class="o">=</span> <span class="kr">function</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
@@ -1257,14 +1322,16 @@ An <a href="/types#Actor">Actor</a> which calls the supplied <em>fn</em> with th
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">isCallable</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="c1">--&gt; bool</span>
 </pre></div>
 Return <code>true</code> if the <em>value</em> is a function or a table with a <code>__call</code> entry in its metatable.</p>
+<p><strong>Type</strong></p>
+<p><code>any -&gt; bool</code></p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>value</strong> - <code>any</code> 
+<p><strong>value</strong> - <code>any</code> - any value 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>bool</code></p>
+<p><code>bool</code> - a boolean</p>
 </blockquote>
 <p><strong>Usage</strong></p>
 <ul>
@@ -1274,20 +1341,22 @@ Return <code>true</code> if the <em>value</em> is a function or a table with a <
 <h3 id="maybe">maybe<a class="headerlink" href="#maybe" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">maybe</span><span class="p">(</span><span class="n">actor</span><span class="p">)</span> <span class="c1">--&gt; Actor&lt;S&gt;</span>
 </pre></div>
-An <a href="/types#Actor">Actor</a> which cancels execution of a chain if a method returns nil, evaluating the chain as nil.</p>
+An <a href="/rodash/types#Actor">Actor</a> which cancels execution of a chain if a method returns nil, evaluating the chain as nil.</p>
 <p>Can wrap any other actor which handles values that are non-nil.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;S&gt;(Actor&lt;S&gt; -&gt; Actor&lt;S&gt;)</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>S</strong> - <code>any</code></p>
+<p><strong>S</strong> - <code>any</code> - the subject type (extends any value)</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>actor</strong> - <code>Actor&lt;S&gt;</code> 
+<p><strong>actor</strong> - <code>Actor&lt;S&gt;</code> - <a href="/rodash/types/#Actor">an Actor</a> (of the subject type) 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>Actor&lt;S&gt;</code></p>
+<p><code>Actor&lt;S&gt;</code> - <a href="/rodash/types/#Actor">an Actor</a> (of the subject type)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="c1">-- We can define a chain of Rodash functions that will skip after a nil is returned.</span>
@@ -1336,26 +1405,28 @@ An <a href="/types#Actor">Actor</a> which cancels execution of a chain if a meth
 
 <hr />
 <h3 id="memoize">memoize<a class="headerlink" href="#memoize" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">memoize</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">serializeArgs</span><span class="p">)</span> <span class="c1">--&gt; (Clearable&lt;...A&gt; &amp; AllClearable &amp; ...A) -&gt; B</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">memoize</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">serializeArgs</span><span class="p">)</span> <span class="c1">--&gt; Clearable&lt;A&gt; &amp; AllClearable &amp; (...A) -&gt; R</span>
 </pre></div>
 Like <a href="/rodash/api/Functions/#once">dash.once</a>, but caches non-nil results of calls to <em>fn</em> keyed by some serialization of the
 input arguments to <em>fn</em>. By default, all the args are serialized simply using <code>tostring</code>.</p>
 <p>Optionally memoize takes <code>function serializeArgs(args, cache)</code>, a function that should return a string key which a
 result should be cached at for a given signature. Return nil to avoid caching the result.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;A, R&gt;((...A -&gt; R), ...A -&gt; string?) -&gt; Clearable&lt;A&gt; &amp; AllClearable &amp; (...A -&gt; R)</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>A</strong> - <code>any</code></p>
-<p><strong>B</strong> - <code>any</code></p>
+<p><strong>A</strong> - <code>any</code> - the primary arguments (extends any value)</p>
+<p><strong>R</strong> - <code>any</code> - the result type (extends any value)</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>fn</strong> - <code>((...A) -&gt; B, ...A) -&gt; string?</code> </p>
-<p><strong>serializeArgs</strong> - <code>any</code>  - (default = <a href="/rodash/api/Tables/#serialize">dash.serialize</a>)
+<p><strong>fn</strong> - <code>((...A) -&gt; R, ...A) -&gt; string?</code> - a function (taking a function (taking the primary arguments, and returning the result type) and the primary arguments, and returning a string (optional)) </p>
+<p><strong>serializeArgs</strong> - <code>any</code> - any value  - (default = <a href="/rodash/api/Tables/#serialize">dash.serialize</a>)
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>(Clearable&lt;...A&gt; &amp; AllClearable &amp; ...A) -&gt; B</code> - the function with method <code>:clear(...)</code> that resets the cache for the argument specified, or <code>:clearAll()</code> to clear the entire cache.</p>
+<p><code>Clearable&lt;A&gt; &amp; AllClearable &amp; (...A) -&gt; R</code> - an intersection (of <a href="/rodash/types/#Clearable">a Clearable</a> (of the primary arguments), <a href="/rodash/types/#AllClearable">an AllClearable</a> and a function (taking the primary arguments, and returning the result type)) - the function with method <code>:clear(...)</code> that resets the cache for the argument specified, or <code>:clearAll()</code> to clear the entire cache.</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">menu</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;soup&quot;</span><span class="p">,</span> <span class="s2">&quot;bread&quot;</span><span class="p">,</span> <span class="s2">&quot;butter&quot;</span><span class="p">}</span>
@@ -1394,9 +1465,11 @@ result should be cached at for a given signature. Return nil to avoid caching th
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">noop</span><span class="p">()</span> <span class="c1">--&gt; void</span>
 </pre></div>
 A simple function that does nothing, and returns nil.</p>
+<p><strong>Type</strong></p>
+<p><code>() -&gt; ()</code></p>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>void</code></p>
+<p><code>void</code> - nothing</p>
 </blockquote>
 <p><strong>Usage</strong></p>
 <ul>
@@ -1404,26 +1477,28 @@ A simple function that does nothing, and returns nil.</p>
 you don't want to do anything.</li>
 </ul>
 <hr />
-<div class="rodocs-trait">Chainable</div>
+<div class="docublox-trait">Chainable</div>
 
 <h3 id="once">once<a class="headerlink" href="#once" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">once</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span> <span class="c1">--&gt; (Clearable &amp; void) -&gt; B</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">once</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span> <span class="c1">--&gt; Clearable &amp; (...A) -&gt; R</span>
 </pre></div>
 Returns a function that when called, only calls <em>fn</em> the first time the function is called.
 For subsequent calls, the initial return of <em>fn</em> is returned, even if it is <code>nil</code>.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;A, R&gt;((...A -&gt; R), R?) -&gt; Clearable &amp; (...A -&gt; R)</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>A</strong> - <code>any</code></p>
-<p><strong>B</strong> - <code>any</code></p>
+<p><strong>A</strong> - <code>any</code> - the primary arguments (extends any value)</p>
+<p><strong>R</strong> - <code>any</code> - the result type (extends any value)</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>fn</strong> - <code>(...A) -&gt; B</code> 
+<p><strong>fn</strong> - <code>(...A) -&gt; R</code> - a function (taking the primary arguments, and returning the result type) 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>(Clearable &amp; void) -&gt; B</code> - the function with method <code>:clear()</code> that resets the cached value.</p>
+<p><code>Clearable &amp; (...A) -&gt; R</code> - an intersection (of <a href="/rodash/types/#Clearable">a Clearable</a> and a function (taking the primary arguments, and returning the result type)) - the function with method <code>:clear()</code> that resets the cached value.</p>
 </blockquote>
 <p><strong>Throws</strong></p>
 <ul>
@@ -1445,24 +1520,26 @@ For subsequent calls, the initial return of <em>fn</em> is returned, even if it 
 <li>Useful for when you want to lazily compute something expensive that doesn't change.</li>
 </ul>
 <hr />
-<div class="rodocs-trait">Chainable</div>
+<div class="docublox-trait">Chainable</div>
 
 <h3 id="returns">returns<a class="headerlink" href="#returns" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">returns</span><span class="p">(...)</span> <span class="c1">--&gt; (void) -&gt; ...A</span>
 </pre></div>
 Returns a function that when called, returns the original input parameters.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;A&gt;(...A -&gt; () -&gt; ...A)</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>A</strong> - <code>any</code></p>
+<p><strong>A</strong> - <code>any</code> - the primary arguments (extends any value)</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>...</strong> - <code>...A</code> 
+<p><strong>...</strong> - <code>...A</code> - the primary arguments 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>(void) -&gt; ...A</code></p>
+<p><code>(void) -&gt; ...A</code> - a function (taking nothing, and returning the primary arguments)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">findPlayer</span><span class="p">(</span><span class="s2">&quot;builderman&quot;</span><span class="p">):</span><span class="n">andThen</span><span class="p">(</span><span class="n">dash</span><span class="p">.</span><span class="n">returns</span><span class="p">(</span><span class="s2">&quot;Found Dave!&quot;</span><span class="p">))</span>
@@ -1481,16 +1558,18 @@ Like <a href="/rodash/api/Functions/#settimeout">dash.setTimeout</a> but calls <
 passed.</p>
 <p>The <em>fn</em> is called in a separate thread, meaning that it will not block the thread it is called
 in, and if the calling threads, the <em>fn</em> will still be called at the expected times.</p>
+<p><strong>Type</strong></p>
+<p><code>(Clearable -&gt; ()), number, number? -&gt; Clearable</code></p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>fn</strong> - <code>(Clearable) -&gt; void</code> </p>
-<p><strong>intervalInSeconds</strong> - <code>number</code> </p>
-<p><strong>delayInSeconds</strong> - <code>number?</code>  - (default = <em>intervalInSeconds</em>) The delay before the initial call.
+<p><strong>fn</strong> - <code>(Clearable) -&gt; void</code> - a function (taking <a href="/rodash/types/#Clearable">a Clearable</a>, and returning nothing) </p>
+<p><strong>intervalInSeconds</strong> - <code>number</code> - a number </p>
+<p><strong>delayInSeconds</strong> - <code>number?</code> - a number (optional)  - (default = <em>intervalInSeconds</em>) The delay before the initial call.
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>Clearable</code> - an instance which <code>:clear()</code> can be called on to prevent <em>fn</em> from firing.</p>
+<p><code>Clearable</code> - <a href="/rodash/types/#Clearable">a Clearable</a> - an instance which <code>:clear()</code> can be called on to prevent <em>fn</em> from firing.</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">waitInterval</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">setInterval</span><span class="p">(</span><span class="kr">function</span><span class="p">()</span>
@@ -1512,15 +1591,17 @@ in, and if the calling threads, the <em>fn</em> will still be called at the expe
 Like <code>delay</code>, this calls <em>fn</em> after <em>delayInSeconds</em> time has passed, with the added benefit of being cancelable.</p>
 <p>The <em>fn</em> is called in a separate thread, meaning that it will not block the thread it is called
 in, and if the calling threads, the <em>fn</em> will still be called at the expected time.</p>
+<p><strong>Type</strong></p>
+<p><code>(Clearable -&gt; ()), number -&gt; Clearable</code></p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>fn</strong> - <code>(Clearable) -&gt; void</code> </p>
-<p><strong>delayInSeconds</strong> - <code>number</code> 
+<p><strong>fn</strong> - <code>(Clearable) -&gt; void</code> - a function (taking <a href="/rodash/types/#Clearable">a Clearable</a>, and returning nothing) </p>
+<p><strong>delayInSeconds</strong> - <code>number</code> - a number 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>Clearable</code> - an instance which <code>:clear()</code> can be called on to prevent <em>fn</em> from firing.</p>
+<p><code>Clearable</code> - <a href="/rodash/types/#Clearable">a Clearable</a> - an instance which <code>:clear()</code> can be called on to prevent <em>fn</em> from firing.</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">waitTimeout</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">setTimeout</span><span class="p">(</span><span class="kr">function</span><span class="p">()</span>
@@ -1537,24 +1618,26 @@ in, and if the calling threads, the <em>fn</em> will still be called at the expe
 </ul>
 <hr />
 <h3 id="throttle">throttle<a class="headerlink" href="#throttle" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">throttle</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">cooldownInSeconds</span><span class="p">)</span> <span class="c1">--&gt; (...A) -&gt; B</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">throttle</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">cooldownInSeconds</span><span class="p">)</span> <span class="c1">--&gt; (...A) -&gt; R</span>
 </pre></div>
 Creates a throttle function that drops any repeat calls within a cooldown period and instead
 returns the result of the last call.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;A, R&gt;((...A) -&gt; R), number -&gt; ...A -&gt; R</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>A</strong> - <code>any</code></p>
-<p><strong>B</strong> - <code>any</code></p>
+<p><strong>A</strong> - <code>any</code> - the primary arguments (extends any value)</p>
+<p><strong>R</strong> - <code>any</code> - the result type (extends any value)</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>fn</strong> - <code>(...A) -&gt; B</code> </p>
-<p><strong>cooldownInSeconds</strong> - <code>number</code> 
+<p><strong>fn</strong> - <code>(...A) -&gt; R</code> - a function (taking the primary arguments, and returning the result type) </p>
+<p><strong>cooldownInSeconds</strong> - <code>number</code> - a number 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>(...A) -&gt; B</code></p>
+<p><code>(...A) -&gt; R</code> - a function (taking the primary arguments, and returning the result type)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">post</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">async</span><span class="p">(</span><span class="n">HttpService</span><span class="p">.</span><span class="n">Post</span><span class="p">)</span>
@@ -1582,14 +1665,16 @@ the illustrated point being throttle will call <em>fn</em> every period during a
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">throws</span><span class="p">(</span><span class="n">errorMessage</span><span class="p">)</span> <span class="c1">--&gt; (void) -&gt; fail</span>
 </pre></div>
 Returns a function that when called, throws the original message.</p>
+<p><strong>Type</strong></p>
+<p><code>string -&gt; () -&gt; fail</code></p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>errorMessage</strong> - <code>string</code> 
+<p><strong>errorMessage</strong> - <code>string</code> - a string 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>(void) -&gt; fail</code></p>
+<p><code>(void) -&gt; fail</code> - a function (taking nothing, and returning a failure state)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">findPlayer</span><span class="p">(</span><span class="s2">&quot;builderman&quot;</span><span class="p">):</span><span class="n">andThen</span><span class="p">(</span><span class="n">dash</span><span class="p">.</span><span class="n">throws</span><span class="p">(</span><span class="s2">&quot;DaveNotFound&quot;</span><span class="p">))</span>
@@ -1602,22 +1687,24 @@ Returns a function that when called, throws the original message.</p>
 </ul>
 <hr />
 <h3 id="unary">unary<a class="headerlink" href="#unary" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">unary</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span> <span class="c1">--&gt; (A) -&gt; B</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">unary</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span> <span class="c1">--&gt; (A) -&gt; R</span>
 </pre></div>
 Returns a function that wraps the input <em>fn</em> but only passes the first argument to it.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;A, R&gt;((A -&gt; R) -&gt; A -&gt; R)</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>A</strong> - <code>any</code></p>
-<p><strong>B</strong> - <code>any</code></p>
+<p><strong>A</strong> - <code>any</code> - the primary arguments (extends any value)</p>
+<p><strong>R</strong> - <code>any</code> - the result type (extends any value)</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>fn</strong> - <code>(A) -&gt; B</code> 
+<p><strong>fn</strong> - <code>(A) -&gt; R</code> - a function (taking the primary arguments, and returning the result type) 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>(A) -&gt; B</code></p>
+<p><code>(A) -&gt; R</code> - a function (taking the primary arguments, and returning the result type)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">printOneArgument</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">unary</span><span class="p">(</span><span class="kr">function</span><span class="p">(...)</span>
@@ -1625,6 +1712,34 @@ Returns a function that wraps the input <em>fn</em> but only passes the first ar
 <span class="kr">end</span><span class="p">)</span>
 <span class="n">printOneArgument</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">,</span> <span class="s2">&quot;World&quot;</span><span class="p">,</span> <span class="s2">&quot;!&quot;</span><span class="p">)</span>
 <span class="c1">--&gt;&gt; Hello</span>
+</pre></div>
+
+<h2 id="members">Members<a class="headerlink" href="#members" title="Permanent link">&para;</a></h2>
+<h3 id="fn">fn<a class="headerlink" href="#fn" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">fn</span> <span class="c1">-- Chain&lt;dash&gt;</span>
+</pre></div>
+A <a href="/rodash/types/#Chain">Chain</a> built from Rodash itself. Any
+<a href="/rodash/types/#Chainable">Chainable</a> Rodash function can be used as a method on this object,
+omitting the subject until the whole chain is evaluated by calling it with the subject.</p>
+<p><strong>Examples</strong></p>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">getNames</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">map</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span> <span class="n">player</span> <span class="p">)</span>
+    <span class="kr">return</span> <span class="n">player</span><span class="p">.</span><span class="n">Name</span>
+<span class="kr">end</span><span class="p">)</span>
+<span class="n">getNames</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">)</span> <span class="c1">--&gt; {&quot;Bilbo Baggins&quot;, &quot;Frodo Baggins&quot;, &quot;Peregrin Took&quot;}</span>
+</pre></div>
+
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">getNames</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">map</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span> <span class="n">player</span> <span class="p">)</span>
+    <span class="kr">return</span> <span class="n">player</span><span class="p">.</span><span class="n">Name</span>
+<span class="kr">end</span><span class="p">):</span><span class="n">filter</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span> <span class="n">name</span> <span class="p">)</span>
+    <span class="kr">return</span> <span class="n">dash</span><span class="p">.</span><span class="n">endsWith</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;Baggins&quot;</span><span class="p">)</span>
+<span class="kr">end</span><span class="p">)</span>
+<span class="n">getNames</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">)</span> <span class="c1">--&gt; {&quot;Bilbo Baggins&quot;, &quot;Frodo Baggins&quot;}</span>
+</pre></div>
+
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">getNames</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">map</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span> <span class="n">player</span> <span class="p">)</span>
+    <span class="kr">return</span> <span class="n">player</span><span class="p">.</span><span class="n">Name</span>
+<span class="kr">end</span><span class="p">):</span><span class="n">filter</span><span class="p">(</span><span class="n">dash</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">endsWith</span><span class="p">(</span><span class="s2">&quot;Baggins&quot;</span><span class="p">))</span>
+<span class="n">getNames</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">)</span> <span class="c1">--&gt; {&quot;Bilbo Baggins&quot;, &quot;Frodo Baggins&quot;}</span>
 </pre></div>
                 
                   

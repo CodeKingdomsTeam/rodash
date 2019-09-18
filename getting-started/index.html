@@ -65,7 +65,7 @@
     <link rel="stylesheet" href="../assets/fonts/material-icons.css">
     
     
-      <link rel="stylesheet" href="../rodocs.css">
+      <link rel="stylesheet" href="../docublox.css">
     
     
       
@@ -436,7 +436,7 @@
 </pre></div>
 
 <p>Here <a href="/rodash/api/Functions/#bindtail">dash.bindTail</a> takes <a href="/rodash/api/Tables/#get">dash.get</a> which looks up a key (or array of keys) in an object, and returns a function which will get the "Name" property of any object passed to it. This seems unnecessary, but it's often useful to separate functions from the data they act on as the functions can then be used with different inputs.</p>
-<p>Fortunately, we can write this much more simply. All of the Rodash functions which act on data such as <a href="/rodash/api/Tables/#map">dash.map</a>, <a href="/rodash/api/Tables/#filter">dash.filter</a> and <a href="/rodash/api/Tables/#get">dash.get</a> are available beneath undefined as chained functions, which means that they can be strung together in a concise way to form a function which performs the desired action on any input.</p>
+<p>Fortunately, we can write this much more simply. All of the Rodash functions which act on data such as <a href="/rodash/api/Tables/#map">dash.map</a>, <a href="/rodash/api/Tables/#filter">dash.filter</a> and <a href="/rodash/api/Tables/#get">dash.get</a> are available beneath <a href="/rodash/api/Functions/#fn">dash.fn</a> as chained functions, which means that they can be strung together in a concise way to form a function which performs the desired action on any input.</p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">dash</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">ReplicatedStorage</span><span class="p">.</span><span class="n">Rodash</span><span class="p">)</span>
 <span class="kd">local</span> <span class="n">fn</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">fn</span>
 

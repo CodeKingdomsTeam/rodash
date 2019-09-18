@@ -65,7 +65,7 @@
     <link rel="stylesheet" href="../../assets/fonts/material-icons.css">
     
     
-      <link rel="stylesheet" href="../../rodocs.css">
+      <link rel="stylesheet" href="../../docublox.css">
     
     
       
@@ -983,7 +983,7 @@
                 <h1 id="tables">Tables<a class="headerlink" href="#tables" title="Permanent link">&para;</a></h1>
 <p>A collection of functions that operate on Lua tables. These can operate on arrays,
 dictionaries and any collection types implemented with tables.</p>
-<p>These functions can iterate over any <a href="/types#Iterable">Iterable</a> values.</p>
+<p>These functions can iterate over any <a href="/rodash/types#Iterable">Iterable</a> values.</p>
 <p>These functions typically act on immutable tables and return new tables in functional style.
 Note that mutable arguments in Rodash are explicitly typed as such with the <code>mut</code> keyword.</p>
 <h2 id="functions">Functions<a class="headerlink" href="#functions" title="Permanent link">&para;</a></h2>
@@ -992,19 +992,21 @@ Note that mutable arguments in Rodash are explicitly typed as such with the <cod
 </pre></div>
 Return <code>true</code> if <em>handler</em> returns true for every element in <em>source</em> it is called with.</p>
 <p>If no handler is provided, <a href="/rodash/api/Tables/#all">dash.all</a> returns true if every element is non-nil.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T: Iterable&lt;K,V&gt;&gt;(T, (value: V, key: K -&gt; bool)?) -&gt; bool</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code> - the primary type (extends <a href="/rodash/types/#Iterable">an Iterable</a> (of the primary key type and the primary value type))</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <code>T</code> </p>
-<p><strong>handler</strong> - <code>(value: V, key: K) -&gt; bool?</code>  - (default = <a href="/rodash/api/Functions/#id">dash.id</a>)
+<p><strong>source</strong> - <code>T</code> - the primary type </p>
+<p><strong>handler</strong> - <code>(value: V, key: K) -&gt; bool?</code> - a function (taking <em>value</em> (the primary value type) and <em>key</em> (the primary key type), and returning a boolean) (optional)  - (default = <a href="/rodash/api/Functions/#id">dash.id</a>)
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>bool</code></p>
+<p><code>bool</code> - a boolean</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">names</span> <span class="o">=</span> <span class="p">{</span>
@@ -1024,19 +1026,21 @@ Return <code>true</code> if <em>handler</em> returns true for every element in <
 </pre></div>
 Return <code>true</code> if <em>handler</em> returns true for at least one element in <em>source</em> it is called with.</p>
 <p>If no handler is provided, <a href="/rodash/api/Tables/#any">dash.any</a> returns true if some element is non-nil.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T: Iterable&lt;K,V&gt;&gt;(T -&gt; bool)</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code> - the primary type (extends <a href="/rodash/types/#Iterable">an Iterable</a> (of the primary key type and the primary value type))</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <code>T</code> </p>
-<p><strong>handler</strong> - <code>any</code>  - (default = <a href="/rodash/api/Functions/#id">dash.id</a>)
+<p><strong>source</strong> - <code>T</code> - the primary type </p>
+<p><strong>handler</strong> - <code>any</code> - any value  - (default = <a href="/rodash/api/Functions/#id">dash.id</a>)
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>bool</code></p>
+<p><code>bool</code> - a boolean</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">names</span> <span class="o">=</span> <span class="p">{</span>
@@ -1056,19 +1060,21 @@ Return <code>true</code> if <em>handler</em> returns true for at least one eleme
 </pre></div>
 Adds new elements in <em>target</em> from subsequent table arguments in order, with elements in later
 tables replacing earlier ones if their keys match.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T: Iterable&lt;K,V&gt;&gt;(mut T, ...T) -&gt; T</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code> - the primary type (extends <a href="/rodash/types/#Iterable">an Iterable</a> (of the primary key type and the primary value type))</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>target</strong> - <code>mut T</code> </p>
-<p><strong>...</strong> - <code>...T</code>  - any number of other tables
+<p><strong>target</strong> - <code>mut T</code> - the primary type (which can be mutated) </p>
+<p><strong>...</strong> - <code>...T</code> - the primary type  - any number of other tables
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>T</code></p>
+<p><code>T</code> - the primary type</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">someInfo</span> <span class="o">=</span> <span class="p">{</span>
@@ -1124,18 +1130,20 @@ tables replacing earlier ones if their keys match.</p>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">clone</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; T</span>
 </pre></div>
 Returns a shallow copy of <em>source</em>.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T: Iterable&lt;K,V&gt;&gt;(T -&gt; T)</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code> - the primary type (extends <a href="/rodash/types/#Iterable">an Iterable</a> (of the primary key type and the primary value type))</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <code>T</code> 
+<p><strong>source</strong> - <code>T</code> - the primary type 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>T</code></p>
+<p><code>T</code> - the primary type</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">Hermione</span> <span class="o">=</span> <span class="p">{</span>
@@ -1167,18 +1175,20 @@ Recursively clones descendants of <em>source</em>, returning the cloned object. 
 same table are found, the same clone is used in the result. This means that <a href="/rodash/api/Tables/#clonedeep">dash.cloneDeep</a> is
 cycle-safe.</p>
 <p>Elements which are not tables are not modified.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T: Iterable&lt;K,V&gt;&gt;(T -&gt; T)</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code> - the primary type (extends <a href="/rodash/types/#Iterable">an Iterable</a> (of the primary key type and the primary value type))</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <code>T</code> 
+<p><strong>source</strong> - <code>T</code> - the primary type 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>T</code></p>
+<p><code>T</code> - the primary type</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">Harry</span> <span class="o">=</span> <span class="p">{</span>
@@ -1206,18 +1216,20 @@ cycle-safe.</p>
 </pre></div>
 Returns an array of elements from a sparse array <em>source</em> with the returned elements provided
 in original key-order.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T: Iterable&lt;K,V&gt;&gt;(T -&gt; V[])</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code> - the primary type (extends <a href="/rodash/types/#Iterable">an Iterable</a> (of the primary key type and the primary value type))</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <code>T</code> 
+<p><strong>source</strong> - <code>T</code> - the primary type 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>V[]</code></p>
+<p><code>V[]</code> - an array (of the primary value type)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">names</span> <span class="o">=</span> <span class="p">{</span>
@@ -1238,15 +1250,17 @@ Returns <code>true</code> if every element in <em>a</em> recursively matches eve
 <li>For elements which are not tables, they match if they are equal.</li>
 <li>If they are tables they match if the left is recursively deeply-equal to the right.</li>
 </ul>
+<p><strong>Type</strong></p>
+<p><code>any, any -&gt; bool</code></p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>a</strong> - <code>any</code> </p>
-<p><strong>b</strong> - <code>any</code> 
+<p><strong>a</strong> - <code>any</code> - any value </p>
+<p><strong>b</strong> - <code>any</code> - any value 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>bool</code></p>
+<p><code>bool</code> - a boolean</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">car</span> <span class="o">=</span> <span class="p">{</span>
@@ -1287,19 +1301,21 @@ Returns <code>true</code> if every element in <em>a</em> recursively matches eve
 </pre></div>
 Adds new elements in <em>target</em> from subsequent table arguments in order, with elements in
 earlier tables overriding later ones if their keys match.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T: Iterable&lt;K,V&gt;&gt;(mut T, ...T) -&gt; T</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code> - the primary type (extends <a href="/rodash/types/#Iterable">an Iterable</a> (of the primary key type and the primary value type))</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>target</strong> - <code>mut T</code> </p>
-<p><strong>...</strong> - <code>...T</code>  - any number of other tables
+<p><strong>target</strong> - <code>mut T</code> - the primary type (which can be mutated) </p>
+<p><strong>...</strong> - <code>...T</code> - the primary type  - any number of other tables
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>T</code></p>
+<p><code>T</code> - the primary type</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">someInfo</span> <span class="o">=</span> <span class="p">{</span>
@@ -1355,14 +1371,16 @@ earlier tables overriding later ones if their keys match.</p>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">defaultSerializer</span><span class="p">(</span><span class="n">input</span><span class="p">)</span> <span class="c1">--&gt; string</span>
 </pre></div>
 A function which provides a simple, shallow string representation of a value.</p>
+<p><strong>Type</strong></p>
+<p><code>any -&gt; string</code></p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>input</strong> - <code>any</code> 
+<p><strong>input</strong> - <code>any</code> - any value 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>string</code></p>
+<p><code>string</code> - a string</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">defaultSerializer</span><span class="p">()</span> <span class="c1">--&gt; &quot;nil&quot;</span>
@@ -1377,18 +1395,20 @@ A function which provides a simple, shallow string representation of a value.</p
 </pre></div>
 Returns an array of all the entries of elements in <em>source</em>.</p>
 <p>Each entry is a tuple <code>(key, value)</code>.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T: Iterable&lt;K,V&gt;&gt;(T -&gt; {K, V}[])</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code> - the primary type (extends <a href="/rodash/types/#Iterable">an Iterable</a> (of the primary key type and the primary value type))</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <code>T</code> 
+<p><strong>source</strong> - <code>T</code> - the primary type 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>{K, V}[]</code></p>
+<p><code>{K, V}[]</code> - an array (of arrays (of tuples (the primary key type and the primary value type)))</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">values</span><span class="p">({</span>
@@ -1404,19 +1424,21 @@ Returns an array of all the entries of elements in <em>source</em>.</p>
 </pre></div>
 Returns an array of any values in <em>source</em> that the <em>handler</em> function returned <code>true</code> for,
 in order of iteration.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T: Iterable&lt;K,V&gt;&gt;(T, (element: V, key: K -&gt; bool) -&gt; V[])</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code> - the primary type (extends <a href="/rodash/types/#Iterable">an Iterable</a> (of the primary key type and the primary value type))</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <code>T</code> </p>
-<p><strong>handler</strong> - <code>(element: V, key: K) -&gt; bool</code> 
+<p><strong>source</strong> - <code>T</code> - the primary type </p>
+<p><strong>handler</strong> - <code>(element: V, key: K) -&gt; bool</code> - a function (taking <em>element</em> (the primary value type) and <em>key</em> (the primary key type), and returning a boolean) 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>V[]</code></p>
+<p><code>V[]</code> - an array (of the primary value type)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">myTools</span> <span class="o">=</span> <span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">.</span><span class="n">LocalPlayer</span><span class="p">.</span><span class="n">Backpack</span><span class="p">:</span><span class="n">GetChildren</span><span class="p">()</span>
@@ -1437,19 +1459,21 @@ in order of iteration.</p>
 Picks a value from the table that <em>handler</em> returns <code>true</code> for.</p>
 <p>If multiple elements might return true, any one of them may be returned as the iteration order
 over a table is stochastic.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T: Iterable&lt;K,V&gt;&gt;((T, (element: V, key: K) -&gt; bool) -&gt; V?)</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code> - the primary type (extends <a href="/rodash/types/#Iterable">an Iterable</a> (of the primary key type and the primary value type))</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <code>(T, element: V, key: K) -&gt; bool</code> </p>
-<p><strong>handler</strong> - <code>any</code> 
+<p><strong>source</strong> - <code>(T, element: V, key: K) -&gt; bool</code> - a function (taking the primary type and a tuple (<em>element</em> (the primary value type) and <em>key</em> (the primary key type)), and returning a boolean) </p>
+<p><strong>handler</strong> - <code>any</code> - any value 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>V?</code></p>
+<p><code>V?</code> - the primary value type (optional)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">names</span> <span class="o">=</span> <span class="p">{</span>
@@ -1481,27 +1505,29 @@ over a table is stochastic.</p>
 </ul>
 <hr />
 <h3 id="flatmap">flatMap<a class="headerlink" href="#flatmap" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">flatMap</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span> <span class="c1">--&gt; U[]</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">flatMap</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">handler</span><span class="p">)</span> <span class="c1">--&gt; V2[]</span>
 </pre></div>
 Like <a href="/rodash/api/Tables/#mapvalues">dash.mapValues</a> this function iterates through <em>source</em> and returns an array of values,
 using <em>handler</em> to transform them. However, <em>handler</em> must return an array of results, these
 elements being insterted into the resulting array.</p>
 <p>You can return an empty array <code>{}</code> from handler to avoid inserting anything for a particular
 element.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T: Iterable&lt;K,V&gt;, V2&gt;((T, (element: V, key: K) -&gt; V2[]) -&gt; V2[])</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
-<p><strong>U</strong> - <code>any</code></p>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code> - the primary type (extends <a href="/rodash/types/#Iterable">an Iterable</a> (of the primary key type and the primary value type))</p>
+<p><strong>V2</strong> - <code>any</code> - the secondary value type (extends any value)</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <code>(T, element: V, key: K) -&gt; U[]</code> </p>
-<p><strong>handler</strong> - <code>any</code> 
+<p><strong>source</strong> - <code>(T, element: V, key: K) -&gt; V2[]</code> - a function (taking the primary type and a tuple (<em>element</em> (the primary value type) and <em>key</em> (the primary key type)), and returning an array (of the secondary value type)) </p>
+<p><strong>handler</strong> - <code>any</code> - any value 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>U[]</code></p>
+<p><code>V2[]</code> - an array (of the secondary value type)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">tools</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">flatMap</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">:</span><span class="n">GetChildren</span><span class="p">(),</span> <span class="kr">function</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
@@ -1511,26 +1537,30 @@ element.</p>
 </pre></div>
 
 <hr />
-<div class="rodocs-trait">Chainable
+<div class="docublox-trait">Chainable
 </div>
 
 <h3 id="get">get<a class="headerlink" href="#get" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="p">...)</span> <span class="c1">--&gt; V?</span>
 </pre></div>
 Get a child or descendant of a table, returning nil if any errors are generated.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;K, V, T: {[K]: V}&gt;(T, ...K) -&gt; V?</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>{[K]: V}</code></p>
+<p><strong>K</strong> - <code>any</code> - the primary key type (extends any value)</p>
+<p><strong>V</strong> - <code>any</code> - the primary value type (extends any value)</p>
+<p><strong>T</strong> - <code>{[K]: V}</code> - the primary type (extends a dictionary mapping the primary key type to the primary value type)</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <code>T</code> </p>
-<p><strong>...</strong> - <code>...K</code>  - Further keys to address any descendent.
+<p><strong>source</strong> - <code>T</code> - the primary type </p>
+<p><strong>...</strong> - <code>...K</code> - the primary key type  - Further keys to address any descendent.
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>V?</code></p>
+<p><code>V?</code> - the primary value type (optional)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">upperTorso</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">,</span> <span class="s2">&quot;LocalPlayer&quot;</span><span class="p">,</span> <span class="s2">&quot;Character&quot;</span><span class="p">,</span> <span class="s2">&quot;UpperTorso&quot;</span><span class="p">)</span>
@@ -1550,20 +1580,22 @@ This function iterates over <em>source</em>, calling <em>handler</em> to obtain 
 Elements from <em>source</em> are then appended to an array of elements based on their key, so
 that this function returns a dictionary of arrays of the elements grouped by their keys.</p>
 <p>If the <em>handler</em> returns nil, the element is dropped from the result.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T: Iterable&lt;K,V&gt;, K2&gt;(((value: T, key: K) -&gt; K2) -&gt; Iterable&lt;K2, Iterable&lt;K,V&gt;&gt;)</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
-<p><strong>K2</strong> - <code>any</code></p>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code> - the primary type (extends <a href="/rodash/types/#Iterable">an Iterable</a> (of the primary key type and the primary value type))</p>
+<p><strong>K2</strong> - <code>any</code> - the secondary key type (extends any value)</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <code>(value: T, key: K) -&gt; K2</code> </p>
-<p><strong>handler</strong> - <code>any</code> 
+<p><strong>source</strong> - <code>(value: T, key: K) -&gt; K2</code> - a function (taking <em>value</em> (the primary type) and <em>key</em> (the primary key type), and returning the secondary key type) </p>
+<p><strong>handler</strong> - <code>any</code> - any value 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>Iterable&lt;K2, Iterable&lt;K, V&gt;&gt;</code></p>
+<p><code>Iterable&lt;K2, Iterable&lt;K, V&gt;&gt;</code> - <a href="/rodash/types/#Iterable">an Iterable</a> (of the secondary key type and <a href="/rodash/types/#Iterable">Iterable</a> (of the primary key type and the primary value type))</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">playerSet</span> <span class="o">=</span> <span class="p">{</span><span class="n">Frodo</span> <span class="o">=</span> <span class="s2">&quot;Frodo&quot;</span><span class="p">,</span> <span class="n">Bilbo</span> <span class="o">=</span> <span class="s2">&quot;Bilbo&quot;</span><span class="p">,</span> <span class="n">Boromir</span> <span class="o">=</span> <span class="s2">&quot;Boromir&quot;</span><span class="p">}</span>
@@ -1587,19 +1619,21 @@ that this function returns a dictionary of arrays of the elements grouped by the
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">includes</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span> <span class="c1">--&gt; bool</span>
 </pre></div>
 Returns <code>true</code> if <em>item</em> exists as a value in the <em>source</em> table.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T: Iterable&lt;K,V&gt;&gt;(T, V -&gt; bool)</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code> - the primary type (extends <a href="/rodash/types/#Iterable">an Iterable</a> (of the primary key type and the primary value type))</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <code>T</code> </p>
-<p><strong>item</strong> - <code>V</code> 
+<p><strong>source</strong> - <code>T</code> - the primary type </p>
+<p><strong>item</strong> - <code>V</code> - the primary value type 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>bool</code></p>
+<p><code>bool</code> - a boolean</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">names</span> <span class="o">=</span> <span class="p">{</span>
@@ -1616,19 +1650,21 @@ Returns <code>true</code> if <em>item</em> exists as a value in the <em>source</
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">invert</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; Iterable&lt;V, K&gt;</span>
 </pre></div>
 Returns a table with elements from <em>source</em> with their keys and values flipped.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;K, V&gt;(Iterable&lt;K,V&gt; -&gt; Iterable&lt;V,K&gt;)</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>K</strong> - <code>any</code></p>
-<p><strong>V</strong> - <code>any</code></p>
+<p><strong>K</strong> - <code>any</code> - the primary key type (extends any value)</p>
+<p><strong>V</strong> - <code>any</code> - the primary value type (extends any value)</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <code>Iterable&lt;K, V&gt;</code> 
+<p><strong>source</strong> - <code>Iterable&lt;K, V&gt;</code> - <a href="/rodash/types/#Iterable">an Iterable</a> (of the primary key type and the primary value type) 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>Iterable&lt;V, K&gt;</code></p>
+<p><code>Iterable&lt;V, K&gt;</code> - <a href="/rodash/types/#Iterable">an Iterable</a> (of the primary value type and the primary key type)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">teams</span> <span class="o">=</span> <span class="p">{</span><span class="n">red</span> <span class="o">=</span> <span class="s2">&quot;Frodo&quot;</span><span class="p">,</span> <span class="n">blue</span> <span class="o">=</span> <span class="s2">&quot;Bilbo&quot;</span><span class="p">,</span> <span class="n">yellow</span> <span class="o">=</span> <span class="s2">&quot;Boromir&quot;</span><span class="p">}</span>
@@ -1641,18 +1677,20 @@ Returns a table with elements from <em>source</em> with their keys and values fl
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">isArray</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; bool</span>
 </pre></div>
 Returns <code>true</code> is <em>source</em> is made up only of natural keys <code>1..n</code>.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T: Iterable&lt;K,V&gt;&gt;(T -&gt; bool)</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code> - the primary type (extends <a href="/rodash/types/#Iterable">an Iterable</a> (of the primary key type and the primary value type))</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <code>T</code> 
+<p><strong>source</strong> - <code>T</code> - the primary type 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>bool</code></p>
+<p><code>bool</code> - a boolean</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">isArray</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">})</span> <span class="c1">--&gt; true</span>
@@ -1667,18 +1705,20 @@ Returns <code>true</code> is <em>source</em> is made up only of natural keys <co
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">isEmpty</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; bool</span>
 </pre></div>
 Returns <code>true</code> if <em>source</em> has no keys. </p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T: Iterable&lt;K,V&gt;&gt;(T -&gt; bool)</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code> - the primary type (extends <a href="/rodash/types/#Iterable">an Iterable</a> (of the primary key type and the primary value type))</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <code>T</code> 
+<p><strong>source</strong> - <code>T</code> - the primary type 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>bool</code></p>
+<p><code>bool</code> - a boolean</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">isEmpty</span><span class="p">({})</span> <span class="c1">--&gt; true</span>
@@ -1699,19 +1739,21 @@ Returns <code>true</code> if all the values in <em>left</em> match corresponding
 <li>For elements which are not tables, they match if they are equal.</li>
 <li>If they are tables they match if the right table is a subset of the left.</li>
 </ul>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T&gt;(T{}, T{}) -&gt; bool</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>any</code></p>
+<p><strong>T</strong> - <code>any</code> - the primary type (extends any value)</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>left</strong> - <code>T{}</code> </p>
-<p><strong>right</strong> - <code>T{}</code> 
+<p><strong>left</strong> - <code>T{}</code> - a dictionary (of the primary type) </p>
+<p><strong>right</strong> - <code>T{}</code> - a dictionary (of the primary type) 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>bool</code></p>
+<p><code>bool</code> - a boolean</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">car</span> <span class="o">=</span> <span class="p">{</span>
@@ -1733,23 +1775,25 @@ Returns <code>true</code> if all the values in <em>left</em> match corresponding
 <h3 id="iterator">iterator<a class="headerlink" href="#iterator" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">iterator</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">asArray</span><span class="p">)</span> <span class="c1">--&gt; Iterator&lt;T&gt;</span>
 </pre></div>
-Determines a suitable <a href="/types#Iterator">Iterator</a> to use for <em>source</em>, allowing <em>source</em> to
+Determines a suitable <a href="/rodash/types#Iterator">Iterator</a> to use for <em>source</em>, allowing <em>source</em> to
 be either a plain table, a table that has a metatable with an <code>iterable</code> key, or a function.</p>
 <p>By default, the iterator is unordered, but passing <em>asArray</em> as <code>true</code> uses <code>ipairs</code> to iterate
 through natural keys <em>1..n</em> in order.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T: Iterable&gt;(T, bool -&gt; Iterator&lt;T&gt;)</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>Iterable</code></p>
+<p><strong>T</strong> - <code>Iterable</code> - the primary type (extends <a href="/rodash/types/#Iterable">an Iterable</a>)</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <code>T</code> </p>
-<p><strong>asArray</strong> - <code>bool</code> 
+<p><strong>source</strong> - <code>T</code> - the primary type </p>
+<p><strong>asArray</strong> - <code>bool</code> - a boolean 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>Iterator&lt;T&gt;</code></p>
+<p><code>Iterator&lt;T&gt;</code> - <a href="/rodash/types/#Iterator">an Iterator</a> (of the primary type)</p>
 </blockquote>
 <hr />
 <h3 id="keyby">keyBy<a class="headerlink" href="#keyby" title="Permanent link">&para;</a></h3>
@@ -1759,20 +1803,22 @@ This function iterates over <em>source</em>, calling <em>handler</em> to obtain 
 The element is then assigned by its key to the resulting object, overriding any previous
 element assigned to that key from source.</p>
 <p>If the <em>handler</em> returns nil, the element is dropped from the result.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T: Iterable&lt;K,V&gt;, K2&gt;((T, (element: V, key: K) -&gt; K2) -&gt; Iterable&lt;K2,V&gt;)</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
-<p><strong>K2</strong> - <code>any</code></p>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code> - the primary type (extends <a href="/rodash/types/#Iterable">an Iterable</a> (of the primary key type and the primary value type))</p>
+<p><strong>K2</strong> - <code>any</code> - the secondary key type (extends any value)</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <code>(T, element: V, key: K) -&gt; K2</code> </p>
-<p><strong>handler</strong> - <code>any</code> 
+<p><strong>source</strong> - <code>(T, element: V, key: K) -&gt; K2</code> - a function (taking the primary type and a tuple (<em>element</em> (the primary value type) and <em>key</em> (the primary key type)), and returning the secondary key type) </p>
+<p><strong>handler</strong> - <code>any</code> - any value 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>Iterable&lt;K2, V&gt;</code></p>
+<p><code>Iterable&lt;K2, V&gt;</code> - <a href="/rodash/types/#Iterable">an Iterable</a> (of the secondary key type and the primary value type)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">playerSet</span> <span class="o">=</span> <span class="p">{</span><span class="n">Frodo</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span> <span class="n">Bilbo</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span> <span class="n">Boromir</span> <span class="o">=</span> <span class="kc">true</span><span class="p">}</span>
@@ -1791,18 +1837,20 @@ element assigned to that key from source.</p>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">keys</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; K[]</span>
 </pre></div>
 Returns an array of all the keys of the elements in <em>source</em>.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T: Iterable&lt;K,V&gt;&gt;(T -&gt; K[])</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code> - the primary type (extends <a href="/rodash/types/#Iterable">an Iterable</a> (of the primary key type and the primary value type))</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <code>T</code> 
+<p><strong>source</strong> - <code>T</code> - the primary type 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>K[]</code></p>
+<p><code>K[]</code> - an array (of the primary key type)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">values</span><span class="p">({</span>
@@ -1817,18 +1865,20 @@ Returns an array of all the keys of the elements in <em>source</em>.</p>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">len</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; int</span>
 </pre></div>
 Returns the number of elements in <em>source</em>.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T: Iterable&lt;K,V&gt;&gt;(T -&gt; int)</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code> - the primary type (extends <a href="/rodash/types/#Iterable">an Iterable</a> (of the primary key type and the primary value type))</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <code>T</code> 
+<p><strong>source</strong> - <code>T</code> - the primary type 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>int</code></p>
+<p><code>int</code> - an integer</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">names</span> <span class="o">=</span> <span class="p">{</span>
@@ -1849,20 +1899,22 @@ Returns the number of elements in <em>source</em>.</p>
 </pre></div>
 Create a new table from <em>source</em> where each value is replaced with the value returned from
 calling <em>handler</em> with each element in <em>source</em>.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T: Iterable&lt;K,V&gt;, V2&gt;((T, (element: V, key: K) -&gt; V2) -&gt; Iterable&lt;K,V2&gt;)</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
-<p><strong>V2</strong> - <code>any</code></p>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code> - the primary type (extends <a href="/rodash/types/#Iterable">an Iterable</a> (of the primary key type and the primary value type))</p>
+<p><strong>V2</strong> - <code>any</code> - the secondary value type (extends any value)</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <code>(T, element: V, key: K) -&gt; V2</code> </p>
-<p><strong>handler</strong> - <code>any</code> 
+<p><strong>source</strong> - <code>(T, element: V, key: K) -&gt; V2</code> - a function (taking the primary type and a tuple (<em>element</em> (the primary value type) and <em>key</em> (the primary key type)), and returning the secondary value type) </p>
+<p><strong>handler</strong> - <code>any</code> - any value 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>Iterable&lt;K, V2&gt;</code></p>
+<p><code>Iterable&lt;K, V2&gt;</code> - <a href="/rodash/types/#Iterable">an Iterable</a> (of the primary key type and the secondary value type)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="c1">-- Use map to get the same property of each value:</span>
@@ -1900,20 +1952,22 @@ calling <em>handler</em> with each element in <em>source</em>.</p>
 </pre></div>
 Like <a href="/rodash/api/Tables/#map">dash.map</a>, but returns an array of the transformed values in the order that they are
 iterated over, dropping the original keys.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T: Iterable&lt;K,V&gt;, V2&gt;((T, (element: V, key: K) -&gt; V2) -&gt; V2[])</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
-<p><strong>V2</strong> - <code>any</code></p>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code> - the primary type (extends <a href="/rodash/types/#Iterable">an Iterable</a> (of the primary key type and the primary value type))</p>
+<p><strong>V2</strong> - <code>any</code> - the secondary value type (extends any value)</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <code>(T, element: V, key: K) -&gt; V2</code> </p>
-<p><strong>handler</strong> - <code>any</code> 
+<p><strong>source</strong> - <code>(T, element: V, key: K) -&gt; V2</code> - a function (taking the primary type and a tuple (<em>element</em> (the primary value type) and <em>key</em> (the primary key type)), and returning the secondary value type) </p>
+<p><strong>handler</strong> - <code>any</code> - any value 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>V2[]</code></p>
+<p><code>V2[]</code> - an array (of the secondary value type)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">ingredients</span> <span class="o">=</span> <span class="p">{</span><span class="n">veg</span> <span class="o">=</span> <span class="s2">&quot;carrot&quot;</span><span class="p">,</span> <span class="n">sauce</span> <span class="o">=</span> <span class="s2">&quot;tomato&quot;</span><span class="p">,</span> <span class="n">herb</span> <span class="o">=</span> <span class="s2">&quot;basil&quot;</span><span class="p">}</span>
@@ -1939,19 +1993,21 @@ Mutates <em>target</em> by iterating recursively through elements of the subsequ
 arguments in order and inserting or replacing the values in target with each
 element preserving keys.</p>
 <p>If any values are both tables, these are merged recursively using <a href="/rodash/api/Tables/#merge">dash.merge</a>.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T: Iterable&lt;K,V&gt;&gt;(mut T, ...T) -&gt; T</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code> - the primary type (extends <a href="/rodash/types/#Iterable">an Iterable</a> (of the primary key type and the primary value type))</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>target</strong> - <code>mut T</code> </p>
-<p><strong>...</strong> - <code>...T</code> 
+<p><strong>target</strong> - <code>mut T</code> - the primary type (which can be mutated) </p>
+<p><strong>...</strong> - <code>...T</code> - the primary type 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>T</code></p>
+<p><code>T</code> - the primary type</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">someInfo</span> <span class="o">=</span> <span class="p">{</span>
@@ -2011,18 +2067,20 @@ Return a set of the tables that appear as descendants of <em>source</em>, mapped
 times each table has been found with a unique parent.</p>
 <p>Repeat occurences are not traversed, so the function is cycle-safe. If any tables in the
 result have a count of two or more, they may form cycles in the <em>source</em>.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T: Iterable&lt;K,V&gt;&gt;(T -&gt; {[T]:int})</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code> - the primary type (extends <a href="/rodash/types/#Iterable">an Iterable</a> (of the primary key type and the primary value type))</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <code>T</code> 
+<p><strong>source</strong> - <code>T</code> - the primary type 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>{[T]: int}</code></p>
+<p><code>{[T]: int}</code> - a dictionary mapping the primary type to integers</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">plate</span> <span class="o">=</span> <span class="p">{</span><span class="n">veg</span> <span class="o">=</span> <span class="s2">&quot;potato&quot;</span><span class="p">,</span> <span class="n">pie</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;stilton&quot;</span><span class="p">,</span> <span class="s2">&quot;beef&quot;</span><span class="p">}}</span>
@@ -2046,18 +2104,20 @@ result have a count of two or more, they may form cycles in the <em>source</em>.
 Returns an element from <em>source</em>, if it has one.</p>
 <p>If there are multiple elements in <em>source</em>, any one of them may be returned as the iteration
 order over a table is stochastic.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T: Iterable&lt;K,V&gt;&gt;(T -&gt; (V, K)?)</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code> - the primary type (extends <a href="/rodash/types/#Iterable">an Iterable</a> (of the primary key type and the primary value type))</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <code>T</code> 
+<p><strong>source</strong> - <code>T</code> - the primary type 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>V, K?</code></p>
+<p><code>V, K?</code> - a tuple (the primary value type and the primary key type) (optional)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">one</span><span class="p">({})</span> <span class="c1">--&gt; nil</span>
@@ -2070,18 +2130,20 @@ order over a table is stochastic.</p>
 </pre></div>
 Returns a copy of <em>source</em>, ensuring each key starts with an underscore <code>_</code>.</p>
 <p>Keys which are already prefixed with an underscore are left unchanged.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T&gt;(T{} -&gt; T{})</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>any</code></p>
+<p><strong>T</strong> - <code>any</code> - the primary type (extends any value)</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <code>T{}</code> 
+<p><strong>source</strong> - <code>T{}</code> - a dictionary (of the primary type) 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>T{}</code></p>
+<p><code>T{}</code> - a dictionary (of the primary type)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">privates</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">privatize</span><span class="p">({</span>
@@ -2136,19 +2198,21 @@ into a private one suitable for a class instance with private fields.</li>
 Returns a string representation of <em>source</em> including all elements with sorted keys.</p>
 <p><a href="/rodash/api/Tables/#serialize">dash.serialize</a> preserves the properties of being unique, stable and cycle-safe if the serializer
 functions provided also obey these properties.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T: Iterable&lt;K,V&gt;&gt;((T, SerializeOptions&lt;T&gt;) -&gt; string)</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code> - the primary type (extends <a href="/rodash/types/#Iterable">an Iterable</a> (of the primary key type and the primary value type))</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <code>T</code> </p>
-<p><strong>options</strong> - <code>SerializeOptions&lt;T&gt;</code> 
+<p><strong>source</strong> - <code>T</code> - the primary type </p>
+<p><strong>options</strong> - <code>SerializeOptions&lt;T&gt;</code> - <a href="/rodash/types/#SerializeOptions">a SerializeOptions</a> (of the primary type) 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>string</code></p>
+<p><code>string</code> - a string</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">serialize</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">})</span> <span class="c1">--&gt; &quot;{1,2,3}&quot;</span>
@@ -2186,19 +2250,21 @@ appropriate when you need a human-readable string.</li>
 Like <a href="/rodash/api/Tables/#serialize">dash.serialize</a>, but if a child element is a table it is serialized recursively.</p>
 <p>Returns a string representation of <em>source</em> including all elements with sorted keys.</p>
 <p>This function preserves uniqueness, stability and cycle-safety.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T: Iterable&lt;K,V&gt;&gt;((T, SerializeOptions&lt;T&gt;) -&gt; string)</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code> - the primary type (extends <a href="/rodash/types/#Iterable">an Iterable</a> (of the primary key type and the primary value type))</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <code>T</code> </p>
-<p><strong>options</strong> - <code>SerializeOptions&lt;T&gt;</code> 
+<p><strong>source</strong> - <code>T</code> - the primary type </p>
+<p><strong>options</strong> - <code>SerializeOptions&lt;T&gt;</code> - <a href="/rodash/types/#SerializeOptions">a SerializeOptions</a> (of the primary type) 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>string</code></p>
+<p><code>string</code> - a string</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">serializeDeep</span><span class="p">({</span><span class="n">a</span> <span class="o">=</span> <span class="p">{</span><span class="n">b</span> <span class="o">=</span> <span class="s2">&quot;table&quot;</span><span class="p">})</span> <span class="c1">--&gt; &#39;{&quot;a&quot;:{&quot;b&quot;:&quot;table&quot;}}&#39;</span>
@@ -2219,7 +2285,7 @@ Like <a href="/rodash/api/Tables/#serialize">dash.serialize</a>, but if a child 
 </li>
 </ul>
 <hr />
-<div class="rodocs-trait">Chainable
+<div class="docublox-trait">Chainable
 </div>
 
 <h3 id="set">set<a class="headerlink" href="#set" title="Permanent link">&para;</a></h3>
@@ -2228,20 +2294,22 @@ Like <a href="/rodash/api/Tables/#serialize">dash.serialize</a>, but if a child 
 Set a child or descendant value in a table. Returns <code>true</code> if the operation completed without error.</p>
 <p>The function walks through the object using keys from <em>path</em> in turn. If any values along the
 path are not tables, <a href="/rodash/api/Tables/#set">dash.set</a> will do nothing and return <code>false</code>.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T: Iterable&lt;K, V&gt;&gt;(T, K[], V) -&gt; bool</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code> - the primary type (extends <a href="/rodash/types/#Iterable">an Iterable</a> (of the primary key type and the primary value type))</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <code>T</code> </p>
-<p><strong>path</strong> - <code>K[]</code> </p>
-<p><strong>value</strong> - <code>V</code> 
+<p><strong>source</strong> - <code>T</code> - the primary type </p>
+<p><strong>path</strong> - <code>K[]</code> - an array (of the primary key type) </p>
+<p><strong>value</strong> - <code>V</code> - the primary value type 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>bool</code> - <code>true</code> if the set worked</p>
+<p><code>bool</code> - a boolean - <code>true</code> if the set worked</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;LocalPlayer&quot;</span><span class="p">,</span> <span class="s2">&quot;Character&quot;</span><span class="p">,</span> <span class="s2">&quot;UpperTorso&quot;</span><span class="p">,</span> <span class="s2">&quot;Color&quot;</span><span class="p">},</span> <span class="n">Color3</span><span class="p">.</span><span class="n">new</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">))</span>
@@ -2254,15 +2322,17 @@ path are not tables, <a href="/rodash/api/Tables/#set">dash.set</a> will do noth
 </pre></div>
 Returns <code>true</code> if <em>left</em> and <em>right</em> are equal, or if they are tables and the elements in one
 are present and have equal values to those in the other.</p>
+<p><strong>Type</strong></p>
+<p><code>any, any -&gt; bool</code></p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>left</strong> - <code>any</code> </p>
-<p><strong>right</strong> - <code>any</code> 
+<p><strong>left</strong> - <code>any</code> - any value </p>
+<p><strong>right</strong> - <code>any</code> - any value 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>bool</code></p>
+<p><code>bool</code> - a boolean</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">car</span> <span class="o">=</span> <span class="p">{</span>
@@ -2291,18 +2361,20 @@ are present and have equal values to those in the other.</p>
 </pre></div>
 Returns an array of the values in <em>source</em>, without any repetitions.</p>
 <p>Values are considered equal if the have the same key representation.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T&gt;(T[] -&gt; T[])</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>any</code></p>
+<p><strong>T</strong> - <code>any</code> - the primary type (extends any value)</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <code>T[]</code> 
+<p><strong>source</strong> - <code>T[]</code> - an array (of the primary type) 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>T[]</code></p>
+<p><code>T[]</code> - an array (of the primary type)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">list</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">}</span>
@@ -2314,18 +2386,20 @@ Returns an array of the values in <em>source</em>, without any repetitions.</p>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">values</span><span class="p">(</span><span class="n">source</span><span class="p">)</span> <span class="c1">--&gt; V[]</span>
 </pre></div>
 Returns an array of all the values of the elements in <em>source</em>.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T: Iterable&lt;K,V&gt;&gt;(T -&gt; V[])</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code> - the primary type (extends <a href="/rodash/types/#Iterable">an Iterable</a> (of the primary key type and the primary value type))</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <code>T</code> 
+<p><strong>source</strong> - <code>T</code> - the primary type 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>V[]</code></p>
+<p><code>V[]</code> - an array (of the primary value type)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">values</span><span class="p">({</span>
@@ -2340,19 +2414,21 @@ Returns an array of all the values of the elements in <em>source</em>.</p>
 <p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">without</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="c1">--&gt; V[]</span>
 </pre></div>
 Returns an array of elements in <em>source</em> with any elements of <em>value</em> removed.</p>
-<p><strong>Types</strong></p>
+<p><strong>Type</strong></p>
+<p><code>&lt;T: Iterable&lt;K,V&gt;&gt;(T, V -&gt; V[])</code></p>
+<p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code></p>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code> - the primary type (extends <a href="/rodash/types/#Iterable">an Iterable</a> (of the primary key type and the primary value type))</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <code>T</code> </p>
-<p><strong>value</strong> - <code>V</code> 
+<p><strong>source</strong> - <code>T</code> - the primary type </p>
+<p><strong>value</strong> - <code>V</code> - the primary value type 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>V[]</code></p>
+<p><code>V[]</code> - an array (of the primary value type)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">points</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">}</span>
