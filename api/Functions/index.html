@@ -1160,14 +1160,14 @@ when the promise completes.</p>
 synchronous methods, removing any boilerplate needed to handle promises in the main code body.</p>
 <p>Can wrap any other actor which handles values after any promise resolution.</p>
 <p><strong>Type</strong></p>
-<p><code>&lt;S&gt;(Actor&lt;S&gt; -&gt; Actor&lt;S&gt;)</code></p>
+<p><code>&lt;S&gt;(Actor&lt;S&gt;? -&gt; Actor&lt;S&gt;)</code></p>
 <p><strong>Generics</strong></p>
 <blockquote>
 <p><strong>S</strong> - <code>any</code> - the subject type (extends any value)</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>actor</strong> - <code>Actor&lt;S&gt;</code> - <a href="/rodash/types/#Actor">an Actor</a> (of the subject type)  - (default = <a href="/rodash/api/Functions/#invoke">dash.invoke</a>) The actor to wrap.
+<p><strong>actor</strong> - <code>Actor&lt;S&gt;?</code> - <a href="/rodash/types/#Actor">an Actor</a> (of the subject type) (optional)  - (default = <a href="/rodash/api/Functions/#invoke">dash.invoke</a>) The actor to wrap.
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
@@ -1345,14 +1345,14 @@ Return <code>true</code> if the <em>value</em> is a function or a table with a <
 An <a href="/rodash/types#Actor">Actor</a> which cancels execution of a chain if a method returns nil, evaluating the chain as nil.</p>
 <p>Can wrap any other actor which handles values that are non-nil.</p>
 <p><strong>Type</strong></p>
-<p><code>&lt;S&gt;(Actor&lt;S&gt; -&gt; Actor&lt;S&gt;)</code></p>
+<p><code>&lt;S&gt;(Actor&lt;S&gt;? -&gt; Actor&lt;S&gt;)</code></p>
 <p><strong>Generics</strong></p>
 <blockquote>
 <p><strong>S</strong> - <code>any</code> - the subject type (extends any value)</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>actor</strong> - <code>Actor&lt;S&gt;</code> - <a href="/rodash/types/#Actor">an Actor</a> (of the subject type) 
+<p><strong>actor</strong> - <code>Actor&lt;S&gt;?</code> - <a href="/rodash/types/#Actor">an Actor</a> (of the subject type) (optional) 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
