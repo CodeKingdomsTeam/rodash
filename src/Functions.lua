@@ -442,7 +442,7 @@ end
 			}
 		}
 ]]
---: <S>(Actor<S> -> Actor<S>)
+--: <S>(Actor<S>? -> Actor<S>)
 function Functions.maybe(actor)
 	actor = actor or Functions.invoke
 	assert(Functions.isCallable(actor), "BadInput: actor must be callable")
@@ -511,7 +511,7 @@ end
 	@rejects passthrough
 	@see `dash.chain`
 ]]
---: <S>(Actor<S> -> Actor<S>)
+--: <S>(Actor<S>? -> Actor<S>)
 function Functions.continue(actor)
 	actor = actor or Functions.invoke
 	assert(Functions.isCallable(actor), "BadInput: actor must be callable")
