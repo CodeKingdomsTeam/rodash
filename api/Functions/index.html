@@ -946,7 +946,7 @@ inside a chain.</li>
 <div class="docublox-trait">Chainable</div>
 
 <h3 id="chain">chain<a class="headerlink" href="#chain" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">chain</span><span class="p">(</span><span class="n">fns</span><span class="p">,</span> <span class="n">actor</span><span class="p">)</span> <span class="c1">--&gt; Chain&lt;S&gt;</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">chain</span><span class="p">(</span><span class="n">fns</span><span class="p">,</span> <span class="n">actor</span><span class="p">)</span> <span class="c1">--&gt; Chain&lt;S, T&gt;</span>
 </pre></div>
 Chain takes a dictionary of chainable functions and returns a Chain instance with
 methods mapped to the input functions.</p>
@@ -955,20 +955,21 @@ sequences of operations on some data with a very concise syntax. An <em>actor</e
 check the value of the data at each step and change how the chain proceeds.</p>
 <p>Calling a <em>Chain</em> with a subject reduces the chained operations in order on the subject. </p>
 <p><strong>Type</strong></p>
-<p><code>&lt;S&gt;(Chainable&lt;S&gt;{}, Actor&lt;S&gt;) -&gt; Chain&lt;S&gt;</code></p>
+<p><code>&lt;S,T:Chainable&lt;S&gt;{}&gt;(T, Actor&lt;S&gt;) -&gt; Chain&lt;S,T&gt;</code></p>
 <p><strong>Generics</strong></p>
 <blockquote>
 <p><strong>S</strong> - <code>any</code> - the subject type (extends any value)</p>
+<p><strong>T</strong> - <code>Chainable&lt;S&gt;{}</code> - the primary type (extends a dictionary (of <a href="/rodash/types/#Chainable">Chainables</a> (of the subject type)))</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>fns</strong> - <code>Chainable&lt;S&gt;{}</code> - a dictionary (of <a href="/rodash/types/#Chainable">Chainables</a> (of the subject type)) </p>
+<p><strong>fns</strong> - <code>T</code> - the primary type </p>
 <p><strong>actor</strong> - <code>Actor&lt;S&gt;</code> - <a href="/rodash/types/#Actor">an Actor</a> (of the subject type)  - called for each result in the chain to determine how the next operation should process it. (default = <a href="/rodash/api/Functions/#invoke">dash.invoke</a>)
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>Chain&lt;S&gt;</code> - <a href="/rodash/types/#Chain">a Chain</a> (of the subject type)</p>
+<p><code>Chain&lt;S, T&gt;</code> - <a href="/rodash/types/#Chain">a Chain</a> (of the subject type and the primary type)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="c1">-- Define a simple chain that can operate a list of numbers.</span>
@@ -1716,7 +1717,7 @@ Returns a function that wraps the input <em>fn</em> but only passes the first ar
 
 <h2 id="members">Members<a class="headerlink" href="#members" title="Permanent link">&para;</a></h2>
 <h3 id="fn">fn<a class="headerlink" href="#fn" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">fn</span> <span class="c1">-- Chain&lt;dash&gt;</span>
+<p><div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">fn</span> <span class="c1">-- Chain&lt;any,dash&gt;</span>
 </pre></div>
 A <a href="/rodash/types/#Chain">Chain</a> built from Rodash itself. Any
 <a href="/rodash/types/#Chainable">Chainable</a> Rodash function can be used as a method on this object,

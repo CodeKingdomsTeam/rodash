@@ -397,13 +397,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#modifying-types" title="Modifying types" class="md-nav__link">
-    Modifying types
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#structural-types" title="Structural types" class="md-nav__link">
     Structural types
   </a>
@@ -413,6 +406,13 @@
         <li class="md-nav__item">
   <a href="#function-types" title="Function types" class="md-nav__link">
     Function types
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modifying-types" title="Modifying types" class="md-nav__link">
+    Modifying types
   </a>
   
     <nav class="md-nav">
@@ -590,15 +590,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#partialord" title="PartialOrd" class="md-nav__link">
-    PartialOrd
+  <a href="#ord" title="Ord" class="md-nav__link">
+    Ord
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#shalloweq" title="ShallowEq" class="md-nav__link">
-    ShallowEq
+  <a href="#eq" title="Eq" class="md-nav__link">
+    Eq
   </a>
   
 </li>
@@ -617,8 +617,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#actor" title="Actor" class="md-nav__link">
-    Actor
+  <a href="#chain" title="Chain" class="md-nav__link">
+    Chain
   </a>
   
 </li>
@@ -631,8 +631,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#chain" title="Chain" class="md-nav__link">
-    Chain
+  <a href="#actor" title="Actor" class="md-nav__link">
+    Actor
   </a>
   
 </li>
@@ -760,13 +760,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#modifying-types" title="Modifying types" class="md-nav__link">
-    Modifying types
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#structural-types" title="Structural types" class="md-nav__link">
     Structural types
   </a>
@@ -776,6 +769,13 @@
         <li class="md-nav__item">
   <a href="#function-types" title="Function types" class="md-nav__link">
     Function types
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modifying-types" title="Modifying types" class="md-nav__link">
+    Modifying types
   </a>
   
     <nav class="md-nav">
@@ -953,15 +953,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#partialord" title="PartialOrd" class="md-nav__link">
-    PartialOrd
+  <a href="#ord" title="Ord" class="md-nav__link">
+    Ord
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#shalloweq" title="ShallowEq" class="md-nav__link">
-    ShallowEq
+  <a href="#eq" title="Eq" class="md-nav__link">
+    Eq
   </a>
   
 </li>
@@ -980,8 +980,8 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#actor" title="Actor" class="md-nav__link">
-    Actor
+  <a href="#chain" title="Chain" class="md-nav__link">
+    Chain
   </a>
   
 </li>
@@ -994,8 +994,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#chain" title="Chain" class="md-nav__link">
-    Chain
+  <a href="#actor" title="Actor" class="md-nav__link">
+    Actor
   </a>
   
 </li>
@@ -1193,33 +1193,6 @@
 </tr>
 </tbody>
 </table>
-<h2 id="modifying-types">Modifying types<a class="headerlink" href="#modifying-types" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Usage</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Mutable parameter</td>
-<td><code>mut X</code></td>
-<td>A function which takes a value of type <code>mut X</code> may modify the value of type <code>X</code> during execution</td>
-</tr>
-<tr>
-<td>Yield return</td>
-<td><code>yield X</code></td>
-<td>A function which returns <code>yield X</code> may yield when executed before returning a value of type <code>X</code></td>
-</tr>
-<tr>
-<td>Self</td>
-<td><code>self X</code></td>
-<td>A function which takes <code>self X</code> as a parameter must be defined using <code>:</code> and called as a method on a value of type <code>X</code>. Only required if the method should be called on a different type to the one it is defined under</td>
-</tr>
-</tbody>
-</table>
 <h2 id="structural-types">Structural types<a class="headerlink" href="#structural-types" title="Permanent link">&para;</a></h2>
 <p>Like many scripting languages, Lua has a general structure type <code>table</code> which can be used to represent arrays, dictionaries, sets, classes, and many other data types. The type language uses a strict set of definitions for different ways tables can be used:</p>
 <table>
@@ -1245,6 +1218,11 @@
 <td>Fixed array</td>
 <td><code>{X, Y, Z}</code></td>
 <td>An array with a fixed number of values, where the first value has type <code>X</code>, the second type <code>Y</code> etc.</td>
+</tr>
+<tr>
+<td>Table</td>
+<td><code>{}</code></td>
+<td>a Lua table with no specific keys or values</td>
 </tr>
 <tr>
 <td>Dictionary</td>
@@ -1293,6 +1271,34 @@
 <td>Rest function</td>
 <td><code>...X -&gt; ...Y</code></td>
 <td>A function that takes any number of parameters of type <code>X</code> and returns any number values of type <code>Y</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="modifying-types">Modifying types<a class="headerlink" href="#modifying-types" title="Permanent link">&para;</a></h2>
+<p>These types can be used in function signatures:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Usage</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mutable parameter</td>
+<td><code>mut X</code></td>
+<td>A function which takes a value of type <code>mut X</code> may modify the value of type <code>X</code> during execution</td>
+</tr>
+<tr>
+<td>Yield return</td>
+<td><code>yield X</code></td>
+<td>A function which returns <code>yield X</code> may yield when executed before returning a value of type <code>X</code></td>
+</tr>
+<tr>
+<td>Self</td>
+<td><code>self X</code></td>
+<td>A function which takes <code>self X</code> as a parameter must be defined using <code>:</code> and called as a method on a value of type <code>X</code>. Only required if the method should be called on a different type to the one it is defined under</td>
 </tr>
 </tbody>
 </table>
@@ -1358,7 +1364,7 @@
 <tr>
 <td>Generic bounds</td>
 <td><code>&lt;T: X&gt;(T -&gt; T)</code></td>
-<td>A function that has a type variable <code>T</code> which must be of the type <code>X</code></td>
+<td>A function that has a type variable <code>T</code> which must satisfy the type <code>X</code></td>
 </tr>
 <tr>
 <td>Parameterized object</td>
@@ -1386,6 +1392,11 @@
 <p>You cannot modify the source of values in an iterator, so they are safer to use if you don't want a function changing the underlying source.</p>
 <p><strong>Type</strong></p>
 <p><code>type Iterator&lt;K,V&gt; = (props: any, previousKey: K?) -&gt; K, V</code></p>
+<p><strong>Generics</strong></p>
+<blockquote>
+<p><strong>K</strong> - <code>some</code> - the primary key type (can be any non-nil value)</p>
+<p><strong>V</strong> - <code>some</code> - the secondary key type (can be any non-nil value)</p>
+</blockquote>
 <h3 id="stateful-iterator">Stateful Iterator<a class="headerlink" href="#stateful-iterator" title="Permanent link">&para;</a></h3>
 <div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nf">statefulIterator</span><span class="p">()</span> <span class="c1">--&gt; K, V</span>
 </pre></div>
@@ -1499,23 +1510,206 @@
 </blockquote>
 <h2 id="class-types">Class types<a class="headerlink" href="#class-types" title="Permanent link">&para;</a></h2>
 <h3 id="class">Class<a class="headerlink" href="#class" title="Permanent link">&para;</a></h3>
+<p>Classes are the building block of object-oriented programming and are represented as tables in Lua. Every class instance has a metatable which points back to its class, allowing it to inherit class methods.</p>
+<p>A class definition defines the unique type <code>T</code>. Any instance of the class satisfies the type <code>T</code>.</p>
+<p><strong>Type</strong></p>
+<p><code>interface Class&lt;T:{}&gt;</code></p>
+<p><strong>Generics</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>{}</code> - the class instance type (can be a table)</p>
+</blockquote>
+<p><strong>Properties</strong></p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>name</strong></td>
+<td><code>string</code></td>
+<td>the name of the class</td>
+</tr>
+<tr>
+<td><strong>new(...)</strong></td>
+<td><code>Constructor&lt;T&gt;</code></td>
+<td>returns a new instance of the class</td>
+</tr>
+</tbody>
+</table>
+<p><strong>See</strong></p>
+<ul>
+<li><a href="/rodash/api/Classes">Classes</a> - for a full list of methods on a class created with <a href="/rodash/api/Classes/#class">dash.class</a>.</li>
+</ul>
 <h3 id="constructor">Constructor<a class="headerlink" href="#constructor" title="Permanent link">&para;</a></h3>
+<p>A marker type for functions which return a new instance of a particular class.</p>
+<p><strong>Type</strong></p>
+<p><code>type Constructor&lt;T:{}&gt; = ... -&gt; T</code></p>
+<p><strong>Generics</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>{}</code> - the class instance type (can be a table)</p>
+</blockquote>
 <h3 id="enum">Enum<a class="headerlink" href="#enum" title="Permanent link">&para;</a></h3>
+<p>A marker type for an enumeration. An enumeration is a fixed dictionary of unique values that allow
+you to name different states that a value can take.</p>
+<p>An enum definition defines the unique type <code>T</code>. Any value which is equal to a value in the 
+enumeration satisfies the type <code>T</code>.</p>
+<p><strong>Type</strong></p>
+<p><code>type Enum&lt;T:some&gt; = {[key:string]:T}</code></p>
+<p><strong>Generics</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>some</code> - the unique type of the enum (can be any non-nil value)</p>
+</blockquote>
+<p><strong>See</strong></p>
+<ul>
+<li><a href="/rodash/api/Classes/#enum">dash.enum</a> - to create and use your own string enums.</li>
+</ul>
 <h3 id="symbol">Symbol<a class="headerlink" href="#symbol" title="Permanent link">&para;</a></h3>
+<p>A marker type for a symbol.</p>
+<p>An symbol definition defines the unique type <code>T</code>. Only the value of the symbol satisfies the type
+<code>T</code>.</p>
+<p><strong>Type</strong></p>
+<p><code>type Symbol&lt;T:some&gt;</code></p>
+<p><strong>Generics</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>some</code> - the unique type of the symbol (can be any non-nil value)</p>
+</blockquote>
+<p><strong>See</strong></p>
+<ul>
+<li><a href="/rodash/api/Classes/#symbol">dash.symbol</a> - to create and use your own symbols.</li>
+</ul>
 <h2 id="decorator-types">Decorator types<a class="headerlink" href="#decorator-types" title="Permanent link">&para;</a></h2>
 <h3 id="decorator">Decorator<a class="headerlink" href="#decorator" title="Permanent link">&para;</a></h3>
+<p>A marker type for decorator functions. A decorator is a function that takes a class and returns a
+modified version of the class which new behavior.</p>
+<p><strong>Type</strong></p>
+<p><code>type Decorator&lt;T:{}&gt; = Class&lt;T&gt; -&gt; Class&lt;T&gt;</code></p>
+<p><strong>Generics</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>{}</code> - the class instance type (can be a table)</p>
+</blockquote>
 <h3 id="cloneable">Cloneable<a class="headerlink" href="#cloneable" title="Permanent link">&para;</a></h3>
-<h3 id="partialord">PartialOrd<a class="headerlink" href="#partialord" title="Permanent link">&para;</a></h3>
-<h3 id="shalloweq">ShallowEq<a class="headerlink" href="#shalloweq" title="Permanent link">&para;</a></h3>
+<p>An interface that lets implementors be cloned.</p>
+<p><strong>Type</strong></p>
+<p><code>interface Cloneable&lt;T:{}&gt;</code></p>
+<p><strong>Generics</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>{}</code> - the class instance type (can be a table)</p>
+</blockquote>
+<p><strong>Properties</strong></p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>clone()</strong></td>
+<td><code>T</code></td>
+<td>returns a copy of the instance</td>
+</tr>
+</tbody>
+</table>
+<p><strong>See</strong></p>
+<ul>
+<li><a href="/rodash/api/Classes/#cloneable">dash.Cloneable</a> - to derive a generated implementation of this interface.</li>
+</ul>
+<h3 id="ord">Ord<a class="headerlink" href="#ord" title="Permanent link">&para;</a></h3>
+<p>An interface that means implementors of the same type <code>T</code> form a total order, similar to the
+<a href="https://doc.rust-lang.org/std/cmp/trait.Ord.html">Rust Ord</a> trait.</p>
+<p><strong>Type</strong></p>
+<p><code>interface Ord&lt;T:{}&gt;</code></p>
+<p><strong>Generics</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>{}</code> - the class instance type (can be a table)</p>
+</blockquote>
+<p><strong>Properties</strong></p>
+<p>Implementors can be compared using the ordering operators such as <code>&lt;</code>, <code>&lt;=</code>, and <code>==</code>.</p>
+<p>An ordering means that you can compare any two elements <code>a</code> and <code>b</code>, and one is always greater
+or equal to the other i.e. <code>a &gt;= b == b &lt; a</code> is always true.</p>
+<p><strong>See</strong></p>
+<ul>
+<li><a href="/rodash/api/Classes/#ord">dash.Ord</a> - to derive a generated implementation of this interface.</li>
+</ul>
+<h3 id="eq">Eq<a class="headerlink" href="#eq" title="Permanent link">&para;</a></h3>
+<p>An interface that means implementors of the same type <code>T</code> form an equivalence relation, similar to
+the <a href="https://doc.rust-lang.org/std/cmp/trait.Eq.html">Rust Eq</a> trait.</p>
+<p><strong>Type</strong></p>
+<p><code>interface Eq&lt;T:{}&gt;</code></p>
+<p><strong>Generics</strong></p>
+<blockquote>
+<p><strong>T</strong> - <code>{}</code> - the class instance type (can be a table)</p>
+</blockquote>
+<p><strong>Properties</strong></p>
+<p>Implementors can be compared using the equality operators such as <code>==</code> and <code>~=</code>.</p>
+<p>An equivalence relation means that you can compare any elements <code>a</code>, <code>b</code> and <code>c</code>, and these
+properties are satisfied:</p>
+<ul>
+<li>Reflexive - <code>a == a</code> is always true</li>
+<li>Symmetric - if <code>a == b</code> then <code>b == a</code></li>
+<li>Transitive - if <code>a == b &amp;&amp; b == c</code> then <code>a == c</code></li>
+</ul>
+<p><strong>See</strong></p>
+<ul>
+<li><a href="/rodash/api/Classes/#shalloweq">dash.ShallowEq</a> - to derive a generated implementation of this interface.</li>
+</ul>
 <h2 id="chaining-types">Chaining types<a class="headerlink" href="#chaining-types" title="Permanent link">&para;</a></h2>
-<h3 id="actor">Actor<a class="headerlink" href="#actor" title="Permanent link">&para;</a></h3>
-<h3 id="chainable">Chainable<a class="headerlink" href="#chainable" title="Permanent link">&para;</a></h3>
 <h3 id="chain">Chain<a class="headerlink" href="#chain" title="Permanent link">&para;</a></h3>
+<p>A chain is a function which can operate on a <em>subject</em> and return a value. They are built by
+composing a "chain" of functions together, which means that when the chain is called, each
+function runs on the subject in order, with the result of one function passed to the next.</p>
+<p>A chain also provides methods based on the <a href="/rodash/types/#chainable">Chainable</a> functions that the
+chain is created with. Each one takes the additional arguments of the chainable and returns a new
+chain that has the operation of the function called "queued" to the end of it.</p>
+<p><strong>Type</strong></p>
+<p><code>type Chain&lt;S,T:Chainable&lt;S&gt;{}&gt; = Chainable&lt;S&gt; &amp; (... -&gt; Chain&lt;S,T&gt;){}</code></p>
+<p><strong>Generics</strong></p>
+<blockquote>
+<p><strong>S</strong> - <code>any</code> - the subject type (can be any value)</p>
+<p><strong>T</strong> - <code>Chainable&lt;S&gt;{}</code> - the chain's interface type (can be a dictionary (of <a href="/rodash/types/#chainable">Chainables</a> (of the subject type)))</p>
+</blockquote>
+<p><strong>See</strong></p>
+<ul>
+<li><a href="/rodash/api/Functions/#chain">dash.chain</a> - to make you own chains</li>
+<li><a href="/rodash/api/Functions/#fn">dash.fn</a> - to make a chain with Rodash functions</li>
+</ul>
+<h3 id="chainable">Chainable<a class="headerlink" href="#chainable" title="Permanent link">&para;</a></h3>
+<p>A marker type for any function that is chainable, meaning it takes a <em>subject</em> as its first
+argument and "operates" on that subject in some way using any additional arguments.</p>
+<p><strong>Type</strong></p>
+<p><code>type Chainable&lt;S&gt; = S, ... -&gt; S</code></p>
+<p><strong>Generics</strong></p>
+<blockquote>
+<p><strong>S</strong> - <code>any</code> - the subject type (can be any value)</p>
+</blockquote>
+<h3 id="actor">Actor<a class="headerlink" href="#actor" title="Permanent link">&para;</a></h3>
+<p>A marker type for a function that acts as an actor in a chain. An actor is a function that is
+called to determine how each function in the chain should evaluate its arguments and the <em>subject</em>
+value.</p>
+<p>By default, a chain simply invokes the function with the subject and additional arguments.</p>
+<p>Actors can be used to transform the types of subjects that functions can naturally deal with,
+without having to change the definition of the functions themselves.</p>
+<p>For example the <a href="/rodash/api/Functions/#maybe">dash.maybe</a> actor factory allows functions to be skipped if the subject is <code>nil</code>,
+and <a href="/rodash/api/Functions/#continue">dash.continue</a> allows functions to act with.</p>
+<p><strong>Type</strong></p>
+<p><code>type Actor&lt;S&gt; = (S -&gt; S), S, ... -&gt; S</code></p>
+<p><strong>See</strong></p>
+<ul>
+<li><a href="/rodash/api/Functions/#chain">dash.chain</a></li>
+<li><a href="/rodash/api/Functions/#maybe">dash.maybe</a></li>
+<li><a href="/rodash/api/Functions/#continue">dash.continue</a></li>
+</ul>
 <h2 id="library-types">Library types<a class="headerlink" href="#library-types" title="Permanent link">&para;</a></h2>
 <h3 id="clearable">Clearable<a class="headerlink" href="#clearable" title="Permanent link">&para;</a></h3>
 <p>A stateful object with a <code>clear</code> method that resets the object state.</p>
-<p><strong>Type</strong>
-<code>interface Clearable&lt;A&gt;</code></p>
+<p><strong>Type</strong></p>
+<p><code>interface Clearable&lt;A&gt;</code></p>
 <p><strong>Generics</strong></p>
 <blockquote>
 <p><strong>A</strong> - <code>any</code> - the primary arguments</p>

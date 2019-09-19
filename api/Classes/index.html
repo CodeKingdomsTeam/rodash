@@ -470,8 +470,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#partialord" title="PartialOrd" class="md-nav__link">
-    PartialOrd
+  <a href="#ord" title="Ord" class="md-nav__link">
+    Ord
   </a>
   
 </li>
@@ -740,8 +740,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#partialord" title="PartialOrd" class="md-nav__link">
-    PartialOrd
+  <a href="#ord" title="Ord" class="md-nav__link">
+    Ord
   </a>
   
 </li>
@@ -1625,14 +1625,14 @@ A decorator which adds a dictionary of functions to a Class table.</p>
 <li>Include the return value of this function in the decorators argument when creating a class.</li>
 </ul>
 <hr />
-<h3 id="partialord">PartialOrd<a class="headerlink" href="#partialord" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">PartialOrd</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span> <span class="c1">--&gt; (Class&lt;T&gt;) -&gt; PartialOrd&lt;T&gt;</span>
+<h3 id="ord">Ord<a class="headerlink" href="#ord" title="Permanent link">&para;</a></h3>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">Ord</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span> <span class="c1">--&gt; (Class&lt;T&gt;) -&gt; Ord&lt;T&gt;</span>
 </pre></div>
 A decorator which derives an order for the <em>Class</em>, meaning instances of the class
 can be compared using <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code> and  <code>&gt;=</code>. To do this, it compares values of the two
 instances at the same keys, as defined by the order of the <em>keys</em> passed in.</p>
 <p><strong>Type</strong></p>
-<p><code>&lt;T&gt;(string[]? -&gt; Class&lt;T&gt; -&gt; PartialOrd&lt;T&gt;)</code></p>
+<p><code>&lt;T&gt;(string[]? -&gt; Class&lt;T&gt; -&gt; Ord&lt;T&gt;)</code></p>
 <p><strong>Generics</strong></p>
 <blockquote>
 <p><strong>T</strong> - <code>any</code> - the primary type (extends any value)</p>
@@ -1644,7 +1644,7 @@ instances at the same keys, as defined by the order of the <em>keys</em> passed 
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>(Class&lt;T&gt;) -&gt; PartialOrd&lt;T&gt;</code> - a function (taking <a href="/rodash/types/#Class">a Class</a> (of the primary type), and returning <a href="/rodash/types/#PartialOrd">a PartialOrd</a> (of the primary type))</p>
+<p><code>(Class&lt;T&gt;) -&gt; Ord&lt;T&gt;</code> - a function (taking <a href="/rodash/types/#Class">a Class</a> (of the primary type), and returning <a href="/rodash/types/#Ord">an Ord</a> (of the primary type))</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">Car</span> <span class="o">=</span>
@@ -1655,7 +1655,7 @@ instances at the same keys, as defined by the order of the <em>keys</em> passed 
             <span class="n">speed</span> <span class="o">=</span> <span class="n">speed</span>
         <span class="p">}</span>
     <span class="kr">end</span><span class="p">,</span>
-    <span class="p">{</span><span class="n">dash</span><span class="p">.</span><span class="n">PartialOrd</span><span class="p">()}</span>
+    <span class="p">{</span><span class="n">dash</span><span class="p">.</span><span class="n">Ord</span><span class="p">()}</span>
 <span class="p">)</span>
 <span class="kr">function</span> <span class="nc">Car</span><span class="p">:</span><span class="nf">brake</span><span class="p">()</span>
     <span class="n">self</span><span class="p">.</span><span class="n">speed</span> <span class="o">=</span> <span class="mi">0</span>
@@ -1669,12 +1669,12 @@ instances at the same keys, as defined by the order of the <em>keys</em> passed 
 
 <hr />
 <h3 id="shalloweq">ShallowEq<a class="headerlink" href="#shalloweq" title="Permanent link">&para;</a></h3>
-<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">ShallowEq</span><span class="p">(</span><span class="n">Class</span><span class="p">)</span> <span class="c1">--&gt; ShallowEq&lt;T&gt;</span>
+<p><div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nc">dash</span><span class="p">.</span><span class="nf">ShallowEq</span><span class="p">(</span><span class="n">Class</span><span class="p">)</span> <span class="c1">--&gt; Eq&lt;T&gt;</span>
 </pre></div>
 A decorator which derives the equality operator for the <em>Class</em> so that any instances of the
 class which are shallow equal will be considered equal.</p>
 <p><strong>Type</strong></p>
-<p><code>&lt;T&gt;(Class&lt;T&gt; -&gt; ShallowEq&lt;T&gt;)</code></p>
+<p><code>&lt;T&gt;(Class&lt;T&gt; -&gt; Eq&lt;T&gt;)</code></p>
 <p><strong>Generics</strong></p>
 <blockquote>
 <p><strong>T</strong> - <code>any</code> - the primary type (extends any value)</p>
@@ -1686,7 +1686,7 @@ class which are shallow equal will be considered equal.</p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>ShallowEq&lt;T&gt;</code> - <a href="/rodash/types/#ShallowEq">a ShallowEq</a> (of the primary type)</p>
+<p><code>Eq&lt;T&gt;</code> - <a href="/rodash/types/#Eq">an Eq</a> (of the primary type)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">Car</span> <span class="o">=</span>
