@@ -58,14 +58,14 @@ Like many scripting languages, Lua has a general structure type `table` which ca
 | Name | Usage | Description |
 | --- | --- | --- |
 | Tuple | `(X, Y, Z)` | Values of particular types separated by commas, such as an argument or return list in a Lua function |
-| Array | `X[]` | A Lua table that has a finite number of [Ordered](/rodash/types/#Ordered) keys with values of type `X` |
+| Array | `X[]` | A Lua table that has a finite number of [Ordered](/rodash/types/#ordered) keys with values of type `X` |
 | Fixed array | `{X, Y, Z}` | An array with a fixed number of values, where the first value has type `X`, the second type `Y` etc. |
 | Table | `{}` | a Lua table with no specific keys or values |
 | Dictionary | `X{}` | a Lua table which has values of type `X` |
 | Map | `{[X]: Y}` | A Lua table with keys of type `X` mapping to values of type `Y` |
 | Multi-dimensional table | `X[][]`<br/>`X{}{}`<br/>`X{}[]{}` | A 2d or higher dimensional table, with values being arrays, dictionaries or multi-dimensional tables themselves | 
 
-Rodash methods use more general types where possible, specifically [Ordered](/rodash/types/#Ordered) and [Iterable](/rodash/types/#Iterable) values. This let's you operate on iterators as well as tables.
+Rodash methods use more general types where possible, specifically [Ordered](/rodash/types/#ordered) and [Iterable](/rodash/types/#iterable) values. This let's you operate on iterators as well as tables.
 
 ## Function types
 
@@ -197,7 +197,7 @@ end
 
 **Usage**
 
-Stateful iterators that you write can be used in any Rodash function that takes an [Iterable](/rodash/types/#Iterable).
+Stateful iterators that you write can be used in any Rodash function that takes an [Iterable](/rodash/types/#iterable).
 
 ### Stateless Iterator
 
@@ -238,7 +238,7 @@ end
 
 **Usage**
 
-Stateless iterators that you write can be used in any Rodash function that takes an [Iterable](/rodash/types/#Iterable).
+Stateless iterators that you write can be used in any Rodash function that takes an [Iterable](/rodash/types/#iterable).
 
 ### Iterable
 
@@ -618,7 +618,7 @@ Customize how `dash.serialize`, `dash.serializeDeep` and `dash.pretty` convert o
 >
 > __V__ - `any` - the primary value type (can be any value)
 >
-> __T__ - `Iterable<K,V>` - An [Iterable](/rodash/types/#Iterable) (of the primary key type and the primary value type)
+> __T__ - `Iterable<K,V>` - An [Iterable](/rodash/types/#iterable) (of the primary key type and the primary value type)
 
 **Properties**
 

@@ -533,8 +533,8 @@ local getRodashChain =
 )
 
 --[[
-	A [Chain](/rodash/types/#Chain) built from Rodash itself. Any
-	[Chainable](/rodash/types/#Chainable) Rodash function can be used as a method on this object,
+	A [Chain](/rodash/types/#chain) built from Rodash itself. Any
+	[Chainable](/rodash/types/#chainable) Rodash function can be used as a method on this object,
 	omitting the subject until the whole chain is evaluated by calling it with the subject.
 	@example
 		local getNames = dash.fn:map(function( player )

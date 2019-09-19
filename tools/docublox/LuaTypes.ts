@@ -222,7 +222,9 @@ export function describeType(type: Type, meta: MetaDescription, plurality?: PLUR
 			if (meta.generics[name]) {
 				typeString = meta.generics[name];
 			} else {
-				typeString = `[${pluralizeName(name, plurality)}](${meta.rootUrl}types/#${name})`;
+				typeString = `[${pluralizeName(name, plurality)}](${
+					meta.rootUrl
+				}types/#${name.toLowerCase()})`;
 			}
 			break;
 		case TypeKind.OPTIONAL:
