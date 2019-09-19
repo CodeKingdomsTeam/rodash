@@ -515,7 +515,7 @@ end
 	@see `dash.deepEqual` - if you want to consider deep equality
 	@see `Class:equals`
 ]]
---: <T>(Class<T> -> ShallowEq<T>)
+--: <T>(Class<T> -> Eq<T>)
 function Classes.ShallowEq(Class)
 	function Class:equals(other)
 		return Tables.shallowEqual(self, other)
@@ -537,7 +537,7 @@ end
 					speed = speed
 				}
 			end,
-			{dash.PartialOrd()}
+			{dash.Ord()}
 		)
 		function Car:brake()
 			self.speed = 0
@@ -548,8 +548,8 @@ end
 		print(fastCar == fastCar2) --> true
 		print(fastCar == slowCar) --> false
 ]]
---: <T>(string[]? -> Class<T> -> PartialOrd<T>)
-function Classes.PartialOrd(keys)
+--: <T>(string[]? -> Class<T> -> Ord<T>)
+function Classes.Ord(keys)
 	if keys then
 		assert(Tables.isArray(keys), "BadInput: keys must be an array if defined")
 	end

@@ -9,5 +9,5 @@ cd "$SCRIPT_DIR"
 cd ..
 
 mkdir -p docs/api
-node node_modules/ts-node/dist/bin.js tools/rodocs --output docs --libName "dash" --rootUrl "/rodash/" src docs_source
+node node_modules/ts-node/dist/bin.js tools/docublox --output docs --libName "dash" --rootUrl "/rodash/" src docs_source
 mkdocs build --clean

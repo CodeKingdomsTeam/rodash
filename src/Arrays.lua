@@ -152,7 +152,7 @@ end
 		-- (in some order)
 		dash.shuffle(teamColors) --> {"blue", "blue", "red", "blue", "red", "red"}
 ]]
---: <T: Iterable>(T -> T)
+--: <T>(T[] -> T[])
 function Arrays.shuffle(source)
 	assert(t.table(source), "BadInput: source must be an array")
 	local result = Tables.clone(source)
@@ -182,10 +182,10 @@ end
 		-- (in some order)
 		unzipRecipe --> {{"first", "third", "second"}, {"cheese", "chillies", "nachos"}}
 ]]
---: <T, R>(T[], (result: R, value: T, key: int -> R), R) -> R
+--: <T, R>(Ordered<T>, (result: R, value: T, key: int -> R), R) -> R
 function Arrays.reduce(source, handler, initial)
 	local result = initial
-	for i, v in Tables.iterator(source) do
+	for i, v in Tables.iterator(source, true) do
 		result = handler(result, v, i)
 	end
 	return result
@@ -201,16 +201,12 @@ end
 		dash.append(list, {"nachos"}, {}, {"chillies"})
 		list --> {"cheese", "nachos", "chillies"}
 ]]
---: <T>(mut T[], ...T[] -> T[])
+--: <T>(mut T[], ...Ordered<T> -> T[])
 function Arrays.append(target, ...)
 	for i = 1, select("#", ...) do
 		local x = select(i, ...)
-		if type(x) == "table" then
-			for _, y in ipairs(x) do
-				table.insert(target, y)
-			end
-		else
-			table.insert(target, x)
+		for _, y in Tables.iterator(x, true) do
+			table.insert(target, y)
 		end
 	end
 
@@ -221,7 +217,7 @@ end
 	Sums all the values in the _source_ array.
 	@example dash.sum({1, 2, 3}) --> 6
 ]]
---: number[] -> number
+--: Ordered<number> -> number
 function Arrays.sum(source)
 	return Arrays.reduce(
 		source,

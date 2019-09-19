@@ -284,7 +284,7 @@ end
 	@see `dash.continue` - an actor for chains of asynchronous functions
 	@see `dash.maybe` - an actor for chains of partial functions
 ]]
---: <S>(Chainable<S>{}, Actor<S>) -> Chain<S>
+--: <S,T:Chainable<S>{}>(T, Actor<S>) -> Chain<S,T>
 function Functions.chain(fns, actor)
 	if actor == nil then
 		actor = Functions.invoke
@@ -555,7 +555,7 @@ local getRodashChain =
 		getNames(game.Players) --> {"Bilbo Baggins", "Frodo Baggins"}
 	@see `dash.chain` - to make your own chains.
 ]]
---: Chain<dash>
+--: Chain<any,dash>
 Functions.fn = {}
 setmetatable(
 	Functions.fn,

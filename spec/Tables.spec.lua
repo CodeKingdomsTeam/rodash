@@ -420,6 +420,26 @@ describe(
 						)
 					end
 				)
+				it(
+					"works when passed a stateless iterator",
+					function()
+						local function someEvenNumbers(_, previousKey)
+							local key = (previousKey or 0) + 1
+							if key < 10 then
+								return key, key * 2
+							end
+						end
+						assert.are.same(
+							{5, 6},
+							Tables.map(
+								someEvenNumbers,
+								function(value)
+									return value / 2
+								end
+							)
+						)
+					end
+				)
 			end
 		)
 
@@ -584,7 +604,7 @@ describe(
 					end
 				)
 				it(
-					"works when passed an iterator",
+					"works when passed a stateful iterator",
 					function()
 						assert.are.same(
 							{5, 6},

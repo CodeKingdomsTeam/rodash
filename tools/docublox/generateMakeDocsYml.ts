@@ -22,7 +22,7 @@ ${files.map(name => `      - ${basename(name, '.md')}: api/${name}`).join('\n')}
   - Glossary: glossary.md
 
 extra_css:
-  - rodocs.css
+  - docublox.css
 
 markdown_extensions:
   - admonition

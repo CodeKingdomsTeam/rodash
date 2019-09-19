@@ -150,7 +150,7 @@ end
 	@param delimiter (default = "")
 	@trait Chainable
 ]]
---: string, Pattern -> string[], string[]
+--: string, pattern -> string[], string[]
 function Strings.splitOn(str, pattern)
 	assertStrIsString(str)
 	assert(t.optional(t.string)(pattern), "BadInput: pattern must be a string or nil")
@@ -580,6 +580,7 @@ end
 	Format a specific _value_ using the specified _displayString_.
 	@example
 		dash.formatValue(255, ":06X") --> 0000FF
+	@see `dash.format` - for a full description of valid display strings.
 ]]
 --: any, DisplayString -> string
 function Strings.formatValue(value, displayString)

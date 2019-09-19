@@ -239,13 +239,15 @@ function getFnDoc(
 
 		const traits = filterEntries(doc.entries, 'trait');
 		if (traits.length) {
-			lines.push(`<div class="rodocs-trait">${traits.map(entry => entry.content).join(' ')}</div>`);
+			lines.push(
+				`<div class="docublox-trait">${traits.map(entry => entry.content).join(' ')}</div>`,
+			);
 		}
 		lines.push(
 			`### ${sortName} \n`,
 			'```lua' +
 				`
-function ${prefixName}.${name}(${params.join(', ')})
+function ${prefixName}.${name}(${params.join(', ')}) --> ${returnTypeString}
 ` +
 				'```',
 			doc.comments,

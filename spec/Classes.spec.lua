@@ -681,7 +681,7 @@ bad value for key amount:
 			end
 		)
 		describe(
-			"PartialOrd",
+			"Ord",
 			function()
 				it(
 					"provides a default ordering for one field",
@@ -694,7 +694,7 @@ bad value for key amount:
 									speed = speed
 								}
 							end,
-							{Classes.PartialOrd()}
+							{Classes.Ord()}
 						)
 						function Car:brake()
 							self.speed = 0

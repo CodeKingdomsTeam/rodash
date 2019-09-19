@@ -338,7 +338,11 @@ export function describeType(type: Type, meta: MetaDescription, plurality?: PLUR
 		(useTag ? '_' + type.tag + '_ (' : '') +
 		typeString +
 		(type.genericParameters
-			? ' (of ' + joinList(type.genericParameters.map(param => describeType(param, meta))) + ')'
+			? ' (of ' +
+			  joinList(
+					type.genericParameters.map(param => describeType(param, meta, PLURALITY.SINGULAR)),
+			  ) +
+			  ')'
 			: '') +
 		(type.isMutable ? ' (which can be mutated)' : '') +
 		(useTag ? ')' : '')

@@ -408,22 +408,10 @@ end
 
 --[[
 	Try running a function which returns a promise and retry if the function throws
-	and error or the promise rejects. The retry behaviour can be adapted using
+	and error or the promise rejects. The retry behavior can be adapted using
 	backoffOptions, which can customize the maximum number of retries and the backoff
 	timing of the form `[0, x^attemptNumber] + y` where _x_ is an exponent that produces
 	a random exponential delay and _y_ is a constant delay.
-
-	#### Backoff Options
-	|Option|Type|Description|
-	|---|---|---|
-	| **maxTries** | _int_ | how many tries (including the first one) the function should be called |
-	| **retryExponentInSeconds** | _number_ | customize the backoff exponent |
-	| **retryConstantInSeconds** | _number_ | customize the backoff constant |
-	| **randomStream** | _Random_ | use a Roblox "Random" instance to control the backoff |
-	| **shouldRetry(response)** | _T -> bool_ | called if maxTries > 1 to determine whether a retry should occur |
-	| **onRetry(waitTime, errorMessage)** | _(number, string) -> nil_ | a hook for when a retry is triggered, with the delay before retry and error message which caused the failure |
-	| **onDone(response, durationInSeconds)** | _(T, number) -> nil_ | a hook for when the promise resolves |
-	| **onFail(errorMessage)** | _string -> nil_ | a hook for when the promise has failed and no more retries are allowed |
 	
 	@rejects passthrough
 	@example
@@ -442,7 +430,7 @@ end
 			print("Great, you have: ", resultingPizza)
 		end)
 ]]
---: <T>(Async<T>, BackoffOptions) -> Promise<T>
+--: <T>(Async<T>, BackoffOptions<T>) -> Promise<T>
 function Async.retryWithBackoff(asyncFn, backoffOptions)
 	assert(Functions.isCallable(asyncFn), "BadInput: asyncFn must be callable")
 	local function backoffThenRetry(errorMessage)

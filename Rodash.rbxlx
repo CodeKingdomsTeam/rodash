@@ -8,15 +8,15 @@
   <Item class="Lighting" referent="1">
     <Properties>
       <string name="Name">Lighting</string>
+      <bool name="Outlines">false</bool>
       <token name="Technology">1</token>
       <Color3 name="Ambient">
         <R>0</R>
         <G>0</G>
         <B>0</B>
       </Color3>
-      <float name="Brightness">2</float>
       <bool name="GlobalShadows">true</bool>
-      <bool name="Outlines">false</bool>
+      <float name="Brightness">2</float>
     </Properties>
   </Item>
   <Item class="ReplicatedStorage" referent="2">
@@ -2324,8 +2324,8 @@ end
 		print(fastCar == fastCar2) --> true
 		print(fastCar == slowCar) --> false
 ]]
---: <T>(string[]? -> Class<T> -> PartialOrd<T>)
-function Classes.PartialOrd(keys)
+--: <T>(string[]? -> Class<T> -> Ord<T>)
+function Classes.Ord(keys)
 	if keys then
 		assert(Tables.isArray(keys), "BadInput: keys must be an array if defined")
 	end
@@ -6631,13 +6631,13 @@ end
     <Item class="Part" referent="18">
       <Properties>
         <string name="Name">Baseplate</string>
-        <bool name="Anchored">true</bool>
         <Color3 name="Color">
           <R>0.38823</R>
           <G>0.37254</G>
           <B>0.38823</B>
         </Color3>
         <bool name="Locked">true</bool>
+        <bool name="Anchored">true</bool>
         <Vector3 name="Position">
           <X>0</X>
           <Y>-10</Y>
