@@ -430,7 +430,7 @@ describe(
 							end
 						end
 						assert.are.same(
-							{5, 6},
+							{1, 2, 3, 4, 5, 6, 7, 8, 9},
 							Tables.map(
 								someEvenNumbers,
 								function(value)

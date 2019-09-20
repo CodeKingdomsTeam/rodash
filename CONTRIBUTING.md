@@ -63,9 +63,9 @@ Rodash installs a number of dependencies for managing development and builds in 
 
 # Development
 
-We use [Rojo](https://rojo.space/docs/0.5.x/) to test Robase during development, and suggest the following workflow:
+We use [Rojo](https://rojo.space/docs/0.5.x/) to test Rodash during development, and suggest the following workflow:
 
-1. Open `Robase.rbxlx` in Roblox Studio.
+1. Open `Rodash.rbxlx` in Roblox Studio.
 2. Run `rojo serve place.project.json`.
 3. Make sure you have the Rojo plugin installed, and connect to the rojo server.
 4. Test any functions in the `Example` script provided.
