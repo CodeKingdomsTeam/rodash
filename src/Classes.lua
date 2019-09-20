@@ -350,9 +350,10 @@ end
 		})
 		dash.pretty(vehicle) --> 'Vehicle {speed = 4, wheelCount = 4, color = "red"}'
 
-	@usage Rodash uses `t` by Osyris to perform runtime type assertions, which we recommend using during
-	development and production code to catch errors quickly and fail fast. For more information
-	about `t`, please visit [https://github.com/osyrisrblx/t](https://github.com/osyrisrblx/t).
+	@usage Rodash uses `t` by Osyris to perform runtime type assertions, which we recommend using
+	in your own code development and production to catch errors quickly and fail fast. For more
+	information about `t`, please visit
+	[https://github.com/osyrisrblx/t](https://github.com/osyrisrblx/t).
 	@usage If you want to instantiate private fields, we recommend using a static factory with a
 		public interface, See `dash.privatize` for an example.
 	@see `dash.class`

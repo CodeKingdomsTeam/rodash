@@ -1,12 +1,12 @@
 Every function in Rodash is dynamically and statically typed.
 
-This means you know what arguments  Rodash functions can take and what they can return when you write your code, and Rodash will also check that you've passed in valid values when you run it.
+This means you know what arguments Rodash functions can take and what they can return when you write your code, and Rodash will also check that you've passed in valid values when you run it.
 
 ## Dynamic Typing
 
 Dynamic typing means checking that the values passed into a function are valid when the function is run. Rodash functions will throw a `BadInput` error if any arguments are invalid, allowing you to catch errors quickly and fail fast during development.
 
-Rodash uses [the "t" library](https://github.com/osyrisrblx/t) by Osyris to perform runtime type assertions, which we recommend using in your own code during development and production code.
+Rodash uses [the "t" library](https://github.com/osyrisrblx/t) by Osyris to perform runtime type assertions, which we recommend using in your own code during both development and production.
 
 ## Static Typing
 
@@ -86,7 +86,6 @@ These types can be used in function signatures:
 | Yield return | `yield X` | A function which returns `yield X` may yield when executed before returning a value of type `X` |
 | Self | `self X` | A function which takes `self X` as a parameter must be defined using `:` and called as a method on a value of type `X`. Only required if the method should be called on a different type to the one it is defined under |
 
-
 ### Callable
 
 Any value that can be called has a function type. In practice, a value is callable if and only if it is one of the following:
@@ -109,6 +108,18 @@ You can test if a value is callable using `dash.isCallable`.
 | Union | `X | Y` | Values of this type can either be of type `X` or of type `Y` (or both) |
 | Intersection | `X & Y` | Values of this type must be of both types `X` and `Y`. For example, if `X` and `Y` are interfaces the value must implement both of them. |
 
+### Type definitions
+
+There a few different ways to define new types in documented code:
+
+| Name | Usage | Description |
+| --- | --- | --- |
+| Marker type | `type X = Y` | This creates a type called `X` that you can refer to which is the same as the type `Y`. For example, a [Constructor](/rodash/types/#constructor) is just a specific type function, but using `Constructor` also indicates how the function should be used beyond its type |
+| Interface | `interface X` | This creates a type called `X` based on functions in a Lua table and a `t` interface |
+| Class | `class X` | This creates a type `X` based on methods in a Lua table and fields in a `t` interface, or use `dash.classWithInterface` |
+| Enum | `enum X` | This creates a type `X` based on keys of a Lua array, or use `dash.enum` |
+| Symbol | `symbol X` | This creates a type `X` based on a Lua table definition, or use `dash.symbol` |
+
 ## Generic types
 
 Generics allow the same function to be used with different types. Known types are replaced with type variables, which are usually single capital letters such as `T` or `K`, but can be any word beginning with a capital letter.
@@ -124,7 +135,7 @@ When a generic function is called, the same type variable must refer to the same
 
 **Examples**
 
-The `dash.last` function returns the last element of an array, and has a type signature of `<T>(T[] -> T)`. If you call it with an array of strings with type `string[]`, then `T = string` and the function becomes parameterized, meaning its type `string[] -> string`. This shows you that the function will return a `string`. If you simply used `any[] -> any` without using a generics, you couldn't know that the function always returned a value of the same type.
+The `dash.last` function returns the last element of an array, and has a type signature of `<T>(T[] -> T)`. If you call it with an array of strings with type `string[]`, then `T = string` and the function becomes parameterized, meaning its type is `string[] -> string`. This shows you that the function will return a `string`. If you simply used `any[] -> any` without using a generic type, you couldn't know that the function always returned a value of the same type.
 
 Like `T[]` was parameterized as a string array when `T = string`, any structural types like dictionaries or [Classes](/rodash/types/#Classes) can also parameterized.
 
@@ -260,7 +271,9 @@ An iterable value is either a dictionary or an [Iterator](/rodash/types/#Iterato
 
 ### Ordered
 
-An ordered value is either an array or an ordered [Iterator](/rodash/types/#Iterator). For something to be ordered, the keys returned during iteration must be the natural numbers. This means the first key must be `1`, the second `2`, the third `3`, etc.
+An ordered value is either an array or an ordered [Iterator](/rodash/types/#Iterator). For something to be ordered, the keys returned during iteration must be the natural number sequence. This means the first key must be `1`, the second `2`, the third `3`, etc.
+
+Functions that operate on ordered values will ignore any additional keys, including numeric keys after a _hole_, which corresponds with how `ipairs` natively iterates through a table. For example, in the table `{10, 20, [4] = 40, [5] = 50}`, only the first two values are considered ordered.
 
 **Type**
 
@@ -450,8 +463,11 @@ An interface that means implementors of the same type `T` form a total order, si
 
 Implementors can be compared using the ordering operators such as `<`, `<=`, and `==`.
 
-An ordering means that you can compare any two elements `a` and `b`, and one is always greater
-or equal to the other i.e. `a >= b == b < a` is always true.
+An ordering means that you can compare any elements `a`, `b` and `c`, and these
+properties are satisfied:
+
+* Two elements are always ordered i.e. exactly one of `a < b`, `a == b` or `a > b` is true
+* Transitive - if `a < b` and `b < c` then `a < c`
 
 **See**
 
@@ -479,7 +495,7 @@ properties are satisfied:
 
 * Reflexive - `a == a` is always true
 * Symmetric - if `a == b` then `b == a`
-* Transitive - if `a == b && b == c` then `a == c`
+* Transitive - if `a == b` and `b == c` then `a == c`
 
 **See**
 
@@ -537,7 +553,7 @@ Actors can be used to transform the types of subjects that functions can natural
 without having to change the definition of the functions themselves.
 
 For example the `dash.maybe` actor factory allows functions to be skipped if the subject is `nil`,
-and `dash.continue` allows functions to act with.
+and `dash.continue` allows functions to act on promises once they have resolved.
 
 **Type**
 
