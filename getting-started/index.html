@@ -464,7 +464,7 @@
                 
                 <h1 id="getting-started">Getting Started<a class="headerlink" href="#getting-started" title="Permanent link">&para;</a></h1>
 <h2 id="using-this-documentation">Using this documentation<a class="headerlink" href="#using-this-documentation" title="Permanent link">&para;</a></h2>
-<p>If you are looking for a specific function check out the <a href="/rodash/Glossary">Glossary</a>.</p>
+<p>If you are looking for a specific function check out the <a href="/rodash/glossary">Glossary</a>.</p>
 <p>If you want to simplify your code using a specific programming concept, Rodash functions are grouped by subject:</p>
 <table>
 <thead>
@@ -562,7 +562,7 @@
     <span class="kd">local</span> <span class="n">getNames</span> <span class="o">=</span> <span class="n">fn</span><span class="p">:</span><span class="n">map</span><span class="p">(</span><span class="n">fn</span><span class="p">:</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Name&quot;</span><span class="p">))</span>
     <span class="kd">local</span> <span class="n">playerNames</span> <span class="o">=</span> <span class="n">getNames</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">:</span><span class="n">GetChildren</span><span class="p">())</span>
     <span class="kd">local</span> <span class="n">nameList</span> <span class="o">=</span> <span class="nb">table.concat</span><span class="p">(</span><span class="n">playerNames</span><span class="p">,</span> <span class="s2">&quot;,&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="nb">string.format</span><span class="p">(</span><span class="s2">&quot;Players online = %s: %s&quot;</span><span class="p">),</span> <span class="o">#</span><span class="n">playerNames</span><span class="p">,</span> <span class="n">nameList</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">string.format</span><span class="p">(</span><span class="s2">&quot;Players online = %s: %s&quot;</span><span class="p">,</span> <span class="o">#</span><span class="n">playerNames</span><span class="p">,</span> <span class="n">nameList</span><span class="p">))</span>
 <span class="kr">end</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 </pre></div>
 
