@@ -1,8 +1,23 @@
-import { Node, Comment, MemberExpression, FunctionDeclaration, Identifier } from './astTypings';
+import {
+	Node,
+	Comment,
+	MemberExpression,
+	FunctionDeclaration,
+	Identifier,
+	AssignmentStatement,
+} from './astTypings';
 import { keyBy } from 'lodash';
 import { GlossaryMap } from './index';
 import * as parser from './typeParser';
-import { stringifyType, FunctionType, TypeKind } from './LuaTypes';
+import {
+	describeType,
+	stringifyType,
+	FunctionType,
+	TypeKind,
+	PLURALITY,
+	getMetaDescription,
+	describeGeneric,
+} from './LuaTypes';
 
 interface DocEntry {
 	tag: string;
@@ -10,31 +25,34 @@ interface DocEntry {
 }
 
 interface Doc {
+	typeString: string;
 	typing: FunctionType;
 	comments: string[];
 	entries: DocEntry[];
 }
-export interface FunctionDoc {
+export interface MdDoc {
 	name: string;
 	content: string;
 	sortName: string;
 	comments: string[];
 }
 
+export interface LibraryProps {
+	libName: string;
+	fileName: string;
+	glossaryMap: GlossaryMap;
+	rootUrl: string;
+}
+
 export interface Nodes {
 	[line: string]: Node;
 }
 
-export function generateMd(
-	fileName: string,
-	nodes: Nodes,
-	maxLine: number,
-	libName: string,
-	glossaryMap: GlossaryMap,
-) {
+export function generateMd(libraryProps: LibraryProps, nodes: Nodes, maxLine: number) {
 	let topComment = '';
 	let inHeader = true;
-	const functions: FunctionDoc[] = [];
+	const functions: MdDoc[] = [];
+	const members: MdDoc[] = [];
 	for (let i = 0; i <= maxLine; i++) {
 		if (!nodes[i]) {
 			continue;
@@ -48,38 +66,63 @@ export function generateMd(
 				inHeader = false;
 			}
 		}
-		if (node.type === 'FunctionDeclaration') {
+		if (node.type === 'FunctionDeclaration' || node.type === 'AssignmentStatement') {
 			const doc = getDocAtLocation(node.loc.start.line, nodes);
 			if (!doc.typing) {
 				console.log('Skipping untyped method:', doc.comments);
 			} else {
-				const fn = getFnDoc(fileName, libName, node as FunctionDeclaration, doc, glossaryMap);
-				if (fn) {
-					if (!fn.comments.length) {
-						console.log('Skipping undocumented method:', fn.sortName);
-					} else {
-						functions.push(fn);
+				if (node.type === 'AssignmentStatement') {
+					const member = getMemberDoc(libraryProps, node as AssignmentStatement, doc);
+					if (member) {
+						if (!member.comments.length) {
+							console.log('Skipping undocumented method:', member.sortName);
+						} else {
+							members.push(member);
+						}
+					}
+				} else {
+					const fn = getFnDoc(libraryProps, node as FunctionDeclaration, doc);
+					if (fn) {
+						if (!fn.comments.length) {
+							console.log('Skipping undocumented method:', fn.sortName);
+						} else {
+							functions.push(fn);
+						}
 					}
 				}
 			}
 		}
 		functions.sort((a, b) => (a.sortName.toLowerCase() < b.sortName.toLowerCase() ? -1 : 1));
+		members.sort((a, b) => (a.sortName.toLowerCase() < b.sortName.toLowerCase() ? -1 : 1));
 	}
 
+	const functionDocs = functions.length
+		? `## Functions
+
+${functions.map(fn => fn.content).join('\n\n---\n\n')}`
+		: '';
+
+	const memberDocs = members.length
+		? `## Members
+
+${members.map(fn => fn.content).join('\n\n---\n\n')}`
+		: '';
+
 	return `
-# ${fileName}
+# ${libraryProps.fileName}
 
 ${topComment}
 
-## Functions
+${functionDocs}
 
-${functions.map(fn => fn.content).join('\n\n---\n\n')}
+${memberDocs}
 
 `;
 }
 
 function getDocAtLocation(loc: number, nodes: Nodes): Doc {
 	let typing: FunctionType;
+	let typeString: string;
 	const comments = [];
 	const entries = [];
 	// Work backwards from the location to find comments above the specified point, which will form
@@ -94,7 +137,8 @@ function getDocAtLocation(loc: number, nodes: Nodes): Doc {
 			if (comment.raw.match(/^\-\-\:/)) {
 				const type = comment.value.substring(1);
 				try {
-					typing = parser.parse(type.trim()) as FunctionType;
+					typeString = type.trim();
+					typing = parser.parse(typeString) as FunctionType;
 				} catch (e) {
 					console.warn('BadType:', type, e);
 				}
@@ -108,6 +152,7 @@ function getDocAtLocation(loc: number, nodes: Nodes): Doc {
 		}
 	}
 	return {
+		typeString,
 		typing,
 		comments: comments.reverse(),
 		entries: entries,
@@ -140,49 +185,95 @@ function getCommentTextAndEntries(commentNode: Comment) {
 	};
 }
 
+function getMemberDoc(
+	libraryProps: LibraryProps,
+	node: AssignmentStatement,
+	doc: Doc,
+): MdDoc | undefined {
+	const member = node.variables[0] as MemberExpression;
+	const name = (member.identifier as Identifier).name;
+	const baseName = member.base.name;
+	const prefixName = baseName === libraryProps.fileName ? libraryProps.libName : baseName;
+	const sortName = baseName === libraryProps.fileName ? name : baseName + '.' + name;
+	const lines = [];
+	lines.push(
+		`### ${name} \n`,
+		'```lua' +
+			`
+${prefixName}.${name} -- ${doc.typeString}
+` +
+			'```',
+		doc.comments,
+	);
+	const examples = filterEntries(doc.entries, 'example');
+	if (examples.length) {
+		lines.push(
+			'\n**Examples**\n',
+			...examples.map(example => '```lua\n' + example.content + '\n```\n\n'),
+		);
+	}
+	return {
+		name,
+		sortName,
+		content: lines.join('\n'),
+		comments: doc.comments,
+	};
+}
+
 function getFnDoc(
-	fileName: string,
-	libName: string,
+	libraryProps: LibraryProps,
 	node: FunctionDeclaration,
 	doc: Doc,
-	glossaryMap: GlossaryMap,
-): FunctionDoc | undefined {
+): MdDoc | undefined {
 	const lines = [];
 	if (node.identifier && node.identifier.type === 'MemberExpression') {
 		const member = node.identifier as MemberExpression;
 		const name = (member.identifier as Identifier).name;
 		const baseName = member.base.name;
 		const params = node.parameters.map(id => (id.type === 'VarargLiteral' ? '...' : id.name));
-		const prefixName = baseName === fileName ? libName : baseName;
-		const sortName = baseName === fileName ? name : baseName + '.' + name;
+		const prefixName = baseName === libraryProps.fileName ? libraryProps.libName : baseName;
+		const sortName = baseName === libraryProps.fileName ? name : baseName + '.' + name;
 
-		const returnType = stringifyType(
-			doc.typing.returnType || { typeKind: TypeKind.ANY, isRestParameter: true },
-		);
+		const returnType = doc.typing.returnType || { typeKind: TypeKind.ANY, isRestParameter: true };
+		const returnTypeString = stringifyType(returnType);
 
 		const traits = filterEntries(doc.entries, 'trait');
 		if (traits.length) {
-			lines.push(`<div class="rodocs-trait">${traits.map(entry => entry.content).join(' ')}</div>`);
+			lines.push(
+				`<div class="docublox-trait">${traits.map(entry => entry.content).join(' ')}</div>`,
+			);
 		}
 		lines.push(
 			`### ${sortName} \n`,
 			'```lua' +
 				`
-function ${prefixName}.${name}(${params.join(', ')}) --> ${returnType}
+function ${prefixName}.${name}(${params.join(', ')}) --> ${returnTypeString}
 ` +
 				'```',
+			doc.comments,
 		);
-		lines.push(doc.comments);
 		const paramEntries = filterEntries(doc.entries, 'param');
 		const paramMap = keyBy(
 			paramEntries.map(entry => entry.content.match(/^\s*([A-Za-z.]+)\s(.*)/)),
 			entry => entry && entry[1],
 		);
+		lines.push('\n**Type**\n', '`' + doc.typeString + '`');
+
+		const metaDescription = getMetaDescription(doc.typing, {
+			generics: {
+				T: 'the type of _self_',
+			},
+			rootUrl: libraryProps.rootUrl,
+		});
+
 		if (doc.typing.genericTypes) {
 			lines.push(
-				'\n**Types**\n',
+				'\n**Generics**\n',
 				...doc.typing.genericTypes.map(
-					generic => `\n> __${generic.tag}__ - \`${stringifyType(generic.extendingType)}\``,
+					generic =>
+						`\n> __${generic.tag}__ - \`${stringifyType(
+							generic.extendingType,
+						)}\` - ${describeGeneric(generic, metaDescription)}`,
 				),
 			);
 		}
@@ -194,18 +285,25 @@ function ${prefixName}.${name}(${params.join(', ')}) --> ${returnType}
 					const parameterType = parameterTypes[i] || {
 						typeKind: TypeKind.ANY,
 					};
-					return `> __${param}__ - \`${stringifyType(parameterType)}\` ${
-						paramMap[param] ? ' - ' + paramMap[param][2] : ''
-					}\n>`;
+					return `> __${param}__ - \`${stringifyType(parameterType)}\` - ${describeType(
+						parameterType,
+						metaDescription,
+						PLURALITY.SINGULAR,
+					)} ${paramMap[param] && paramMap[param][2] ? ' - ' + paramMap[param][2] : ''}\n>`;
 				}),
 			);
 		}
 		const returns = filterEntries(doc.entries, 'returns');
 		lines.push('\n**Returns**\n');
+		const returnTypeDescription = describeType(returnType, metaDescription, PLURALITY.SINGULAR);
 		if (returns.length) {
-			lines.push(...returns.map(({ content }) => `\n> \`${returnType}\` - ${content}`));
+			lines.push(
+				...returns.map(
+					({ content }) => `\n> \`${returnTypeString}\` - ${returnTypeDescription} - ${content}`,
+				),
+			);
 		} else {
-			lines.push(`\n> \`${returnType}\``);
+			lines.push(`\n> \`${returnTypeString}\` - ${returnTypeDescription}`);
 		}
 		const throws = filterEntries(doc.entries, 'throws');
 		if (throws.length) {
@@ -241,17 +339,7 @@ function ${prefixName}.${name}(${params.join(', ')}) --> ${returnType}
 		}
 		const see = filterEntries(doc.entries, 'see');
 		if (see.length) {
-			lines.push(
-				'\n**See**\n',
-				...see.map(({ content }) => {
-					const [, linkName, suffix] = content.match(/^\s*([^\s]+)\s*(.*)/);
-					const prefix = libName + '.';
-					const link = linkName.startsWith(prefix)
-						? glossaryMap[linkName.substring(prefix.length)].link
-						: linkName;
-					return `\n* [${linkName}](${link}) ${suffix}`;
-				}),
-			);
+			lines.push('\n**See**\n', ...see.map(({ content }) => `\n* ${content}`));
 		}
 		return {
 			name,
@@ -263,18 +351,9 @@ function ${prefixName}.${name}(${params.join(', ')}) --> ${returnType}
 }
 
 function formatList(entries: DocEntry[], modifier?: (line: string) => string) {
-	return entries.map(({ content }) => '\n* ' + content);
+	return entries.map(({ content }) => '\n* ' + (modifier ? modifier(content) : content));
 }
 
 function filterEntries(entries: DocEntry[], tag: string) {
 	return entries.filter(entry => entry.tag === tag);
-}
-
-function escapeHtml(unsafe: string) {
-	return unsafe
-		.replace(/&/g, '&amp;')
-		.replace(/</g, '&lt;')
-		.replace(/>/g, '&gt;')
-		.replace(/"/g, '&quot;')
-		.replace(/'/g, '&#039;');
 }

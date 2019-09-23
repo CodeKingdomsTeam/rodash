@@ -2,10 +2,10 @@
 	A collection of functions that operate on Lua tables. These can operate on arrays,
 	dictionaries and any collection types implemented with tables.
 
-	Functions can also iterate over custom iterator functions.
+	These functions can iterate over any [Iterable](/rodash/types#Iterable) values.
 
 	These functions typically act on immutable tables and return new tables in functional style.
-	Note that mutable arguments in Rodash are explicitly typed as such.
+	Note that mutable arguments in Rodash are explicitly typed as such with the `mut` keyword.
 ]]
 local t = require(script.Parent.Parent.t)
 
@@ -17,10 +17,10 @@ local function assertHandlerIsFn(handler)
 end
 
 --[[
-	Determines a suitable iterator to use for _source_, allowing _source_ to be either a plain
-	table, a table that has a metatable with an `iterable` key, or a function.
+	Determines a suitable [Iterator](/rodash/types#Iterator) to use for _source_, allowing _source_ to
+	be either a plain table, a table that has a metatable with an `iterable` key, or a function.
 
-	By default, the iterator is unordered, but passing _asArray_ as true uses `ipairs` to iterate
+	By default, the iterator is unordered, but passing _asArray_ as `true` uses `ipairs` to iterate
 	through natural keys _1..n_ in order.
 ]]
 --: <T: Iterable>(T, bool -> Iterator<T>)
@@ -52,7 +52,7 @@ end
 		getUpperTorso(players.LocalPlayer) --> Part
 	@trait Chainable
 ]]
---: <T: {[K]: V}>(T, ...K) -> V?
+--: <K, V, T: {[K]: V}>(T, ...K) -> V?
 function Tables.get(source, ...)
 	local path = {...}
 	local ok, value =
@@ -71,9 +71,11 @@ function Tables.get(source, ...)
 end
 
 --[[
-	Set a child or descendant of a table. Returns `true` if the operation completed without error.
+	Set a child or descendant value in a table. Returns `true` if the operation completed without error.
 
-	If any values along the path are not tables, `dash.set` will do nothing and return `false`.
+	The function walks through the object using keys from _path_ in turn. If any values along the
+	path are not tables, `dash.set` will do nothing and return `false`.
+
 	@returns `true` if the set worked
 	@example
 		dash.set(game.Players, {"LocalPlayer", "Character", "UpperTorso", "Color"}, Color3.new(255, 255, 255))
@@ -96,8 +98,8 @@ function Tables.set(source, path, value)
 end
 
 --[[
-	Return new table from _source_ with each value at the same key, but replaced by the return from
-	the _handler_ function called for each value and key in the table.
+	Create a new table from _source_ where each value is replaced with the value returned from
+	calling _handler_ with each element in _source_.
 	@example
 		-- Use map to get the same property of each value:
 		local playerNames = dash.map(game.Players:GetChildren(), function(player)
@@ -120,7 +122,7 @@ end
 			return value + (numbers[key - 1] or 0)
 		end)
 		nextNumbers --> {1, 2, 3, 5, 8}
-	@see filter if you want to 
+	@see `dash.filter` - if you want to remove values using a predicate.
 ]]
 --: <T: Iterable<K,V>, V2>((T, (element: V, key: K) -> V2) -> Iterable<K,V2>)
 function Tables.map(source, handler)
@@ -135,12 +137,14 @@ end
 --[[
 	Like `dash.map`, but returns an array of the transformed values in the order that they are
 	iterated over, dropping the original keys.
+	@see `dash.map`
 	@example
 		local ingredients = {veg = "carrot", sauce = "tomato", herb = "basil"}
 		local list = dash.mapValues(function(value)
 			return dash.format("{} x2", value)
 		end)
 		list --> {"carrot x2", "tomato x2", "basil x2"} (in some order)
+	@usage This is equivalent to `dash.values(dash.map(...))` but more concise.
 ]]
 --: <T: Iterable<K,V>, V2>((T, (element: V, key: K) -> V2) -> V2[])
 function Tables.mapValues(source, handler)
@@ -153,14 +157,16 @@ function Tables.mapValues(source, handler)
 end
 
 --[[
-	Like `dash.map`, but the return of the _handler_ is used to transform the key of each element,
-	while the value is preserved.
+	This function iterates over _source_, calling _handler_ to obtain a key for each element.
+	The element is then assigned by its key to the resulting object, overriding any previous
+	element assigned to that key from source.
 
 	If the _handler_ returns nil, the element is dropped from the result.
+	@see `dash.groupBy` - if you want to preseve all the elements at each key.
 	@example
 		local playerSet = {Frodo = true, Bilbo = true, Boromir = true}
 		local healthSet = dash.keyBy(playerSet, function(name)
-			return dash.get(game.Players, name, "Health")
+			return dash.get(game.Players, name, "Character", "Humanoid", "Health")
 		end)
 		healthSet --> {100 = true, 50 = true, 0 = true}
 ]]
@@ -178,8 +184,9 @@ function Tables.keyBy(source, handler)
 end
 
 --[[
-	Like `dash.mapValues` but _handler_ must return an array. These elements are then insterted into
-	the the resulting array returned.
+	Like `dash.mapValues` this function iterates through _source_ and returns an array of values,
+	using _handler_ to transform them. However, _handler_ must return an array of results, these
+	elements being insterted into the resulting array.
 
 	You can return an empty array `{}` from handler to avoid inserting anything for a particular
 	element.
@@ -190,7 +197,7 @@ end
 		end)
 		tools --> {Spoon, Ring, Sting, Book}
 ]]
---: <T: Iterable<K,V>, U>((T, (element: V, key: K) -> U[]) -> U[])
+--: <T: Iterable<K,V>, V2>((T, (element: V, key: K) -> V2[]) -> V2[])
 function Tables.flatMap(source, handler)
 	assertHandlerIsFn(handler)
 	local Arrays = require(script.Parent.Arrays)
@@ -213,7 +220,7 @@ end
 			return dash.endsWith(tool.Name, "Spoon")
 		end)
 		mySpoons --> {SilverSpoon, TableSpoon}
-	@see dash.map if you would like to remove elements but preserve table keys
+	@see `dash.map` if you would like to remove elements but preserve table keys
 ]]
 --: <T: Iterable<K,V>>(T, (element: V, key: K -> bool) -> V[])
 function Tables.filter(source, handler)
@@ -341,6 +348,7 @@ end
 
 --[[
 	Returns a copy of _source_, ensuring each key starts with an underscore `_`.
+	
 	Keys which are already prefixed with an underscore are left unchanged.
 	@example
 		local privates = dash.privatize({
@@ -349,6 +357,33 @@ end
 			_private = 3
 		})
 		privates --> {_1 = 1, _public = 2, _private = 3}
+	@example
+		-- Make a static factory to create Cars with private fields
+		local interface = {
+			speed = t.number,
+			color = t.string
+		}
+		local Car = dash.classWithInterface(
+			dash.privatize(interface)
+		)
+		local CarFactory = {
+			make = function(props)
+				return Car.new(dash.privatize(props))
+			end
+		}
+		-- Create a new car using a public interface:
+		local car = CarFactory.make({
+			speed = 5,
+			color = 'red'
+		})
+		-- By convention, private fields should only by their owner.
+		car._speed --> 5
+	@usage
+		Fields starting with an underscore are considered private in many programming languages
+		without inbuild access control. This function allows you to translate a public interface
+		into a private one suitable for a class instance with private fields.
+	@see `dash.class`
+	@see `dash.classWithInterface`
 ]]
 --: <T>(T{} -> T{})
 function Tables.privatize(source)
@@ -379,16 +414,19 @@ function Tables.invert(source)
 end
 
 --[[
-	Like `dash.map`, but the return of the _handler_ is used to transform the key of each element,
-	while the value is preserved.
+	This function iterates over _source_, calling _handler_ to obtain a key for each element.
+	Elements from _source_ are then appended to an array of elements based on their key, so
+	that this function returns a dictionary of arrays of the elements grouped by their keys.
 
 	If the _handler_ returns nil, the element is dropped from the result.
+	@see `dash.keyBy` - if you only want one element to be preserved at each key
+	@see `dash.get`
 	@example
-		local playerSet = {Frodo = true, Bilbo = true, Boromir = true}
-		local healthSet = dash.mapKeys(playerSet, function(name)
-			return dash.get(game.Players, name, "Health")
+		local playerSet = {Frodo = "Frodo", Bilbo = "Bilbo", Boromir = "Boromir"}
+		local healthSet = dash.keyBy(playerSet, function(name)
+			return dash.get(game.Players, name, "Character", "Humanoid", "Health")
 		end)
-		healthSet --> {100 = true, 50 = true, 0 = true}
+		healthSet --> {100 = {}, 50 = {"Bilbo", "Frodo"}, 0 = {"Boromir"}}
 ]]
 --: <T: Iterable<K,V>, K2>(((value: T, key: K) -> K2) -> Iterable<K2, Iterable<K,V>>)
 function Tables.groupBy(source, handler)
@@ -451,8 +489,8 @@ end
 				}
 			}
 		]]
-	@see dash.assign
-	@see dash.defaults
+	@see `dash.assign`
+	@see `dash.defaults`
 ]=]
 --: <T: Iterable<K,V>>(mut T, ...T) -> T
 function Tables.merge(target, ...)
@@ -476,11 +514,12 @@ end
 
 --[[
 	Returns an array of all the values of the elements in _source_.
-	@example dash.values({
-		Frodo = 1,
-		Boromir = 2,
-		Bilbo = 3
-	}) --> {1, 2, 3} (in some order)
+	@example
+		dash.values({
+			Frodo = 1,
+			Boromir = 2,
+			Bilbo = 3
+		}) --> {1, 2, 3} (in some order)
 ]]
 --: <T: Iterable<K,V>>(T -> V[])
 function Tables.values(source)
@@ -493,11 +532,12 @@ end
 
 --[[
 	Returns an array of all the keys of the elements in _source_.
-	@example dash.values({
-		Frodo = 1,
-		Boromir = 2,
-		Bilbo = 3
-	}) --> {"Frodo", "Boromir", "Bilbo"} (in some order)
+	@example
+		dash.values({
+			Frodo = 1,
+			Boromir = 2,
+			Bilbo = 3
+		}) --> {"Frodo", "Boromir", "Bilbo"} (in some order)
 ]]
 --: <T: Iterable<K,V>>(T -> K[])
 function Tables.keys(source)
@@ -531,7 +571,8 @@ end
 --[[
 	Picks a value from the table that _handler_ returns `true` for.
 
-	As tables do not have ordered keys, do not rely on returning any particular value.
+	If multiple elements might return true, any one of them may be returned as the iteration order
+	over a table is stochastic.
 	@example
 		local names = {
 			[3] = "Boromir",
@@ -550,7 +591,7 @@ end
 		-- Or find the key of a specific value:
 		local _, key = dash.find(names, dash.fn:matches("Bilbo"))
 		key --> 8
-	@see dash.first
+	@see `dash.first`
 	@usage If you need to find the first value of an array that matches, use `dash.first`.
 ]]
 --: <T: Iterable<K,V>>((T, (element: V, key: K) -> bool) -> V?)
@@ -593,6 +634,7 @@ end
 			[8] = "Bilbo"
 		}
 		dash.len(names) --> 3
+	@usage Note that a table only has a length if it is an array, so this can be used on non-arrays.
 ]]
 --: <T: Iterable<K,V>>(T -> int)
 function Tables.len(source)
@@ -662,8 +704,8 @@ end
 				}
 			}
 		]]
-	@see dash.defaults
-	@see dash.merge
+	@see `dash.defaults`
+	@see `dash.merge`
 ]=]
 --: <T: Iterable<K,V>>(mut T, ...T) -> T
 function Tables.assign(target, ...)
@@ -672,7 +714,7 @@ end
 
 --[=[
 	Adds new elements in _target_ from subsequent table arguments in order, with elements in
-	earlier tables replacing earlier ones if their keys match.
+	earlier tables overriding later ones if their keys match.
 	@param ... any number of other tables
 	@example
 		local someInfo = {
@@ -712,8 +754,8 @@ end
 				}
 			}
 		]]
-	@see dash.assign
-	@see dash.merge
+	@see `dash.assign`
+	@see `dash.merge`
 ]=]
 --: <T: Iterable<K,V>>(mut T, ...T) -> T
 function Tables.defaults(target, ...)
@@ -730,9 +772,9 @@ end
 		local PastHermione = dash.clone(Hermione)
 		PastHermione.time = 9
 		Hermione.time --> 12
-	@see dash.cloneDeep - if you also want to clone descendants of the table, though this can be costly.
-	@see dash.map - if you want to return different values for each key.
-	@see dash.Cloneable - use this to derive a default `:clone()` method for class instances.
+	@see `dash.cloneDeep` - if you also want to clone descendants of the table, though this can be costly.
+	@see `dash.map` - if you want to return different values for each key.
+	@see `dash.Cloneable` - use this to derive a default `:clone()` method for class instances.
 ]]
 --: <T: Iterable<K,V>>(T -> T)
 function Tables.clone(source)
@@ -759,7 +801,7 @@ end
 		Harry.age = 13
 		-- The object clonedHarry is completely independent of any changes to Harry:
 		dash.pretty(clonedHarry) --> '<1>{age = 12, patronus = "stag", pet = {animal = "owl", owner = &1}}'
-	@see dash.clone - if you simply want to perform a shallow clone.
+	@see `dash.clone` - if you simply want to perform a shallow clone.
 ]]
 --: <T: Iterable<K,V>>(T -> T)
 function Tables.cloneDeep(source)
@@ -779,10 +821,10 @@ function Tables.cloneDeep(source)
 end
 
 --[[
-	Returns `true` if all the values in _a_ match corresponding values in _b_ recursively.
+	Returns `true` if all the values in _left_ match corresponding values in _right_ recursively.
 
 	* For elements which are not tables, they match if they are equal.
-	* If they are tables they match if the right is a subset of the left.
+	* If they are tables they match if the right table is a subset of the left.
 
 	@example
 		local car = {
@@ -800,12 +842,12 @@ end
 		dash.isSubset({}, car) --> false
 ]]
 --: <T>(T{}, T{}) -> bool
-function Tables.isSubset(a, b)
-	if type(a) ~= "table" or type(b) ~= "table" then
+function Tables.isSubset(left, right)
+	if type(left) ~= "table" or type(right) ~= "table" then
 		return false
 	else
-		for key, aValue in pairs(a) do
-			local bValue = b[key]
+		for key, aValue in pairs(left) do
+			local bValue = right[key]
 			if type(aValue) ~= type(bValue) then
 				return false
 			elseif aValue ~= bValue then
@@ -824,11 +866,12 @@ function Tables.isSubset(a, b)
 end
 
 --[[
-	Returns `true` if _source_ has no keys.
+	Returns `true` if _source_ has no keys. 
 	@example
 		dash.isEmpty({}) --> true
 		dash.isEmpty({false}) --> false
 		dash.isEmpty({a = 1}) --> false
+	@usage Note that a table only has a length if it is an array, so this can be used on non-arrays.
 ]]
 --: <T: Iterable<K,V>>(T -> bool)
 function Tables.isEmpty(source)
@@ -837,6 +880,9 @@ end
 
 --[[
 	Returns an element from _source_, if it has one.
+
+	If there are multiple elements in _source_, any one of them may be returned as the iteration
+	order over a table is stochastic.
 	@example
 		dash.one({}) --> nil
 		dash.one({a = 1, b = 2, c = 3}) --> b, 2 (or any another element)
@@ -875,8 +921,8 @@ end
 		dash.deepEqual(car, dash.clone(car)) --> true
 		dash.deepEqual(car, dash.cloneDeep(car)) --> true
 		dash.deepEqual(car, car2) --> false
-	@see dash.isSubset
-	@see dash.shallowEqual
+	@see `dash.isSubset`
+	@see `dash.shallowEqual`
 ]]
 --: any, any -> bool
 function Tables.deepEqual(a, b)
@@ -901,7 +947,7 @@ end
 		dash.shallowEqual(car, dash.cloneDeep(car)) --> false
 
 	Based on https://developmentarc.gitbooks.io/react-indepth/content/life_cycle/update/using_should_component_update.html
-	@see dash.deepEqual
+	@see `dash.deepEqual`
 ]]
 --: any, any -> bool
 function Tables.shallowEqual(left, right)
@@ -989,6 +1035,11 @@ end
 
 --[[
 	A function which provides a simple, shallow string representation of a value.
+	@example
+		dash.defaultSerializer() --> "nil"
+		dash.defaultSerializer(true) --> "true"
+		dash.defaultSerializer(5.8) --> "5.8"
+		dash.defaultSerializer("Hello " .. \n .. " there") --> '"Hello \n there"'
 ]]
 --: any -> string
 function Tables.defaultSerializer(input)
@@ -1053,9 +1104,9 @@ end
 	@usage Use `dash.serialize` when you need a representation of a table which doesn't need to be
 		human-readable, or you need to customize the way serialization works. `dash.pretty` is more
 		appropriate when you need a human-readable string.
-	@see dash.serializeDeep
-	@see dash.defaultSerializer
-	@see dash.pretty
+	@see `dash.serializeDeep`
+	@see `dash.defaultSerializer`
+	@see `dash.pretty`
 ]]
 --: <T: Iterable<K,V>>((T, SerializeOptions<T>) -> string)
 function Tables.serialize(source, options)
@@ -1098,8 +1149,8 @@ end
 		local kyle = {name = "Kyle"}
 		kyle.child = kyle
 		dash.serializeDeep(kyle) --> '<0>{"child":<&0>,"name":"Kyle"}'
-	@see dash.serialize
-	@see dash.defaultSerializer
+	@see `dash.serialize`
+	@see `dash.defaultSerializer`
 ]]
 --: <T: Iterable<K,V>>((T, SerializeOptions<T>) -> string)
 function Tables.serializeDeep(source, options)
@@ -1125,7 +1176,7 @@ function Tables.serializeDeep(source, options)
 	return Tables.serialize(source, serializeOptions)
 end
 
---[[
+--[=[
 	Return a set of the tables that appear as descendants of _source_, mapped to the number of
 	times each table has been found with a unique parent.
 
@@ -1133,17 +1184,17 @@ end
 	result have a count of two or more, they may form cycles in the _source_.
 	@example
 		local plate = {veg = "potato", pie = {"stilton", "beef"}}
-		dash.occurences(plate) --> {
+		dash.occurences(plate) --[[> {
 			[{veg = "potato", pie = {"stilton", "beef"}}] = 1
 			[{"stilton", "beef"}] = 1
-		}
+		}]]
 	@example
 		local kyle = {name = "Kyle"}
 		kyle.child = kyle
-		dash.occurences(kyle) --> {
+		dash.occurences(kyle) --[[> {
 			[{name = "Kyle", child = kyle}] = 2
-		}
-]]
+		}]]
+]=]
 --: <T: Iterable<K,V>>(T -> {[T]:int})
 function Tables.occurences(source)
 	assert(t.table(source), "BadInput: source must be a table")

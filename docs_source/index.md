@@ -1,10 +1,14 @@
 ![logo](logo.png)
 
+# Home
+
 Rodash is a collection of functions designed to aid everyday game programming in Roblox. It borrows ideas from [lodash](https://lodash.com) in JS, some simpler functionality of [Penlight](https://github.com/stevedonovan/Penlight) and standalone helper scripts in circulation among the Roblox community.
 
 See the [Getting Started](getting-started) page for examples of how you can use Rodash.
 
-# Installation
+## Installation
+
+## Using the latest release
 
 1. Download the latest _rbxmx_ model from the [Github releases page](https://github.com/CodeKingdomsTeam/rodash/releases).
 2. Drag the model file from your _Downloads_ folder into a Roblox Studio project.
@@ -12,7 +16,13 @@ See the [Getting Started](getting-started) page for examples of how you can use 
 
    ![ReplicatedStorage](ReplicatedStorage.png)
 
-Then require Rodash in any of your scripts:
+### Using Rojo
+
+If you are familiar with Git and [Rojo](https://rojo.space/docs/0.5.x/) you can also clone the [Rodash repo](https://github.com/CodeKingdomsTeam/rodash/) and incorporate the dependencies from the `default.project.json` file into your own project.
+
+## Usage
+
+Require Rodash in any of your scripts:
 
 ```lua
 local dash = require(game.ReplicatedStorage.Rodash)
@@ -29,11 +39,14 @@ local dash = require(game.ReplicatedStorage.Rodash)
 local append = dash.append
 ```
 
-# Discussion
+
+## Discussion
 
 If you have any queries or feedback, please [join the discussion](https://discord.gg/PyaNeN5) on the Studio+ discord server!
 
-# Design Principles
+Please report any bugs to the [Issue Tracker](https://github.com/CodeKingdomsTeam/rodash/issues).
+
+## Design Principles
 
 The Rodash design principles make it quick and easy to use the library to write concise operations, or incrementally simplify existing Roblox code.
 

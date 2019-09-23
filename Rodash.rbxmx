@@ -1,29 +1,9 @@
 <roblox version="4">
-  <Item class="HttpService" referent="0">
+  <Item class="Folder" referent="0">
     <Properties>
-      <string name="Name">HttpService</string>
-      <bool name="HttpEnabled">true</bool>
+      <string name="Name">Packages</string>
     </Properties>
-  </Item>
-  <Item class="Lighting" referent="1">
-    <Properties>
-      <string name="Name">Lighting</string>
-      <Color3 name="Ambient">
-        <R>0</R>
-        <G>0</G>
-        <B>0</B>
-      </Color3>
-      <bool name="Outlines">false</bool>
-      <token name="Technology">1</token>
-      <bool name="GlobalShadows">true</bool>
-      <float name="Brightness">2</float>
-    </Properties>
-  </Item>
-  <Item class="ReplicatedStorage" referent="2">
-    <Properties>
-      <string name="Name">ReplicatedStorage</string>
-    </Properties>
-    <Item class="ModuleScript" referent="3">
+    <Item class="ModuleScript" referent="1">
       <Properties>
         <string name="Name">Promise</string>
         <string name="Source">--[[
@@ -450,7 +430,7 @@ end
 
 return Promise</string>
       </Properties>
-      <Item class="ModuleScript" referent="4">
+      <Item class="ModuleScript" referent="2">
         <Properties>
           <string name="Name">init.spec</string>
           <string name="Source">return function()
@@ -879,7 +859,7 @@ end</string>
         </Properties>
       </Item>
     </Item>
-    <Item class="ModuleScript" referent="5">
+    <Item class="ModuleScript" referent="3">
       <Properties>
         <string name="Name">Rodash</string>
         <string name="Source"><![CDATA[local Async = require(script.Async)
@@ -889,11 +869,11 @@ local Strings = require(script.Strings)
 local Arrays = require(script.Arrays)
 local Tables = require(script.Tables)
 
-local dash = Tables.assign(Async, Classes, Functions, Strings, Arrays, Tables)
+local dash = Tables.assign({}, Async, Classes, Functions, Strings, Arrays, Tables)
 return dash
 ]]></string>
       </Properties>
-      <Item class="ModuleScript" referent="6">
+      <Item class="ModuleScript" referent="4">
         <Properties>
           <string name="Name">Arrays</string>
           <string name="Source"><![CDATA[--[=[
@@ -1224,7 +1204,7 @@ return Arrays
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="7">
+      <Item class="ModuleScript" referent="5">
         <Properties>
           <string name="Name">Async</string>
           <string name="Source"><![CDATA[--[[
@@ -1755,7 +1735,7 @@ return Async
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="8">
+      <Item class="ModuleScript" referent="6">
         <Properties>
           <string name="Name">Classes</string>
           <string name="Source"><![CDATA[--[[
@@ -2110,9 +2090,10 @@ end
 		})
 		dash.pretty(vehicle) --> 'Vehicle {speed = 4, wheelCount = 4, color = "red"}'
 
-	@usage Rodash uses `t` by Osyris to perform runtime type assertions, which we recommend using during
-	development and production code to catch errors quickly and fail fast. For more information
-	about `t`, please visit [https://github.com/osyrisrblx/t](https://github.com/osyrisrblx/t).
+	@usage Rodash uses `t` by Osyris to perform runtime type assertions, which we recommend using
+	in your own code development and production to catch errors quickly and fail fast. For more
+	information about `t`, please visit
+	[https://github.com/osyrisrblx/t](https://github.com/osyrisrblx/t).
 	@usage If you want to instantiate private fields, we recommend using a static factory with a
 		public interface, See `dash.privatize` for an example.
 	@see `dash.class`
@@ -2674,7 +2655,7 @@ return Classes
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="9">
+      <Item class="ModuleScript" referent="7">
         <Properties>
           <string name="Name">Functions</string>
           <string name="Source"><![CDATA[--[[
@@ -3521,7 +3502,7 @@ return Functions
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="10">
+      <Item class="ModuleScript" referent="8">
         <Properties>
           <string name="Name">Strings</string>
           <string name="Source"><![CDATA[--[[
@@ -4227,7 +4208,7 @@ return Strings
 ]]></string>
         </Properties>
       </Item>
-      <Item class="ModuleScript" referent="11">
+      <Item class="ModuleScript" referent="9">
         <Properties>
           <string name="Name">Tables</string>
           <string name="Source"><![CDATA[--[[
@@ -5454,7 +5435,7 @@ return Tables
         </Properties>
       </Item>
     </Item>
-    <Item class="ModuleScript" referent="12">
+    <Item class="ModuleScript" referent="10">
       <Properties>
         <string name="Name">t</string>
         <string name="Source">-- t: a runtime typechecker for Roblox
@@ -6395,244 +6376,6 @@ function t.strict(check)
 end
 
 return t</string>
-      </Properties>
-    </Item>
-  </Item>
-  <Item class="ServerScriptService" referent="13">
-    <Properties>
-      <string name="Name">ServerScriptService</string>
-    </Properties>
-    <Item class="Script" referent="14">
-      <Properties>
-        <string name="Name">Example</string>
-        <string name="Source"><![CDATA[print("Examples of using Rodash in your project:")
-
-local dash = require(game.ReplicatedStorage.Rodash)
-local fn = dash.fn
-
-dash.setInterval(
-	function()
-		local getNames = fn:map(fn:get("Name"))
-		local playerNames = getNames(game.Players:GetChildren())
-		print(dash.format("Players online ({#1}): {:#?}", playerNames))
-	end,
-	1
-)
-
-print(dash.encodeUrlComponent("https://example.com/Egg+Fried Rice!?🤷🏼‍♀️"))
-]]></string>
-      </Properties>
-    </Item>
-    <Item class="ModuleScript" referent="15">
-      <Properties>
-        <string name="Name">Strings.spec</string>
-        <string name="Source"><![CDATA[return function()
-	local Strings = require(script.Parent.Strings)
-	describe(
-		"Strings and UTF8",
-		function()
-			describe(
-				"charToHex",
-				function()
-					it(
-						"encodes correctly",
-						function()
-							assert.equal("3C", Strings.charToHex("<"))
-						end
-					)
-					it(
-						"encodes utf8 correctly",
-						function()
-							assert.equal("1F60F", Strings.charToHex("😏"))
-						end
-					)
-					it(
-						"encodes utf8 correctly with formatting",
-						function()
-							assert.equal("0x1F60F", Strings.charToHex("😏", "0x{}"))
-						end
-					)
-					it(
-						"encodes utf8 with multiple code points correctly",
-						function()
-							assert.equal("&#x1F937;&#x1F3FC;&#x200D;&#x2640;&#xFE0F;", Strings.charToHex("🤷🏼‍♀️", "&#x{};"))
-						end
-					)
-					it(
-						"encodes utf8 bytes correctly",
-						function()
-							assert.equal("%F0%9F%A4%B7%F0%9F%8F%BC%E2%80%8D%E2%99%80%EF%B8%8F", Strings.charToHex("🤷🏼‍♀️", "%{}", true))
-						end
-					)
-				end
-			)
-
-			describe(
-				"hexToChar",
-				function()
-					it(
-						"decodes correctly",
-						function()
-							assert.equal("_", Strings.hexToChar("%5F"))
-						end
-					)
-					it(
-						"throws for an invalid encoding",
-						function()
-							assert.errors(
-								function()
-									Strings.hexToChar("nope")
-								end
-							)
-						end
-					)
-				end
-			)
-
-			describe(
-				"encodeUrlComponent",
-				function()
-					it(
-						"encodes correctly",
-						function()
-							assert.equal(
-								"https%3A%2F%2Fexample.com%2FEgg%2BFried%20Rice!%3F",
-								Strings.encodeUrlComponent("https://example.com/Egg+Fried Rice!?")
-							)
-						end
-					)
-				end
-			)
-			describe(
-				"encodeUrl",
-				function()
-					it(
-						"encodes correctly",
-						function()
-							assert.equal("https://example.com/Egg+Fried%20Rice!?", Strings.encodeUrl("https://example.com/Egg+Fried Rice!?"))
-						end
-					)
-				end
-			)
-			describe(
-				"decodeUrlComponent",
-				function()
-					it(
-						"decodes correctly",
-						function()
-							assert.equal(
-								"https://example.com/Egg+Fried Rice!?",
-								Strings.decodeUrlComponent("https%3A%2F%2Fexample.com%2FEgg%2BFried%20Rice!%3F")
-							)
-						end
-					)
-				end
-			)
-			describe(
-				"decodeUrl",
-				function()
-					it(
-						"decodes correctly",
-						function()
-							assert.equal("https://example.com/Egg+Fried Rice!?", Strings.decodeUrl("https://example.com/Egg+Fried%20Rice!?"))
-						end
-					)
-				end
-			)
-			describe(
-				"makeQueryString",
-				function()
-					it(
-						"makes query",
-						function()
-							assert.equal(
-								"?biscuits=hob+nobs&time=11&chocolatey=true",
-								Strings.encodeQueryString(
-									{
-										time = 11,
-										biscuits = "hob nobs",
-										chocolatey = true
-									}
-								)
-							)
-						end
-					)
-				end
-			)
-
-			describe(
-				"encodeHtml",
-				function()
-					it(
-						"characters",
-						function()
-							assert.are.same(
-								"Peas &lt; Bacon &gt; &quot;Fish&quot; &amp; &apos;Chips&apos;",
-								Strings.encodeHtml([[Peas < Bacon > "Fish" & 'Chips']])
-							)
-						end
-					)
-				end
-			)
-
-			describe(
-				"decodeHtml",
-				function()
-					it(
-						"html entities",
-						function()
-							assert.are.same(
-								[[<b>"Smashed"</b> 'Avocado' 😏]],
-								Strings.decodeHtml("&lt;b&gt;&#34;Smashed&quot;&lt;/b&gt; &apos;Avocado&#39; &#x1F60F;")
-							)
-						end
-					)
-					it(
-						"conflated ampersand",
-						function()
-							assert.are.same("Ampersand is &amp;", Strings.decodeHtml("Ampersand is &#38;amp;"))
-						end
-					)
-				end
-			)
-		end
-	)
-end
-]]></string>
-      </Properties>
-    </Item>
-  </Item>
-  <Item class="SoundService" referent="16">
-    <Properties>
-      <string name="Name">SoundService</string>
-      <bool name="RespectFilteringEnabled">true</bool>
-    </Properties>
-  </Item>
-  <Item class="Workspace" referent="17">
-    <Properties>
-      <string name="Name">Workspace</string>
-      <bool name="FilteringEnabled">true</bool>
-    </Properties>
-    <Item class="Part" referent="18">
-      <Properties>
-        <string name="Name">Baseplate</string>
-        <Color3 name="Color">
-          <R>0.38823</R>
-          <G>0.37254</G>
-          <B>0.38823</B>
-        </Color3>
-        <Vector3 name="Position">
-          <X>0</X>
-          <Y>-10</Y>
-          <Z>0</Z>
-        </Vector3>
-        <Vector3 name="size">
-          <X>512</X>
-          <Y>20</Y>
-          <Z>512</Z>
-        </Vector3>
-        <bool name="Anchored">true</bool>
-        <bool name="Locked">true</bool>
       </Properties>
     </Item>
   </Item>

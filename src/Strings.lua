@@ -255,25 +255,42 @@ end
 	This function first calls `dash.format` on the arguments provided and then outputs the response
 	to the debug target, set using `dash.setDebug`. By default, this function does nothing, allowing
 	developers to leave the calls in the source code if that is beneficial.
-	@param subject the format match string
+	@param format the format match string
+	@example
+		-- During development:
+		dash.setDebug()
+		-- At any point in the code:
+		dash.debug("Hello {}", game.Players.LocalPlayer)
+		-->> Hello builderman (for example)
 	@usage A common pattern would be to `dash.setDebug()` to alias to `print` during local development,
-		and call e.g. `dash.setDebug(dash.bind(HttpService.PostAsync, "https://example.com/log"))`
-		on a production build to allow remote debugging.
+		and send debug messages to an HTTP server on a production build to allow remote debugging.
+	@see `dash.setDebug`
 ]]
---: any, ... -> string
-function Strings.debug(subject, ...)
+--: string, ... -> string
+function Strings.debug(format, ...)
 	if Strings.debugTarget == nil then
 		return
 	end
-	Strings.debugTarget(Strings.format(...))
+	Strings.debugTarget(Strings.format(format, ...))
 end
 
 --[[
 	Hooks up any debug methods to invoke _fn_. By default, `dash.debug` does nothing.
 	@param fn (default = `print`)
 	@usage Calling `dash.setDebug()` will simply print all calls to `dash.debug` with formatted arguments.
+	@example
+		local postMessage = dash.async(function(message)
+			HttpService.PostAsync("https://example.com/log", message)
+		end
+		-- During production:
+		dash.setDebug(postMessage)
+		-- At any point in the code:
+		dash.debug("Hello is printed")
+		-- "Hello is printed" is posted to the server
+	@see `dash.debug`
+	@see `dash.async`
 ]]
---: <T>(Function<T> -> ())
+--: <A>(...A -> ())
 function Strings.setDebug(fn)
 	Strings.debugTarget = fn
 end
@@ -334,13 +351,19 @@ function Strings.hexToChar(hex)
 end
 
 --[[
-	Encodes _str_ for use as a URL, for example as an entire URL.
+	Encodes _str_ for use as a URL, for example when calling an HTTP endpoint.
+
+	Note that, unlike this function, `HttpService.EncodeUrl` actually attempts to encode a string
+	for purposes as a URL component rather than an entire URL, and as such will not produce a valid
+	URL.
+
 	@trait Chainable
 	@example
 		dash.encodeUrl("https://example.com/Egg+Fried Rice!?🤷🏼‍♀️")
 		--> "https://example.com/Egg+Fried%20Rice!?%F0%9F%A4%B7%F0%9F%8F%BC%E2%80%8D%E2%99%80%EF%B8%8F"
 	@usage
 		This method is designed to act like `encodeURI` in JavaScript.
+	@see `dash.encodeUrlComponent`
 ]]
 --: string -> string
 function Strings.encodeUrl(str)
@@ -358,7 +381,7 @@ function Strings.encodeUrl(str)
 end
 
 --[[
-	Encodes _str_ for use in a URL, for example as a query parameter of a URL.
+	Encodes _str_ for use in a URL, for example as a query parameter of a call to an HTTP endpoint.
 	@trait Chainable
 	@example
 		dash.encodeUrlComponent("https://example.com/Egg+Fried Rice!?🤷🏼‍♀️")
@@ -395,7 +418,8 @@ local calculateDecodeUrlExceptions =
 )
 
 --[[
-	The inverse of `dash.encodeUrl`.
+	The inverse of `dash.encodeUrl`. Use this to turn a URL which has been encoded for use in a
+	HTTP request back into its original form.
 	@trait Chainable
 	@example
 		dash.decodeUrl("https://Egg+Fried%20Rice!?")
@@ -419,7 +443,8 @@ function Strings.decodeUrl(str)
 end
 
 --[[
-	The inverse of `dash.encodeUrlComponent`.
+	The inverse of `dash.encodeUrlComponent`. Use this to turn a string which has been encoded for
+	use as a component of a url back into its original form.
 	@trait Chainable
 	@example
 		dash.decodeUrlComponent("https%3A%2F%2FEgg%2BFried%20Rice!%3F")
@@ -490,8 +515,8 @@ end
 	@usage Escape `{` with `{{` and `}` similarly with `}}`.
 	@usage See [https://developer.roblox.com/articles/Format-String](https://developer.roblox.com/articles/Format-String)
 		for complete list of formating options and further use cases.
-	@see dash.serializeDeep
-	@see dash.pretty
+	@see `dash.serializeDeep`
+	@see `dash.pretty`
 ]]
 --: string, ... -> string
 function Strings.format(format, ...)
@@ -553,6 +578,9 @@ end
 
 --[[
 	Format a specific _value_ using the specified _displayString_.
+	@example
+		dash.formatValue(255, ":06X") --> 0000FF
+	@see `dash.format` - for a full description of valid display strings.
 ]]
 --: any, DisplayString -> string
 function Strings.formatValue(value, displayString)
@@ -587,9 +615,27 @@ end
 	Returns a human-readable string for the given _value_. The string will be formatted across
 	multiple lines if a descendant element gets longer than `80` characters.
 
-	@see dash.serializeDeep for a compact alternative.
+	Optionally a table of [SerializeOptions](/rodash/types#SerializeOptions) can be passed which will pass
+	to the underlying `dash.serialize` function so you can customise what is displayed.
+
+	@example
+		local fox = {
+			name = "Mr. Fox",
+			color = "red"
+		}
+		print(dash.pretty(fox))
+		-->> {color = "red", name = "Mr. Fox"}
+	@example
+		local fox = {
+			name = "Mr. Fox",
+			color = "red"
+		}
+		print(dash.pretty(fox, {omitKeys = {"name"}}))
+		-->> {color = "red"}
+
+	@see `dash.serializeDeep` for a compact alternative.
 ]]
---: any, bool -> string
+--: <T>(T, SerializeOptions<T>? -> string)
 function Strings.pretty(value, serializeOptions)
 	local function serializeValue(value, options)
 		if type(value) == "table" then

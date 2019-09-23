@@ -342,10 +342,16 @@ describe(
 			"append",
 			function()
 				it(
-					"concatenates mixed tables and values, ignoring unnatural keys",
+					"concatenates ordered elements, ignoring unnatural keys",
 					function()
 						local a = {7, 4}
-						local b = 9
+						local b = function(_, prevValue)
+							if prevValue == nil then
+								local key = 1
+								local value = 9
+								return key, value
+							end
+						end
 						local c = {[1] = 5, x = 12}
 
 						assert.are.same({7, 4, 9, 5}, Arrays.append(a, b, c))

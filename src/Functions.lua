@@ -8,7 +8,8 @@ local Functions = {}
 
 --[[
 	A simple function that does nothing, and returns nil.
-	@usage Shorthand for `function() end`.
+	@usage Shorthand for `function() end`. Useful for when a function is expecting a callback but
+		you don't want to do anything.
 ]]
 --: () -> ()
 function Functions.noop()
@@ -17,7 +18,8 @@ end
 --[[
 	A simple function that does nothing, but returns its input parameters.
 	@trait Chainable
-	@usage This is typically referred to as the "identity" function.
+	@usage This is typically referred to as the "identity" function. Useful for when a function is
+		expecting a callback to transform a value but you don't want to make any change to it.
 ]]
 --: <A>(...A -> ...A)
 function Functions.id(...)
@@ -52,8 +54,14 @@ end
 
 --[[
 	Returns a function that wraps the input _fn_ but only passes the first argument to it.
+	@example
+		local printOneArgument = dash.unary(function(...)
+			print(...)
+		end)
+		printOneArgument("Hello", "World", "!")
+		-->> Hello
 ]]
---: <A, B>((A -> B) -> A -> B)
+--: <A, R>((A -> R) -> A -> R)
 function Functions.unary(fn)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
 	return function(first)
@@ -66,7 +74,7 @@ end
 	@example
 		findPlayer("builderman"):andThen(dash.throws("DaveNotFound"))
 		--!> "DaveNotFound" (soon after)
-	@usage Useful for when you want a callback to discard the arguments passed in and instead use static ones.
+	@usage Useful for when you want a callback to discard any result and throw a message instead.
 ]]
 --: string -> () -> fail
 function Functions.throws(errorMessage)
@@ -87,7 +95,7 @@ end
 		local damageLocalPlayer = dash.bind(damagePlayer, game.Players.LocalPlayer)
 		damageLocalPlayer(5)
 ]]
---: <A, B, R>(((...A, ...B -> R), ...A) -> ...B -> R)
+--: <A, A2, R>(((...A, ...A2 -> R), ...A) -> ...A2 -> R)
 function Functions.bind(fn, ...)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
 	local args = {...}
@@ -100,6 +108,15 @@ end
 	Takes a chainable function _fn_ and binds _arguments_ to the tail of the _fn_ argument list.
 	Returns a function which executes _fn_, passing a subject ahead of the bound arguments supplied.
 	@example
+		local function setHealthTo(player, health)
+			player.Health = health
+		end
+		local restoreHealth = dash.bindTail(setHealthTo, 100)
+		local Jimbo = {
+			Health = 1
+		}
+		restoreHealth
+	@example
 		local filterHurtPlayers = dash.bindTail(dash.filter, function(player)
 			return player.Health < player.MaxHealth
 		end)
@@ -108,6 +125,8 @@ end
 		end)
 		local filterHurtNames = dash.compose(filterHurtPlayers, getName)
 		filterHurtNames(game.Players) --> {"Frodo", "Boromir"}	
+	@see `dash.filter`
+	@see `dash.compose`
 	@usage Chainable rodash function feeds are mapped to `dash.fn`, such as `dash.fn.map(handler)`.
 ]]
 --: <S>(Chainable<S>, ...) -> S -> S
@@ -126,7 +145,7 @@ end
 	@trait Chainable
 	@example
 		local fry = dash.once(function(item)
-			return "fried " .. tiem
+			return "fried " .. item
 		end)
 		fry("sardine") --> "fried sardine"
 		fry("squid") --> "fried sardine"
@@ -136,7 +155,7 @@ end
 	@throws _passthrough_ - any error thrown when called will cause `nil` to cache and pass through the error.
 	@usage Useful for when you want to lazily compute something expensive that doesn't change.
 ]]
---: <...A, B>((...A -> B), B?) -> Clearable & () -> B
+--: <A, R>((...A -> R), R?) -> Clearable & (...A -> R)
 function Functions.once(fn)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
 	local called = false
@@ -166,9 +185,29 @@ end
 
 --[[
 	Calls the supplied _fn_ on the subject and any additional arguments, returning the result.
+	@example
+		local function get(object, key)
+			return object[key]
+		end
+		local Jimbo = {
+			Name = "Jimbo"
+		}
+		dash.call(Jimbo, get, "Name") --> "Jimbo"
+	@example
+		local function get(object, key)
+			return object[key]
+		end
+		local isABaggins = dash.fn:call(get, "Name"):endsWith("Baggins")
+		local Jimbo = {
+			Name = "Jimbo"
+		}
+		isABaggins(Jimbo) --> false
 	@trait Chainable
+	@usage This is useful when used in the `dash.fn:call` form to call arbitrary function
+		inside a chain.
+	@see `dash.chain`
 ]]
---: <S: Subject, A, R>(S, (S, ...A -> R), ...A -> R)
+--: <S, A, R>(S, (S, ...A -> R), ...A -> R)
 function Functions.call(subject, fn, ...)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
 	return fn(subject, ...)
@@ -240,14 +279,12 @@ end
 		methods of `dash.fn`.
 	@usage A chainable method is one that has the subject which is passed through a chain as the
 		first argument, and subsequent arguments
-	@see dash.chainFn - Makes a function chainable if it returns a chain.
-	@see dash.invoke - the identity actor
-	@see dash.continue - an actor for chains of asynchronous functions
-	@see dash.maybe - an actor for chains of partial functions
+	@see `dash.chainFn` - Makes a function chainable if it returns a chain.
+	@see `dash.invoke` - the identity actor
+	@see `dash.continue` - an actor for chains of asynchronous functions
+	@see `dash.maybe` - an actor for chains of partial functions
 ]]
---: type Chainable<S: Subject> = S, ... -> S
---: type Actor<S: Subject> = (... -> S) -> ... -> S
---: <S: Subject>(Chainable<S>{}, Actor<S>) -> Chain<S>
+--: <S,T:Chainable<S>{}>(T, Actor<S>) -> Chain<S,T>
 function Functions.chain(fns, actor)
 	if actor == nil then
 		actor = Functions.invoke
@@ -329,7 +366,7 @@ end
 		local op = numberChain:addN(2):sum()
 		op({1, 2, 3}) --> 12
 
-	@see dash.chain
+	@see `dash.chain`
 ]]
 --: <T, A, R>((...A -> T -> R) -> T, ...A -> R)
 function Functions.chainFn(fn)
@@ -340,17 +377,25 @@ function Functions.chainFn(fn)
 end
 
 --[[
-	An actor which calls the supplied _fn_ with the argument tail.
+	An [Actor](/rodash/types#Actor) which calls the supplied _fn_ with the argument tail.
+	@example
+		local getName = function(player)
+			return player.Name
+		end
+		local Jimbo = {
+			Name = "Jimbo"
+		}
+		dash.invoke(getName, Jimbo) --> "Jimbo"
 	@usage This is the default _actor_ for `dash.chain` and acts as an identity, meaning it has no effect on the result.
 ]]
---: <S>(Actor<S>)
+--: <S, A>((A -> S), ...A -> S)
 function Functions.invoke(fn, ...)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
 	return fn(...)
 end
 
 --[[
-	An actor which cancels execution of a chain if a method returns nil, evaluating the chain as nil.
+	An [Actor](/rodash/types#Actor) which cancels execution of a chain if a method returns nil, evaluating the chain as nil.
 
 	Can wrap any other actor which handles values that are non-nil.
 	@example 
@@ -397,7 +442,7 @@ end
 			}
 		}
 ]]
---: <S>(Actor<S> -> Actor<S>)
+--: <S>(Actor<S>? -> Actor<S>)
 function Functions.maybe(actor)
 	actor = actor or Functions.invoke
 	assert(Functions.isCallable(actor), "BadInput: actor must be callable")
@@ -412,7 +457,7 @@ function Functions.maybe(actor)
 end
 
 --[[
-	An actor getter which awaits on any promises returned by chain methods, and continues execution
+	An [Actor](/rodash/types#Actor) getter which awaits on any promises returned by chain methods, and continues execution
 	when the promise completes.
 
 	This allows any asynchronous methods to be used in chains without modifying any of the chain's
@@ -464,9 +509,9 @@ end
 		}
 		filterHurtHobbitNames(crew):await() --> {"Frodo Baggins"} (some time later)
 	@rejects passthrough
-	@see dash.chain
+	@see `dash.chain`
 ]]
---: <S>(Actor<S> -> Actor<S>)
+--: <S>(Actor<S>? -> Actor<S>)
 function Functions.continue(actor)
 	actor = actor or Functions.invoke
 	assert(Functions.isCallable(actor), "BadInput: actor must be callable")
@@ -486,6 +531,31 @@ local getRodashChain =
 		return Functions.chain(rd)
 	end
 )
+
+--[[
+	A [Chain](/rodash/types/#chain) built from Rodash itself. Any
+	[Chainable](/rodash/types/#chainable) Rodash function can be used as a method on this object,
+	omitting the subject until the whole chain is evaluated by calling it with the subject.
+	@example
+		local getNames = dash.fn:map(function( player )
+			return player.Name
+		end)
+		getNames(game.Players) --> {"Bilbo Baggins", "Frodo Baggins", "Peregrin Took"}
+	@example
+		local getNames = dash.fn:map(function( player )
+			return player.Name
+		end):filter(function( name )
+			return dash.endsWith(name, "Baggins")
+		end)
+		getNames(game.Players) --> {"Bilbo Baggins", "Frodo Baggins"}
+	@example
+		local getNames = dash.fn:map(function( player )
+			return player.Name
+		end):filter(dash.fn:endsWith("Baggins"))
+		getNames(game.Players) --> {"Bilbo Baggins", "Frodo Baggins"}
+	@see `dash.chain` - to make your own chains.
+]]
+--: Chain<any,dash>
 Functions.fn = {}
 setmetatable(
 	Functions.fn,
@@ -507,8 +577,12 @@ setmetatable(
 	Returns a function that calls the argument functions in left-right order on an input, passing
 	the return of the previous function as argument(s) to the next.
 	@example
-		local function fry(item) return "fried " .. item end
-		local function cheesify(item) return "cheesy " .. item end
+		local function fry(item)
+			return "fried " .. item
+		end
+		local function cheesify(item)
+			return "cheesy " .. item
+		end
 		local prepare = dash.compose(fry, cheesify)
 		prepare("nachos") --> "cheesy fried nachos"
 	@usage Useful for when you want to lazily compute something expensive that doesn't change.
@@ -557,10 +631,11 @@ end
 
 		heat:clear(1)
 		heat(1) --> "hot beef"
-	@see dash.serialize
-	@see dash.serializeDeep if you want to recursively serialize arguments.
+	@see `dash.once`
+	@see `dash.serialize`
+	@see `dash.serializeDeep` if you want to recursively serialize arguments.
 ]]
---: <...A, B>((...A -> B), ...A -> string?) -> Clearable<...A> & AllClearable & (...A) -> B
+--: <A, R>((...A -> R), ...A -> string?) -> Clearable<A> & AllClearable & (...A -> R)
 function Functions.memoize(fn, serializeArgs)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
 	serializeArgs = serializeArgs or Functions.unary(Tables.serialize)
@@ -598,7 +673,19 @@ end
 
 --[[
 	Like `delay`, this calls _fn_ after _delayInSeconds_ time has passed, with the added benefit of being cancelable.
+
+	The _fn_ is called in a separate thread, meaning that it will not block the thread it is called
+	in, and if the calling threads, the _fn_ will still be called at the expected time.
+	
 	@returns an instance which `:clear()` can be called on to prevent _fn_ from firing.
+	@example
+		local waitTimeout = dash.setTimeout(function()
+			print("Sorry, no players came online!")
+		end, 5)
+		game.Players.PlayerAdded:Connect(function(player)
+			waitTimeout:clear()
+		end)
+	@see `dash.delay`
 ]]
 --: (Clearable -> ()), number -> Clearable
 function Functions.setTimeout(fn, delayInSeconds)
@@ -623,9 +710,22 @@ function Functions.setTimeout(fn, delayInSeconds)
 end
 
 --[[
-	Like `dash.setTimeout` but calls _fn_ after every interval of _intervalInSeconds_ time has passed.
+	Like `dash.setTimeout` but calls _fn_ after every interval of _intervalInSeconds_ time has
+	passed.
+
+	The _fn_ is called in a separate thread, meaning that it will not block the thread it is called
+	in, and if the calling threads, the _fn_ will still be called at the expected times.
+
 	@param delayInSeconds (default = _intervalInSeconds_) The delay before the initial call.
 	@returns an instance which `:clear()` can be called on to prevent _fn_ from firing.
+	@example
+		local waitInterval = dash.setInterval(function()
+			print("Waiting for more players...")
+		end, 5)
+		game.Players.PlayerAdded:Connect(function(player)
+			waitInterval:clear()
+		end)
+	@see `dash.setTimeout`
 ]]
 --: (Clearable -> ()), number, number? -> Clearable
 function Functions.setInterval(fn, intervalInSeconds, delayInSeconds)
@@ -661,7 +761,7 @@ end
 	@usage A nice [visualisation of debounce vs. throttle](http://demo.nimius.net/debounce_throttle/), 
 		the illustrated point being debounce will only call _fn_ at the end of a spurt of events.
 ]]
---: <A, B>(...A -> B), number -> Clearable & (...A -> B)
+--: <A, R>(...A -> R), number -> Clearable & (...A -> R)
 function Functions.debounce(fn, delayInSeconds)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
 	assert(type(delayInSeconds) == "number", "BadInput: delayInSeconds must be a number")
@@ -701,10 +801,21 @@ end
 --[[
 	Creates a throttle function that drops any repeat calls within a cooldown period and instead
 	returns the result of the last call.
+	@example
+		local post = dash.async(HttpService.Post)
+		local saveMap = dash.throttle(function(data)
+			post("https://example.com/save", data)
+		end, 10)
+		saveMap(map) -- This saves the map
+		saveMap(map) -- This function call is throttled and won't result in post being called
+		saveMap(map) -- Same again
+		wait(10)
+		saveMap(map) -- Enough time has passed, so this saves the map again
 	@usage A nice [visualisation of debounce vs. throttle](http://demo.nimius.net/debounce_throttle/),
 		the illustrated point being throttle will call _fn_ every period during a spurt of events.
+	@see `dash.async`
 ]]
---: <A, B>((...A) -> B), number -> ...A -> B
+--: <A, R>((...A) -> R), number -> ...A -> R
 function Functions.throttle(fn, cooldownInSeconds)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
 	assert(type(cooldownInSeconds) == "number", "BadInput: cooldownInSeconds must be a number > 0")

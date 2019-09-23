@@ -5,5 +5,5 @@ local Strings = require(script.Strings)
 local Arrays = require(script.Arrays)
 local Tables = require(script.Tables)
 
-local dash = Tables.assign(Async, Classes, Functions, Strings, Arrays, Tables)
+local dash = Tables.assign({}, Async, Classes, Functions, Strings, Arrays, Tables)
 return dash
