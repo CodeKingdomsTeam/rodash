@@ -845,7 +845,7 @@ Returns a function which executes <em>fn</em>, passing a subject ahead of the bo
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>fn</strong> - <code>Chainable&lt;S&gt;</code> - <a href="/rodash/types/#Chainable">a Chainable</a> (of the subject type) </p>
+<p><strong>fn</strong> - <code>Chainable&lt;S&gt;</code> - <a href="/rodash/types/#chainable">a Chainable</a> (of the subject type) </p>
 <p><strong>...</strong> - <code>...any</code> - any values 
 </p>
 </blockquote>
@@ -859,9 +859,10 @@ Returns a function which executes <em>fn</em>, passing a subject ahead of the bo
 <span class="kr">end</span>
 <span class="kd">local</span> <span class="n">restoreHealth</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">bindTail</span><span class="p">(</span><span class="n">setHealthTo</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
 <span class="kd">local</span> <span class="n">Jimbo</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="n">Health</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">Health</span> <span class="o">=</span> <span class="mi">5</span>
 <span class="p">}</span>
-<span class="n">restoreHealth</span>
+<span class="n">restoreHealth</span><span class="p">(</span><span class="n">Jimbo</span><span class="p">)</span>
+<span class="n">Jimbo</span><span class="p">.</span><span class="n">Health</span> <span class="c1">--&gt; 100</span>
 </pre></div>
 
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">filterHurtPlayers</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">bindTail</span><span class="p">(</span><span class="n">dash</span><span class="p">.</span><span class="n">filter</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
@@ -959,17 +960,17 @@ check the value of the data at each step and change how the chain proceeds.</p>
 <p><strong>Generics</strong></p>
 <blockquote>
 <p><strong>S</strong> - <code>any</code> - the subject type (extends any value)</p>
-<p><strong>T</strong> - <code>Chainable&lt;S&gt;{}</code> - the primary type (extends a dictionary (of <a href="/rodash/types/#Chainable">Chainables</a> (of the subject type)))</p>
+<p><strong>T</strong> - <code>Chainable&lt;S&gt;{}</code> - the primary type (extends a dictionary (of <a href="/rodash/types/#chainable">Chainables</a> (of the subject type)))</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>fns</strong> - <code>T</code> - the primary type </p>
-<p><strong>actor</strong> - <code>Actor&lt;S&gt;</code> - <a href="/rodash/types/#Actor">an Actor</a> (of the subject type)  - called for each result in the chain to determine how the next operation should process it. (default = <a href="/rodash/api/Functions/#invoke">dash.invoke</a>)
+<p><strong>actor</strong> - <code>Actor&lt;S&gt;</code> - <a href="/rodash/types/#actor">an Actor</a> (of the subject type)  - called for each result in the chain to determine how the next operation should process it. (default = <a href="/rodash/api/Functions/#invoke">dash.invoke</a>)
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>Chain&lt;S, T&gt;</code> - <a href="/rodash/types/#Chain">a Chain</a> (of the subject type and the primary type)</p>
+<p><code>Chain&lt;S, T&gt;</code> - <a href="/rodash/types/#chain">a Chain</a> (of the subject type and the primary type)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="c1">-- Define a simple chain that can operate a list of numbers.</span>
@@ -1167,12 +1168,12 @@ synchronous methods, removing any boilerplate needed to handle promises in the m
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>actor</strong> - <code>Actor&lt;S&gt;?</code> - <a href="/rodash/types/#Actor">an Actor</a> (of the subject type) (optional)  - (default = <a href="/rodash/api/Functions/#invoke">dash.invoke</a>) The actor to wrap.
+<p><strong>actor</strong> - <code>Actor&lt;S&gt;?</code> - <a href="/rodash/types/#actor">an Actor</a> (of the subject type) (optional)  - (default = <a href="/rodash/api/Functions/#invoke">dash.invoke</a>) The actor to wrap.
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>Actor&lt;S&gt;</code> - <a href="/rodash/types/#Actor">an Actor</a> (of the subject type)</p>
+<p><code>Actor&lt;S&gt;</code> - <a href="/rodash/types/#actor">an Actor</a> (of the subject type)</p>
 </blockquote>
 <p><strong>Rejects</strong></p>
 <ul>
@@ -1248,7 +1249,7 @@ elapsed since the last time the debounced function was attempted to be called.</
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>Clearable &amp; (...A) -&gt; R</code> - an intersection (of <a href="/rodash/types/#Clearable">a Clearable</a> and a function (taking the primary arguments, and returning the result type)) - the debounced function with method <code>:clear()</code> can be called on to cancel any scheduled call.</p>
+<p><code>Clearable &amp; (...A) -&gt; R</code> - an intersection (of <a href="/rodash/types/#clearable">a Clearable</a> and a function (taking the primary arguments, and returning the result type)) - the debounced function with method <code>:clear()</code> can be called on to cancel any scheduled call.</p>
 </blockquote>
 <p><strong>Usage</strong></p>
 <ul>
@@ -1352,12 +1353,12 @@ An <a href="/rodash/types#Actor">Actor</a> which cancels execution of a chain if
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>actor</strong> - <code>Actor&lt;S&gt;?</code> - <a href="/rodash/types/#Actor">an Actor</a> (of the subject type) (optional) 
+<p><strong>actor</strong> - <code>Actor&lt;S&gt;?</code> - <a href="/rodash/types/#actor">an Actor</a> (of the subject type) (optional) 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>Actor&lt;S&gt;</code> - <a href="/rodash/types/#Actor">an Actor</a> (of the subject type)</p>
+<p><code>Actor&lt;S&gt;</code> - <a href="/rodash/types/#actor">an Actor</a> (of the subject type)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="c1">-- We can define a chain of Rodash functions that will skip after a nil is returned.</span>
@@ -1427,7 +1428,7 @@ result should be cached at for a given signature. Return nil to avoid caching th
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>Clearable&lt;A&gt; &amp; AllClearable &amp; (...A) -&gt; R</code> - an intersection (of <a href="/rodash/types/#Clearable">a Clearable</a> (of the primary arguments), <a href="/rodash/types/#AllClearable">an AllClearable</a> and a function (taking the primary arguments, and returning the result type)) - the function with method <code>:clear(...)</code> that resets the cache for the argument specified, or <code>:clearAll()</code> to clear the entire cache.</p>
+<p><code>Clearable&lt;A&gt; &amp; AllClearable &amp; (...A) -&gt; R</code> - an intersection (of <a href="/rodash/types/#clearable">a Clearable</a> (of the primary arguments), <a href="/rodash/types/#allclearable">an AllClearable</a> and a function (taking the primary arguments, and returning the result type)) - the function with method <code>:clear(...)</code> that resets the cache for the argument specified, or <code>:clearAll()</code> to clear the entire cache.</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">menu</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;soup&quot;</span><span class="p">,</span> <span class="s2">&quot;bread&quot;</span><span class="p">,</span> <span class="s2">&quot;butter&quot;</span><span class="p">}</span>
@@ -1499,7 +1500,7 @@ For subsequent calls, the initial return of <em>fn</em> is returned, even if it 
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>Clearable &amp; (...A) -&gt; R</code> - an intersection (of <a href="/rodash/types/#Clearable">a Clearable</a> and a function (taking the primary arguments, and returning the result type)) - the function with method <code>:clear()</code> that resets the cached value.</p>
+<p><code>Clearable &amp; (...A) -&gt; R</code> - an intersection (of <a href="/rodash/types/#clearable">a Clearable</a> and a function (taking the primary arguments, and returning the result type)) - the function with method <code>:clear()</code> that resets the cached value.</p>
 </blockquote>
 <p><strong>Throws</strong></p>
 <ul>
@@ -1563,14 +1564,14 @@ in, and if the calling threads, the <em>fn</em> will still be called at the expe
 <p><code>(Clearable -&gt; ()), number, number? -&gt; Clearable</code></p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>fn</strong> - <code>(Clearable) -&gt; void</code> - a function (taking <a href="/rodash/types/#Clearable">a Clearable</a>, and returning nothing) </p>
+<p><strong>fn</strong> - <code>(Clearable) -&gt; void</code> - a function (taking <a href="/rodash/types/#clearable">a Clearable</a>, and returning nothing) </p>
 <p><strong>intervalInSeconds</strong> - <code>number</code> - a number </p>
 <p><strong>delayInSeconds</strong> - <code>number?</code> - a number (optional)  - (default = <em>intervalInSeconds</em>) The delay before the initial call.
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>Clearable</code> - <a href="/rodash/types/#Clearable">a Clearable</a> - an instance which <code>:clear()</code> can be called on to prevent <em>fn</em> from firing.</p>
+<p><code>Clearable</code> - <a href="/rodash/types/#clearable">a Clearable</a> - an instance which <code>:clear()</code> can be called on to prevent <em>fn</em> from firing.</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">waitInterval</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">setInterval</span><span class="p">(</span><span class="kr">function</span><span class="p">()</span>
@@ -1596,13 +1597,13 @@ in, and if the calling threads, the <em>fn</em> will still be called at the expe
 <p><code>(Clearable -&gt; ()), number -&gt; Clearable</code></p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>fn</strong> - <code>(Clearable) -&gt; void</code> - a function (taking <a href="/rodash/types/#Clearable">a Clearable</a>, and returning nothing) </p>
+<p><strong>fn</strong> - <code>(Clearable) -&gt; void</code> - a function (taking <a href="/rodash/types/#clearable">a Clearable</a>, and returning nothing) </p>
 <p><strong>delayInSeconds</strong> - <code>number</code> - a number 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>Clearable</code> - <a href="/rodash/types/#Clearable">a Clearable</a> - an instance which <code>:clear()</code> can be called on to prevent <em>fn</em> from firing.</p>
+<p><code>Clearable</code> - <a href="/rodash/types/#clearable">a Clearable</a> - an instance which <code>:clear()</code> can be called on to prevent <em>fn</em> from firing.</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">waitTimeout</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">setTimeout</span><span class="p">(</span><span class="kr">function</span><span class="p">()</span>
@@ -1719,8 +1720,8 @@ Returns a function that wraps the input <em>fn</em> but only passes the first ar
 <h3 id="fn">fn<a class="headerlink" href="#fn" title="Permanent link">&para;</a></h3>
 <p><div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">fn</span> <span class="c1">-- Chain&lt;any,dash&gt;</span>
 </pre></div>
-A <a href="/rodash/types/#Chain">Chain</a> built from Rodash itself. Any
-<a href="/rodash/types/#Chainable">Chainable</a> Rodash function can be used as a method on this object,
+A <a href="/rodash/types/#chain">Chain</a> built from Rodash itself. Any
+<a href="/rodash/types/#chainable">Chainable</a> Rodash function can be used as a method on this object,
 omitting the subject until the whole chain is evaluated by calling it with the subject.</p>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">getNames</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">fn</span><span class="p">:</span><span class="n">map</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span> <span class="n">player</span> <span class="p">)</span>

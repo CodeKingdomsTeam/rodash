@@ -683,12 +683,12 @@ after any asynchronous actions, and rejects if the function throws an error.</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>fn</strong> - <code>Yieldable&lt;T, A&gt;</code> - <a href="/rodash/types/#Yieldable">a Yieldable</a> (of the primary type and the primary arguments) 
+<p><strong>fn</strong> - <code>Yieldable&lt;T, A&gt;</code> - <a href="/rodash/types/#yieldable">a Yieldable</a> (of the primary type and the primary arguments) 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>(...A) -&gt; Promise&lt;T&gt;</code> - a function (taking the primary arguments, and returning <a href="/rodash/types/#Promise">a Promise</a> (of the primary type))</p>
+<p><code>(...A) -&gt; Promise&lt;T&gt;</code> - a function (taking the primary arguments, and returning <a href="/rodash/types/#promise">a Promise</a> (of the primary type))</p>
 </blockquote>
 <p><strong>Rejects</strong></p>
 <ul>
@@ -728,12 +728,12 @@ functions that return promises when called rather than yielding.</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>dictionary</strong> - <code>Yieldable&lt;T, A&gt;{}</code> - a dictionary (of <a href="/rodash/types/#Yieldable">Yieldables</a> (of the primary type and the primary arguments)) 
+<p><strong>dictionary</strong> - <code>Yieldable&lt;T, A&gt;{}</code> - a dictionary (of <a href="/rodash/types/#yieldable">Yieldables</a> (of the primary type and the primary arguments)) 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>(...A) -&gt; Promise&lt;T&gt;{}</code> - a dictionary (of functions (taking the primary arguments, and returning <a href="/rodash/types/#Promise">a Promise</a> (of the primary type)))</p>
+<p><code>(...A) -&gt; Promise&lt;T&gt;{}</code> - a dictionary (of functions (taking the primary arguments, and returning <a href="/rodash/types/#promise">a Promise</a> (of the primary type)))</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">http</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">asyncAll</span><span class="p">(</span><span class="n">game</span><span class="p">:</span><span class="n">GetService</span><span class="p">(</span><span class="s2">&quot;HttpService&quot;</span><span class="p">))</span>
@@ -779,7 +779,7 @@ isn't a promise.</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>value</strong> - <code>Promise&lt;T&gt; | T</code> - <a href="/rodash/types/#Promise">a Promise</a> (of the primary type) or the primary type 
+<p><strong>value</strong> - <code>Promise&lt;T&gt; | T</code> - <a href="/rodash/types/#promise">a Promise</a> (of the primary type) or the primary type 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
@@ -810,7 +810,7 @@ Returns a promise which resolves after the given delayInSeconds.</p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>Promise&lt;nil&gt;</code> - <a href="/rodash/types/#Promise">a Promise</a> (of nil)</p>
+<p><code>Promise&lt;nil&gt;</code> - <a href="/rodash/types/#promise">a Promise</a> (of nil)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="n">dash</span><span class="p">.</span><span class="n">delay</span><span class="p">(</span><span class="mi">1</span><span class="p">):</span><span class="n">andThen</span><span class="p">(</span><span class="kr">function</span><span class="p">()</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Delivered&quot;</span><span class="p">)</span> <span class="kr">end</span><span class="p">)</span>
@@ -833,13 +833,13 @@ otherwise <code>false</code>, and the promise's <em>result</em> as the second ar
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>promise</strong> - <code>(Promise&lt;T&gt;, bool, T) -&gt; R</code> - a function (taking <a href="/rodash/types/#Promise">a Promise</a> (of the primary type) and a tuple (a boolean and the primary type), and returning the result type) </p>
+<p><strong>promise</strong> - <code>(Promise&lt;T&gt;, bool, T) -&gt; R</code> - a function (taking <a href="/rodash/types/#promise">a Promise</a> (of the primary type) and a tuple (a boolean and the primary type), and returning the result type) </p>
 <p><strong>fn</strong> - <code>any</code> - any value  - <em>function(ok, result)</em>
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>Promise&lt;R&gt;</code> - <a href="/rodash/types/#Promise">a Promise</a> (of the result type)</p>
+<p><code>Promise&lt;R&gt;</code> - <a href="/rodash/types/#promise">a Promise</a> (of the result type)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">getHunger</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">async</span><span class="p">(</span><span class="kr">function</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
@@ -906,12 +906,12 @@ Returns a promise which never resolves or rejects.</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>array</strong> - <code>Promise&lt;T&gt; | T[]</code> - an array (of <a href="/rodash/types/#Promise">Promises</a> (of the primary type) or the primary type) 
+<p><strong>array</strong> - <code>Promise&lt;T&gt; | T[]</code> - an array (of <a href="/rodash/types/#promise">Promises</a> (of the primary type) or the primary type) 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>Promise&lt;T[]&gt;</code> - <a href="/rodash/types/#Promise">a Promise</a> (of an array (of the primary type)) - an array mapping the input to resolved elements.</p>
+<p><code>Promise&lt;T[]&gt;</code> - <a href="/rodash/types/#promise">a Promise</a> (of an array (of the primary type)) - an array mapping the input to resolved elements.</p>
 </blockquote>
 <p><strong>Rejects</strong></p>
 <ul>
@@ -957,12 +957,12 @@ if any of them are promises that reject.</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>dictionary</strong> - <code>Promise&lt;T&gt; | T{}</code> - a dictionary (of <a href="/rodash/types/#Promise">Promises</a> (of the primary type) or the primary type) 
+<p><strong>dictionary</strong> - <code>Promise&lt;T&gt; | T{}</code> - a dictionary (of <a href="/rodash/types/#promise">Promises</a> (of the primary type) or the primary type) 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>Promise&lt;T{}&gt;</code> - <a href="/rodash/types/#Promise">a Promise</a> (of a dictionary (of the primary type)) - a dictionary mapping the input to resolved elements.</p>
+<p><code>Promise&lt;T{}&gt;</code> - <a href="/rodash/types/#promise">a Promise</a> (of a dictionary (of the primary type)) - a dictionary mapping the input to resolved elements.</p>
 </blockquote>
 <p><strong>Rejects</strong></p>
 <ul>
@@ -1012,13 +1012,13 @@ first <em>n</em> promises if specified. If any promise rejects, race rejects wit
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>array</strong> - <code>Promise&lt;T&gt;[]</code> - an array (of <a href="/rodash/types/#Promise">Promises</a> (of the primary type)) </p>
+<p><strong>array</strong> - <code>Promise&lt;T&gt;[]</code> - an array (of <a href="/rodash/types/#promise">Promises</a> (of the primary type)) </p>
 <p><strong>n</strong> - <code>uint?</code> - an unsigned integer (optional)  - the number of promises required (default = 1)
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>Promise&lt;T[]&gt;</code> - <a href="/rodash/types/#Promise">a Promise</a> (of an array (of the primary type)) - an array containing the first n resolutions, in the order that they resolved.</p>
+<p><code>Promise&lt;T[]&gt;</code> - <a href="/rodash/types/#promise">a Promise</a> (of an array (of the primary type)) - an array containing the first n resolutions, in the order that they resolved.</p>
 </blockquote>
 <p><strong>Throws</strong></p>
 <ul>
@@ -1068,7 +1068,7 @@ Like <a href="/rodash/api/Async/#resolve">dash.resolve</a> but can take any numb
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>Promise&lt;T&gt;</code> - <a href="/rodash/types/#Promise">a Promise</a> (of the type of <em>self</em>)</p>
+<p><code>Promise&lt;T&gt;</code> - <a href="/rodash/types/#promise">a Promise</a> (of the type of <em>self</em>)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="kr">function</span> <span class="nf">mash</span><span class="p">(</span> <span class="n">veg</span> <span class="p">)</span>
@@ -1101,13 +1101,13 @@ a random exponential delay and <em>y</em> is a constant delay.</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>asyncFn</strong> - <code>Async&lt;T&gt;</code> - <a href="/rodash/types/#Async">an Async</a> (of the primary type) </p>
-<p><strong>backoffOptions</strong> - <code>BackoffOptions&lt;T&gt;</code> - <a href="/rodash/types/#BackoffOptions">a BackoffOptions</a> (of the primary type) 
+<p><strong>asyncFn</strong> - <code>Async&lt;T&gt;</code> - <a href="/rodash/types/#async">an Async</a> (of the primary type) </p>
+<p><strong>backoffOptions</strong> - <code>BackoffOptions&lt;T&gt;</code> - <a href="/rodash/types/#backoffoptions">a BackoffOptions</a> (of the primary type) 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>Promise&lt;T&gt;</code> - <a href="/rodash/types/#Promise">a Promise</a> (of the primary type)</p>
+<p><code>Promise&lt;T&gt;</code> - <a href="/rodash/types/#promise">a Promise</a> (of the primary type)</p>
 </blockquote>
 <p><strong>Rejects</strong></p>
 <ul>
@@ -1145,12 +1145,12 @@ previous promise as argument(s).</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>...</strong> - <code>(...A) -&gt; Promise&lt;A&gt;[]</code> - an array (of functions (taking the primary arguments, and returning <a href="/rodash/types/#Promise">a Promise</a> (of the primary arguments))) 
+<p><strong>...</strong> - <code>(...A) -&gt; Promise&lt;A&gt;[]</code> - an array (of functions (taking the primary arguments, and returning <a href="/rodash/types/#promise">a Promise</a> (of the primary arguments))) 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>(...A) -&gt; Promise&lt;A&gt;</code> - a function (taking the primary arguments, and returning <a href="/rodash/types/#Promise">a Promise</a> (of the primary arguments))</p>
+<p><code>(...A) -&gt; Promise&lt;A&gt;</code> - a function (taking the primary arguments, and returning <a href="/rodash/types/#promise">a Promise</a> (of the primary arguments))</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="kr">function</span> <span class="nf">fry</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
@@ -1186,14 +1186,14 @@ an error, which can be optionally customized.</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>promise</strong> - <code>Promise&lt;T&gt;</code> - <a href="/rodash/types/#Promise">a Promise</a> (of the primary type) </p>
+<p><strong>promise</strong> - <code>Promise&lt;T&gt;</code> - <a href="/rodash/types/#promise">a Promise</a> (of the primary type) </p>
 <p><strong>deadlineInSeconds</strong> - <code>number</code> - a number </p>
 <p><strong>timeoutMessage</strong> - <code>string?</code> - a string (optional)  - (default = "TimeoutError")
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>Promise&lt;T&gt;</code> - <a href="/rodash/types/#Promise">a Promise</a> (of the primary type)</p>
+<p><code>Promise&lt;T&gt;</code> - <a href="/rodash/types/#promise">a Promise</a> (of the primary type)</p>
 </blockquote>
 <p><strong>Rejects</strong></p>
 <ul>

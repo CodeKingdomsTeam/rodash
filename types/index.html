@@ -435,6 +435,19 @@
     Composite types
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#type-definitions" title="Type definitions" class="md-nav__link">
+    Type definitions
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -798,6 +811,19 @@
     Composite types
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#type-definitions" title="Type definitions" class="md-nav__link">
+    Type definitions
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1075,10 +1101,10 @@
                   <h1>Types</h1>
                 
                 <p>Every function in Rodash is dynamically and statically typed.</p>
-<p>This means you know what arguments  Rodash functions can take and what they can return when you write your code, and Rodash will also check that you've passed in valid values when you run it.</p>
+<p>This means you know what arguments Rodash functions can take and what they can return when you write your code, and Rodash will also check that you've passed in valid values when you run it.</p>
 <h2 id="dynamic-typing">Dynamic Typing<a class="headerlink" href="#dynamic-typing" title="Permanent link">&para;</a></h2>
 <p>Dynamic typing means checking that the values passed into a function are valid when the function is run. Rodash functions will throw a <code>BadInput</code> error if any arguments are invalid, allowing you to catch errors quickly and fail fast during development.</p>
-<p>Rodash uses <a href="https://github.com/osyrisrblx/t">the "t" library</a> by Osyris to perform runtime type assertions, which we recommend using in your own code during development and production code.</p>
+<p>Rodash uses <a href="https://github.com/osyrisrblx/t">the "t" library</a> by Osyris to perform runtime type assertions, which we recommend using in your own code during both development and production.</p>
 <h2 id="static-typing">Static Typing<a class="headerlink" href="#static-typing" title="Permanent link">&para;</a></h2>
 <p>Lua is a dynamically-typed language, which means that you can't tell from normal Lua source code what type of values you should use when calling functions, unless you understand how the function internals work.</p>
 <p>Rodash uses a type language that borrows heavily from the Typescript type language.</p>
@@ -1212,7 +1238,7 @@
 <tr>
 <td>Array</td>
 <td><code>X[]</code></td>
-<td>A Lua table that has a finite number of <a href="/rodash/types/#Ordered">Ordered</a> keys with values of type <code>X</code></td>
+<td>A Lua table that has a finite number of <a href="/rodash/types/#ordered">Ordered</a> keys with values of type <code>X</code></td>
 </tr>
 <tr>
 <td>Fixed array</td>
@@ -1241,7 +1267,7 @@
 </tr>
 </tbody>
 </table>
-<p>Rodash methods use more general types where possible, specifically <a href="/rodash/types/#Ordered">Ordered</a> and <a href="/rodash/types/#Iterable">Iterable</a> values. This let's you operate on iterators as well as tables.</p>
+<p>Rodash methods use more general types where possible, specifically <a href="/rodash/types/#ordered">Ordered</a> and <a href="/rodash/types/#iterable">Iterable</a> values. This let's you operate on iterators as well as tables.</p>
 <h2 id="function-types">Function types<a class="headerlink" href="#function-types" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1339,6 +1365,44 @@
 </tr>
 </tbody>
 </table>
+<h3 id="type-definitions">Type definitions<a class="headerlink" href="#type-definitions" title="Permanent link">&para;</a></h3>
+<p>There a few different ways to define new types in documented code:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Usage</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Marker type</td>
+<td><code>type X = Y</code></td>
+<td>This creates a type called <code>X</code> that you can refer to which is the same as the type <code>Y</code>. For example, a <a href="/rodash/types/#constructor">Constructor</a> is just a specific type function, but using <code>Constructor</code> also indicates how the function should be used beyond its type</td>
+</tr>
+<tr>
+<td>Interface</td>
+<td><code>interface X</code></td>
+<td>This creates a type called <code>X</code> based on functions in a Lua table and a <code>t</code> interface</td>
+</tr>
+<tr>
+<td>Class</td>
+<td><code>class X</code></td>
+<td>This creates a type <code>X</code> based on methods in a Lua table and fields in a <code>t</code> interface, or use <a href="/rodash/api/Classes/#classwithinterface">dash.classWithInterface</a></td>
+</tr>
+<tr>
+<td>Enum</td>
+<td><code>enum X</code></td>
+<td>This creates a type <code>X</code> based on keys of a Lua array, or use <a href="/rodash/api/Classes/#enum">dash.enum</a></td>
+</tr>
+<tr>
+<td>Symbol</td>
+<td><code>symbol X</code></td>
+<td>This creates a type <code>X</code> based on a Lua table definition, or use <a href="/rodash/api/Classes/#symbol">dash.symbol</a></td>
+</tr>
+</tbody>
+</table>
 <h2 id="generic-types">Generic types<a class="headerlink" href="#generic-types" title="Permanent link">&para;</a></h2>
 <p>Generics allow the same function to be used with different types. Known types are replaced with type variables, which are usually single capital letters such as <code>T</code> or <code>K</code>, but can be any word beginning with a capital letter.</p>
 <p>When a generic function is called, the same type variable must refer to the same type everywhere it appears in the type definition. </p>
@@ -1374,7 +1438,7 @@
 </tbody>
 </table>
 <p><strong>Examples</strong></p>
-<p>The <a href="/rodash/api/Arrays/#last">dash.last</a> function returns the last element of an array, and has a type signature of <code>&lt;T&gt;(T[] -&gt; T)</code>. If you call it with an array of strings with type <code>string[]</code>, then <code>T = string</code> and the function becomes parameterized, meaning its type <code>string[] -&gt; string</code>. This shows you that the function will return a <code>string</code>. If you simply used <code>any[] -&gt; any</code> without using a generics, you couldn't know that the function always returned a value of the same type.</p>
+<p>The <a href="/rodash/api/Arrays/#last">dash.last</a> function returns the last element of an array, and has a type signature of <code>&lt;T&gt;(T[] -&gt; T)</code>. If you call it with an array of strings with type <code>string[]</code>, then <code>T = string</code> and the function becomes parameterized, meaning its type is <code>string[] -&gt; string</code>. This shows you that the function will return a <code>string</code>. If you simply used <code>any[] -&gt; any</code> without using a generic type, you couldn't know that the function always returned a value of the same type.</p>
 <p>Like <code>T[]</code> was parameterized as a string array when <code>T = string</code>, any structural types like dictionaries or <a href="/rodash/types/#Classes">Classes</a> can also parameterized.</p>
 <p><strong>Usage</strong></p>
 <p>Note that using <code>...X</code> when <code>X</code> refers to a tuple expands the elements from the tuple in-order, as a value can't have a tuple type itself. For example, <a href="/rodash/api/Functions/#id">dash.id</a> has the type signature <code>&lt;A&gt;(...A -&gt; ...A)</code>. If you call <code>id(1, "Hello")</code> then <code>A = (number, string)</code> and the function becomes typed as: <code>number, string -&gt; number, string</code>.</p>
@@ -1425,7 +1489,7 @@
 </pre></div>
 
 <p><strong>Usage</strong></p>
-<p>Stateful iterators that you write can be used in any Rodash function that takes an <a href="/rodash/types/#Iterable">Iterable</a>.</p>
+<p>Stateful iterators that you write can be used in any Rodash function that takes an <a href="/rodash/types/#iterable">Iterable</a>.</p>
 <h3 id="stateless-iterator">Stateless Iterator<a class="headerlink" href="#stateless-iterator" title="Permanent link">&para;</a></h3>
 <div class="codehilite"><pre><span></span><span class="kr">function</span> <span class="nf">statelessIterator</span><span class="p">(</span><span class="n">props</span><span class="p">,</span> <span class="n">previousKey</span><span class="p">)</span> <span class="c1">--&gt; K, V</span>
 </pre></div>
@@ -1454,7 +1518,7 @@
 </pre></div>
 
 <p><strong>Usage</strong></p>
-<p>Stateless iterators that you write can be used in any Rodash function that takes an <a href="/rodash/types/#Iterable">Iterable</a>.</p>
+<p>Stateless iterators that you write can be used in any Rodash function that takes an <a href="/rodash/types/#iterable">Iterable</a>.</p>
 <h3 id="iterable">Iterable<a class="headerlink" href="#iterable" title="Permanent link">&para;</a></h3>
 <p>An iterable value is either a dictionary or an <a href="/rodash/types/#Iterator">Iterator</a>. Many Rodash functions can operate on iterator functions as well as tables.</p>
 <p><strong>Type</strong></p>
@@ -1469,7 +1533,8 @@
 <li><a href="/rodash/types/#Iterator">Iterator</a></li>
 </ul>
 <h3 id="ordered">Ordered<a class="headerlink" href="#ordered" title="Permanent link">&para;</a></h3>
-<p>An ordered value is either an array or an ordered <a href="/rodash/types/#Iterator">Iterator</a>. For something to be ordered, the keys returned during iteration must be the natural numbers. This means the first key must be <code>1</code>, the second <code>2</code>, the third <code>3</code>, etc.</p>
+<p>An ordered value is either an array or an ordered <a href="/rodash/types/#Iterator">Iterator</a>. For something to be ordered, the keys returned during iteration must be the natural number sequence. This means the first key must be <code>1</code>, the second <code>2</code>, the third <code>3</code>, etc.</p>
+<p>Functions that operate on ordered values will ignore any additional keys, including numeric keys after a <em>hole</em>, which corresponds with how <code>ipairs</code> natively iterates through a table. For example, in the table <code>{10, 20, [4] = 40, [5] = 50}</code>, only the first two values are considered ordered.</p>
 <p><strong>Type</strong></p>
 <p><code>type Ordered&lt;V&gt; = V[] | Iterator&lt;number,V&gt;</code></p>
 <p><strong>Generics</strong></p>
@@ -1631,8 +1696,12 @@ modified version of the class which new behavior.</p>
 </blockquote>
 <p><strong>Properties</strong></p>
 <p>Implementors can be compared using the ordering operators such as <code>&lt;</code>, <code>&lt;=</code>, and <code>==</code>.</p>
-<p>An ordering means that you can compare any two elements <code>a</code> and <code>b</code>, and one is always greater
-or equal to the other i.e. <code>a &gt;= b == b &lt; a</code> is always true.</p>
+<p>An ordering means that you can compare any elements <code>a</code>, <code>b</code> and <code>c</code>, and these
+properties are satisfied:</p>
+<ul>
+<li>Two elements are always ordered i.e. exactly one of <code>a &lt; b</code>, <code>a == b</code> or <code>a &gt; b</code> is true</li>
+<li>Transitive - if <code>a &lt; b</code> and <code>b &lt; c</code> then <code>a &lt; c</code></li>
+</ul>
 <p><strong>See</strong></p>
 <ul>
 <li><a href="/rodash/api/Classes/#ord">dash.Ord</a> - to derive a generated implementation of this interface.</li>
@@ -1653,7 +1722,7 @@ properties are satisfied:</p>
 <ul>
 <li>Reflexive - <code>a == a</code> is always true</li>
 <li>Symmetric - if <code>a == b</code> then <code>b == a</code></li>
-<li>Transitive - if <code>a == b &amp;&amp; b == c</code> then <code>a == c</code></li>
+<li>Transitive - if <code>a == b</code> and <code>b == c</code> then <code>a == c</code></li>
 </ul>
 <p><strong>See</strong></p>
 <ul>
@@ -1696,7 +1765,7 @@ value.</p>
 <p>Actors can be used to transform the types of subjects that functions can naturally deal with,
 without having to change the definition of the functions themselves.</p>
 <p>For example the <a href="/rodash/api/Functions/#maybe">dash.maybe</a> actor factory allows functions to be skipped if the subject is <code>nil</code>,
-and <a href="/rodash/api/Functions/#continue">dash.continue</a> allows functions to act with.</p>
+and <a href="/rodash/api/Functions/#continue">dash.continue</a> allows functions to act on promises once they have resolved.</p>
 <p><strong>Type</strong></p>
 <p><code>type Actor&lt;S&gt; = (S -&gt; S), S, ... -&gt; S</code></p>
 <p><strong>See</strong></p>
@@ -1778,7 +1847,7 @@ and <a href="/rodash/api/Functions/#continue">dash.continue</a> allows functions
 <blockquote>
 <p><strong>K</strong> - <code>any</code> - the primary key type (can be any value)</p>
 <p><strong>V</strong> - <code>any</code> - the primary value type (can be any value)</p>
-<p><strong>T</strong> - <code>Iterable&lt;K,V&gt;</code> - An <a href="/rodash/types/#Iterable">Iterable</a> (of the primary key type and the primary value type)</p>
+<p><strong>T</strong> - <code>Iterable&lt;K,V&gt;</code> - An <a href="/rodash/types/#iterable">Iterable</a> (of the primary key type and the primary value type)</p>
 </blockquote>
 <p><strong>Properties</strong></p>
 <table>

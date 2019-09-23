@@ -631,7 +631,7 @@ Inserts into the <em>target</em> array the elements from all subsequent argument
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>target</strong> - <code>mut T[]</code> - an array (of the primary type) (which can be mutated) </p>
-<p><strong>...</strong> - <code>...Ordered&lt;T&gt;</code> - <a href="/rodash/types/#Ordered">Ordereds</a> (of the primary type)  - any number of other arrays
+<p><strong>...</strong> - <code>...Ordered&lt;T&gt;</code> - <a href="/rodash/types/#ordered">Ordereds</a> (of the primary type)  - any number of other arrays
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
@@ -689,7 +689,7 @@ Returns the earliest value from the array that <em>predicate</em> returns <code>
 <p><code>&lt;T: Iterable&lt;K,V&gt;&gt;(T, (element: V, key: K -&gt; bool) -&gt; V?)</code></p>
 <p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code> - the primary type (extends <a href="/rodash/types/#Iterable">an Iterable</a> (of the primary key type and the primary value type))</p>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code> - the primary type (extends <a href="/rodash/types/#iterable">an Iterable</a> (of the primary key type and the primary value type))</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
@@ -745,7 +745,7 @@ Returns the last value from the array that <em>predicate</em> returns <code>true
 <p><code>&lt;T: Iterable&lt;K,V&gt;&gt;(T, (element: V, key: K -&gt; bool) -&gt; V?)</code></p>
 <p><strong>Generics</strong></p>
 <blockquote>
-<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code> - the primary type (extends <a href="/rodash/types/#Iterable">an Iterable</a> (of the primary key type and the primary value type))</p>
+<p><strong>T</strong> - <code>Iterable&lt;K, V&gt;</code> - the primary type (extends <a href="/rodash/types/#iterable">an Iterable</a> (of the primary key type and the primary value type))</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
@@ -798,7 +798,7 @@ and key as subsequent arguments.</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <code>Ordered&lt;T&gt;</code> - <a href="/rodash/types/#Ordered">an Ordered</a> (of the primary type) </p>
+<p><strong>source</strong> - <code>Ordered&lt;T&gt;</code> - <a href="/rodash/types/#ordered">an Ordered</a> (of the primary type) </p>
 <p><strong>handler</strong> - <code>(result: R, value: T, key: int) -&gt; R</code> - a function (taking <em>result</em> (the result type), <em>value</em> (the primary type) and <em>key</em> (an integer), and returning the result type) </p>
 <p><strong>initial</strong> - <code>R</code> - the result type 
 </p>
@@ -964,7 +964,7 @@ Sums all the values in the <em>source</em> array.</p>
 <p><code>Ordered&lt;number&gt; -&gt; number</code></p>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>source</strong> - <code>Ordered&lt;number&gt;</code> - <a href="/rodash/types/#Ordered">an Ordered</a> (of a number) 
+<p><strong>source</strong> - <code>Ordered&lt;number&gt;</code> - <a href="/rodash/types/#ordered">an Ordered</a> (of a number) 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>

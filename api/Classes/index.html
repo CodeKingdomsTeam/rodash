@@ -808,13 +808,13 @@ additional methods and functionality you may need. Specifically you can:</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>name</strong> - <code>string</code> - a string </p>
-<p><strong>constructor</strong> - <code>Constructor&lt;T&gt;?</code> - <a href="/rodash/types/#Constructor">a Constructor</a> (of the primary type) (optional)  - (default = <code>dash.returns({})</code>)</p>
-<p><strong>decorators</strong> - <code>Decorator&lt;T&gt;[]?</code> - an array (of <a href="/rodash/types/#Decorator">Decorators</a> (of the primary type)) (optional)  - (default = <code>{}</code>)
+<p><strong>constructor</strong> - <code>Constructor&lt;T&gt;?</code> - <a href="/rodash/types/#constructor">a Constructor</a> (of the primary type) (optional)  - (default = <code>dash.returns({})</code>)</p>
+<p><strong>decorators</strong> - <code>Decorator&lt;T&gt;[]?</code> - an array (of <a href="/rodash/types/#decorator">Decorators</a> (of the primary type)) (optional)  - (default = <code>{}</code>)
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>Class&lt;T&gt;</code> - <a href="/rodash/types/#Class">a Class</a> (of the primary type)</p>
+<p><code>Class&lt;T&gt;</code> - <a href="/rodash/types/#class">a Class</a> (of the primary type)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="c1">-- Create a simple Vehicle class</span>
@@ -972,13 +972,13 @@ optionally overriding the <em>constructor</em> and providing additional <em>deco
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>name</strong> - <code>string</code> - a string </p>
-<p><strong>constructor</strong> - <code>Constructor&lt;S&gt;?</code> - <a href="/rodash/types/#Constructor">a Constructor</a> (of the subject type) (optional) </p>
-<p><strong>decorators</strong> - <code>Decorator&lt;S&gt;[]?</code> - an array (of <a href="/rodash/types/#Decorator">Decorators</a> (of the subject type)) (optional) 
+<p><strong>constructor</strong> - <code>Constructor&lt;S&gt;?</code> - <a href="/rodash/types/#constructor">a Constructor</a> (of the subject type) (optional) </p>
+<p><strong>decorators</strong> - <code>Decorator&lt;S&gt;[]?</code> - an array (of <a href="/rodash/types/#decorator">Decorators</a> (of the subject type)) (optional) 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>Class&lt;S&gt;</code> - <a href="/rodash/types/#Class">a Class</a> (of the subject type)</p>
+<p><code>Class&lt;S&gt;</code> - <a href="/rodash/types/#class">a Class</a> (of the subject type)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span>    <span class="kd">local</span> <span class="n">Vehicle</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="s2">&quot;Vehicle&quot;</span><span class="p">,</span> <span class="kr">function</span><span class="p">(</span><span class="n">wheelCount</span><span class="p">)</span> <span class="kr">return</span> 
@@ -1030,12 +1030,12 @@ optionally overriding the <em>constructor</em> and providing additional <em>deco
 <blockquote>
 <p><strong>name</strong> - <code>T: string</code> - <em>T</em> (a string) </p>
 <p><strong>interface</strong> - <code>S</code> - the subject type </p>
-<p><strong>decorators</strong> - <code>Decorator[]?</code> - an array (of <a href="/rodash/types/#Decorator">Decorators</a>) (optional) 
+<p><strong>decorators</strong> - <code>Decorator[]?</code> - an array (of <a href="/rodash/types/#decorator">Decorators</a>) (optional) 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>Class&lt;S&gt;</code> - <a href="/rodash/types/#Class">a Class</a> (of the subject type)</p>
+<p><code>Class&lt;S&gt;</code> - <a href="/rodash/types/#class">a Class</a> (of the subject type)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span>    <span class="kd">local</span> <span class="n">Vehicle</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">classWithInterface</span><span class="p">(</span><span class="s2">&quot;Vehicle&quot;</span><span class="p">,</span> <span class="p">{</span>
@@ -1202,13 +1202,13 @@ for more information.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>name</strong> - <code>string</code> - a string </p>
-<p><strong>interface</strong> - <code>Interface&lt;T&gt;</code> - <a href="/rodash/types/#Interface">an Interface</a> (of the primary type) </p>
-<p><strong>decorators</strong> - <code>Decorator&lt;T&gt;[]?</code> - an array (of <a href="/rodash/types/#Decorator">Decorators</a> (of the primary type)) (optional) 
+<p><strong>interface</strong> - <code>Interface&lt;T&gt;</code> - <a href="/rodash/types/#interface">an Interface</a> (of the primary type) </p>
+<p><strong>decorators</strong> - <code>Decorator&lt;T&gt;[]?</code> - an array (of <a href="/rodash/types/#decorator">Decorators</a> (of the primary type)) (optional) 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>Class&lt;T&gt;</code> - <a href="/rodash/types/#Class">a Class</a> (of the primary type)</p>
+<p><code>Class&lt;T&gt;</code> - <a href="/rodash/types/#class">a Class</a> (of the primary type)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">Vehicle</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">classWithInterface</span><span class="p">(</span><span class="s2">&quot;Vehicle&quot;</span><span class="p">,</span> <span class="p">{</span>
@@ -1227,9 +1227,10 @@ for more information.</p>
 <p><strong>Usage</strong></p>
 <ul>
 <li>
-<p>Rodash uses <code>t</code> by Osyris to perform runtime type assertions, which we recommend using during
-development and production code to catch errors quickly and fail fast. For more information
-about <code>t</code>, please visit <a href="https://github.com/osyrisrblx/t">https://github.com/osyrisrblx/t</a>.</p>
+<p>Rodash uses <code>t</code> by Osyris to perform runtime type assertions, which we recommend using
+in your own code development and production to catch errors quickly and fail fast. For more
+information about <code>t</code>, please visit
+<a href="https://github.com/osyrisrblx/t">https://github.com/osyrisrblx/t</a>.</p>
 </li>
 <li>
 <p>If you want to instantiate private fields, we recommend using a static factory with a
@@ -1262,12 +1263,12 @@ the instance when called that has the same metatable as the instance it is calle
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>Class</strong> - <code>Class&lt;T&gt;</code> - <a href="/rodash/types/#Class">a Class</a> (of the primary type) 
+<p><strong>Class</strong> - <code>Class&lt;T&gt;</code> - <a href="/rodash/types/#class">a Class</a> (of the primary type) 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>Cloneable&lt;T&gt;</code> - <a href="/rodash/types/#Cloneable">a Cloneable</a> (of the primary type)</p>
+<p><code>Cloneable&lt;T&gt;</code> - <a href="/rodash/types/#cloneable">a Cloneable</a> (of the primary type)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">Car</span> <span class="o">=</span>
@@ -1310,7 +1311,7 @@ the result of the function as the class instance.</p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>(Class&lt;T&gt;) -&gt; Class&lt;T&gt;</code> - a function (taking <a href="/rodash/types/#Class">a Class</a> (of the primary type), and returning <a href="/rodash/types/#Class">a Class</a> (of the primary type))</p>
+<p><code>(Class&lt;T&gt;) -&gt; Class&lt;T&gt;</code> - a function (taking <a href="/rodash/types/#class">a Class</a> (of the primary type), and returning <a href="/rodash/types/#class">a Class</a> (of the primary type))</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="c1">-- Create a decorator which freezes all class keys</span>
@@ -1361,7 +1362,7 @@ typos.</p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>Enum&lt;T&gt;</code> - <a href="/rodash/types/#Enum">an Enum</a> (of the primary type)</p>
+<p><code>Enum&lt;T&gt;</code> - <a href="/rodash/types/#enum">an Enum</a> (of the primary type)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">TOGGLE</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">enum</span><span class="p">(</span><span class="s2">&quot;ON&quot;</span><span class="p">,</span> <span class="s2">&quot;OFF&quot;</span><span class="p">)</span>
@@ -1430,7 +1431,7 @@ string of the class name and values of any <em>keys</em> provided.</p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>(Class&lt;T&gt;) -&gt; Formatable&lt;T&gt;</code> - a function (taking <a href="/rodash/types/#Class">a Class</a> (of the primary type), and returning <a href="/rodash/types/#Formatable">a Formatable</a> (of the primary type))</p>
+<p><code>(Class&lt;T&gt;) -&gt; Formatable&lt;T&gt;</code> - a function (taking <a href="/rodash/types/#class">a Class</a> (of the primary type), and returning <a href="/rodash/types/#formatable">a Formatable</a> (of the primary type))</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">Car</span> <span class="o">=</span>
@@ -1510,7 +1511,7 @@ Returns <code>true</code> if <em>value</em> is an instance of <em>type</em>.</p>
 <p><strong>Parameters</strong></p>
 <blockquote>
 <p><strong>value</strong> - <code>any</code> - any value </p>
-<p><strong>Type</strong> - <code>Type&lt;T&gt;</code> - <a href="/rodash/types/#Type">a Type</a> (of the primary type) 
+<p><strong>Type</strong> - <code>Type&lt;T&gt;</code> - <a href="/rodash/types/#type">a Type</a> (of the primary type) 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
@@ -1556,8 +1557,8 @@ from causing problems later on down the line.</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>enum</strong> - <code>Enum&lt;T&gt;</code> - <a href="/rodash/types/#Enum">an Enum</a> (of the primary type) </p>
-<p><strong>strategies</strong> - <code>{[enumValue: T]: Strategy&lt;V, A&gt;}</code> - a dictionary mapping <em>enumValue</em> (the primary type) to <a href="/rodash/types/#Strategy">Strategys</a> (of the primary value type and the primary arguments) 
+<p><strong>enum</strong> - <code>Enum&lt;T&gt;</code> - <a href="/rodash/types/#enum">an Enum</a> (of the primary type) </p>
+<p><strong>strategies</strong> - <code>{[enumValue: T]: Strategy&lt;V, A&gt;}</code> - a dictionary mapping <em>enumValue</em> (the primary type) to <a href="/rodash/types/#strategy">Strategys</a> (of the primary value type and the primary arguments) 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
@@ -1601,7 +1602,7 @@ A decorator which adds a dictionary of functions to a Class table.</p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>(Class&lt;T&gt;) -&gt; Class&lt;T&gt;</code> - a function (taking <a href="/rodash/types/#Class">a Class</a> (of the primary type), and returning <a href="/rodash/types/#Class">a Class</a> (of the primary type))</p>
+<p><code>(Class&lt;T&gt;) -&gt; Class&lt;T&gt;</code> - a function (taking <a href="/rodash/types/#class">a Class</a> (of the primary type), and returning <a href="/rodash/types/#class">a Class</a> (of the primary type))</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">CanBrake</span> <span class="o">=</span> <span class="p">{</span>
@@ -1644,7 +1645,7 @@ instances at the same keys, as defined by the order of the <em>keys</em> passed 
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>(Class&lt;T&gt;) -&gt; Ord&lt;T&gt;</code> - a function (taking <a href="/rodash/types/#Class">a Class</a> (of the primary type), and returning <a href="/rodash/types/#Ord">an Ord</a> (of the primary type))</p>
+<p><code>(Class&lt;T&gt;) -&gt; Ord&lt;T&gt;</code> - a function (taking <a href="/rodash/types/#class">a Class</a> (of the primary type), and returning <a href="/rodash/types/#ord">an Ord</a> (of the primary type))</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">Car</span> <span class="o">=</span>
@@ -1681,12 +1682,12 @@ class which are shallow equal will be considered equal.</p>
 </blockquote>
 <p><strong>Parameters</strong></p>
 <blockquote>
-<p><strong>Class</strong> - <code>Class&lt;T&gt;</code> - <a href="/rodash/types/#Class">a Class</a> (of the primary type) 
+<p><strong>Class</strong> - <code>Class&lt;T&gt;</code> - <a href="/rodash/types/#class">a Class</a> (of the primary type) 
 </p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>Eq&lt;T&gt;</code> - <a href="/rodash/types/#Eq">an Eq</a> (of the primary type)</p>
+<p><code>Eq&lt;T&gt;</code> - <a href="/rodash/types/#eq">an Eq</a> (of the primary type)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">Car</span> <span class="o">=</span>
@@ -1746,7 +1747,7 @@ string lookup.</p>
 </blockquote>
 <p><strong>Returns</strong></p>
 <blockquote>
-<p><code>Symbol&lt;T&gt;</code> - <a href="/rodash/types/#Symbol">a Symbol</a> (of the primary type)</p>
+<p><code>Symbol&lt;T&gt;</code> - <a href="/rodash/types/#symbol">a Symbol</a> (of the primary type)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">DOUBLE</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">symbol</span><span class="p">(</span><span class="s2">&quot;DOUBLE&quot;</span><span class="p">)</span>
