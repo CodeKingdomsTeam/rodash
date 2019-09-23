@@ -2,7 +2,7 @@
 
 # Home
 
-Rodash is a collection of functions designed to aid everyday game programming in Roblox. It borrows ideas from [lodash](https://lodash.com) in JS, some simpler functionality of [Penlight](https://github.com/stevedonovan/Penlight) and standalone helper scripts in circulation among the Roblox community.
+Rodash is a collection of core functions expanding the capabilities of Lua in Roblox. It borrows ideas from [lodash](https://lodash.com) in JS, some simpler functionality of [Penlight](https://github.com/stevedonovan/Penlight) and standalone helper scripts in circulation among the Roblox community.
 
 See the [Getting Started](getting-started) page for examples of how you can use Rodash.
 

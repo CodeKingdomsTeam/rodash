@@ -113,9 +113,10 @@ end
 		end
 		local restoreHealth = dash.bindTail(setHealthTo, 100)
 		local Jimbo = {
-			Health = 1
+			Health = 5
 		}
-		restoreHealth
+		restoreHealth(Jimbo)
+		Jimbo.Health --> 100
 	@example
 		local filterHurtPlayers = dash.bindTail(dash.filter, function(player)
 			return player.Health < player.MaxHealth
