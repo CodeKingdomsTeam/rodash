@@ -4315,7 +4315,7 @@ end
 	calling _handler_ with each element in _source_.
 	@example
 		-- Use map to get the same property of each value:
-		local playerNames = dash.map(game.Players:GetChildren(), function(player)
+		local playerNames = dash.map(game.Players:GetPlayers(), function(player)
 			return player.Name
 		end)
 		playerNames --> {"Frodo Baggins", "Bilbo Baggins", "Boromir"}
@@ -4405,7 +4405,7 @@ end
 	element.
 
 	@example
-		local tools = dash.flatMap(game.Players:GetChildren(), function(player)
+		local tools = dash.flatMap(game.Players:GetPlayers(), function(player)
 			return player.Backpack:GetChildren()
 		end)
 		tools --> {Spoon, Ring, Sting, Book}

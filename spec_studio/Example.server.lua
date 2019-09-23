@@ -6,7 +6,7 @@ local fn = dash.fn
 dash.setInterval(
 	function()
 		local getNames = fn:map(fn:get("Name"))
-		local playerNames = getNames(game.Players:GetChildren())
+		local playerNames = getNames(game.Players:GetPlayers())
 		print(dash.format("Players online ({#1}): {:#?}", playerNames))
 	end,
 	1
