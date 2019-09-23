@@ -25,7 +25,7 @@ To understand how Rodash can be helpful in your game, here is an example code sn
 spawn(function()
 	while true do
 		local playerNames = {}
-		for player in pairs(game.Players:GetChildren()) do
+		for player in pairs(game.Players:GetPlayers()) do
 			table.insert(playerNames, player.Name)
 		end
 		local nameList = table.concat(playerNames, ",")
@@ -42,7 +42,7 @@ local dash = require(game.ReplicatedStorage.Rodash)
 
 dash.setInterval(function()
 	local playerNames = {}
-	for player in pairs(game.Players:GetChildren()) do
+	for player in pairs(game.Players:GetPlayers()) do
 		table.insert(playerNames, player.Name)
 	end
 	local nameList = table.concat(playerNames, ",")
@@ -58,7 +58,7 @@ A cleaner way to get the player names from the list of players is using `map`:
 local dash = require(game.ReplicatedStorage.Rodash)
 
 dash.setInterval(function()
-	local playerNames = dash.map(game.Players:GetChildren(), function(name)
+	local playerNames = dash.map(game.Players:GetPlayers(), function(name)
 		return player.Name
 	end)
 	local nameList = table.concat(playerNames, ",")
@@ -74,7 +74,7 @@ Rodash also has lots of primitive functions such as `dash.noop`, `dash.id`, `das
 local dash = require(game.ReplicatedStorage.Rodash)
 
 dash.setInterval(function()
-	local playerNames = dash.map(game.Players:GetChildren(), dash.bindTail(dash.get, "Name"))
+	local playerNames = dash.map(game.Players:GetPlayers(), dash.bindTail(dash.get, "Name"))
 	local nameList = table.concat(playerNames, ",")
 	print(string.format("Players online = %s: %s", #playerNames, nameList))
 end, 1)
@@ -90,7 +90,7 @@ local fn = dash.fn
 
 dash.setInterval(function()
     local getNames = fn:map(fn:get("Name"))
-    local playerNames = getNames(game.Players:GetChildren())
+    local playerNames = getNames(game.Players:GetPlayers())
     local nameList = table.concat(playerNames, ",")
     print(string.format("Players online = %s: %s", #playerNames, nameList))
 end, 1)
@@ -104,7 +104,7 @@ local fn = dash.fn
 
 dash.setInterval(function()
 	local getNames = fn:map(fn:get("Name"))
-	local playerNames = getNames(game.Players:GetChildren())
+	local playerNames = getNames(game.Players:GetPlayers())
 	print(dash.format("Players online = {#}: {1:#?}", playerNames))
 end, 1)
 ```
