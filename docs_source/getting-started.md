@@ -2,7 +2,7 @@
 
 ## Using this documentation
 
-If you are looking for a specific function check out the [Glossary](/rodash/Glossary).
+If you are looking for a specific function check out the [Glossary](/rodash/glossary).
 
 If you want to simplify your code using a specific programming concept, Rodash functions are grouped by subject:
 
@@ -29,7 +29,7 @@ spawn(function()
 			table.insert(playerNames, player.Name)
 		end
 		local nameList = table.concat(playerNames, ",")
-		print(string.format("Players online = %s: %s"), #playerNames, nameList)
+		print(string.format("Players online = %s: %s", #playerNames, nameList))
 		wait(1)
 	end
 end)
@@ -46,7 +46,7 @@ dash.setInterval(function()
 		table.insert(playerNames, player.Name)
 	end
 	local nameList = table.concat(playerNames, ",")
-	print(string.format("Players online = %s: %s"), #playerNames, nameList)
+	print(string.format("Players online = %s: %s", #playerNames, nameList))
 end, 1)
 ```
 
@@ -62,7 +62,7 @@ dash.setInterval(function()
 		return player.Name
 	end)
 	local nameList = table.concat(playerNames, ",")
-	print(string.format("Players online = %s: %s"), #playerNames, nameList)
+	print(string.format("Players online = %s: %s", #playerNames, nameList))
 end, 1)
 ```
 
@@ -76,7 +76,7 @@ local dash = require(game.ReplicatedStorage.Rodash)
 dash.setInterval(function()
 	local playerNames = dash.map(game.Players:GetChildren(), dash.bindTail(dash.get, "Name"))
 	local nameList = table.concat(playerNames, ",")
-	print(string.format("Players online = %s: %s"), #playerNames, nameList)
+	print(string.format("Players online = %s: %s", #playerNames, nameList))
 end, 1)
 ```
 
@@ -89,10 +89,10 @@ local dash = require(game.ReplicatedStorage.Rodash)
 local fn = dash.fn
 
 dash.setInterval(function()
-	local getNames = fn:map(fn:get("Name"))
-	local playerNames = getNames(game.Players:GetChildren())
-	local nameList = table.concat(playerNames, ",")
-	print(string.format("Players online = %s: %s"), #playerNames, nameList)
+    local getNames = fn:map(fn:get("Name"))
+    local playerNames = getNames(game.Players:GetChildren())
+    local nameList = table.concat(playerNames, ",")
+    print(string.format("Players online = %s: %s", #playerNames, nameList))
 end, 1)
 ```
 
