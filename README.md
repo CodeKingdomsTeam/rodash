@@ -1,6 +1,6 @@
 ![logo](docs/logo.png)
 
-Rodash is a collection of functions designed to aid everyday game programming in Roblox.
+Rodash is a collection of core functions expanding the capability of Lua in Roblox.
 
 # [Getting Started](https://codekingdomsteam.github.io/rodash/)
 
