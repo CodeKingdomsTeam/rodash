@@ -58,7 +58,7 @@ A cleaner way to get the player names from the list of players is using `map`:
 local dash = require(game.ReplicatedStorage.Rodash)
 
 dash.setInterval(function()
-	local playerNames = dash.map(game.Players:GetPlayers(), function(name)
+	local playerNames = dash.map(game.Players:GetPlayers(), function(player)
 		return player.Name
 	end)
 	local nameList = table.concat(playerNames, ",")

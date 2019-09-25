@@ -624,6 +624,63 @@ bad value for key amount:
 			end
 		)
 		describe(
+			"construct",
+			function()
+				it(
+					"to construct a default instance",
+					function()
+						local Car = Classes.class("Car", Classes.construct({speed = 5}))
+						local car = Car.new()
+						assert.equals(5, car.speed)
+					end
+				)
+				it(
+					"to construct a default interfaced instance",
+					function()
+						local construct = Classes.construct({speed = 5})
+						local Car =
+							Classes.classWithInterface(
+							"Car",
+							{
+								speed = t.optional(t.number)
+							},
+							{Classes.decorate(construct)}
+						)
+						local car = Car.new()
+						assert.equals(5, car.speed)
+					end
+				)
+				it(
+					"to make frozen class instances",
+					function()
+						local Final = Classes.decorate(Classes.freeze)
+						local StaticCar =
+							Classes.class(
+							"StaticCar",
+							function(speed)
+								return {
+									speed = speed
+								}
+							end,
+							{Final}
+						)
+						function StaticCar:brake()
+							self.speed = 0
+							self.stopped = true
+						end
+						local car = StaticCar.new(5)
+
+						assert.errors(
+							function()
+								car:brake()
+							end,
+							"ReadonlyKey: Attempt to write to a frozen key speed"
+						)
+					end
+				)
+			end
+		)
+		describe(
 			"Cloneable",
 			function()
 				it(

@@ -5,29 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [2019-09-25]
 
-### Added
+* Released v1.1.0
+* Added dash.construct as a better alternative to dash.returns for class constructors
 
-- `Strings.Split`
-- `Strings.Trim`
-- `Strings.StartsWith`
-- `Strings.EndsWith`
-- `Tables.Slice`
-- `Tables.GetLength`
-- `Tables.Clone`
-- `Tables.Map`
-- `Tables.Find`
-- `Tables.Filter`
-- `Tables.InsertMany`
-- `Strings.PadLeft`
-- `Strings.PadRight`
-- `Tables.Invert`
-- `Tables.Includes`
+## [2019-09-23]
 
-### Fixed
-
-- Typing of `Tables.GetLength` and `Tables.Split`
-- Split works for empty delimiter
-- `Tables.IsSubset`
-- `Tables.DeepEquals`
+* Released v1.0.0
