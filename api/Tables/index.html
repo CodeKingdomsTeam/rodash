@@ -1530,7 +1530,7 @@ element.</p>
 <p><code>V2[]</code> - an array (of the secondary value type)</p>
 </blockquote>
 <p><strong>Examples</strong></p>
-<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">tools</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">flatMap</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">:</span><span class="n">GetChildren</span><span class="p">(),</span> <span class="kr">function</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
+<div class="codehilite"><pre><span></span><span class="kd">local</span> <span class="n">tools</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">flatMap</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">:</span><span class="n">GetPlayers</span><span class="p">(),</span> <span class="kr">function</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
     <span class="kr">return</span> <span class="n">player</span><span class="p">.</span><span class="n">Backpack</span><span class="p">:</span><span class="n">GetChildren</span><span class="p">()</span>
 <span class="kr">end</span><span class="p">)</span>
 <span class="n">tools</span> <span class="c1">--&gt; {Spoon, Ring, Sting, Book}</span>
@@ -1918,7 +1918,7 @@ calling <em>handler</em> with each element in <em>source</em>.</p>
 </blockquote>
 <p><strong>Examples</strong></p>
 <div class="codehilite"><pre><span></span><span class="c1">-- Use map to get the same property of each value:</span>
-<span class="kd">local</span> <span class="n">playerNames</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">:</span><span class="n">GetChildren</span><span class="p">(),</span> <span class="kr">function</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">playerNames</span> <span class="o">=</span> <span class="n">dash</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">game</span><span class="p">.</span><span class="n">Players</span><span class="p">:</span><span class="n">GetPlayers</span><span class="p">(),</span> <span class="kr">function</span><span class="p">(</span><span class="n">player</span><span class="p">)</span>
     <span class="kr">return</span> <span class="n">player</span><span class="p">.</span><span class="n">Name</span>
 <span class="kr">end</span><span class="p">)</span>
 <span class="n">playerNames</span> <span class="c1">--&gt; {&quot;Frodo Baggins&quot;, &quot;Bilbo Baggins&quot;, &quot;Boromir&quot;}</span>
