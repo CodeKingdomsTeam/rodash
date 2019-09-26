@@ -18,7 +18,7 @@ local Classes = {}
 	2. Mixin an implementation of an interface e.g. `dash.mixin( fns )`
 	3. Decorate fields or functions e.g. `dash.decorate(dash.freeze)`
 
-	@param constructor (default = `dash.returns({})`)
+	@param constructor (default = `dash.construct({})`)
 	@param decorators (default = `{}`)
 	@example
 		-- Create a simple Vehicle class
@@ -46,6 +46,7 @@ local Classes = {}
 	@see `dash.classWithInterface` - recommended for providing runtime type-checking.
 	@see `dash.mixin` - extend the class with extra methods.
 	@see `dash.decorate` - include methods that run when an instance of the class is constructed.
+	@see `dash.construct` - provide a default object to use as a new instance.
 ]]
 --: <T>(string, Constructor<T>?, Decorator<T>[]?) -> Class<T>
 function Classes.class(name, constructor, decorators)
@@ -390,6 +391,37 @@ function Classes.classWithInterface(name, interface, decorators)
 		type(interface) == "function" and getImplementsInterface(interface(Class)) or getImplementsInterface(interface)
 	Class.interface = interface
 	return Class
+end
+
+--[[
+	Returns a function that creates a shallow copy of the _template_ when called.
+	@example
+		local Car = dash.class("Car", dash.construct({
+			speed = 5
+		}))
+
+		local car = Car.new()
+		car.speed --> 5
+	@example
+		-- A constructor can be made for a class with an interface using decorate.
+		local constructor = dash.construct({
+			speed = 5
+		})
+		local Car = dash.classWithInterface("Car", {
+			speed = t.optional(t.number)
+		}, {dash.decorate(constructor)})
+
+		local car = Car.new()
+		car.speed --> 5
+	@usage Useful if you want to return a default object for a class constructor.
+	@see `dash.class`
+	@see `dash.classWithInterface`
+]]
+--: <T:{}>(T -> () -> T)
+function Classes.construct(template)
+	return function()
+		return Tables.clone(template)
+	end
 end
 
 --[[
