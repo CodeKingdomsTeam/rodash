@@ -7,13 +7,20 @@
 	These functions typically act on immutable tables and return new tables in functional style.
 	Note that mutable arguments in Rodash are explicitly typed as such with the `mut` keyword.
 ]]
+
 local t = require(script.Parent.Parent.t)
 
 local Tables = {}
 
+local callbackOrTable = t.union(t.callback, t.table)
+
 local function assertHandlerIsFn(handler)
 	local Functions = require(script.Parent.Functions)
 	assert(Functions.isCallable(handler), "BadInput: handler must be a function")
+end
+
+local function returnX(x)
+	return x
 end
 
 --[[
@@ -25,12 +32,13 @@ end
 ]]
 --: <T: Iterable>(T, bool -> Iterator<T>)
 function Tables.iterator(source, asArray)
+	assert(callbackOrTable(source))
 	local metatable = getmetatable(source)
 	local iterable = metatable and metatable.iterable or source
+
 	if type(source) == "function" then
 		return source
 	else
-		assert(type(source) == "table", "BadInput: Can only iterate over a table or an iterator function")
 		if asArray then
 			return ipairs(iterable)
 		else
@@ -55,16 +63,15 @@ end
 --: <K, V, T: {[K]: V}>(T, ...K) -> V?
 function Tables.get(source, ...)
 	local path = {...}
-	local ok, value =
-		pcall(
-		function()
-			local result = source
-			for _, key in ipairs(path) do
-				result = result[key]
-			end
-			return result
+	local ok, value = pcall(function()
+		local result = source
+		for _, key in ipairs(path) do
+			result = result[key]
 		end
-	)
+
+		return result
+	end)
+
 	if ok then
 		return value
 	end
@@ -84,17 +91,14 @@ end
 ]]
 --: <T: Iterable<K, V>>(T, K[], V) -> bool
 function Tables.set(source, path, value)
-	local ok =
-		pcall(
-		function()
-			local result = source
-			for i = 1, #path - 1 do
-				result = result[path[i]]
-			end
-			result[path[#path]] = value
+	return (pcall(function()
+		local result = source
+		for i = 1, #path - 1 do
+			result = result[path[i]]
 		end
-	)
-	return ok
+
+		result[path[#path]] = value
+	end))
 end
 
 --[[
@@ -127,10 +131,12 @@ end
 --: <T: Iterable<K,V>, V2>((T, (element: V, key: K) -> V2) -> Iterable<K,V2>)
 function Tables.map(source, handler)
 	assertHandlerIsFn(handler)
+
 	local result = {}
 	for i, v in Tables.iterator(source) do
 		result[i] = handler(v, i)
 	end
+
 	return result
 end
 
@@ -150,9 +156,13 @@ end
 function Tables.mapValues(source, handler)
 	assertHandlerIsFn(handler)
 	local result = {}
+	local length = 0
+
 	for i, v in Tables.iterator(source) do
-		table.insert(result, handler(v, i))
+		length = length + 1
+		result[length] = handler(v, i)
 	end
+
 	return result
 end
 
@@ -174,12 +184,14 @@ end
 function Tables.keyBy(source, handler)
 	assertHandlerIsFn(handler)
 	local result = {}
+
 	for i, v in Tables.iterator(source) do
 		local key = handler(v, i)
 		if key ~= nil then
 			result[key] = v
 		end
 	end
+
 	return result
 end
 
@@ -202,11 +214,13 @@ function Tables.flatMap(source, handler)
 	assertHandlerIsFn(handler)
 	local Arrays = require(script.Parent.Arrays)
 	local result = {}
+
 	for i, v in Tables.iterator(source) do
 		local list = handler(v, i)
-		assert(t.table(list), "BadResult: Handler must return an array")
+		assert(t.table(list))
 		Arrays.append(result, list)
 	end
+
 	return result
 end
 
@@ -226,11 +240,15 @@ end
 function Tables.filter(source, handler)
 	assertHandlerIsFn(handler)
 	local result = {}
+	local length = 0
+
 	for i, v in Tables.iterator(source) do
 		if handler(v, i) then
-			table.insert(result, v)
+			length = length + 1
+			result[length] = v
 		end
 	end
+
 	return result
 end
 
@@ -247,12 +265,9 @@ end
 ]]
 --: <T: Iterable<K,V>>(T, V -> V[])
 function Tables.without(source, value)
-	return Tables.filter(
-		source,
-		function(child)
-			return child ~= value
-		end
-	)
+	return Tables.filter(source, function(child)
+		return child ~= value
+	end)
 end
 
 --[[
@@ -272,12 +287,10 @@ end
 function Tables.compact(source)
 	local Arrays = require(script.Parent.Arrays)
 	local sortedKeys = Arrays.sort(Tables.keys(source))
-	return Tables.map(
-		sortedKeys,
-		function(key)
-			return source[key]
-		end
-	)
+
+	return Tables.map(sortedKeys, function(key)
+		return source[key]
+	end)
 end
 
 --[[
@@ -298,17 +311,15 @@ end
 ]]
 --: <T: Iterable<K,V>>(T, (value: V, key: K -> bool)?) -> bool
 function Tables.all(source, handler)
-	if not handler then
-		handler = function(x)
-			return x
-		end
-	end
+	handler = handler or returnX
 	assertHandlerIsFn(handler)
+
 	for key, value in Tables.iterator(source) do
 		if not handler(value, key) then
 			return false
 		end
 	end
+
 	return true
 end
 
@@ -330,12 +341,9 @@ end
 ]]
 --: <T: Iterable<K,V>>(T -> bool)
 function Tables.any(source, handler)
-	if not handler then
-		handler = function(x)
-			return x
-		end
-	end
+	handler = handler or returnX
 	assertHandlerIsFn(handler)
+
 	-- Use double negation to coerce the type to a boolean, as there is
 	-- no toboolean() or equivalent in Lua.
 	for key, value in Tables.iterator(source) do
@@ -343,6 +351,7 @@ function Tables.any(source, handler)
 			return true
 		end
 	end
+
 	return false
 end
 
@@ -388,13 +397,11 @@ end
 --: <T>(T{} -> T{})
 function Tables.privatize(source)
 	local Strings = require(script.Parent.Strings)
-	return Tables.keyBy(
-		source,
-		function(_, key)
-			local stringKey = tostring(key)
-			return Strings.startsWith(stringKey, "_") and stringKey or "_" .. stringKey
-		end
-	)
+
+	return Tables.keyBy(source, function(_, key)
+		local stringKey = tostring(key)
+		return Strings.startsWith(stringKey, "_") and stringKey or "_" .. stringKey
+	end)
 end
 
 --[[
@@ -410,6 +417,7 @@ function Tables.invert(source)
 	for i, v in Tables.iterator(source) do
 		result[v] = i
 	end
+
 	return result
 end
 
@@ -432,15 +440,15 @@ end
 function Tables.groupBy(source, handler)
 	assertHandlerIsFn(handler)
 	local result = {}
+
 	for i, v in Tables.iterator(source) do
 		local key = handler(v, i)
 		if key ~= nil then
-			if not result[key] then
-				result[key] = {}
-			end
-			table.insert(result[key], v)
+			if not result[key] then result[key] = {} end
+			result[key][#result[key] + 1] = v
 		end
 	end
+
 	return result
 end
 
@@ -509,6 +517,7 @@ function Tables.merge(target, ...)
 			end
 		end
 	end
+
 	return target
 end
 
@@ -524,9 +533,13 @@ end
 --: <T: Iterable<K,V>>(T -> V[])
 function Tables.values(source)
 	local result = {}
+	local length = 0
+
 	for i, v in Tables.iterator(source) do
-		table.insert(result, v)
+		length = length + 1
+		result[length] = v
 	end
+
 	return result
 end
 
@@ -542,9 +555,13 @@ end
 --: <T: Iterable<K,V>>(T -> K[])
 function Tables.keys(source)
 	local result = {}
+	local length = 0
+
 	for i, v in Tables.iterator(source) do
-		table.insert(result, i)
+		length = length + 1
+		result[length] = i
 	end
+
 	return result
 end
 
@@ -562,9 +579,13 @@ end
 --: <T: Iterable<K,V>>(T -> {K, V}[])
 function Tables.entries(source)
 	local result = {}
+	local length = 0
+
 	for i, v in Tables.iterator(source) do
-		table.insert(result, {i, v})
+		length = length + 1
+		result[length] = {i, v}
 	end
+
 	return result
 end
 
@@ -597,8 +618,9 @@ end
 --: <T: Iterable<K,V>>((T, (element: V, key: K) -> bool) -> V?)
 function Tables.find(source, handler)
 	assertHandlerIsFn(handler)
+
 	for i, v in Tables.iterator(source) do
-		if (handler(v, i)) then
+		if handler(v, i) then
 			return v, i
 		end
 	end
@@ -617,12 +639,9 @@ end
 ]]
 --: <T: Iterable<K,V>>(T, V -> bool)
 function Tables.includes(source, item)
-	return Tables.find(
-		source,
-		function(value)
-			return value == item
-		end
-	) ~= nil
+	return Tables.find(source, function(value)
+		return value == item
+	end) ~= nil
 end
 
 --[[
@@ -642,6 +661,7 @@ function Tables.len(source)
 	for _ in Tables.iterator(source) do
 		count = count + 1
 	end
+
 	return count
 end
 
@@ -659,6 +679,7 @@ local function assign(shouldOverwriteTarget, target, ...)
 			end
 		end
 	end
+
 	return target
 end
 
@@ -781,6 +802,19 @@ function Tables.clone(source)
 	return Tables.assign({}, source)
 end
 
+local function cloneVisit(input, visited)
+	if type(input) == "table" then
+		if visited[input] == nil then
+			visited[input] = {}
+			Tables.assign(visited[input], Tables.map(input, cloneVisit))
+		end
+
+		return visited[input]
+	else
+		return input
+	end
+end
+
 --[[
 	Recursively clones descendants of _source_, returning the cloned object. If references to the
 	same table are found, the same clone is used in the result. This means that `dash.cloneDeep` is
@@ -805,19 +839,7 @@ end
 ]]
 --: <T: Iterable<K,V>>(T -> T)
 function Tables.cloneDeep(source)
-	local visited = {}
-	local function cloneVisit(input)
-		if type(input) == "table" then
-			if visited[input] == nil then
-				visited[input] = {}
-				Tables.assign(visited[input], Tables.map(input, cloneVisit))
-			end
-			return visited[input]
-		else
-			return input
-		end
-	end
-	return cloneVisit(source)
+	return cloneVisit(source, {})
 end
 
 --[[
@@ -848,20 +870,19 @@ function Tables.isSubset(left, right)
 	else
 		for key, aValue in pairs(left) do
 			local bValue = right[key]
-			if type(aValue) ~= type(bValue) then
+			if typeof(aValue) ~= typeof(bValue) then
 				return false
 			elseif aValue ~= bValue then
 				if type(aValue) == "table" then
 					-- The values are tables, so we need to recurse for a deep comparison.
-					if not Tables.isSubset(aValue, bValue) then
-						return false
-					end
+					return Tables.isSubset(aValue, bValue)
 				else
 					return false
 				end
 			end
 		end
 	end
+
 	return true
 end
 
@@ -951,20 +972,16 @@ end
 ]]
 --: any, any -> bool
 function Tables.shallowEqual(left, right)
-	if type(left) ~= "table" or type(right) ~= "table" then
-		return left == right
-	end
+	if type(left) ~= "table" or type(right) ~= "table" then return left == right end
+
 	local leftKeys = Tables.keys(left)
 	local rightKeys = Tables.keys(right)
-	if #leftKeys ~= #rightKeys then
-		return false
-	end
-	return Tables.all(
-		left,
-		function(value, key)
-			return value == right[key]
-		end
-	)
+
+	if #leftKeys ~= #rightKeys then return false end
+
+	return Tables.all(left, function(value, key)
+		return value == right[key]
+	end)
 end
 
 --[[
@@ -981,6 +998,10 @@ function Tables.isArray(source)
 	return #Tables.keys(source) == #source
 end
 
+local function sortContents(left, right)
+	return left[2] < right[2]
+end
+
 local function serializeVisit(source, options)
 	local Arrays = require(script.Parent.Arrays)
 	local isArray = Tables.isArray(source)
@@ -995,41 +1016,27 @@ local function serializeVisit(source, options)
 			ref = "<" .. cycles.count .. ">"
 		end
 	end
-	local filteredKeys =
-		Tables.map(
-		Tables.filter(
-			-- Sort optimistically so references are more likely to be generated in print order
-			options.keys or Arrays.sort(Tables.keys(source)),
-			function(key)
-				return not Tables.includes(options.omitKeys, key)
-			end
-		),
-		function(key)
-			return {key, options.serializeKey(key, options)}
-		end
-	)
 
-	local contents =
-		Tables.map(
-		-- Sort keys again in case the serialization doesn't preserve order.
-		-- Don't rely on the string value of the object as e.g. a table hash will change its value
-		-- between runs.
-		Arrays.sort(
-			filteredKeys,
-			function(left, right)
-				return left[2] < right[2]
-			end
-		),
-		function(pair)
-			local value = source[pair[1]]
-			local stringValue = options.serializeValue(value, options)
-			if isArray then
-				return stringValue
-			else
-				return options.serializeElement(pair[2], stringValue, options)
-			end
+	-- Sort optimistically so references are more likely to be generated in print order
+	local filteredKeys = Tables.map(Tables.filter(options.keys or Arrays.sort(Tables.keys(source)), function(key)
+		return not Tables.includes(options.omitKeys, key)
+	end), function(key)
+		return {key, options.serializeKey(key, options)}
+	end)
+	
+	-- Sort keys again in case the serialization doesn't preserve order.
+	-- Don't rely on the string value of the object as e.g. a table hash will change its value
+	-- between runs.
+	local contents = Tables.map(Arrays.sort(filteredKeys, sortContents), function(pair)
+		local value = source[pair[1]]
+		local stringValue = options.serializeValue(value, options)
+		if isArray then
+			return stringValue
+		else
+			return options.serializeElement(pair[2], stringValue, options)
 		end
-	)
+	end)
+
 	return options.serializeTable(contents, ref, options)
 end
 
@@ -1048,7 +1055,7 @@ function Tables.defaultSerializer(input)
 	elseif type(input) == "number" or type(input) == "boolean" then
 		return tostring(input)
 	elseif type(input) == "string" then
-		return '"' .. input:gsub("\\", "\\\\"):gsub('"', '\\"'):gsub("\n", "\\n") .. '"'
+		return '"' .. string.gsub(string.gsub(string.gsub(input, "\\", "\\\\"), '"', '\\"'), "\n", "\\n") .. '"'
 	else
 		return "<" .. tostring(input) .. ">"
 	end
@@ -1074,17 +1081,25 @@ local function getDefaultSerializeOptions()
 		serializeElement = function(key, value, options)
 			return key .. options.keyDelimiter .. value
 		end,
+
 		serializeTable = function(contents, ref, options)
 			return ref .. "{" .. table.concat(contents, options.valueDelimiter) .. "}"
 		end,
+	
 		keyDelimiter = ":",
 		valueDelimiter = ",",
+
 		cycles = {
 			count = 0,
-			visits = {}
+			visits = {},
 		},
-		omitKeys = {}
+
+		omitKeys = {},
 	}
+end
+
+local function greaterThanOneOrNil(value)
+	return value > 1 and value or nil
 end
 
 --[[
@@ -1111,25 +1126,22 @@ end
 --: <T: Iterable<K,V>>((T, SerializeOptions<T>) -> string)
 function Tables.serialize(source, options)
 	options = Tables.defaults({}, options, getDefaultSerializeOptions())
-	assert(t.string(options.valueDelimiter), "BadInput: options.valueDelimiter must be a string if defined")
-	assert(t.string(options.keyDelimiter), "BadInput: options.keyDelimiter must be a string if defined")
+	assert(t.string(options.valueDelimiter))
+	assert(t.string(options.keyDelimiter))
+
 	local Functions = require(script.Parent.Functions)
 	assert(Functions.isCallable(options.serializeValue), "BadInput: options.serializeValue must be a function if defined")
 	assert(Functions.isCallable(options.serializeKey), "BadInput: options.serializeKey must be a function if defined")
+
 	if type(source) ~= "table" then
 		return options.serializeValue(source, options)
 	end
 
 	-- Find tables which appear more than once, and assign each an index
 	if not options.cycles.refs then
-		options.cycles.refs =
-			Tables.map(
-			Tables.occurences(source),
-			function(value)
-				return value > 1 and value or nil
-			end
-		)
+		options.cycles.refs = Tables.map(Tables.occurences(source), greaterThanOneOrNil)
 	end
+
 	return serializeVisit(source, options)
 end
 
@@ -1156,8 +1168,10 @@ end
 function Tables.serializeDeep(source, options)
 	options = Tables.defaults({}, options, getDefaultSerializeOptions())
 	local Functions = require(script.Parent.Functions)
+
 	assert(Functions.isCallable(options.serializeValue), "BadInput: options.serializeValue must be a function if defined")
 	assert(Functions.isCallable(options.serializeKey), "BadInput: options.serializeKey must be a function if defined")
+
 	local function deepSerializer(fn, value, internalOptions)
 		if type(value) == "table" then
 			return Tables.serialize(value, internalOptions)
@@ -1165,14 +1179,12 @@ function Tables.serializeDeep(source, options)
 			return fn(value, internalOptions)
 		end
 	end
-	local serializeOptions =
-		Tables.defaults(
-		{
-			serializeKey = Functions.bind(deepSerializer, options.serializeKey),
-			serializeValue = Functions.bind(deepSerializer, options.serializeValue)
-		},
-		options
-	)
+
+	local serializeOptions = Tables.defaults({
+		serializeKey = Functions.bind(deepSerializer, options.serializeKey),
+		serializeValue = Functions.bind(deepSerializer, options.serializeValue),
+	}, options)
+
 	return Tables.serialize(source, serializeOptions)
 end
 
@@ -1197,7 +1209,8 @@ end
 ]=]
 --: <T: Iterable<K,V>>(T -> {[T]:int})
 function Tables.occurences(source)
-	assert(t.table(source), "BadInput: source must be a table")
+	assert(t.table(source))
+
 	local counts = {[source] = 1}
 	countOccurences(source, counts)
 	return counts
