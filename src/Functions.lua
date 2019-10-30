@@ -1,8 +1,11 @@
 --[[
 	Utility functions and building blocks for functional programming styles.
 ]]
+
 local Tables = require(script.Parent.Tables)
 local t = require(script.Parent.Parent.t)
+
+local optionalNumber = t.optional(t.number)
 
 local Functions = {}
 
@@ -12,8 +15,7 @@ local Functions = {}
 		you don't want to do anything.
 ]]
 --: () -> ()
-function Functions.noop()
-end
+function Functions.noop() end
 
 --[[
 	A simple function that does nothing, but returns its input parameters.
@@ -36,9 +38,11 @@ end
 ]]
 --: <A>(...A -> () -> ...A)
 function Functions.returns(...)
+	local length = select("#", ...)
 	local args = {...}
+
 	return function()
-		return unpack(args)
+		return unpack(args, 1, length)
 	end
 end
 
@@ -64,6 +68,7 @@ end
 --: <A, R>((A -> R) -> A -> R)
 function Functions.unary(fn)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
+
 	return function(first)
 		return fn(first)
 	end
@@ -78,7 +83,8 @@ end
 ]]
 --: string -> () -> fail
 function Functions.throws(errorMessage)
-	assert(t.string(errorMessage), "BadInput: errorMessage must be a string")
+	assert(t.string(errorMessage))
+
 	return function()
 		error(errorMessage)
 	end
@@ -98,9 +104,11 @@ end
 --: <A, A2, R>(((...A, ...A2 -> R), ...A) -> ...A2 -> R)
 function Functions.bind(fn, ...)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
+	local length = select("#", ...)
 	local args = {...}
+
 	return function(...)
-		return fn(unpack(args), ...)
+		return fn(unpack(args, 1, length), ...)
 	end
 end
 
@@ -125,7 +133,7 @@ end
 			return player.Name
 		end)
 		local filterHurtNames = dash.compose(filterHurtPlayers, getName)
-		filterHurtNames(game.Players) --> {"Frodo", "Boromir"}	
+		filterHurtNames(game.Players) --> {"Frodo", "Boromir"}
 	@see `dash.filter`
 	@see `dash.compose`
 	@usage Chainable rodash function feeds are mapped to `dash.fn`, such as `dash.fn.map(handler)`.
@@ -133,9 +141,11 @@ end
 --: <S>(Chainable<S>, ...) -> S -> S
 function Functions.bindTail(fn, ...)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
+	local length = select("#", ...)
 	local args = {...}
+
 	return function(subject)
-		return fn(subject, unpack(args))
+		return fn(subject, unpack(args, 1, length))
 	end
 end
 
@@ -159,28 +169,28 @@ end
 --: <A, R>((...A -> R), R?) -> Clearable & (...A -> R)
 function Functions.once(fn)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
+
 	local called = false
 	local result = nil
 	local once = {
 		clear = function()
 			called = false
 			result = nil
-		end
+		end,
 	}
-	setmetatable(
-		once,
-		{
-			__call = function(_, ...)
-				if called then
-					return result
-				else
-					called = true
-					result = fn(...)
-					return result
-				end
+
+	setmetatable(once, {
+		__call = function(_, ...)
+			if called then
+				return result
+			else
+				called = true
+				result = fn(...)
+				return result
 			end
-		}
-	)
+		end,
+	})
+
 	return once
 end
 
@@ -221,8 +231,8 @@ end
 	Chaining is useful when you want to simplify operating on data in a common form and perform
 	sequences of operations on some data with a very concise syntax. An _actor_ function can
 	check the value of the data at each step and change how the chain proceeds.
-	
-	Calling a _Chain_ with a subject reduces the chained operations in order on the subject. 
+
+	Calling a _Chain_ with a subject reduces the chained operations in order on the subject.
 	@param actor called for each result in the chain to determine how the next operation should process it. (default = `dash.invoke`)
 	@example
 		-- Define a simple chain that can operate a list of numbers.
@@ -287,49 +297,52 @@ end
 ]]
 --: <S,T:Chainable<S>{}>(T, Actor<S>) -> Chain<S,T>
 function Functions.chain(fns, actor)
-	if actor == nil then
-		actor = Functions.invoke
-	end
+	actor = actor or Functions.invoke
 	assert(Functions.isCallable(actor), "BadInput: actor must be callable")
 	local chain = {}
-	setmetatable(
-		chain,
-		{
-			__index = function(self, name)
-				local fn = fns[name]
-				assert(Functions.isCallable(fn), "BadFn: Chain key " .. tostring(name) .. " is not callable")
-				local feeder = function(parent, ...)
-					assert(type(parent) == "table", "BadCall: Chain functions must be called with ':'")
-					local stage = {}
-					local op = Functions.bindTail(fn, ...)
-					setmetatable(
-						stage,
-						{
-							__index = chain,
-							__call = function(self, subject)
-								local value = parent(subject)
-								return actor(op, value)
-							end,
-							__tostring = function()
-								return tostring(parent) .. "::" .. name
-							end
-						}
-					)
-					return stage
-				end
-				return feeder
-			end,
-			__newindex = function()
-				error("ReadonlyKey: Cannot assign to a chain, create one with dash.chain instead.")
-			end,
-			__call = function(_, subject)
-				return subject
-			end,
-			__tostring = function()
-				return "Chain"
+
+	setmetatable(chain, {
+		__index = function(self, name)
+			local fn = fns[name]
+			assert(Functions.isCallable(fn), "BadFn: Chain key " .. tostring(name) .. " is not callable")
+
+			local feeder = function(parent, ...)
+				assert(t.table(parent))
+
+				local stage = {}
+				local op = Functions.bindTail(fn, ...)
+				setmetatable(stage, {
+					__index = chain,
+
+					__call = function(self, subject)
+						local value = parent(subject)
+						return actor(op, value)
+					end,
+
+					__tostring = function()
+						return tostring(parent) .. "::" .. name
+					end,
+				})
+
+				return stage
 			end
-		}
-	)
+
+			return feeder
+		end,
+
+		__newindex = function()
+			error("ReadonlyKey: Cannot assign to a chain, create one with dash.chain instead.")
+		end,
+
+		__call = function(_, subject)
+			return subject
+		end,
+
+		__tostring = function()
+			return "Chain"
+		end,
+	})
+
 	return chain
 end
 
@@ -372,6 +385,7 @@ end
 --: <T, A, R>((...A -> T -> R) -> T, ...A -> R)
 function Functions.chainFn(fn)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
+
 	return function(source, ...)
 		return fn(...)(source)
 	end
@@ -399,7 +413,7 @@ end
 	An [Actor](/rodash/types#Actor) which cancels execution of a chain if a method returns nil, evaluating the chain as nil.
 
 	Can wrap any other actor which handles values that are non-nil.
-	@example 
+	@example
 		-- We can define a chain of Rodash functions that will skip after a nil is returned.
 		local maybeFn = dash.chain(_, dash.maybe())
 		local getName = function(player)
@@ -447,6 +461,7 @@ end
 function Functions.maybe(actor)
 	actor = actor or Functions.invoke
 	assert(Functions.isCallable(actor), "BadInput: actor must be callable")
+
 	return function(fn, ...)
 		local args = {...}
 		if args[1] == nil then
@@ -463,7 +478,7 @@ end
 
 	This allows any asynchronous methods to be used in chains without modifying any of the chain's
 	synchronous methods, removing any boilerplate needed to handle promises in the main code body.
-	
+
 	Can wrap any other actor which handles values after any promise resolution.
 	@param actor (default = `dash.invoke`) The actor to wrap.
 	@example
@@ -516,22 +531,19 @@ end
 function Functions.continue(actor)
 	actor = actor or Functions.invoke
 	assert(Functions.isCallable(actor), "BadInput: actor must be callable")
+
 	return function(fn, value, ...)
 		local Async = require(script.Parent.Async)
-		return Async.resolve(value):andThen(
-			function(...)
-				return actor(fn, ...)
-			end
-		)
+
+		return Async.resolve(value):andThen(function(...)
+			return actor(fn, ...)
+		end)
 	end
 end
 
-local getRodashChain =
-	Functions.once(
-	function(rd)
-		return Functions.chain(rd)
-	end
-)
+local getRodashChain = Functions.once(function(rd)
+	return Functions.chain(rd)
+end)
 
 --[[
 	A [Chain](/rodash/types/#chain) built from Rodash itself. Any
@@ -558,21 +570,20 @@ local getRodashChain =
 ]]
 --: Chain<any,dash>
 Functions.fn = {}
-setmetatable(
-	Functions.fn,
-	{
-		__index = function(self, key)
-			local rd = require(script.Parent)
-			return getRodashChain(rd)[key]
-		end,
-		__call = function(self, subject)
-			return subject
-		end,
-		__tostring = function()
-			return "fn"
-		end
-	}
-)
+setmetatable(Functions.fn, {
+	__index = function(_, key)
+		local rd = require(script.Parent)
+		return getRodashChain(rd)[key]
+	end,
+
+	__call = function(_, subject)
+		return subject
+	end,
+
+	__tostring = function()
+		return "fn"
+	end,
+})
 
 --[[
 	Returns a function that calls the argument functions in left-right order on an input, passing
@@ -595,12 +606,14 @@ function Functions.compose(...)
 	if fnCount == 0 then
 		return Functions.id
 	end
+
 	local fns = {...}
 	return function(...)
 		local result = {fns[1](...)}
 		for i = 2, fnCount do
 			result = {fns[i](unpack(result))}
 		end
+
 		return unpack(result)
 	end
 end
@@ -641,6 +654,7 @@ function Functions.memoize(fn, serializeArgs)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
 	serializeArgs = serializeArgs or Functions.unary(Tables.serialize)
 	assert(Functions.isCallable(serializeArgs), "BadInput: serializeArgs must be callable or nil")
+
 	local cache = {}
 	local clearable = {
 		clear = function(_, ...)
@@ -649,26 +663,26 @@ function Functions.memoize(fn, serializeArgs)
 				cache[cacheKey] = nil
 			end
 		end,
+
 		clearAll = function()
 			cache = {}
-		end
+		end,
 	}
-	setmetatable(
-		clearable,
-		{
-			__call = function(_, ...)
-				local cacheKey = serializeArgs({...}, cache)
-				if cacheKey == nil then
-					return fn(...)
-				else
-					if cache[cacheKey] == nil then
-						cache[cacheKey] = fn(...)
-					end
-					return cache[cacheKey]
+
+	setmetatable(clearable, {
+		__call = function(_, ...)
+			local cacheKey = serializeArgs({...}, cache)
+			if cacheKey == nil then
+				return fn(...)
+			else
+				if cache[cacheKey] == nil then
+					cache[cacheKey] = fn(...)
 				end
+				return cache[cacheKey]
 			end
-		}
-	)
+		end,
+	})
+
 	return clearable
 end
 
@@ -677,7 +691,7 @@ end
 
 	The _fn_ is called in a separate thread, meaning that it will not block the thread it is called
 	in, and if the calling threads, the _fn_ will still be called at the expected time.
-	
+
 	@returns an instance which `:clear()` can be called on to prevent _fn_ from firing.
 	@example
 		local waitTimeout = dash.setTimeout(function()
@@ -691,22 +705,22 @@ end
 --: (Clearable -> ()), number -> Clearable
 function Functions.setTimeout(fn, delayInSeconds)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
-	assert(t.number(delayInSeconds), "BadInput: delayInSeconds must be a number")
+	assert(t.number(delayInSeconds))
+
 	local cleared = false
 	local timeout
-	delay(
-		delayInSeconds,
-		function()
-			if not cleared then
-				fn(timeout)
-			end
+	delay(delayInSeconds, function()
+		if not cleared then
+			fn(timeout)
 		end
-	)
+	end)
+
 	timeout = {
 		clear = function()
 			cleared = true
-		end
+		end,
 	}
+
 	return timeout
 end
 
@@ -731,17 +745,20 @@ end
 --: (Clearable -> ()), number, number? -> Clearable
 function Functions.setInterval(fn, intervalInSeconds, delayInSeconds)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
-	assert(t.number(intervalInSeconds), "BadInput: intervalInSeconds must be a number")
-	assert(t.optional(t.number)(delayInSeconds), "BadInput: delayInSeconds must be a number")
+	assert(t.number(intervalInSeconds))
+	assert(optionalNumber(delayInSeconds))
+
 	local timeout
 	local callTimeout
 	local function handleTimeout()
 		callTimeout()
 		fn(timeout)
 	end
-	callTimeout = function()
+
+	function callTimeout()
 		timeout = Functions.setTimeout(handleTimeout, intervalInSeconds)
 	end
+
 	if delayInSeconds ~= nil then
 		timeout = Functions.setTimeout(handleTimeout, delayInSeconds)
 	else
@@ -751,7 +768,7 @@ function Functions.setInterval(fn, intervalInSeconds, delayInSeconds)
 	return {
 		clear = function()
 			timeout:clear()
-		end
+		end,
 	}
 end
 
@@ -759,13 +776,13 @@ end
 	Creates a debounced function that delays calling _fn_ until after _delayInSeconds_ seconds have
 	elapsed since the last time the debounced function was attempted to be called.
 	@returns the debounced function with method `:clear()` can be called on to cancel any scheduled call.
-	@usage A nice [visualisation of debounce vs. throttle](http://demo.nimius.net/debounce_throttle/), 
+	@usage A nice [visualisation of debounce vs. throttle](http://demo.nimius.net/debounce_throttle/),
 		the illustrated point being debounce will only call _fn_ at the end of a spurt of events.
 ]]
 --: <A, R>(...A -> R), number -> Clearable & (...A -> R)
 function Functions.debounce(fn, delayInSeconds)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
-	assert(type(delayInSeconds) == "number", "BadInput: delayInSeconds must be a number")
+	assert(t.number(delayInSeconds))
 
 	local lastResult = nil
 	local timeout
@@ -775,27 +792,26 @@ function Functions.debounce(fn, delayInSeconds)
 			if timeout then
 				timeout:clear()
 			end
-		end
+		end,
 	}
-	setmetatable(
-		debounced,
-		{
-			__call = function(_, ...)
-				local args = {...}
-				if timeout then
-					timeout:clear()
-				end
-				timeout =
-					Functions.setTimeout(
-					function()
-						lastResult = fn(unpack(args))
-					end,
-					delayInSeconds
-				)
-				return lastResult
+
+	setmetatable(debounced, {
+		__call = function(_, ...)
+			local length = select("#", ...)
+			local args = {...}
+
+			if timeout then
+				timeout:clear()
 			end
-		}
-	)
+
+			timeout = Functions.setTimeout(function()
+				lastResult = fn(unpack(args, 1, length))
+			end, delayInSeconds)
+
+			return lastResult
+		end,
+	})
+
 	return debounced
 end
 
@@ -819,8 +835,7 @@ end
 --: <A, R>((...A) -> R), number -> ...A -> R
 function Functions.throttle(fn, cooldownInSeconds)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
-	assert(type(cooldownInSeconds) == "number", "BadInput: cooldownInSeconds must be a number > 0")
-	assert(cooldownInSeconds > 0, "BadInput: cooldownInSeconds must be a number > 0")
+	assert(t.numberPositive(cooldownInSeconds))
 
 	local cached = false
 	local lastResult = nil
@@ -828,13 +843,11 @@ function Functions.throttle(fn, cooldownInSeconds)
 		if not cached then
 			cached = true
 			lastResult = fn(...)
-			Functions.setTimeout(
-				function()
-					cached = false
-				end,
-				cooldownInSeconds
-			)
+			Functions.setTimeout(function()
+				cached = false
+			end, cooldownInSeconds)
 		end
+
 		return lastResult
 	end
 end
