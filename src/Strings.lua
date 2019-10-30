@@ -1,15 +1,42 @@
 --[[
 	Useful functions to manipulate strings, based on similar implementations in other standard libraries.
 ]]
+
 local t = require(script.Parent.Parent.t)
 local Functions = require(script.Parent.Functions)
 local Tables = require(script.Parent.Tables)
 local Strings = {}
-local insert = table.insert
-local concat = table.concat
 
-local function assertStrIsString(str)
-	assert(t.string(str), "BadInput: str must be a string")
+local optionalString = t.optional(t.string)
+
+local ENCODE_ENTITIES = {["<"] = "lt", [">"] = "gt", ["&"] = "amp", ["\""] = "quot", ["'"] = "apos"}
+local DECODE_ENTITIES = {lt = "<", gt = ">", amp = "&", quot = "\"", apos = "'"}
+
+local function camelCase(head, tail)
+	return string.upper(head) .. string.lower(tail)
+end
+
+local function kebabCase(a, b)
+	return a .. "-" .. b
+end
+
+local function snakeCase(a, b)
+	return a .. "_" .. b
+end
+
+local function titleCase(head, tail)
+	return string.upper(head) .. tail
+end
+
+local function encodeHtml(char)
+	return ENCODE_ENTITIES[char] and ("&" .. ENCODE_ENTITIES[char] .. ";") or char
+end
+
+local function decodeHtml(original, hashPrefix, code)
+	return (hashPrefix == "" and DECODE_ENTITIES[code]) or
+		(hashPrefix == "#x" and tonumber(code, 16)) and utf8.char(tonumber(code, 16)) or
+		(hashPrefix == "#" and tonumber(code)) and utf8.char(code) or
+		original
 end
 
 --[[
@@ -21,13 +48,8 @@ end
 ]]
 --: string -> string
 function Strings.camelCase(str)
-	assertStrIsString(str)
-	return str:gsub(
-		"(%a)([%w]*)",
-		function(head, tail)
-			return head:upper() .. tail:lower()
-		end
-	):gsub("%A", ""):gsub("^%u", string.lower)
+	assert(t.string(str))
+	return (string.gsub(string.gsub(string.gsub(str, "(%a)([%w]*)", camelCase), "%A", ""), "^%u", string.lower))
 end
 
 --[[
@@ -40,13 +62,8 @@ end
 ]]
 --: string -> string
 function Strings.kebabCase(str)
-	assertStrIsString(str)
-	return str:gsub(
-		"(%l)(%u)",
-		function(a, b)
-			return a .. "-" .. b
-		end
-	):gsub("%A", "-"):gsub("^%-+", ""):gsub("%-+$", ""):lower()
+	assert(t.string(str))
+	return (string.lower(string.gsub(string.gsub(string.gsub(string.gsub(str, "(%l)(%u)", kebabCase), "%A", "-"), "^%-+", ""), "%-+$", "")))
 end
 
 --[[
@@ -59,13 +76,8 @@ end
 ]]
 --: string -> string
 function Strings.snakeCase(str)
-	assertStrIsString(str)
-	return str:gsub(
-		"(%l)(%u)",
-		function(a, b)
-			return a .. "_" .. b
-		end
-	):gsub("%A", "_"):gsub("^_+", ""):gsub("_+$", ""):upper()
+	assert(t.string(str))
+	return (string.upper(string.gsub(string.gsub(string.gsub(string.gsub(str, "(%l)(%u)", snakeCase), "%A", "_"), "^_+", ""), "_+$", "")))
 end
 
 --[[
@@ -78,13 +90,8 @@ end
 ]]
 --: string -> string
 function Strings.titleCase(str)
-	assertStrIsString(str)
-	return str:gsub(
-		"(%a)([%w_%-'’]*)",
-		function(head, tail)
-			return head:upper() .. tail
-		end
-	)
+	assert(t.string(str))
+	return (string.gsub(str, "(%a)([%w_%-'’]*)", titleCase))
 end
 
 --[[
@@ -94,8 +101,8 @@ end
 ]]
 --: string -> string
 function Strings.capitalize(str)
-	assertStrIsString(str)
-	return str:gsub("^%l", string.upper)
+	assert(t.string(str))
+	return (string.gsub(str, "^%l", string.upper))
 end
 
 --[==[
@@ -105,16 +112,8 @@ end
 ]==]
 --: string -> string
 function Strings.encodeHtml(str)
-	assertStrIsString(str)
-	local entities = {["<"] = "lt", [">"] = "gt", ["&"] = "amp", ['"'] = "quot", ["'"] = "apos"}
-	local result =
-		str:gsub(
-		".",
-		function(char)
-			return entities[char] and ("&" .. entities[char] .. ";") or char
-		end
-	)
-	return result
+	assert(t.string(str))
+	return (string.gsub(str, ".", encodeHtml))
 end
 
 --[==[
@@ -125,19 +124,8 @@ end
 ]==]
 --: string -> string
 function Strings.decodeHtml(str)
-	assertStrIsString(str)
-	local entities = {lt = "<", gt = ">", amp = "&", quot = '"', apos = "'"}
-	local result =
-		str:gsub(
-		"(&(#?x?)([%d%a]+);)",
-		function(original, hashPrefix, code)
-			return (hashPrefix == "" and entities[code]) or
-				(hashPrefix == "#x" and tonumber(code, 16)) and utf8.char(tonumber(code, 16)) or
-				(hashPrefix == "#" and tonumber(code)) and utf8.char(code) or
-				original
-		end
-	)
-	return result
+	assert(t.string(str))
+	return (string.gsub(str, "(&(#?x?)([%d%a]+);)", decodeHtml))
 end
 
 --[[
@@ -152,25 +140,32 @@ end
 ]]
 --: string, pattern -> string[], string[]
 function Strings.splitOn(str, pattern)
-	assertStrIsString(str)
-	assert(t.optional(t.string)(pattern), "BadInput: pattern must be a string or nil")
+	assert(t.string(str))
+	assert(optionalString(pattern))
+
 	local parts = {}
 	local delimiters = {}
+	local length = 0
 	local from = 1
+
 	if not pattern then
 		for i = 1, #str do
-			insert(parts, str:sub(i, i))
+			parts[i] = string.sub(str, i, i)
 		end
+
 		return parts
 	end
-	local delimiterStart, delimiterEnd = str:find(pattern, from)
+
+	local delimiterStart, delimiterEnd = string.find(str, pattern, from)
 	while delimiterStart do
-		insert(delimiters, str:sub(delimiterStart, delimiterEnd))
-		insert(parts, str:sub(from, delimiterStart - 1))
+		length = length + 1
+		delimiters[length] = string.sub(str, delimiterStart, delimiterEnd)
+		parts[length] = string.sub(str, from, delimiterStart - 1)
 		from = delimiterEnd + 1
-		delimiterStart, delimiterEnd = str:find(pattern, from)
+		delimiterStart, delimiterEnd = string.find(str, pattern, from)
 	end
-	insert(parts, str:sub(from))
+
+	parts[length + 1] = string.sub(str, from)
 	return parts, delimiters
 end
 
@@ -181,8 +176,8 @@ end
 ]]
 --: string -> string
 function Strings.trim(str)
-	assertStrIsString(str)
-	return str:match("^%s*(.-)%s*$")
+	assert(t.string(str))
+	return string.match(str, "^%s*(.-)%s*$")
 end
 
 --[[
@@ -193,9 +188,10 @@ end
 ]]
 --: string, string -> bool
 function Strings.startsWith(str, prefix)
-	assertStrIsString(str)
-	assert(t.string(prefix), "BadInput: prefix must be a string")
-	return str:sub(1, prefix:len()) == prefix
+	assert(t.string(str))
+	assert(t.string(prefix))
+
+	return string.sub(str, 1, #prefix) == prefix
 end
 
 --[[
@@ -206,9 +202,10 @@ end
 ]]
 --: string, string -> bool
 function Strings.endsWith(str, suffix)
-	assertStrIsString(str)
-	assert(t.string(suffix), "BadInput: suffix must be a string")
-	return str:sub(-suffix:len()) == suffix
+	assert(t.string(str))
+	assert(t.string(suffix))
+
+	return string.sub(str, -#suffix) == suffix
 end
 
 --[[
@@ -221,14 +218,16 @@ end
 ]]
 --: string, number, string -> string
 function Strings.leftPad(str, length, prefix)
-	assertStrIsString(str)
-	assert(t.number(length), "BadInput: length must be a number")
-	assert(t.optional(t.string)(prefix), "BadInput: prefix must be a string or nil")
+	assert(t.string(str))
+	assert(t.number(length))
+	assert(optionalString(prefix))
+
 	prefix = prefix or " "
 	local padLength = length - #str
 	local remainder = padLength % #prefix
 	local repetitions = (padLength - remainder) / #prefix
-	return string.rep(prefix or " ", repetitions) .. prefix:sub(1, remainder) .. str
+
+	return string.rep(prefix or " ", repetitions) .. string.sub(prefix, 1, remainder) .. str
 end
 
 --[[
@@ -241,14 +240,16 @@ end
 ]]
 --: string, number, string -> string
 function Strings.rightPad(str, length, suffix)
-	assertStrIsString(str)
-	assert(t.number(length), "BadInput: length must be a number")
-	assert(t.optional(t.string)(suffix), "BadInput: suffix must be a string or nil")
+	assert(t.string(str))
+	assert(t.number(length))
+	assert(optionalString(suffix))
+
 	suffix = suffix or " "
 	local padLength = length - #str
 	local remainder = padLength % #suffix
 	local repetitions = (padLength - remainder) / #suffix
-	return str .. string.rep(suffix or " ", repetitions) .. suffix:sub(1, remainder)
+
+	return str .. string.rep(suffix or " ", repetitions) .. string.sub(suffix, 1, remainder)
 end
 
 --[[
@@ -268,9 +269,7 @@ end
 ]]
 --: string, ... -> string
 function Strings.debug(format, ...)
-	if Strings.debugTarget == nil then
-		return
-	end
+	if Strings.debugTarget == nil then return end
 	Strings.debugTarget(Strings.format(format, ...))
 end
 
@@ -308,27 +307,25 @@ end
 ]]
 --: char, string?, boolean? -> string
 function Strings.charToHex(char, format, useBytes)
-	assert(t.string(char), "BadInput: char must be a single utf8 character string")
+	assert(t.string(char))
 	local values = {}
+	local length = 0
+
 	if useBytes then
-		for i = 1, char:len() do
-			insert(values, char:byte(i))
+		for i = 1, #char do
+			values[i] = string.byte(char, i)
 		end
 	else
 		for position, codePoint in utf8.codes(char) do
-			insert(values, codePoint)
+			length = length + 1
+			values[length] = codePoint
 		end
 	end
-	return concat(
-		Tables.map(
-			values,
-			function(value)
-				local hexValue = string.format("%X", value)
-				return format and Strings.format(format, hexValue) or hexValue
-			end,
-			""
-		)
-	)
+
+	return table.concat(Tables.map(values, function(value)
+		local hexValue = string.format("%X", value)
+		return format and Strings.format(format, hexValue) or hexValue
+	end, ""))
 end
 
 --[[
@@ -341,12 +338,14 @@ end
 ]]
 --: str -> char
 function Strings.hexToChar(hex)
-	assert(t.string(hex), "BadInput: hex must be a string")
-	if hex:sub(0, 1) == "%" or hex:sub(0, 1) == "#" then
-		hex = hex:sub(2)
-	elseif hex:sub(0, 2) == "0x" then
-		hex = hex:sub(3)
+	assert(t.string(hex))
+
+	if string.sub(hex, 0, 1) == "%" or string.sub(hex, 0, 1) == "#" then
+		hex = string.sub(hex, 2)
+	elseif string.sub(hex, 0, 2) == "0x" then
+		hex = string.sub(hex, 3)
 	end
+
 	return utf8.char(tonumber(hex, 16)) or error("MalformedInput")
 end
 
@@ -367,17 +366,22 @@ end
 ]]
 --: string -> string
 function Strings.encodeUrl(str)
-	assertStrIsString(str)
+	assert(t.string(str))
 	local result = {}
+	local length = 0
+
 	for _, codePoint in utf8.codes(str) do
 		local char = utf8.char(codePoint)
-		if char:match("^[%;%,%/%?%:%@%&%=%+%$%w%-%_%.%!%~%*%'%(%)%#]$") then
-			table.insert(result, char)
+		if string.match(char, "^[%;%,%/%?%:%@%&%=%+%$%w%-%_%.%!%~%*%'%(%)%#]$") then
+			length = length + 1
+			result[length] = char
 		else
-			table.insert(result, Strings.charToHex(char, "%{}", true))
+			length = length + 1
+			result[length] = Strings.charToHex(char, "%{}", true)
 		end
 	end
-	return table.concat(result, "")
+
+	return table.concat(result)
 end
 
 --[[
@@ -393,29 +397,41 @@ end
 ]]
 --: string -> string
 function Strings.encodeUrlComponent(str)
-	assertStrIsString(str)
+	assert(t.string(str))
 	local result = {}
+	local length = 0
+
 	for _, codePoint in utf8.codes(str) do
 		local char = utf8.char(codePoint)
-		if char:match("^[%;%,%/%?%:%@%&%=%+%$%w%-%_%.%!%~%*%'%(%)%#]$") then
-			table.insert(result, char)
+		if string.match(char, "^[%;%,%/%?%:%@%&%=%+%$%w%-%_%.%!%~%*%'%(%)%#]$") then
+			length = length + 1
+			result[length] = char
 		else
-			table.insert(result, Strings.charToHex(char, "%{}", true))
+			length = length + 1
+			result[length] = Strings.charToHex(char, "%{}", true)
 		end
 	end
-	return table.concat(result, "")
+
+	return table.concat(result)
 end
 
-local calculateDecodeUrlExceptions =
-	Functions.once(
-	function()
-		local exceptions = {}
-		for char in ("#$&+,/:;=?@"):gmatch(".") do
-			exceptions[string.byte(char)] = true
-		end
-		return exceptions
+local calculateDecodeUrlExceptions = Functions.once(function()
+	local exceptions = {}
+	for char in string.gmatch("#$&+,/:;=?@", ".") do
+		exceptions[string.byte(char)] = true
 	end
-)
+
+	return exceptions
+end)
+
+local DECODE_URL_EXCEPTIONS = calculateDecodeUrlExceptions()
+
+local function decodeUrl(term)
+	local charId = tonumber(term, 16)
+	if not DECODE_URL_EXCEPTIONS[charId] then
+		return utf8.char(charId)
+	end
+end
 
 --[[
 	The inverse of `dash.encodeUrl`. Use this to turn a URL which has been encoded for use in a
@@ -429,17 +445,8 @@ local calculateDecodeUrlExceptions =
 ]]
 --: string -> string
 function Strings.decodeUrl(str)
-	assertStrIsString(str)
-	local exceptions = calculateDecodeUrlExceptions()
-	return str:gsub(
-		"%%(%x%x)",
-		function(term)
-			local charId = tonumber(term, 16)
-			if not exceptions[charId] then
-				return utf8.char(charId)
-			end
-		end
-	)
+	assert(t.string(str))
+	return (string.gsub(str, "%%(%x%x)", decodeUrl))
 end
 
 --[[
@@ -454,14 +461,18 @@ end
 ]]
 --: string -> string
 function Strings.decodeUrlComponent(str)
-	assertStrIsString(str)
-	return str:gsub("%%(%x%x)", Strings.hexToChar)
+	assert(t.string(str))
+	return (string.gsub(str, "%%(%x%x)", Strings.hexToChar))
+end
+
+local function encodeQueryStringMap(value, key)
+	return Strings.encodeUrlComponent(tostring(key)) .. "=" .. Strings.encodeUrlComponent(tostring(value))
 end
 
 --[[
 	Takes a _query_ dictionary of key-value pairs and builds a query string that can be concatenated
 	to the end of a url.
-	
+
 	@example
 		dash.encodeQueryString({
 			time = 11,
@@ -473,15 +484,10 @@ end
 ]]
 --: <K,V>(Iterable<K,V> -> string)
 function Strings.encodeQueryString(query)
-	assert(t.table(query), "BadInput: query must be a table")
-	local fields =
-		Tables.mapValues(
-		query,
-		function(value, key)
-			return Strings.encodeUrlComponent(tostring(key)) .. "=" .. Strings.encodeUrlComponent(tostring(value))
-		end
-	)
-	return ("?" .. concat(fields, "&"))
+	assert(t.table(query))
+
+	local fields = Tables.mapValues(query, encodeQueryStringMap)
+	return ("?" .. table.concat(fields, "&"))
 end
 
 --[[
@@ -490,7 +496,7 @@ end
 
 	This function is a simpler & more powerful version of `string.format`, inspired by `format!`
 	in Rust.
-	
+
 	* `{}` formats and prints the next argument using `:format()` if available, or a suitable
 		default representation depending on its type.
 	* `{2}` formats and prints the 2nd argument.
@@ -523,57 +529,65 @@ function Strings.format(format, ...)
 	local args = {...}
 	local argIndex = 1
 	local texts, subs = Strings.splitOn(format, "{[^{}]*}")
+
 	local result = {}
+	local length = 0
+
 	for i, text in pairs(texts) do
-		local unescaped = text:gsub("{{", "{"):gsub("}}", "}")
-		insert(result, unescaped)
-		local placeholder = subs[i] and subs[i]:sub(2, -2)
+		local unescaped = string.gsub(string.gsub(text, "{{", "{"), "}}", "}")
+		length = length + 1
+		result[length] = unescaped
+		local placeholder = subs[i] and string.sub(subs[i], 2, -2)
+
 		if placeholder then
-			local escapeMatch = text:gmatch("{+$")()
+			local escapeMatch = string.gmatch(text, "{+$")()
 			local isEscaped = escapeMatch and #escapeMatch % 2 == 1
 			if not isEscaped then
 				local placeholderSplit = Strings.splitOn(placeholder, ":")
 				local isLength = Strings.startsWith(placeholderSplit[1], "#")
-				local argString = isLength and placeholderSplit[1]:sub(2) or placeholderSplit[1]
+				local argString = isLength and string.sub(placeholderSplit[1], 2) or placeholderSplit[1]
+
 				local nextIndex = tonumber(argString)
 				local displayString = placeholderSplit[2]
 				local arg
+
 				if nextIndex then
 					arg = args[nextIndex]
 				else
 					arg = args[argIndex]
 					argIndex = argIndex + 1
 				end
-				if isLength then
-					arg = #arg
-				end
-				insert(result, Strings.formatValue(arg, displayString or ""))
+
+				if isLength then arg = #arg end
+				length = length + 1
+				result[length] = Strings.formatValue(arg, displayString or "")
 			else
-				local unescapedSub = placeholder
-				insert(result, unescapedSub)
+				length = length + 1
+				result[length] = placeholder
 			end
 		end
 	end
-	return table.concat(result, "")
+
+	return table.concat(result)
+end
+
+local BINARY_EIGHT = {
+	["1"] = "000",
+	["2"] = "001",
+	["3"] = "010",
+	["4"] = "011",
+	["5"] = "100",
+	["6"] = "101",
+	["7"] = "110",
+	["8"] = "111",
+}
+
+local function encodeBinaryEight(char)
+	return BINARY_EIGHT[char]
 end
 
 local function decimalToBinary(number)
-	local binaryEight = {
-		["1"] = "000",
-		["2"] = "001",
-		["3"] = "010",
-		["4"] = "011",
-		["5"] = "100",
-		["6"] = "101",
-		["7"] = "110",
-		["8"] = "111"
-	}
-	return string.format("%o", number):gsub(
-		".",
-		function(char)
-			return binaryEight[char]
-		end
-	):gsub("^0+", "")
+	return string.gsub(string.gsub(string.format("%o", number), ".", encodeBinaryEight), "^0+", "")
 end
 
 --[[
@@ -584,22 +598,23 @@ end
 ]]
 --: any, DisplayString -> string
 function Strings.formatValue(value, displayString)
-	local displayTypeStart, displayTypeEnd = displayString:find("[A-Za-z#?]+")
+	local displayTypeStart, displayTypeEnd = string.find(displayString, "[A-Za-z#?]+")
 	if displayTypeStart then
-		local displayType = displayString:sub(displayTypeStart, displayTypeEnd)
-		local formatAsString =
-			"%" .. displayString:sub(1, displayTypeStart - 1) .. displayString:sub(displayTypeEnd + 1) .. "s"
+		local displayType = string.sub(displayString, displayTypeStart, displayTypeEnd)
+		local formatAsString = "%"
+			.. string.sub(displayString, 1, displayTypeStart - 1)
+			.. string.sub(displayString, displayTypeEnd + 1) .. "s"
+
 		if displayType == "#?" then
 			return string.format(formatAsString, Strings.pretty(value))
 		elseif displayType == "?" then
 			return string.format(formatAsString, Tables.serializeDeep(value))
 		elseif displayType == "#b" then
-			local result = decimalToBinary(value)
-			return string.format(formatAsString, "0b" .. result)
+			return string.format(formatAsString, "0b" .. decimalToBinary(value))
 		elseif displayType == "b" then
-			local result = decimalToBinary(value)
-			return string.format(formatAsString, result)
+			return string.format(formatAsString, decimalToBinary(value))
 		end
+
 		return string.format("%" .. displayString, value)
 	else
 		local displayType = "s"
@@ -607,8 +622,23 @@ function Strings.formatValue(value, displayString)
 			local _, fraction = math.modf(value)
 			displayType = fraction == 0 and "d" or "f"
 		end
+
 		return string.format("%" .. displayString .. displayType, tostring(value))
 	end
+end
+
+local function serializeValue(value, options)
+	if type(value) == "table" then
+		local className = ""
+		if value.Class then className = value.Class.name .. " " end
+		return className .. Tables.serialize(value, options)
+	else
+		return Tables.defaultSerializer(value, options)
+	end
+end
+
+local function updateElement(element)
+	return "\t" .. string.gsub(element, "\n", "\n\t")
 end
 
 --[[
@@ -637,64 +667,35 @@ end
 ]]
 --: <T>(T, SerializeOptions<T>? -> string)
 function Strings.pretty(value, serializeOptions)
-	local function serializeValue(value, options)
-		if type(value) == "table" then
-			local className = ""
-			if value.Class then
-				className = value.Class.name .. " "
-			end
-			return className .. Tables.serialize(value, options)
-		else
-			return Tables.defaultSerializer(value, options)
-		end
-	end
-
 	local MAX_LINE = 80
 
-	return Tables.serialize(
-		value,
-		Tables.assign(
-			{
-				serializeValue = serializeValue,
-				serializeKey = function(key, options)
-					if type(key) == "string" then
-						return key
-					else
-						return "[" .. serializeValue(key, options) .. "]"
-					end
-				end,
-				serializeElement = function(key, value)
-					local shortString = key .. " = " .. value
-					if #shortString < MAX_LINE or shortString:match("\n") then
-						return shortString
-					end
-					return key .. " =\n\t" .. value
-				end or nil,
-				serializeTable = function(contents, ref, options)
-					local shortString = ref .. "{" .. table.concat(contents, ", ") .. "}"
-					if #shortString < MAX_LINE then
-						return shortString
-					end
-					return ref ..
-						"{\n" ..
-							table.concat(
-								Tables.map(
-									contents,
-									function(element)
-										return "\t" .. element:gsub("\n", "\n\t")
-									end
-								),
-								",\n"
-							) ..
-								"\n}"
-				end or nil,
-				keyDelimiter = " = ",
-				valueDelimiter = ", ",
-				omitKeys = {"Class"}
-			},
-			serializeOptions or {}
-		)
-	)
+	return Tables.serialize(value, Tables.assign({
+		serializeValue = serializeValue,
+		serializeKey = function(key, options)
+			if type(key) == "string" then
+				return key
+			else
+				return "[" .. serializeValue(key, options) .. "]"
+			end
+		end,
+
+		serializeElement = function(key, value)
+			local shortString = key .. " = " .. value
+			return (#shortString < MAX_LINE or string.match(shortString, "\n") and shortString)
+				or (key .. " =\n\t" .. value)
+		end or nil,
+
+		serializeTable = function(contents, ref, options)
+			local shortString = ref .. "{" .. table.concat(contents, ", ") .. "}"
+
+			return #shortString < MAX_LINE and shortString
+				or ref .. "{\n" .. table.concat(Tables.map(contents, updateElement), ",\n") .. "\n}"
+		end or nil,
+
+		keyDelimiter = " = ",
+		valueDelimiter = ", ",
+		omitKeys = {"Class"},
+	}, serializeOptions or {}))
 end
 
 return Strings
