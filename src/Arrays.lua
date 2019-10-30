@@ -16,15 +16,28 @@
 
 	These functions can iterate over any [Ordered](/rodash/types#Ordered) values.
 ]=]
+
 local t = require(script.Parent.Parent.t)
 local Tables = require(script.Parent.Tables)
 
+local optionalNumber = t.optional(t.number)
+local sliceTuple = t.tuple(t.table, optionalNumber, optionalNumber, optionalNumber)
+
 local Arrays = {}
+
+local function returnTrue()
+	return true
+end
+
+local function sumFunction(current, value)
+	return current + value
+end
 
 local function assertHandlerIsFn(handler)
 	local Functions = require(script.Parent.Functions)
 	assert(Functions.isCallable(handler), "BadInput: handler must be a function")
 end
+
 local function assertPredicateIsFn(handler)
 	local Functions = require(script.Parent.Functions)
 	assert(Functions.isCallable(handler), "BadInput: handler must be a function")
@@ -37,7 +50,7 @@ local typeIndex = {
 	["function"] = 4,
 	["CFunction"] = 5,
 	userdata = 6,
-	table = 7
+	table = 7,
 }
 
 --[[
@@ -56,12 +69,11 @@ function Arrays.defaultComparator(a, b)
 	if type(a) ~= type(b) then
 		return typeIndex[type(a)] - typeIndex[type(b)]
 	end
-	local ok, result =
-		pcall(
-		function()
-			return a < b
-		end
-	)
+
+	local ok, result = pcall(function()
+		return a < b
+	end)
+
 	if ok then
 		return result
 	else
@@ -95,25 +107,22 @@ end
 ]]
 --: <T>(T[], (T -> bool | number | nil)? -> T[])
 function Arrays.sort(input, comparator)
-	assert(t.table(input), "BadInput: input must be an array")
+	assert(t.table(input))
 
 	local Functions = require(script.Parent.Functions)
 	assert(comparator == nil or Functions.isCallable(comparator), "BadInput: comparator must be callable or nil")
 
 	comparator = comparator or Arrays.defaultComparator
 
-	table.sort(
-		input,
-		function(a, b)
-			local result = comparator(a, b)
+	table.sort(input, function(a, b)
+		local result = comparator(a, b)
 
-			if type(result) ~= "number" and type(result) ~= "boolean" and result ~= nil then
-				error("BadResult: comparator must return a boolean, a number or nil")
-			end
-
-			return result == true or (type(result) == "number" and result < 0)
+		if typeof(result) ~= "number" and typeof(result) ~= "boolean" and result ~= nil then
+			error("BadResult: comparator must return a boolean, a number or nil")
 		end
-	)
+
+		return result == true or (typeof(result) == "number" and result < 0)
+	end)
 
 	return input
 end
@@ -121,7 +130,7 @@ end
 --[[
 	Returns a copied portion of the _source_, between the _first_ and _last_ elements inclusive and
 	jumping _step_ each time if provided.
-	
+
 	@param first (default = 1) The index of the first element to include.
 	@param last (default = `#source`) The index of the last element to include.
 	@param step (default = 1) What amount to step the index by during iteration.
@@ -132,14 +141,14 @@ end
 ]]
 --: <T>(T[], int?, int?, int? -> T[])
 function Arrays.slice(source, first, last, step)
-	assert(t.table(source), "BadInput: source must be an array")
-	assert(t.optional(t.number)(first), "BadInput: first must be an int")
-	assert(t.optional(t.number)(last), "BadInput: last must be an int")
-	assert(t.optional(t.number)(step), "BadInput: step must be an int")
+	assert(sliceTuple(source, first, last, step))
+
 	local sliced = {}
+	local length = 0
 
 	for i = first or 1, last or #source, step or 1 do
-		sliced[#sliced + 1] = source[i]
+		length = length + 1
+		sliced[length] = source[i]
 	end
 
 	return sliced
@@ -154,12 +163,14 @@ end
 ]]
 --: <T>(T[] -> T[])
 function Arrays.shuffle(source)
-	assert(t.table(source), "BadInput: source must be an array")
+	assert(t.table(source))
+
 	local result = Tables.clone(source)
 	for i = #result, 1, -1 do
 		local j = math.random(i)
 		result[i], result[j] = result[j], result[i]
 	end
+
 	return result
 end
 
@@ -188,6 +199,7 @@ function Arrays.reduce(source, handler, initial)
 	for i, v in Tables.iterator(source, true) do
 		result = handler(result, v, i)
 	end
+
 	return result
 end
 
@@ -203,10 +215,13 @@ end
 ]]
 --: <T>(mut T[], ...Ordered<T> -> T[])
 function Arrays.append(target, ...)
+	local length = #target
+
 	for i = 1, select("#", ...) do
 		local x = select(i, ...)
 		for _, y in Tables.iterator(x, true) do
-			table.insert(target, y)
+			length = length + 1
+			target[length] = y
 		end
 	end
 
@@ -219,13 +234,7 @@ end
 ]]
 --: Ordered<number> -> number
 function Arrays.sum(source)
-	return Arrays.reduce(
-		source,
-		function(current, value)
-			return current + value
-		end,
-		0
-	)
+	return Arrays.reduce(source, sumFunction, 0)
 end
 
 --[[
@@ -235,9 +244,13 @@ end
 --: <T>(T[] -> T[])
 function Arrays.reverse(source)
 	local output = {}
+	local length = 0
+
 	for i = #source, 1, -1 do
-		table.insert(output, source[i])
+		length = length + 1
+		output[length] = source[i]
 	end
+
 	return output
 end
 
@@ -270,17 +283,16 @@ end
 		-- Find the index of a value:
 		local _, index = dash.first(names, dash.fn:matches("Bilbo"))
 		index --> 2
-	@see `dash.find` 
+	@see `dash.find`
 	@usage If you need to find a value in a table which isn't an array, use `dash.find`.
 ]]
 --: <T: Iterable<K,V>>(T, (element: V, key: K -> bool) -> V?)
 function Arrays.first(source, predicate)
-	predicate = predicate or function()
-			return true
-		end
+	predicate = predicate or returnTrue
+
 	assertPredicateIsFn(predicate)
 	for i, v in Tables.iterator(source, true) do
-		if (predicate(v, i)) then
+		if predicate(v, i) then
 			return v, i
 		end
 	end
@@ -310,13 +322,12 @@ end
 ]]
 --: <T: Iterable<K,V>>(T, (element: V, key: K -> bool) -> V?)
 function Arrays.last(source, predicate)
-	predicate = predicate or function()
-			return true
-		end
+	predicate = predicate or returnTrue
+
 	assertHandlerIsFn(predicate)
 	for i = #source, 1, -1 do
 		local value = source[i]
-		if (predicate(value, i)) then
+		if predicate(value, i) then
 			return value, i
 		end
 	end
