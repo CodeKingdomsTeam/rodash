@@ -9,11 +9,30 @@
 	promises to right places in your code, and delay running any code which requires the value
 	until it is ready.
 ]]
+
 local t = require(script.Parent.Parent.t)
 local Tables = require(script.Parent.Tables)
 local Functions = require(script.Parent.Functions)
 local Promise = require(script.Parent.Parent.Promise)
 local Async = {}
+
+local optionalIntegerThatIsAtLeastZero = t.optional(t.intersection(t.integer, t.numberMin(0)))
+
+local function asyncAllFunction(value)
+	if Functions.isCallable(value) then
+		return Async.async(value)
+	else
+		return value
+	end
+end
+
+local function parallelFunction(object)
+	if Async.isPromise(object) then
+		return object
+	else
+		return Promise.resolve(object)
+	end
+end
 
 local baseRandomStream = Random.new()
 
@@ -35,6 +54,7 @@ function Async.await(value)
 	if Async.isPromise(value) then
 		return value:await()
 	end
+
 	return value
 end
 
@@ -44,12 +64,13 @@ end
 ]]
 --: <T>(T -> bool)
 function Async.isPromise(value)
-	local ok, isPromise =
-		pcall(
-		function()
-			return Promise.is(value)
-		end
-	)
+	--[[
+	local ok, isPromise = pcall(function()
+		return Promise.is(value)
+	end)
+	--]]
+
+	local ok, isPromise = pcall(Promise.is, value)
 	return ok and isPromise
 end
 
@@ -57,13 +78,13 @@ end
     Given an _array_ of values, this function returns a promise which
     resolves once all of the array elements have resolved, or rejects
     if any of the array elements reject.
-	
+
 	@returns an array mapping the input to resolved elements.
 	@example
 		local heat = function(item)
 			local oven = dash.parallel({item, dash.delay(1)})
 			return oven:andThen(function(result)
-				return "hot-" .. result[1] 
+				return "hot-" .. result[1]
 			end)
 		end
 		local meal =dash.parallel({heat("cheese"), "tomato"})
@@ -76,18 +97,9 @@ end
 ]]
 --: <T>((Promise<T> | T)[] -> Promise<T[]>)
 function Async.parallel(array)
-	assert(t.table(array), "BadInput: array must be an array")
-	local promises =
-		Tables.map(
-		array,
-		function(object)
-			if Async.isPromise(object) then
-				return object
-			else
-				return Promise.resolve(object)
-			end
-		end
-	)
+	assert(t.array(array))
+
+	local promises = Tables.map(array, parallelFunction)
 	return Promise.all(promises)
 end
 
@@ -95,14 +107,14 @@ end
 	Given a _dictionary_ of values, this function returns a promise which
 	resolves once all of the values in the dictionary have resolved, or rejects
 	if any of them are promises that reject.
-	
+
 	@returns a dictionary mapping the input to resolved elements.
 	@rejects passthrough
 	@example
 		local heat = function(item)
 			local oven = dash.parallel({item, dash.delay(1)})
 			return oven:andThen(function(result)
-				return "hot-" .. result[1] 
+				return "hot-" .. result[1]
 			end)
 		end
 		local toastie = dash.parallelAll({
@@ -117,7 +129,7 @@ end
 		end)
 		dash.parallelAll({
 			main = fetch("http://example.com/burger"),
-			side = fetch("http://example.com/fries") 
+			side = fetch("http://example.com/fries")
 		}):andThen(function(meal)
 			print("Meal", dash.pretty(meal))
 		end)
@@ -125,25 +137,18 @@ end
 ]]
 --: <T>((Promise<T> | T){}) -> Promise<T{}>
 function Async.parallelAll(dictionary)
-	assert(t.table(dictionary), "BadInput: dictionary must be a table")
+	assert(t.table(dictionary))
+
 	local keys = Tables.keys(dictionary)
-	local values =
-		Tables.map(
-		keys,
-		function(key)
-			return dictionary[key]
-		end
-	)
-	return Async.parallel(values):andThen(
-		function(output)
-			return Tables.keyBy(
-				output,
-				function(value, i)
-					return keys[i]
-				end
-			)
-		end
-	)
+	local values = Tables.map(keys, function(key)
+		return dictionary[key]
+	end)
+
+	return Async.parallel(values):andThen(function(output)
+		return Tables.keyBy(output, function(_, i)
+			return keys[i]
+		end)
+	end)
 end
 
 --[[
@@ -160,12 +165,12 @@ end
 ]]
 --: T -> Promise<T>
 function Async.resolve(...)
+	local length = select("#", ...)
 	local args = {...}
-	return Promise.new(
-		function(resolve)
-			resolve(unpack(args))
-		end
-	)
+
+	return Promise.new(function(resolve)
+		resolve(unpack(args, 1, length))
+	end)
 end
 
 --[[
@@ -192,31 +197,35 @@ end
 ]]
 --: <T>(Promise<T>[], uint?) -> Promise<T[]>
 function Async.race(array, n)
+	assert(optionalIntegerThatIsAtLeastZero(n))
+
 	n = n or 1
-	assert(n >= 0, "BadInput: n must be an integer >= 0")
 	assert(#array >= n, "OutOfBoundsError: n must be less than #array")
+
 	local function handler(resolve, reject)
 		local results = {}
+		local length = 0
+
 		local function finally(ok, result)
-			if #results < n then
+			if length < n then
 				if ok then
-					table.insert(results, result)
-					if #results == n then
-						resolve(results)
-					end
+					length = length + 1
+					results[length] = result
+					if length == n then resolve(results) end
 				else
 					reject(result)
 				end
 			end
 		end
+
 		local function awaitElement(promise)
 			Async.finally(promise, finally)
 		end
+
 		Tables.map(array, awaitElement)
-		if n == 0 then
-			resolve(results)
-		end
+		if n == 0 then resolve(results) end
 	end
+
 	return Promise.new(handler)
 end
 
@@ -241,15 +250,12 @@ end
 --: <T, R>(Promise<T>, (bool, T) -> R) -> Promise<R>
 function Async.finally(promise, fn)
 	assert(Async.isPromise(promise), "BadInput: promise must be a promise")
-	return promise:andThen(
-		function(...)
-			return fn(true, ...)
-		end
-	):catch(
-		function(...)
-			return fn(false, ...)
-		end
-	)
+
+	return promise:andThen(function(...)
+		return fn(true, ...)
+	end):catch(function(...)
+		return fn(false, ...)
+	end)
 end
 
 --[[
@@ -273,12 +279,10 @@ end
 ]]
 --: <T>(Promise<T>, number, string?) -> Promise<T>
 function Async.timeout(promise, deadlineInSeconds, timeoutMessage)
-	return Async.race(
-		{
-			promise,
-			Async.delay(deadlineInSeconds):andThen(Functions.throws(timeoutMessage or "TimeoutError"))
-		}
-	)
+	return Async.race({
+		promise,
+		Async.delay(deadlineInSeconds):andThen(Functions.throws(timeoutMessage or "TimeoutError")),
+	})
 end
 
 --[[
@@ -301,15 +305,15 @@ end
 function Async.series(...)
 	local fnCount = select("#", ...)
 	local fns = {...}
-	return Async.async(
-		function(...)
-			local result = {fns[1](...)}
-			for i = 2, fnCount do
-				result = {Async.resolve(fns[i](unpack(result))):await()}
-			end
-			return unpack(result)
+
+	return Async.async(function(...)
+		local result = {fns[1](...)}
+		for i = 2, fnCount do
+			result = {Async.resolve(fns[i](unpack(result))):await()}
 		end
-	)
+
+		return unpack(result)
+	end)
 end
 
 --[[
@@ -319,12 +323,11 @@ end
 ]]
 --: number -> Promise<nil>
 function Async.delay(delayInSeconds)
-	assert(t.number(delayInSeconds), "BadInput: delayInSeconds must be a number")
-	return Promise.new(
-		function(resolve)
-			delay(delayInSeconds, resolve)
-		end
-	)
+	assert(t.number(delayInSeconds))
+
+	return Promise.new(function(resolve)
+		delay(delayInSeconds, resolve)
+	end)
 end
 
 --[[
@@ -347,22 +350,21 @@ end
 --: <T, A>(Yieldable<T, A>) -> ...A -> Promise<T>
 function Async.async(fn)
 	assert(Functions.isCallable(fn), "BadInput: fn must be callable")
+
 	return function(...)
+		local length = select("#", ...)
 		local callArgs = {...}
-		return Promise.new(
-			function(resolve, reject)
-				coroutine.wrap(
-					function()
-						local ok, result = pcall(fn, unpack(callArgs))
-						if ok then
-							resolve(result)
-						else
-							reject(result)
-						end
-					end
-				)()
-			end
-		)
+
+		return Promise.new(function(resolve, reject)
+			coroutine.wrap(function()
+				local ok, result = pcall(fn, unpack(callArgs, 1, length))
+				if ok then
+					resolve(result)
+				else
+					reject(result)
+				end
+			end)()
+		end)
 	end
 end
 
@@ -390,18 +392,9 @@ end
 ]]
 --: <T, A>(Yieldable<T, A>{}) -> (...A -> Promise<T>){}
 function Async.asyncAll(dictionary)
-	assert(t.table(dictionary), "BadInput: dictionary must be a table")
-	local result =
-		Tables.map(
-		dictionary,
-		function(value)
-			if Functions.isCallable(value) then
-				return Async.async(value)
-			else
-				return value
-			end
-		end
-	)
+	assert(t.table(dictionary))
+	local result = Tables.map(dictionary, asyncAllFunction)
+
 	setmetatable(result, getmetatable(dictionary))
 	return result
 end
@@ -412,7 +405,7 @@ end
 	backoffOptions, which can customize the maximum number of retries and the backoff
 	timing of the form `[0, x^attemptNumber] + y` where _x_ is an exponent that produces
 	a random exponential delay and _y_ is a constant delay.
-	
+
 	@rejects passthrough
 	@example
 		-- Use dash.retryWithBackoff to retry a GET request repeatedly.
@@ -426,61 +419,46 @@ end
 				print("Failed to fetch due to", errorMessage)
 				print("Retrying in ", waitTime)
 			end
-		}):andThen(function(resultingPizza) 
+		}):andThen(function(resultingPizza)
 			print("Great, you have: ", resultingPizza)
 		end)
 ]]
 --: <T>(Async<T>, BackoffOptions<T>) -> Promise<T>
 function Async.retryWithBackoff(asyncFn, backoffOptions)
 	assert(Functions.isCallable(asyncFn), "BadInput: asyncFn must be callable")
+
 	local function backoffThenRetry(errorMessage)
 		local waitTime =
 			(backoffOptions.retryExponentInSeconds ^ backoffOptions.attemptNumber) * backoffOptions.randomStream:NextNumber() +
 			backoffOptions.retryConstantInSeconds
+
 		backoffOptions.onRetry(waitTime, errorMessage)
-		return Async.delay(waitTime):andThen(
-			function()
-				return Async.retryWithBackoff(
-					asyncFn,
-					Tables.assign(
-						{},
-						backoffOptions,
-						{
-							maxTries = backoffOptions.maxTries - 1,
-							attemptNumber = backoffOptions.attemptNumber + 1
-						}
-					)
-				)
-			end
-		)
+		return Async.delay(waitTime):andThen(function()
+			return Async.retryWithBackoff(asyncFn, Tables.assign({}, backoffOptions, {
+				maxTries = backoffOptions.maxTries - 1,
+				attemptNumber = backoffOptions.attemptNumber + 1,
+			}))
+		end)
 	end
 
 	local function getDurationInSeconds()
 		return tick() - backoffOptions.startTime
 	end
 
-	backoffOptions =
-		Tables.assign(
-		{
-			startTime = tick(),
-			maxTries = 5,
-			attemptNumber = 0,
-			retryExponentInSeconds = 5,
-			retryConstantInSeconds = 2,
-			randomStream = baseRandomStream,
-			onRetry = function()
-			end,
-			onDone = function()
-			end,
-			onFail = function()
-			end,
-			shouldRetry = function()
-				return true
-			end
-		},
-		backoffOptions
-	)
-	assert(backoffOptions.maxTries > 0, "BadInput: maxTries must be > 0")
+	backoffOptions = Tables.assign({
+		startTime = tick(),
+		maxTries = 5,
+		attemptNumber = 0,
+		retryExponentInSeconds = 5,
+		retryConstantInSeconds = 2,
+		randomStream = baseRandomStream,
+		onRetry = function() end,
+		onDone = function() end,
+		onFail = function() end,
+		shouldRetry = function() return true end,
+	}, backoffOptions)
+
+	assert(t.numberPositive(backoffOptions.maxTries))
 
 	local function shouldRetry(response)
 		return backoffOptions.maxTries > 1 and backoffOptions.shouldRetry(response)
@@ -500,20 +478,19 @@ function Async.retryWithBackoff(asyncFn, backoffOptions)
 		return Async.isPromise(response) and response or Promise.resolve(response)
 	end
 
-	local ok, response =
-		pcall(
-		function()
-			return asyncFn()
-		end
-	)
+	--[[
+	local ok, response = pcall(function()
+		return asyncFn()
+	end)
+	--]]
+
+	local ok, response = pcall(asyncFn)
 
 	if ok then
 		if Async.isPromise(response) then
-			return response:catch(
-				function(response)
-					return retryIfShouldElseCallOnFailAndReturn(response, error)
-				end
-			):andThen(callOnDoneAndReturnPromise)
+			return response:catch(function(response)
+				return retryIfShouldElseCallOnFailAndReturn(response, error)
+			end):andThen(callOnDoneAndReturnPromise)
 		else
 			return callOnDoneAndReturnPromise(response)
 		end
