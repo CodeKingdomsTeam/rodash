@@ -1,11 +1,31 @@
 --[[
 	These tools provide implementations of and functions for higher-order abstractions such as classes, enumerations and symbols.
 ]]
+
 local t = require(script.Parent.Parent.t)
 local Tables = require(script.Parent.Tables)
 local Arrays = require(script.Parent.Arrays)
 local Functions = require(script.Parent.Functions)
 local Classes = {}
+
+local optionalIsCallable = t.optional(Functions.isCallable)
+local optionalTable = t.optional(t.table)
+local callbackValues = t.values(t.callback)
+
+local upperSnakeCase = t.match("^[A-Z_]+$")
+
+local function keyByFunction(key)
+	assert(upperSnakeCase(key))
+	return key
+end
+
+local function returnEmptyTable()
+	return {}
+end
+
+local function returnSecond(_, key)
+	return key
+end
 
 --[[
 	Create a class called _name_ with the specified _constructor_. The constructor should return a
@@ -13,7 +33,7 @@ local Classes = {}
 
 	Optionally, you may provide an array of _decorators_ which compose and reduce the Class, adding
 	additional methods and functionality you may need. Specifically you can:
-	
+
 	1. Add standard functionality to the class e.g. `dash.Cloneable`, `dash.ShallowEq`
 	2. Mixin an implementation of an interface e.g. `dash.mixin( fns )`
 	3. Decorate fields or functions e.g. `dash.decorate(dash.freeze)`
@@ -22,7 +42,7 @@ local Classes = {}
 	@param decorators (default = `{}`)
 	@example
 		-- Create a simple Vehicle class
-		local Vehicle = dash.class("Vehicle", function(wheelCount) return 
+		local Vehicle = dash.class("Vehicle", function(wheelCount) return
 			{
 				speed = 0,
 				wheelCount = wheelCount
@@ -38,7 +58,7 @@ local Classes = {}
 		-- Drive the car
 		car:drive(10)
 		car.speed --> 10
-		
+
 	@usage When using Rodash classes, private fields should be prefixed with `_` to avoid accidental access.
 	@usage A private field should only be accessed by a method of the class itself, though Rodash
 		does not restrict this in code.
@@ -50,17 +70,18 @@ local Classes = {}
 ]]
 --: <T>(string, Constructor<T>?, Decorator<T>[]?) -> Class<T>
 function Classes.class(name, constructor, decorators)
-	assert(t.string(name), "BadInput: name must be a string")
-	assert(t.optional(Functions.isCallable)(constructor), "BadInput: constructor must be callable or nil")
-	assert(t.optional(t.table)(decorators), "BadInput: decorators must be a table or nil")
+	assert(t.string(name))
+	assert(optionalIsCallable(constructor))
+	assert(optionalTable(decorators))
+
 	local decorate = Functions.compose(unpack(decorators or {}))
-	constructor = constructor or function()
-			return {}
-		end
+	constructor = constructor or returnEmptyTable
+
 	-- @type Class<T>
 	local Class = {
-		name = name
+		name = name,
 	}
+
 	--[[
 		Return a new instance of the class, passing any arguments to the specified constructor.
 		@example
@@ -75,30 +96,29 @@ function Classes.class(name, constructor, decorators)
 	--: <S, A>(...A -> S)
 	function Class.new(...)
 		local instance = constructor(...)
-		setmetatable(
-			instance,
-			{
-				__index = Class,
-				__tostring = Class.toString,
-				__eq = Class.equals,
-				__lt = Class.__lt,
-				__le = Class.__le,
-				__add = Class.__add,
-				__sub = Class.__sub,
-				__mul = Class.__mul,
-				__div = Class.__div,
-				__mod = Class.__mod
-			}
-		)
+		setmetatable(instance, {
+			__index = Class,
+			__tostring = Class.toString,
+			__eq = Class.equals,
+			__lt = Class.__lt,
+			__le = Class.__le,
+			__add = Class.__add,
+			__sub = Class.__sub,
+			__mul = Class.__mul,
+			__div = Class.__div,
+			__mod = Class.__mod,
+		})
+
 		instance.Class = Class
 		instance:_init(...)
 		return instance
 	end
+
 	--[[
 		Run after the instance has been properly initialized, allowing methods on the instance to
 		be used.
 		@example
-			local Vehicle = dash.class("Vehicle", function(wheelCount) return 
+			local Vehicle = dash.class("Vehicle", function(wheelCount) return
 				{
 					speed = 0,
 					wheelCount = wheelCount
@@ -118,7 +138,7 @@ function Classes.class(name, constructor, decorators)
 			function Vehicle:_generateId()
 				return dash.format("#{}: {} wheels", Vehicle._getNextId(), self.wheelCount)
 			end
-			-- Return the id if the instance is represented as a string 
+			-- Return the id if the instance is represented as a string
 			function Vehicle:toString()
 				return self._id
 			end
@@ -127,13 +147,12 @@ function Classes.class(name, constructor, decorators)
 			tostring(car) --> "#1: 4 wheels"
 	]]
 	--: (mut self) -> ()
-	function Class:_init()
-	end
+	function Class:_init() end
 
 	--[[
 		Returns `true` if _value_ is an instance of _Class_ or any sub-class.
 		@example
-			local Vehicle = dash.class("Vehicle", function(wheelCount) return 
+			local Vehicle = dash.class("Vehicle", function(wheelCount) return
 				{
 					speed = 0,
 					wheelCount = wheelCount
@@ -162,7 +181,7 @@ function Classes.class(name, constructor, decorators)
 		Super methods can be accessed using `Class.methodName` and should be called with self.
 
 		@example
-			local Vehicle = dash.class("Vehicle", function(wheelCount) return 
+			local Vehicle = dash.class("Vehicle", function(wheelCount) return
 				{
 					speed = 0,
 					wheelCount = wheelCount
@@ -230,9 +249,7 @@ function Classes.class(name, constructor, decorators)
 	function Class:extendWithInterface(name, interface, decorators)
 		local function getComposableInterface(input)
 			if input == nil then
-				return function()
-					return {}
-				end
+				return returnEmptyTable
 			elseif type(input) == "function" then
 				return input
 			else
@@ -241,10 +258,15 @@ function Classes.class(name, constructor, decorators)
 				end
 			end
 		end
+
 		local inheritedInterface = self.interface
-		local compositeInterface = function(Class)
-			return Tables.assign({}, getComposableInterface(interface)(Class), getComposableInterface(inheritedInterface)(Class))
+		local function compositeInterface(Class)
+			return Tables.assign({},
+				getComposableInterface(interface)(Class),
+				getComposableInterface(inheritedInterface)(Class)
+			)
 		end
+
 		local SubClass = Classes.classWithInterface(name, compositeInterface, decorators)
 		setmetatable(SubClass, {__index = self})
 		return SubClass
@@ -259,7 +281,7 @@ function Classes.class(name, constructor, decorators)
 					name = name
 				}
 			end)
-			
+
 			local car = Car.new()
 			car:toString() --> 'Car'
 			tostring(car) --> 'Car'
@@ -364,31 +386,22 @@ end
 --: <T>(string, Interface<T>, Decorator<T>[]? -> Class<T>)
 function Classes.classWithInterface(name, interface, decorators)
 	local function getImplementsInterface(currentInterface)
-		local ok, problem = t.values(t.callback)(currentInterface)
-		assert(ok, string.format([[BadInput: Class %s does not have a valid interface
-%s]], name, tostring(problem)))
+		local ok, problem = callbackValues(currentInterface)
+		assert(ok, string.format("BadInput: Class %s does not have a valid interface %s", name, tostring(problem)))
 		return t.strictInterface(currentInterface)
 	end
+
 	local implementsInterface
-	local Class =
-		Classes.class(
-		name,
-		function(data)
-			data = data or {}
-			local ok, problem = implementsInterface(data)
-			assert(ok, string.format([[BadInput: Class %s cannot be instantiated
-%s]], name, tostring(problem)))
-			return Tables.keyBy(
-				data,
-				function(_, key)
-					return key
-				end
-			)
-		end,
-		decorators
-	)
-	implementsInterface =
-		type(interface) == "function" and getImplementsInterface(interface(Class)) or getImplementsInterface(interface)
+	local Class = Classes.class(name, function(data)
+		data = data or {}
+		local ok, problem = implementsInterface(data)
+		assert(ok, string.format("BadInput: Class %s cannot be instantiated %s", name, tostring(problem)))
+
+		return Tables.keyBy(data, returnSecond)
+	end, decorators)
+
+	implementsInterface = type(interface) == "function" and getImplementsInterface(interface(Class))
+		or getImplementsInterface(interface)
 	Class.interface = interface
 	return Class
 end
@@ -445,7 +458,7 @@ end
 ]]
 --: <T>((T, ... -> ...)[] -> Class<T> -> Class<T>)
 function Classes.mixin(fns)
-	assert(t.table(fns), "BadInput: fns must be a table")
+	assert(t.table(fns))
 	return function(Class)
 		Tables.assign(Class, fns)
 		return Class
@@ -482,6 +495,7 @@ function Classes.decorate(fn)
 			local instance = underlyingNew(...)
 			return fn(instance)
 		end
+
 		return Class
 	end
 end
@@ -517,6 +531,7 @@ function Classes.Cloneable(Class)
 		setmetatable(newInstance, getmetatable(self))
 		return newInstance
 	end
+
 	return Class
 end
 
@@ -553,6 +568,7 @@ function Classes.ShallowEq(Class)
 	function Class:equals(other)
 		return Tables.shallowEqual(self, other)
 	end
+
 	return Class
 end
 
@@ -586,9 +602,11 @@ function Classes.Ord(keys)
 	if keys then
 		assert(Tables.isArray(keys), "BadInput: keys must be an array if defined")
 	end
+
 	local function getInstancesKeys(self, instanceKeys)
 		return instanceKeys or Arrays.sort(Tables.keys(self))
 	end
+
 	local function compareInstances(self, other, allowEquality)
 		local instanceKeys = getInstancesKeys(self, keys)
 		for _, key in ipairs(instanceKeys) do
@@ -597,12 +615,15 @@ function Classes.Ord(keys)
 			elseif Arrays.defaultComparator(other[key], self[key]) then
 				return false
 			end
+
 			if self[key] ~= other[key] then
 				return not allowEquality
 			end
 		end
+
 		return allowEquality
 	end
+
 	return function(Class)
 		function Class:equals(other)
 			local instanceKeys = getInstancesKeys(self, keys)
@@ -611,14 +632,18 @@ function Classes.Ord(keys)
 					return false
 				end
 			end
+
 			return true
 		end
+
 		function Class:__le(other)
 			return compareInstances(self, other, true)
 		end
+
 		function Class:__lt(other)
 			return compareInstances(self, other, false)
 		end
+
 		return Class
 	end
 end
@@ -648,18 +673,15 @@ function Classes.Formatable(keys)
 	return function(Class)
 		function Class:toString()
 			local Strings = require(script.Parent.Strings)
-			return Strings.format(
-				"{}({})",
-				Class.name,
-				Tables.serialize(
-					self,
-					{
-						keys = keys,
-						omitKeys = {"Class"}
-					}
-				):sub(2, -2)
+
+			return Strings.format("{}({})", Class.name,
+				string.sub(Tables.serialize(self, {
+					keys = keys,
+					omitKeys = {"Class"},
+				}), 2, -2)
 			)
 		end
+
 		return Class
 	end
 end
@@ -689,14 +711,8 @@ end
 ]]
 --: <T>(string -> Enum<T>)
 function Classes.enum(keys)
-	local enum =
-		Tables.keyBy(
-		keys,
-		function(key)
-			assert(key:match("^[A-Z_]+$"), "BadInput: Enum keys must be defined as upper snake-case")
-			return key
-		end
-	)
+	local enum = Tables.keyBy(keys, keyByFunction)
+
 	Classes.finalize(enum)
 	return Classes.freeze(enum)
 end
@@ -728,12 +744,13 @@ end
 ]]
 --: <T, ...A, V>(Enum<T>, {[enumValue: T]: Strategy<V, A>}) -> (enumValue: T, ...A) -> V
 function Classes.match(enum, strategies)
-	assert(t.table(enum), "BadInput: enum should be a table")
+	assert(t.table(enum))
 	assert(
 		Tables.deepEqual(Arrays.sort(Tables.values(enum)), Arrays.sort(Tables.keys(strategies))),
 		"BadInput: keys for strategies must match values for enum"
 	)
-	assert(t.values(t.callback)(strategies), "BadInput: strategies values must be functions")
+
+	assert(callbackValues(strategies))
 
 	return function(enumValue, ...)
 		assert(Classes.isA(enumValue, enum), "BadInput: enumValue must be an instance of enum")
@@ -770,16 +787,20 @@ function Classes.finalize(object)
 				else
 					value = backend.__index[key]
 				end
+
 				if value ~= nil then
 					return value
 				end
 			end
+
 			error(string.format("FinalObject: Attempt to read missing key %s in final object", key))
 		end,
+
 		__newindex = function(child, key)
 			error(string.format("FinalObject: Attempt to add key %s to final object", key))
-		end
+		end,
 	}
+
 	if backend then
 		setmetatable(proxy, backend)
 	end
@@ -792,7 +813,7 @@ end
 --[[
 	Create a symbol with a specified _name_. We recommend upper snake-case as the symbol is a
 	constant, unless you are linking the symbol conceptually to a different string.
-	
+
 	Symbols are useful when you want a value that isn't equal to any other type, for example if you
 	want to store a unique property on an object that won't be accidentally accessed with a simple
 	string lookup.
@@ -823,23 +844,22 @@ end
 --: <T>(string -> Symbol<T>)
 function Classes.symbol(name)
 	local symbol = {
-		__symbol = name
+		__symbol = name,
 	}
-	setmetatable(
-		symbol,
-		{
-			__tostring = function()
-				return "Symbol(" .. name .. ")"
-			end
-		}
-	)
+
+	setmetatable(symbol, {
+		__tostring = function()
+			return "Symbol(" .. name .. ")"
+		end,
+	})
+
 	return symbol
 end
 
 --[[
 	`dash.freeze` takes _object_ and returns a new read-only version which prevents any values from
 	being changed.
-	
+
 	Unfortunately you cannot iterate using `pairs` or `ipairs` on frozen objects because Lua 5.1
 	does not support overwriting these in metatables. However, you can use `dash.iterator` to get
 	an iterator for the object and use that.
@@ -866,27 +886,30 @@ end
 --: <T: table>(T -> T)
 function Classes.freeze(object)
 	local proxy = {}
-	setmetatable(
-		proxy,
-		{
-			__index = function(child, key)
-				return object[key]
-			end,
-			__newindex = function(child, key)
-				error(string.format("ReadonlyKey: Attempt to write to a frozen key %s", key))
-			end,
-			__len = function(child)
-				return #object
-			end,
-			__tostring = function(child)
-				return "Freeze(" .. tostring(object) .. ")"
-			end,
-			__call = function(child, ...)
-				return object(...)
-			end,
-			iterable = object
-		}
-	)
+	setmetatable(proxy, {
+		__index = function(_, key)
+			return object[key]
+		end,
+
+		__newindex = function(_, key)
+			error(string.format("ReadonlyKey: Attempt to write to a frozen key %s", key))
+		end,
+
+		__len = function()
+			return #object
+		end,
+
+		__tostring = function()
+			return "Freeze(" .. tostring(object) .. ")"
+		end,
+
+		__call = function(_, ...)
+			return object(...)
+		end,
+
+		iterable = object,
+	})
+
 	return proxy
 end
 
@@ -918,28 +941,24 @@ end
 ]]
 --: <T>(any, Type<T> -> bool)
 function Classes.isA(value, Type)
-	local ok, isAType =
-		pcall(
-		function()
-			local isEnum = type(value) == "string"
-			if isEnum then
-				local isEnumKeyDefined = type(Type[value]) == "string"
-				return isEnumKeyDefined
-			elseif type(value) == "table" then
-				if value.__symbol and Type[value.__symbol] == value then
-					return true
-				end
-				local metatable = getmetatable(value)
-				while metatable do
-					if metatable.__index == Type then
-						return true
-					end
-					metatable = getmetatable(metatable.__index)
-				end
+	local ok, isAType = pcall(function()
+		local valueType = type(value)
+		if valueType == "string" then
+			local isEnumKeyDefined = type(Type[value]) == "string"
+			return isEnumKeyDefined
+		elseif valueType == "table" then
+			if value.__symbol and Type[value.__symbol] == value then return true end
+			local metatable = getmetatable(value)
+
+			while metatable do
+				if metatable.__index == Type then return true end
+				metatable = getmetatable(metatable.__index)
 			end
-			return false
 		end
-	)
+
+		return false
+	end)
+
 	return ok and isAType
 end
 
